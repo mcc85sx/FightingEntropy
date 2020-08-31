@@ -1,4 +1,4 @@
-﻿
+
     Class Host
     {
         [String]          $HostName
@@ -11,7 +11,7 @@
         {
             If ( $IPAddress -notmatch "(\d+).(\d+).(\d+).(\d+)" )
             {
-                Throw "Invalid entry"
+                Throw "Invalid IPAddress"
             }
 
             If ( $MacAddress -notmatch "([A-Fa-f0-9]{2}(-|:)*){5}[A-Fa-f0-9]{2}" )
@@ -26,16 +26,74 @@
             If ( $This.Class -in "A","B","C" -and $This.MacAddress -notmatch "ff-ff-ff-ff-ff-ff" ) 
             {
                 $This.Hostname      = Try { ( Resolve-DNSName $IPAddress -EA 0 ).NameHost } Catch { "*UnKnown*" }
-                $This.Vendor        = [Vendor]::New($MacAddress)
                 Write-Host "Resolved [+] $IPAddress..."
             }
 
             Else
             {
                 $This.Hostname      = "-"
-                $This.Vendor        = "-"
                 Write-Host "Reserved [-] $IPAddress..."
             }
+        }
+    }
+
+    Class NetInterface
+    {
+        [String]              $Type
+        [String]           $ifAlias
+        [Int32]            $ifIndex
+        [String]         $IPAddress
+        [Int32]             $Prefix
+        [String]           $NetMask
+        [Object]           $Gateway
+
+        [String] GetNetMask([Int32]$Prefix)
+        {
+            If ( $Prefix -notin 1..30 )
+            {
+                Throw "CIDR out of range"
+            }
+            
+            $Switch                 = 0
+            $Mask                   = 0..3
+            $Slot                   = @{ 0 = 1..7 ; 1 = 8..15 ; 2 = 16..23 ; 3 = 24..30 }
+
+            ForEach ( $I in 0..3 )
+            {
+                If ( $Switch -eq 1 ) 
+                { 
+                    $Mask[$I] = 0 
+                }
+
+                If ( $Switch -eq 0 )
+                {
+                    If ( $Prefix -in $Slot[$I] ) 
+                    { 
+                        $Mask[$I]   = @(0,128,192,224,240,248,252,254,255)[$Prefix % 8]
+                        $Switch     = 1
+                    } 
+                
+                    Else
+                    { 
+                        $Mask[$I]    = 255 
+                    }
+                }
+            }
+        
+            Return $Mask[0..3] -join '.'
+        }
+
+        [
+
+        NetInterface([CimInstance]$IPAddress)
+        {
+            $This.Type              = "IPV{0}" -f @{ 0 = 4 ; 1 = 6 }[[Int32]($IPAddress.IPAddress -notmatch "(\d+).(\d+).(\d+).(\d+)" )]
+            $This.ifAlias           = $IPAddress.InterfaceAlias
+            $This.ifIndex           = $IPAddress.InterfaceIndex
+            $This.IPAddress         = $IPAddress.IPAddress
+            $This.Prefix            = $IPAddress.PrefixLength
+            $This.Netmask           = $This.GetNetMask($This.Prefix)
+            $This.Gateway           = ( Get-NetRoute -InterfaceIndex $This.ifIndex | ? DestinationPrefix -match "/$($This.Prefix)" ).DestinationPrefix.Split("/")[0]
         }
     }
 
@@ -46,7 +104,8 @@
         [String]       $Description
         [String]          $HostName
         [String]            $Domain
-        [String]       $IPV4Address
+        [Object]              $IPV4
+        [Object]              $IPV6
         [String]        $MacAddress
         [String]            $Vendor
         [Object]             $Table
@@ -60,8 +119,12 @@
 
         Adapter([String[]]$Table)
         {
+
             $This.Index             = Invoke-Expression ( $Table[0] -Split " " )[3]
-            $This.IPV4Address       = ( $Table[0] -Replace "Interface: ", "" -Split " " )[0]
+
+            $This.IPV4              = Get-NetIPAddress -AddressFamily IPv4 | ? ifIndex -eq $This.Index
+            $This.IPV6              = Get-NetIPAddress -AddressFamily IPv6 | ? ifIndex -eq $This.Index
+
             $This.Table             = @( )
             
             If ( $Table.Count -gt 2 ) 
@@ -81,45 +144,41 @@
 
     Class Vendor
     {
-        [String]              $Name
-        [String]        $MacAddress
+        [String]               $Hex
         [Int32]              $Index
+        [String]              $Name
 
         Vendor([String]$MacAddress)
         {
-            If ( $MacAddress -notmatch "([A-Fa-f0-9]{2}(-|:)*){5}[A-Fa-f0-9]{2}" )
-            {
-                Throw "Invalid MacAddress"
-            }
-
-            $This.MacAddress = $MacAddress
-            $This.Index      = Invoke-Expression ( "0x{0}" -f ( ( $MacAddress -Replace "(:|-)" , "" )[0..5] -join '' ) )
+            $This.Hex               = ( $MacAddress -Replace "(:|-)" , "" ).SubString(0,6)
+            $This.Index             = [Convert]::ToInt64($This.Hex,16)
         }
     }
 
     Class VendorList
     {
         Hidden [String]       $Path
+        [String[]]            $List
         [Int32[]]            $Index
         [String[]]            $Name
-        [String[]]            $List
 
         VendorList([String]$Path)
         {
-            $This.Path              = "$Path\Archives\Network" 
+            $This.Path              = "$Path\Archives\Network"
 
             If ( ! ( Test-Path "$($This.Path)\Vendor.zip" ) )
             {
                 Throw "Invalid Path"
             }
 
+            Write-Host "Retrieving Vendor List"
+
             Expand-Archive -Path "$($This.Path)\Vendor.zip" -DestinationPath $This.Path -Force
 
             ForEach ( $Item in "Index","Name","List" )
             {
-                Write-Host " Loading [+] $Item"
-
                 $This.$Item         = "$($This.Path)\$Item.txt" | % { Get-Content $_ ; Remove-Item $_ }
+                Write-Host "  Loaded [+] $Item"
             }
         }
     }
@@ -151,13 +210,31 @@
             }
         }
 
-        [String]              $Path
-        [String]      $ComputerName
-        [String]            $Domain
+        [String]                       $Path
+        [String]               $ComputerName
+        [String]                     $Domain
 
-        Hidden [Object]     $Vendor
-        [Object]         $Interface
-        [Object]         $HostRange
+        [Object]                     $Vendor
+        [Object]                  $Interface
+        [Object]                  $HostRange
+
+        [String] GetVendor([String]$MacAddress)
+        {
+            $IVendor                           = [Vendor]::New($MacAddress)
+            $Rank                              = 0
+
+            ForEach ( $I in 1..( $This.Vendor.Index.Count ) )
+            {
+                If ( $Rank -eq $IVendor.Index )
+                {
+                    $IVendor.Name              = $This.Vendor.Name[$This.Vendor.Index[$I]]
+                }
+
+                $Rank                          = $Rank + $This.Vendor.List[$I]
+            }
+
+            Return $IVendor.Name
+        }
 
         Network ()
         {
@@ -168,10 +245,7 @@
                 $This.Domain        = $_.Domain
                 $This.Vendor        = [VendorList]::New($This.Path)
             }
-        }
 
-        GetInterface()
-        {
             $Cache                  = arp -a
             $ID                     = -1
             $List                   = @{ }
@@ -182,6 +256,7 @@
             {
                 If ( $Cache[$I] -match "Interface:" )
                 {
+                    Write-Host "Detected [+] Interface"
                     $ID             ++
                     $List.Add( $ID , @( ) )
                 }
@@ -203,7 +278,7 @@
                     $This.Interface.Alias               = $_.Name
                     $This.Interface.Description         = $_.InterfaceDescription
                     $This.Interface.MacAddress          = $_.MacAddress
-                    $This.Interface.Vendor              = $_.MacAddress -Replace "(-|:)" , ""
+                    $This.Interface.Vendor              = $This.GetVendor($_.MacAddress)
                 }
             }
 
@@ -220,33 +295,54 @@
                         $This.Interface[$I].Alias       = $_.Name
                         $This.Interface[$I].Description = $_.InterfaceDescription
                         $This.Interface[$I].MacAddress  = $_.MacAddress
-                        $This.Interface[$I].Vendor      = $_.MacAddress -Replace "(-|:)" , ""
+                        $This.Interface[$I].Vendor      = $This.GetVendor($_.MacAddress)
                     }
                 }
             }
-        }
 
-        [String] GetVendor([Object]$Vendor,[String]$MacAddress)
-        {
-            $Item                   = [Vendor]::New($MacAddress)
-            $Rank                   = 0
+            $This.HostRange     = @( )
 
-            ForEach ( $I in 1..( $Vendor.List.Count - 1 ) )
+            If ( $This.Interface.Count -eq 1 ) 
             {
-                $Rank               = $Rank + $Vendor.List[$I]
-                
-                If ( $Rank -eq $Item.Index )
+                ForEach ( $X in 0..( $This.Interface.Table.Count - 1 ) )
                 {
-                    $Item.Name      = $This.Vendor.Name[$This.Vendor.Index[$I]]
+                    $Item = $This.Interface.Table[$X]
+
+                    If ( $Item.MacAddress -notin $This.Hostrange.MacAddress )
+                    {
+                        If ( $Item.Hostname -ne "-" )
+                        {
+                            $This.HostRange += $Item
+                        }
+                    }
                 }
             }
 
-            If ( !$Item.Name )
+            Else
             {
-                $Item.Name          = "Exceeded"
+                ForEach ( $I in 0..( $This.Interface.Count - 1 ) )
+                {
+                    ForEach ( $X in 0..( $This.Interface[$I].Table.Count - 1 ) )
+                    {
+                        $Item = $This.Interface[$I].Table[$X]
+
+                        If ( $Item.MacAddress -notin $This.Hostrange.MacAddress )
+                        {
+                            If ( $Item.HostName -ne "-" )
+                            {
+                                $This.HostRange += $Item
+                            }
+                        }
+                    }
+                }
             }
 
-            Return $Item.Name
+            ForEach ( $I in 0..( $This.HostRange.Count - 1 ) )
+            {
+                $This.HostRange[$I].Vendor = $This.GetVendor($This.HostRange[$I].MacAddress)
+            }
+
+            
         }
 
         [String] GetNetMask([Int32]$CIDR)
@@ -286,21 +382,7 @@
         }
     }
 
-    $Net = [Network]::New()
-    
-    $Net.GetInterface()
+    $Net               = [Network]::New()
 
-    If ( $Net.Interface.Count -eq 1 ) 
-    {
-        $Net.Interface.Table
-    }
-
-    Else
-    {
-        ForEach ( $I in 0..( $Net.Interface.Table.Count - 1 ) )
-        {
-            $Net.Interface[$I].Table
-        }
-    }
-
-    #$Net.Interface.Table | ? Vendor -eq "" | % { ( $_.MacAddress -Replace "(-|:)" , "" )[0..5] -join '' }
+    $Net.Interface 
+    $Net.HostRange | FT

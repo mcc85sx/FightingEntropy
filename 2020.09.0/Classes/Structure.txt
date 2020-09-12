@@ -1,0 +1,14 @@
+
+# Module   
+Name        : FightingEntropy
+Version     : 2020.09.0
+Provider    : Secure Digits Plus LLC
+URL         : https://raw.github.com/mcc85sx/FightingEntropy/blob/master/2020.09.0
+Registry    : HKLM:\SOFTWARE\Policies\Secure Digits Plus LLC\FightingEntropy\2020.09.0
+Path        : C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.09.0
+Content     : …
+
+# Root
+Registry    : HKLM:\SOFTWARE\Policies\Secure Digits Plus LLC\FightingEntropy\2020.09.0
+Name        : FightingEntropy
+InstallDate : 

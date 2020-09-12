@@ -44,23 +44,23 @@ Class Drive
 
 Class File
 {
-    [String]                                            $Mode
-    [DateTime]                                          $Date
-    [Int32]                                            $Depth
-    [String]                                            $Name
-    [String]                                        $FullName
-    
-    [Object]                                        $Provider
+    [String]                $Mode
+    [DateTime]              $Date
+    [Int32]                $Depth
+    [String]                $Name
+    [String]            $FullName
+    [Object]            $Provider
+
     [System.IO.FileStream]                      $StreamWriter
     [Object]                                       $Transform
     [System.Security.Cryptography.CryptoStream] $CryptoStream
     [System.IO.FileStream]                      $StreamReader
 
-    [Int32]                                           $XCount
-    [Int32]                                           $Offset
-    [Int32]                                   $BlockSizeBytes
-    [Byte[]]                                            $Data
-    [Int32]                                        $BytesRead
+    [Int32]               $XCount
+    [Int32]               $Offset
+    [Int32]       $BlockSizeBytes
+    [Byte[]]                $Data
+    [Int32]            $BytesRead 
     
     File([Object]$Provider,[String]$Path)
     {
@@ -157,22 +157,26 @@ Class Provider
     [Int32]  $KeyLength
     [Byte[]] $Key
     [Int32]  $IVLength
-    [Byte[]] $IV
+    [Byte[]]                    $IV
 
     Provider([System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate)
     {
-        $This.Certificate           = $Certificate
-        $This.AESProvider           = New-Object System.Security.Cryptography.AesManaged
-        $This.AESProvider.KeySize   = 256
-        $This.AESProvider.BlockSize = 128
-        $This.AESProvider.Mode      = [System.Security.Cryptography.CipherMode]::CBC
-        $This.Name                  = $This.AESProvider.GetType()
-        $This.KeyFormatter          = New-Object System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter($Certificate.PublicKey.Key)
-        $This.KeyExchange           = $This.KeyFormatter.CreateKeyExchange($This.AESProvider.Key,$This.Name)
-        $This.KeyLength             = $This.KeyExchange.Length
-        $This.Key                   = [System.BitConverter]::GetBytes($This.KeyLength)
-        $This.IVLength              = $This.AesProvider.IV.Length
-        $This.IV                    = [System.BitConverter]::GetBytes($This.IVLength)
+        $This.Certificate         = $Certificate
+        $This.AESProvider         = New-Object System.Security.Cryptography.AesManaged
+        $This.AESProvider         | % { 
+            
+            $_.KeySize            = 256
+            $_.BlockSize          = 128
+            $_.Mode               = [System.Security.Cryptography.CipherMode]::CBC
+        }
+
+        $This.Name                = $This.AESProvider.GetType()
+        $This.KeyFormatter        = New-Object System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter($Certificate.PublicKey.Key)
+        $This.KeyExchange         = $This.KeyFormatter.CreateKeyExchange($This.AESProvider.Key,$This.Name)
+        $This.KeyLength           = $This.KeyExchange.Length
+        $This.Key                 = [System.BitConverter]::GetBytes($This.KeyLength)
+        $This.IVLength            = $This.AesProvider.IV.Length
+        $This.IV                  = [System.BitConverter]::GetBytes($This.IVLength)
     }
 }
 

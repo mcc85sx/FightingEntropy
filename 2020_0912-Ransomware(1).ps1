@@ -1,3 +1,5 @@
+# Source original script found here https://www.youtube.com/watch?v=atL1WmmMJJw
+
 Class Drives
 {
     [Drive[]]           $PSDrives

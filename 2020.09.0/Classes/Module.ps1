@@ -14,7 +14,7 @@ Class FERoot # // Folder for installation and database, accesses Registry for fo
 Class FEModule # // Module Provisioning (Installs Module/Validates Existence)
 {
     [String] $Name               = "FightingEntropy"
-    [String] $Version            = "2020.08.0"
+    [String] $Version            = "2020.09.0"
     [String] $Provider           = "Secure Digits Plus LLC"
     [String] $Registry           = "HKLM:\SOFTWARE\Policies\{0}\{1}\{2}"
     [String] $Path               = "$Env:ProgramData\{0}\{1}\{2}"
@@ -56,129 +56,108 @@ Class FEModule # // Module Provisioning (Installs Module/Validates Existence)
     }
 }
 
-    Class FEShare # // Creates an MDT/FE Share for MDT/FE Deployments
+Class FEShare # // Creates an MDT/FE Share for MDT/FE Deployments
+{
+    [String]           $Name = "FE001"
+    [String]     $PSProvider
+    [String]           $Root
+    [String]    $Description = $Null
+    [String]    $NetworkPath
+    [Object]        $Company = [FECompany]::New()
+
+    Hidden [String[]] $Names
+    Hidden [String[]] $Roots
+
+    Hidden [Hashtable] $Hash = @{
+
+        Name        = "Microsoft Deployment Toolkit" 
+        Path        = ( Get-ChildItem ( Get-ItemProperty "HKLM:\Software\Microsoft\Deployment 4" ).Install_Dir "*Toolkit.psd1" -Recurse ).FullName
+        Description = ("The [Microsoft Deployment Toolkit]\\_It is *the* toolkit...\_...that Microsoft themselves uses...\" +
+                        "_...to deploy additional toolkits.\\_It's not that weird.\_You're just thinking way too far into it" +
+                        ", honestly.\\_Regardless... it is quite a fearsome toolkit to have in one's pocket.\_Or, wherever " +
+                        "really...\_...at any given time.\\_When you need to be taken seriously...?\_Well, it *should* be t" +
+                        "he first choice on one's agenda.\_But that's up to you.\\_The [Microsoft Deployment Toolkit].\_Eve" +
+                        "n Mr. Gates thinks it's awesome." ).Replace("_","    ").Split('\')
+    }
+
+    FEShare([String]$Name,[String]$Root,[String]$Description,[String]$NetworkPath)
     {
-        [String]           $Name = "FE001"
-        [String]     $PSProvider
-        [String]           $Root
-        [String]    $Description = $Null
-        [String]    $NetworkPath
-        [Object]        $Company = [FECompany]::New()
-
-        Hidden [String[]] $Names
-        Hidden [String[]] $Roots
-
-        Hidden [Hashtable] $Hash = @{
-
-            Name        = "Microsoft Deployment Toolkit" 
-            Path        = ( GCI ( GP "HKLM:\Software\Microsoft\Deployment 4" ).Install_Dir "*Toolkit.psd1" -Recurse ).FullName
-            Description = ("The [Microsoft Deployment Toolkit]\\_It is *the* toolkit...\_...that Microsoft themselves uses...\" +
-                            "_...to deploy additional toolkits.\\_It's not that weird.\_You're just thinking way too far into it" +
-                               ", honestly.\\_Regardless... it is quite a fearsome toolkit to have in one's pocket.\_Or, wherever " +
-                               "really...\_...at any given time.\\_When you need to be taken seriously...?\_Well, it *should* be t" +
-                               "he first choice on one's agenda.\_But that's up to you.\\_The [Microsoft Deployment Toolkit].\_Eve" +
-                               "n Mr. Gates thinks it's awesome." ).Replace("_","    ").Split('\')
-        }
-
-        FEShare([String]$Name,[String]$Root,[String]$Description,[String]$NetworkPath)
+        If ( Test-Path $Root )
         {
-            If ( Test-Path $Root )
-            {
-                Throw "Path exists"
-            }
-
-            Else
-            {
-                $This.Root = $Root
-            }
-
-            If ( Get-SMBShare | ? { $_.Name -eq $Name -or $_.Path -eq $Root } )
-            {
-                Throw "Share exists"
-            }
-
-            @{  Name        = "Microsoft Deployment Toolkit" 
-                Path        = ( GCI ( GP "HKLM:\Software\Microsoft\Deployment 4" ).Install_Dir "*Toolkit.psd1" -Recurse ).FullName
-                Description = ("The [Microsoft Deployment Toolkit]\\_It is *the* toolkit...\_...that Microsoft themselves uses...\" +
-                               "_...to deploy additional toolkits.\\_It's not that weird.\_You're just thinking way too far into it" +
-                               ", honestly.\\_Regardless... it is quite a fearsome toolkit to have in one's pocket.\_Or, wherever " +
-                               "really...\_...at any given time.\\_When you need to be taken seriously...?\_Well, it *should* be t" +
-                               "he first choice on one's agenda.\_But that's up to you.\\_The [Microsoft Deployment Toolkit].\_Eve" +
-                               "n Mr. Gates thinks it's awesome." ).Replace("_","    ").Split('\') } | % {
-
-                If ( $_.Path -eq $Null )
-                {
-                    Throw ( "{0} is not installed" -f $_.Names )
-                }
-
-                Import-Module $_.Path -Verbose
-
-                Write-Theme $_.Description
-            }
-
-            $This.Names        = ( Get-MDTPersistentDrive ).Name
-            $This.Roots        = ( Get-MDTPersistentDrive ).Path
-
-            If ( $Name -in $This.Names -or $Root -in $This.Roots )
-            {
-                Throw "MDT/FE Share exists"
-            }
-
-            If ( $This.Names -ne $Null )
-            {
-                $This.Name     = $This.Names | % { @($_,$_[-1])[[Int32]($_.Count -gt 1)].Replace("DS","") } | % { "FE{0:d3}" -f ( [Int32]$_ + 1 ) }
-            }
-
-            $This.PSProvider   = "MDTProvider" 
-            $This.Root         = $Root
-            $This.Description  = If ( $Description -ne $Null ) { $Description }
-            $This.NetworkPath  = $NetworkPath
-
-            @{  
-                Path           = $Root
-                ItemType       = "Directory"      
-            
-            }                  | % { New-Item @_ -Verbose }
-
-            @{  
-                Name           = $Name
-                Path           = $Root 
-                FullAccess     = "Administrators" 
-            
-            }                  | % { New-SMBShare @_ -Verbose }
-
-            @{  
-                Name           = $This.Name 
-                PSProvider     = $This.PSProvider
-                Root           = $This.Root
-                Description    = $This.Description
-                NetworkPath    = $This.NetworkPath
-                Verbose        = $True  
-
-            } | % { New-PSDrive @_ | add-MDTPersistentDrive -Verbose }
+            Throw "Path exists"
         }
-    }
 
-    Class FECompany # // Object for Company information needed to fulfill post install/branding
-    {
-        [String] $Name
-        [String] $Branch
-        [String] $Background
-        [String] $Logo
-        [String] $Phone
-        [String] $Website
-        [String] $Hours
-
-        FECompany() {}
-
-        Load([String]$Name,[String]$Branch,[String]$Background,[String]$Logo,[String]$Phone,[String]$Website,[String]$Hours)
-        { 
-            $This.Name       = $Name
-            $This.Branch     = $Branch
-            $This.Background = $Background
-            $This.Logo       = $Logo
-            $This.Phone      = $Phone
-            $This.Website    = $Website
-            $This.Hours      = $Hours
+        Else
+        {
+            $This.Root = $Root
         }
+
+        If ( Get-SMBShare | ? { $_.Name -eq $Name -or $_.Path -eq $Root } )
+        {
+            Throw "Share exists"
+        }
+
+        If ( !$This.Hash.Path )
+        {
+            Throw ( "{0} is not installed" -f $_.Names )
+        }
+
+        Import-Module $This.Hash.Path -Verbose
+
+        $This.Names        = ( Get-MDTPersistentDrive ).Name
+        $This.Roots        = ( Get-MDTPersistentDrive ).Path
+
+        If ( $Name -in $This.Names -or $Root -in $This.Roots )
+        {
+            Throw "MDT/FE Share exists"
+        }
+
+        If ( !! $This.Names )
+        {
+            $This.Name     = $This.Names        | % { @($_,$_[-1])[[Int32]($_.Count -gt 1)].Replace("DS","") } | % { "FE{0:d3}" -f ( [Int32]$_ + 1 ) }
+        }
+
+        $This.PSProvider   = "MDTProvider" 
+        $This.Root         = $Root
+        $This.Description  = $Description       | % { If ( !$_ ) { $_ } Else { $_ } }
+        $This.NetworkPath  = $NetworkPath
+
+        @{  Path           = $Root
+            ItemType       = "Directory"      } | % { New-Item @_ -Verbose }
+
+        @{  Name           = $Name
+            Path           = $Root 
+            FullAccess     = "Administrators" } | % { New-SMBShare @_ -Verbose }
+
+        @{  Name           = $This.Name 
+            PSProvider     = $This.PSProvider
+            Root           = $This.Root
+            Description    = $This.Description
+            NetworkPath    = $This.NetworkPath
+            Verbose        = $True            } | % { New-PSDrive @_ | add-MDTPersistentDrive -Verbose }
     }
+}
+
+Class FECompany # // Object for Company information needed to fulfill post install/branding
+{
+    [String] $Name
+    [String] $Branch
+    [String] $Background
+    [String] $Logo
+    [String] $Phone
+    [String] $Website
+    [String] $Hours
+
+    FECompany() {}
+
+    Load([String]$Name,[String]$Branch,[String]$Background,[String]$Logo,[String]$Phone,[String]$Website,[String]$Hours)
+    { 
+        $This.Name       = $Name
+        $This.Branch     = $Branch
+        $This.Background = $Background
+        $This.Logo       = $Logo
+        $This.Phone      = $Phone
+        $This.Website    = $Website
+        $This.Hours      = $Hours
+    }
+}

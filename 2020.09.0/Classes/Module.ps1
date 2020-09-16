@@ -1,32 +1,42 @@
-Class FERoot # // Folder for installation and database, accesses Registry for forward info
-{
-    [String] $Name
-    [String] $Date
-    [String] $Path
-
-    FERoot([String]$Path)
+    Class FERoot # // Details for root tools directory
     {
-        $This.Date = Get-Date -UFormat "%Y_%m%d-%H%M%S"
-        $This.Path = $Path
+        [String] $Name
+        [String] $Version
+        [String] $Provider
+        [String] $Date
+        [String] $Path
+
+        FERoot([String]$Name,[String]$Version,[String]$Provider,[String]$Path)
+        {
+            $This.Name               = $Name
+            $This.Version            = $Version
+            $This.Provider           = $Provider
+            $This.Date               = Get-Date -UFormat "%Y_%m%d-%H%M%S"
+            $This.Path               = $Path
+        }
     }
-}
 
-Class FEModule # // Module Provisioning (Installs Module/Validates Existence)
-{
-    [String] $Name               = "FightingEntropy"
-    [String] $Version            = "2020.09.0"
-    [String] $Provider           = "Secure Digits Plus LLC"
-    [String] $Registry           = "HKLM:\SOFTWARE\Policies\{0}\{1}\{2}"
-    [String] $Path               = "$Env:ProgramData\{0}\{1}\{2}"
-    [Object] $Content
-
-    Hidden [String[]] $Folders   = "Archive","Classes","Control","Graphics","Network"
-    Hidden [String[]] $Files     = "FightingEntropy.ps1","FightingEntropy.psm1"
-
-    [String] GetRoot([String]$Root)
+    Class FEModule # // Module Path Definitions
     {
-        Return ( $Root -f $This.Provider, $This.Name, $This.Version )
-    }
+        [String]               $Name = "FightingEntropy"
+        [String]            $Version = "2020.09.0"
+        [String]           $Provider = "Secure Digits Plus LLC"
+        [String]                $URL = "https://raw.github.com/mcc85sx/FightingEntropy/blob/master/2020.09.0"
+
+        [String]           $Registry = "HKLM:\SOFTWARE\Policies"
+        [String[]]       $Properties = "Name Version Provider Date Path" -Split " "
+        [Object]               $Root
+
+        [String]               $Path = $Env:ProgramData
+        [Object] $Tree
+
+        Hidden [String[]] $Folders   = "Archives Classes Control Functions Graphics Network Services" -Split " "
+        Hidden [String[]] $Files     = "FightingEntropy.ps1 FightingEntropy.psm1" -Split " "
+
+        [String] GetRoot([String]$Root)
+        {
+            Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+        }
 
     GetModule()
     {

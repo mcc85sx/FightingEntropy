@@ -1,19 +1,42 @@
-
-
-Class XamlNames
+Class XamlWindow
 {
-    [String]   $Xaml
-    [String[]] $Names
+    Hidden [String]  $Xaml
+    [String[]]      $Names 
+    [String[]]   $Assembly = "PresentationFramework PresentationCore WindowsBase".Split(" ")
+    [XML.XMLReader]  $Node
+    [Object]       $Output
+    [Windows.Window]  $GUI
 
-    XamlNames([String]$Xaml)
+    XamlObject([String]$XAML)
     {
-        If ( !$Xaml )
+        If ( !$Xaml ) 
         {
-            Throw "Xaml invalid/null"
+            Throw "Invalid XAML Input"
         }
 
-        $This.Xaml  = $Xaml
-        $This.Names = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" }
+        $This.Xaml         = $Xaml
+        $This.Names        = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
+        $This.Assembly     | % { Add-Type -AssemblyName $_ }
+        $This.Node         = [XML.XMLReader]::Create([IO.StringReader]$Xaml)
+        $This.Output       = [Windows.Markup.XAMLReader]::Load($This.Node)
+    
+        ForEach ( $I in 0..( $This.Names.Count - 1 ) )
+        {
+            $This.Output   | Add-Member -MemberType NoteProperty -Name $This.Names[$I] -Value $This.Output.FindName($This.Names[$I]) -Force 
+        }
+
+        $This.GUI          = [Windows.Window]::new()
+    }
+
+    Invoke()
+    {
+        $This.GUI.Dispatcher.InvokeAsync({ 
+        
+            $Output = $This.Output.ShowDialog()
+            Set-Variable -Name Output -Value $This.Output -Scope Global 
+            #[System.Windows.Data.BindingOperations]::SetBinding($Target,$Property,$Binding)
+
+        }).Wait()
     }
 }
 

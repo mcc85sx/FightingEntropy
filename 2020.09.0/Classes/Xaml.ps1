@@ -1,12 +1,10 @@
-Add-Type -AssemblyName PresentationCore
-Add-Type -AssemblyName PresentationFramework
-Add-Type -AssemblyName WindowsBase
+
+"PresentationFramework PresentationCore WindowsBase" -Split " " | % { Add-Type -AssemblyName $_ }
 
 Class XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight (His method wasn't able to PassThru variables)
 {
     Hidden [String]        $Xaml
     [String[]]            $Names 
-    [String[]]         $Assembly = ("PresentationFramework PresentationCore WindowsBase" -Split " ")
     [XML.XMLReader]        $Node
     [Object]               $Host
     [Windows.Window]         $IO
@@ -20,7 +18,6 @@ Class XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkins
 
         $This.Xaml               = $Xaml
         $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
-        $This.Assembly           | % { Add-Type -AssemblyName $_ -Verbose }
         $This.Node               = [XML.XMLReader]::Create([IO.StringReader]$This.Xaml)
         $This.Host               = [Windows.Markup.XAMLReader]::Load($This.Node)
     

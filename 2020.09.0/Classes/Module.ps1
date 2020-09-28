@@ -1,4 +1,4 @@
-    Class FERoot # // Details for root tools directory
+    Class FERoot                     # // Details for root tools directory
     {
         Hidden [String[]]     $Names = ("Name Version Provider Date Path Status" -Split " ") 
         [String]               $Name
@@ -20,17 +20,15 @@
         }
     }
 
-    Class FEModule # // Module Path Definitions
+    Class FEModule                   # // Module Path Definitions
     {
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.09.0"
         [String]           $Provider = "Secure Digits Plus LLC"
+        [String]               $Path = $Env:ProgramData
         [String]                $URL = "https://github.com/mcc85sx/FightingEntropy/blob/master/2020.09.0"
-
         [String]           $Registry = "HKLM:\SOFTWARE\Policies"
         [Object]         $Properties
-
-        [String]               $Path = $Env:ProgramData
         [Object]               $Base
 
         Hidden [String[]]   $Folders = "Archives Classes Control Functions Graphics Network Services" -Split " "
@@ -58,7 +56,7 @@
                     $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
                 }
 
-                [FERoot]::New($This.Registry,$This.Name,$This.Version,$This.Provider,$This.Path)
+                [FERoot]::New( $This.Registry, $This.Name, $This.Version, $This.Provider, $This.Path )
             }
 
             $This.Properties         = Get-ItemProperty -Path $This.Registry | Select-Object Name, Version, Provider, Date, Path, Status
@@ -95,14 +93,17 @@
                 $This.Archives  = $_.Base | ? Name -eq Archives   | Get-ChildItem
                 $This.Classes   = $_.Base | ? Name -eq Classes    | Get-ChildItem
                 $This.Functions = $_.Base | ? Name -eq Functions  | Get-ChildItem
-                $This.Network   = $This.Archives | ? Name -eq Network | Get-ChildItem
-                $This.Services  = $_.Base | ? Name -eq Services   | Get-ChildItem
+                $This.Path      = $_.Path
             }
 
             # TODO: Set Background, Icons, System Badge/Info, Group Policy, etc.
             # "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons"
             # "ClassicStartMenu" , "NewStartPanel"
+        }
 
+        LoadNetworking()
+        {
+            $This.Network       = [FENetwork]::New($This.Path)
         }
     }
 
@@ -169,7 +170,7 @@
 
             $This.PSProvider   = "MDTProvider" 
             $This.Root         = $Root
-            $This.Description  = $Description       | % { If ( !$_ ) { $_ } Else { $_ } }
+            $This.Description  = $Description       | % { If ( !$_ ) { "-" } Else { $_ } }
             $This.NetworkPath  = $NetworkPath
 
             @{  Path           = $Root
@@ -184,7 +185,7 @@
                 Root           = $This.Root
                 Description    = $This.Description
                 NetworkPath    = $This.NetworkPath
-                Verbose        = $True            } | % { New-PSDrive @_ | add-MDTPersistentDrive -Verbose }
+                Verbose        = $True            } | % { New-PSDrive @_ | Add-MDTPersistentDrive -Verbose }
         }
     }
 

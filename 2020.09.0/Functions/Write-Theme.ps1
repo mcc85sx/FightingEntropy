@@ -1,4 +1,4 @@
-Class FEObject
+﻿Class FEObject
 {
     [String]                  $Name
     [Int32]                   $Mode
@@ -30,6 +30,14 @@ Class FEObject
 
     Draw([Int32[]]$Palette)
     {   
+        If ( [Console]::WindowWidth -lt 120 )
+        { 
+            While ( [Console]::WindowWidth -lt 120 ) 
+            { 
+                [Console]::WindowWidth ++ 
+            } 
+        }
+
         ForEach ( $I in 0..( $This.Output.Count - 1 ) )
         {
             ForEach ( $X in 0..( $This.Output[$I].Count - 1 ) )
@@ -45,19 +53,16 @@ Class FEObject
     {
         Switch($O.GetType().Name)
         {
-            OrderedDictionary { $This.Body += $This.Line(" ")
-                $O.GetEnumerator()          | % { 
-                                $This.Body += $This.Pair($_.Name,$_.Value) } }
-            Hashtable         { $This.Body += $This.Line(" ")
-                $O.GetEnumerator()          | Sort-Object Name | % { 
-                    $This.Body             += $This.Pair($_.Name,$_.Value) } }
-            Int32             { $This.Body += $This.Line($O) }
-            String            { $This.Body += $This.Line($O) }
-            Default           { $This.Body += $This.Line(" ")
+            Hashtable     { $This.Body       += $This.Line(" ")
+                              $O.GetEnumerator() | Sort-Object Name | % { 
+                                $This.Body   += $This.Pair($_.Name,$_.Value) } }
+            Int32         { $This.Body       += $This.Line($O) }
+            String        { $This.Body       += $This.Line($O) }
+            Default       { $This.Body       += $This.Line(" ")
                 
                 ForEach ( $X in $This.Names($O) )
                 { 
-                    $This.Body += $This.Pair($X,$O.$($X))
+                            $This.Body += $This.Pair($X,$O.$($X))
                 }
             }
         }
@@ -149,11 +154,9 @@ Class FEObject
                     $This.Output.Add($OutputIndex,$Item.Mask)
                     $OutputIndex ++
                 }
-
                 $This.Theme.Header  
                 {
                     $Item.Load($This.Header)
-                    $Item.SetHead()
                     $This.Output.Add($OutputIndex,$Item.Mask)
                     $OutputIndex ++
                 }
@@ -178,8 +181,7 @@ Class FEObject
                 $This.Theme.Footer  
                 {  
                     $Item.Load(" Press Enter to Continue ")
-                    $Item.SetFoot()
-                    $This.Output.Add($OutputIndex,$Item.Mask)
+                    $This.Output.Add($OutputIndex,$Item.Mask) 
                     $OutputIndex ++
                 }
             }
@@ -300,77 +302,43 @@ Class FETrack
     
     Load([String]$Load)
     {
-        $Width                     = $This.Mask.Count - 6
-        $Load                      = " $Load"
-        $Offset                    = 4-($Load.Length % 4)
-        $Load                      = "{0}{1}" -f $Load, (" " * $Offset)
-        $Line                      = 0..( $Load.Length - 1 ) | ? { $_ % 4 -eq 0 } | % { $Load.Substring($_,4) }
-
+        $Offset        = 4-($Load.Length % 4)
+        $Load          = "{0}{1}" -f $Load, (" " * $Offset)
+        $Line          = 0..( $Load.Length - 1 ) | ? { $_ % 4 -eq 0 } | % { $Load.Substring($_,4) }
+                            
+        If ( $Line.Count -gt 1 )
+        {
+            ForEach ( $X in 0..( $Line.Count - 1 ) )
+            {
+                $This.Mask[$X+3].Object          = $Line[$X]
+                $This.Mask[$X+3].ForegroundColor = 2
+            }
+        }
+    
         If ( $Line.Count -eq 1 )
-        {
-            $This.Mask[3].Object                 = $Line
-            $This.Mask[3].ForegroundColor        = 2
+        {      
+            $This.Mask[3].Object             = $Line
+            $This.Mask[3].ForegroundColor    = 2
         }
-        
-        If ( $Line.Count -eq $Width )
-        {
-            ForEach ( $X in 0..( $Line.Count - 1 ) )
-            {
-                $This.Mask[3+$X].Object          = $Line[$X]
-                $This.Mask[3+$X].ForegroundColor = 2
-            }
-        }
-
-        Else
-        {
-            ForEach ( $X in 0..( $Line.Count - 1 ) )
-            {
-                $This.Mask[3+$X].Object               = $Line[$X]
-                $This.Mask[3+$X].ForegroundColor      = 2
-            }
-
-            $This.Mask[3+$Line.Count].Object          = "]___"
-            $This.Mask[3+$Line.Count].Foregroundcolor = 1
-
-            ForEach ( $X in ( $Line.Count + 1 )..( $Width - 1 ) )
-            {
-                $This.Mask[3+$X].Object               = "____"
-                $This.Mask[3+$X].ForegroundColor      = 1
-            }
-        }
-    }
-
-    SetHead()
-    {
-        $This.Mask[2].Object                 = "\__["
-        $This.Mask[26].Object                = "___/"
-    }
-
-    SetFoot()
-    {
-        $This.Mask[2].Object                 = "\__["
-        $This.Mask[26].Object                = "___/"
     }
     
     SetBody([Int32]$Count)
     {
-        $Count % 2                | % { 
-
+        $Count % 2 | % { 
             $This.Mask[0].Object  = @("   \","   /")[$_]
             $This.Mask[1].Object  = @("\   ","/   ")[$_]
             $This.Mask[-2].Object = @("   \","   /")[$_]
             $This.Mask[-1].Object = @("\   ","/   ")[$_]
         }
-
-        -4..-3 | % { $This.Mask[$_].Object = "    " }
     }
 }
 
     Function Write-Theme # Cross Platform
     {
         [CmdLetBinding()]Param(
-            [Parameter(Mandatory,Position=0,ValueFromPipeline,ValueFromPipelineByPropertyName)][ValidateNotNullOrEmpty()][Object]$InputObject,
-            [Parameter(Position=1)][Int32[]]$Palette=@(10,12,15,0))
+            [Parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)][ValidateNotNullOrEmpty()][Object]$InputObject,
+            [Parameter()][Int32[]]$Palette=@(10,12,15,0))
 
-        [FEObject]::New($InputObject).Draw($Palette)
+        $Theme = [FEObject]::New($InputObject)
+        $Theme.Draw($Palette)
     }

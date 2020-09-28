@@ -1,3 +1,4 @@
+
 Class Services
 {
     Hidden [Object[]] $WMIObject
@@ -5,10 +6,10 @@ Class Services
 
     Services()
     {
-        $This.WMIObject    = @(WMIObject -Class Win32_Service|Select DelayedAutoStart,
-                              StartMode,State,Status,DisplayName,Pathname,Description)
+        $This.WMIObject    = Get-WMIObject -Class Win32_Service | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, Pathname, Description
+        $This.Service      = @( )
 
-        For ( $I = 0; $I -le $This.WMIObject.Count - 1 ;$I ++ )
+        For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )
         {
             $This.Service += [Service]::New($I,$This.WMIObject[$I])
         }
@@ -18,7 +19,6 @@ Class Services
 Class Service
 {
     [Int32]               $Index
-    [Object]            $Service 
     [String]               $Name 
     [Bool]                $Scope
     [Int32[]]              $Slot 
@@ -33,7 +33,6 @@ Class Service
     Service([Int32]$Index,[Object]$WMI)
     {
         $This.Index              = $Index
-        $This.Service            = $WMI
         $This.Name               = $WMI.Name
         $This.DelayedAutoStart   = $WMI.DelayedAutoStart
         $This.StartMode          = $WMI.StartMode

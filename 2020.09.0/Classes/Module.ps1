@@ -1,4 +1,4 @@
-Class FERoot # // Details for root tools directory
+    Class FERoot # // Details for root tools directory
     {
         Hidden [String[]]     $Names = ("Name Version Provider Date Path Status" -Split " ") 
         [String]               $Name

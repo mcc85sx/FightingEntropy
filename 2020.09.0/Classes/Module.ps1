@@ -65,48 +65,6 @@
         }
     }
 
-    Class FEMaster
-    {
-        [String]               $Name
-        [String]            $Version
-        [String]           $Provider
-        [Object]             $Module
-
-        [Object[]]         $Archives
-        [Object[]]          $Classes
-        [Object[]]        $Functions
-        [Object[]]         $Graphics
-        [Object[]]          $Network
-        [Object[]]         $Services
-
-        [Object]               $Path
-
-        FEMaster()
-        {
-            $This.Module        = [FEModule]::New()
-            
-            $This.Module        | % { 
-
-                $This.Name      = $_.Name
-                $This.Version   = $_.Version
-                $This.Provider  = $_.Provider
-                $This.Archives  = $_.Base | ? Name -eq Archives   | Get-ChildItem
-                $This.Classes   = $_.Base | ? Name -eq Classes    | Get-ChildItem
-                $This.Functions = $_.Base | ? Name -eq Functions  | Get-ChildItem
-                $This.Path      = $_.Path
-            }
-
-            # TODO: Set Background, Icons, System Badge/Info, Group Policy, etc.
-            # "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons"
-            # "ClassicStartMenu" , "NewStartPanel"
-        }
-
-        LoadNetworking()
-        {
-            $This.Network       = [FENetwork]::New($This.Path)
-        }
-    }
-
     Class FEShare # // Creates an MDT/FE Share for MDT/FE Deployments
     {
         [String]           $Name = "FE001"
@@ -210,5 +168,47 @@
             $This.Phone      = $Phone
             $This.Website    = $Website
             $This.Hours      = $Hours
+        }
+    }
+    
+    Class FEMaster
+    {
+        [String]               $Name
+        [String]            $Version
+        [String]           $Provider
+        [Object]             $Module
+
+        [Object[]]         $Archives
+        [Object[]]          $Classes
+        [Object[]]        $Functions
+        [Object[]]         $Graphics
+        [Object[]]          $Network
+        [Object[]]         $Services
+
+        [Object]               $Path
+
+        FEMaster()
+        {
+            $This.Module        = [FEModule]::New()
+            
+            $This.Module        | % { 
+
+                $This.Name      = $_.Name
+                $This.Version   = $_.Version
+                $This.Provider  = $_.Provider
+                $This.Archives  = $_.Base | ? Name -eq Archives   | Get-ChildItem
+                $This.Classes   = $_.Base | ? Name -eq Classes    | Get-ChildItem
+                $This.Functions = $_.Base | ? Name -eq Functions  | Get-ChildItem
+                $This.Path      = $_.Path
+            }
+
+            # TODO: Set Background, Icons, System Badge/Info, Group Policy, etc.
+            # "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons"
+            # "ClassicStartMenu" , "NewStartPanel"
+        }
+
+        LoadNetworking()
+        {
+            $This.Network       = [FENetwork]::New($This.Path)
         }
     }

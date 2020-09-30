@@ -1,8 +1,48 @@
+
+    Class FEVendor
+    {
+        [String]       $Names
+        [String]        $Name
+        [String]         $Hex
+        [Int32]        $Index
+        [Int32]         $Rank
+
+        FEVendor([Object]$Vendor,[String]$Mac)
+        {
+            If ( $Mac -notmatch "([A-Fa-f0-9]{2}(:|-)*){5}[A-Fa-f0-9]{2}" )
+            {
+                Throw "Invalid MacAddress"
+            }
+
+            $This.Hex     =  ( $Mac -Replace "(:|-)" , "" ).SubString(0,6)
+            $This.Index   = Invoke-Expression "0x$($This.Hex)"
+
+            $This.Rank    = 0
+            $I            = 0
+
+            While ( $This.Name -eq $Null )
+            {
+                $I ++
+                $This.Rank = $This.Rank + $Vendor.List[$I]
+
+                If ( $This.Rank -gt $This.Index )
+                {
+                    $This.Name = "Exceeded"
+                }
+
+                If ( $This.Rank -eq $This.Index )
+                {
+                    $This.Name = $Vendor.Names[$Vendor.Index[$I]]
+                }
+            }
+        }
+    }
+
     Class FEVendorList
     {
         [Int32[]]       $Index
         [Int32[]]        $List
-        [String[]]       $Name
+        [String[]]      $Names
 
         FEVendorList([String]$Path)
         {
@@ -19,7 +59,7 @@
                 {
                     Index.txt { $This.Index = Get-Content $Item.FullName }
                     List.txt  { $This.List  = Get-Content $Item.FullName }
-                    Name.txt  { $This.Name  = Get-Content $Item.FullName }
+                    Name.txt  { $This.Names = Get-Content $Item.FullName }
                 }
 
                 Remove-Item -Path $Item.FullName
@@ -33,7 +73,6 @@
         [String]           $Archive
         [String]          $FilePath
         [Object]        $VendorList
-        [Object[]]         $Adapter
         [Object[]]       $Interface
 
         FENetwork([String]$Path)
@@ -43,11 +82,20 @@
                 Throw "Invalid Path"
             }
 
-            $This.Path       = $Path
-            $This.Archive    = Get-ChildItem -Path $Path -Filter Vendor.zip -Recurse | % FullName
-            $This.VendorList = [FEVendorList]::New($This.Path)
-            $This.Interface  = @( )
-            Get-NetIPConfiguration -Detailed | % { $This.Interface += $_ }
+            $This.Path           = $Path
+            $This.Archive        = Get-ChildItem -Path $Path -Filter Vendor.zip -Recurse | % FullName
+            $This.FilePath       = "$Path\Network"
+            $This.VendorList     = [FEVendorList]::New($This.Path)
+
+            $This.Interface      = @( )
+            ForEach ( $Interface in Get-NetIPConfiguration -Detailed )
+            {
+                $Item            = [FENetInterface]::New($Interface)
+                $Item.Vendor     = [FEVendor]::New($This.VendorList,$Item.MacAddress)
+                $This.Interface += $Item
+            }
+
+            $This.Interface      = $This.Interface | Sort-Object Index
         }
     }
 
@@ -60,7 +108,7 @@
         [String] $Network
         [Int32]  $Max
 
-        FEIPV4Network( )
+        FEIPV4Network()
         {
 
         }
@@ -85,23 +133,20 @@
         [Int32]  $Index
         [String] $Description
         [String] $MacAddress
-        [String] $Vendor
+        [Object] $Vendor
         [Object] $IPV4
         [Object] $IPV6
         [Object] $DNS
 
         FENetInterface([Object]$Interface)
         {
-            $Interface            | % { 
-
-                $This.Name        = $_.ComputerName
-                $This.Alias       = $_.InterfaceAlias
-                $This.Index       = $_.InterfaceIndex
-                $This.Description = $_.InterfaceDescription
-                $This.MacAddress  = $_.NetAdapter.LinkLayerAddress
-                $This.IPV4        = [FEIPV4Network]::New()
-                $This.IPV6        = [FEIPV6Network]::New()
-                $This.DNS         = $_.DNSServer
-            }
+            $This.Name        = $Interface.ComputerName
+            $This.Alias       = $Interface.InterfaceAlias
+            $This.Index       = $Interface.InterfaceIndex
+            $This.Description = $Interface.InterfaceDescription
+            $This.MacAddress  = $Interface.NetAdapter.LinkLayerAddress
+            $This.IPV4        = [FEIPV4Network]::New()
+            $This.IPV6        = [FEIPV6Network]::New()
+            $This.DNS         = $Interface.DNSServer
         }
     }

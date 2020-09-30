@@ -1,4 +1,4 @@
-﻿Function Remove-FEShare
+Function Remove-FEShare
 {
     [CmdLetBinding()]Param(
         
@@ -6,7 +6,7 @@
         [Parameter(Mandatory,Position=1)][String]$Path
     )
 
-    Import-Module ( ( GCI ( GP "HKLM:\Software\Microsoft\Deployment 4" ).Install_Dir "*Toolkit.psd1" -Recurse ).FullName )
+    Import-Module ( ( Get-ChildItem -Path ( Get-ItemProperty -Path "HKLM:\Software\Microsoft\Deployment 4" ).Install_Dir "*Toolkit.psd1" -Recurse ).FullName )
 
     Get-SMBShare           | ? { $_.Name -eq $Name -and $_.Path -eq $Path } | Remove-SMBShare -Force -EA 0
     Get-MDTPersistentDrive | ? { $_.Path -eq $Path } | % { Remove-MDTPersistentDrive -Name $_.Name -VB -EA 0 }

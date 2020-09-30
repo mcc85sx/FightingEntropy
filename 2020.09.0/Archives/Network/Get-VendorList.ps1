@@ -28,7 +28,7 @@
 $Names                  = @( )
 $Ranks                  = @( )
 $VendorList             = @{ }
-$Swap                   = Get-Content -Path C:\Users\mcook85\Desktop\nmap-mac-prefixes.txt
+$Swap                   = ( Invoke-WebRequest "https://linuxnet.ca/ieee/oui/nmap-mac-prefixes" ).Content
 $Content                = $Swap -Split "`n"
 
 ForEach ( $I in 0..( $Content.Count - 1 ) )

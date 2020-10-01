@@ -1,4 +1,4 @@
-
+# External reference for ipinfo.io/$IP doesn't seem to be working correctly in PS7... 5.1/ISE works fine
     Class Certificate
     {
         [String]       $ExternalIP

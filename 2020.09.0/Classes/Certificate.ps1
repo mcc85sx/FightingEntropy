@@ -38,4 +38,4 @@
         }
     }
     
-    [Certificate]::New("Secure Digits Plus LLC","securedigitsplus.com")
+    # Example: [Certificate]::New("Secure Digits Plus LLC","securedigitsplus.com")

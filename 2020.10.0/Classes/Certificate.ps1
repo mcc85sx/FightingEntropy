@@ -1,7 +1,7 @@
 Class Certificate
 {
     [String]       $ExternalIP
-    Hidden [Object]      $Ping
+    [Object]             $Ping
     [String]     $Organization
     [String]       $CommonName
     [String]         $Location
@@ -12,21 +12,13 @@ Class Certificate
     [String]         $SiteLink
 
     Certificate(
+    [String]       $ExternalIP ,
+    [Object]             $Ping ,
     [String]     $Organization ,
     [String]       $CommonName )
     {
-        If ( ! ( Test-Connection 1.1.1.1 -Count 1 ) ) 
-        { 
-            Throw "Unable to verify internet connection" 
-        }
-        
-        [Net.ServicePointManager]::SecurityProtocol = 3072
-        
-        # This (2) lines from Chrissie Lamaire's script, 
-        # https://gallery.technet.microsoft.com/scriptcenter/Get-ExternalPublic-IP-c1b601bb
-
-        $This.ExternalIP       = Invoke-WebRequest http://ifconfig.me/ip | % Content 
-        $This.Ping             = Invoke-RestMethod http://ipinfo.io/$( $This.ExternalIP ) -Method Get
+        $This.ExternalIP       = $ExternalIP
+        $This.Ping             = $Ping
         $This.Organization     = $Organization
         $This.CommonName       = $CommonName
         $This.Location         = $This.Ping.City
@@ -34,5 +26,18 @@ Class Certificate
         $This.Country          = $This.Ping.Country
         $This.Postal           = $This.Ping.Postal
         $This.TimeZone         = $This.Ping.TimeZone
+
+        $This.SiteLink         = $This.GetSiteLink($Ping)
+    }
+
+    [String] GetSiteLink([Object]$Ping)
+    {
+        $Return = @( )
+        $Return += ( $Ping.City -Split " " | % { $_[0] } ) -join ''
+        $Return += ( $Ping.Region -Split " " | % { $_[0] } ) -join ''
+        $Return += $Ping.Country
+        $Return += $Ping.Postal
+
+        Return $Return -join '-'
     }
 }

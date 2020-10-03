@@ -48,3 +48,70 @@ Class Info
         $This.Chassis            = $This.Hash.Chassis[$This.CS.PCSystemType]
     }
 }
+
+Class File
+{
+    [String]                $Mode
+    [DateTime]              $Date
+    [Int32]                $Depth
+    [String]                $Name
+    [String]            $FullName
+    [Object]            $Provider
+
+    File([String]$Path)
+    {
+        [System.IO.FileInfo]::New($Path) | % {
+
+            $This.Mode            = $_.Mode
+            $This.Date            = $_.LastWriteTime
+            $This.Depth           = $_.FullName.Split("\").Count - 2
+            $This.Name            = $_.Name
+            $This.FullName        = $_.FullName
+            $This.Provider        = $Provider
+        }
+    }
+}
+
+Class Drive
+{
+    [Object]                $Name
+    Hidden [String] $FullProvider
+    [String]            $Provider
+    [String]                $Root
+    [String]         $DisplayRoot
+    [String]         $Description
+    Hidden [Int32]          $Mode
+    
+    Drive([Object]$Drive)
+    {
+        $This.Name                = $Drive.Name
+        $This.FullProvider        = $Drive.Provider
+        $This.Provider            = Split-Path -Leaf $Drive.Provider
+        $This.Root                = $Drive.Root
+        $This.DisplayRoot         = $Drive.DisplayRoot
+        $This.Description         = $Drive.Description | % { ($_,"-")[!$_] }
+        $This.Mode                = Switch ( Split-Path -Leaf $Drive.Provider )
+        { 
+            FileSystem   {0} Certificate  {1} Environment  {2} Registry     {3} Temp         {4} 
+            Alias        {5} Function     {6} Variable     {7} WSMan        {8} Default     {-1} 
+        }
+    }
+}
+    
+Class Drives
+{
+    [Drive[]]           $PSDrives
+    [Drive[]]         $FileSystem
+    [Drive[]]            $Network
+    [Drive[]]          $CertStore
+    [Object[]]             $Samba
+        
+    Drives()
+    {
+        $This.PSDrives            = Get-PSDrive      | % { [Drive]::New($_) } | Sort-Object Mode
+        $This.FileSystem          = $This.PSDrives   | ? Mode -eq 0 | Sort-Object Root 
+        $This.Network             = $This.FileSystem | ? DisplayRoot
+        $This.CertStore           = $This.PSDrives   | ? Mode -eq 1
+        $This.Samba               = Get-SMBShare     | Sort-Object Path
+    }
+}

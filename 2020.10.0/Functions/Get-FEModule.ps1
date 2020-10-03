@@ -1,4 +1,4 @@
-﻿ Function Get-FEModule
+Function Get-FEModule
 {
     [CmdLetBinding( DefaultParameterSetName = 0,
                     HelpUri                 = 'http://www.github.com/secure-digits-plus-llc')]Param(                

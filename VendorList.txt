@@ -455,7 +455,6 @@
 0001C6	Quarry
 0001C7	Cisco
 0001C8	Conrad
-0001C8	Thomas Conrad
 0001C9	Cisco
 0001CA	Geocast Network
 0001CB	EVR

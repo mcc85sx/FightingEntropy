@@ -1,11 +1,4 @@
-
-    # File Links
-    
-    $BrandParams = [FEModule]::New().Base | ? Name -eq Graphics | % { Get-ChildItem $_.FullName } | ? Name -Match OEM
-    $Background  = $BrandParams | ? Name -match OEMbg   | % FullName
-    $Logo        = $BrandParams | ? Name -match OEMlogo | % FullName
-
-    Class _Brand
+Class _Brand
     {
         [String] $Path
         [String] $Name
@@ -89,6 +82,7 @@
             ForEach ( $I in 0..8 ) 
             {
                 $This.Output  += [_Brand]::New($This.Items[$I],$This.Names[$I],$This.Values[$I])
+                $This.Output[$I] | % { Set-ItemProperty -Path $_.Path -Name $_.Name -Value $_.Value -Verbose }
             }
         }
     }

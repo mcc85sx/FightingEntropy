@@ -242,12 +242,18 @@
     $Root    = [RootVar]::New()
     $Root.Default()
 
-    $LD      = $Root.Target.Path
-    $LR      = $Root.Target.Resources
-    $BG      = "{0}\{1}" -f $Root.Target.Resources, $Root.Background
-    $LG      = "{0}\{1}" -f $Root.Target.Resources, $Root.Logo
+    $LD          = $Root.Target.Path
+    $LR          = $Root.Target.Resources
+    $BG          = "{0}\{1}" -f $Root.Target.Resources, $Root.Background
+    $LG          = "{0}\{1}" -f $Root.Target.Resources, $Root.Logo
 
     $Root.Server
 
-    $DCCred  = [Key]::New($Root.UNC,$Root.DCUser,$Root.DCPass)
-    $LMCred  = [Key]::New($Root.UNC,$Root.LMUser,$Root.LMPass)
+    $DCCred      = [Key]::New($Root.UNC,$Root.DCUser,$Root.DCPass)
+    $LMCred      = [Key]::New($Root.UNC,$Root.LMUser,$Root.LMPass)
+
+    $BrandParams = [FEModule]::New().Base | ? Name -eq Graphics | % { Get-ChildItem $_.FullName } | ? Name -Match OEM
+    $Background  = $BrandParams | ? Name -match OEMbg   | % FullName
+    $Logo        = $BrandParams | ? Name -match OEMlogo | % FullName
+
+    $Brand       = [Branding]::New($Background,$Logo)

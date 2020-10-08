@@ -1,5 +1,3 @@
-﻿# _Company
-
 Class _Share
 {
     [String]           $Name = "FE001"

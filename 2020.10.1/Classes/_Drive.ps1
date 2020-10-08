@@ -1,4 +1,4 @@
-﻿Class Drive
+Class _Drive
 {
     [Object]                $Name
     [String]        $FullProvider
@@ -8,7 +8,7 @@
     [String]         $Description
     [Int32]                 $Mode
     
-    Drive([Object]$Drive)
+    _Drive([Object]$Drive)
     {
         $This.Name                = $Drive.Name
         $This.FullProvider        = $Drive.Provider

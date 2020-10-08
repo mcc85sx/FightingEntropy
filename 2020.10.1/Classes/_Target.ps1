@@ -1,4 +1,4 @@
-﻿Class _Target
+Class _Target
 {
     [String] $Path
     [String] $ComputerName 

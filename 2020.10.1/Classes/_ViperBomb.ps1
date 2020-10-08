@@ -585,7 +585,7 @@ Class _ViperBomb
     [_Services]         $Current
     Hidden [Hashtable] $Template
     
-    ViperBomb()
+    _ViperBomb()
     {
         $This.Template             = @{ }
 

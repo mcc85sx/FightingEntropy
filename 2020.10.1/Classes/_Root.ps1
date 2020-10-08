@@ -1,4 +1,4 @@
-﻿Class _Root                     # // Details for root tools directory
+Class _Root
 {
     Hidden [String[]]     $Names = ("Name Version Provider Date Path Status" -Split " ") 
     [String]               $Name

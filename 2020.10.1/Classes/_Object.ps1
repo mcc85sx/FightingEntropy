@@ -1,6 +1,3 @@
-﻿# _Theme
-# _Track
-
 Class _Object
 {
     [String]                  $Name

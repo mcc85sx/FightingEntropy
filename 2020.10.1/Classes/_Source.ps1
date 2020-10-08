@@ -1,4 +1,4 @@
-﻿Class _Source
+Class _Source
 {
     [String] $NetworkPath
     [String] $Branding

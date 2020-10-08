@@ -1,5 +1,3 @@
-﻿# Drive
- 
 Class _Drives
 {
     [Object[]]           $PSDrives

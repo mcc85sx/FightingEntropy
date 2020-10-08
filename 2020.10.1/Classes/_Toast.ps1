@@ -1,5 +1,3 @@
-# _Cache
-
 Class _Toast
 {
     [Validateset(1,2,3,4)]

@@ -1,4 +1,4 @@
-﻿ Function Get-FEModule
+Function Get-FEModule
 {
     [CmdLetBinding( DefaultParameterSetName = 0,
                     HelpUri                 = 'http://www.github.com/secure-digits-plus-llc')]Param(                
@@ -10,6 +10,6 @@
 
     Switch ($PSCmdlet.ParameterSetName) 
     { 
-        0 { [_Module]::New() } 1 { [_Module]::New().Registry } 2 { [_Module]::New().Root } 3 { [_Module]::New().Tree } 
+        0 { [_Master]::New() } 1 { [_Master]::New().Registry } 2 { [_Master]::New().Root } 3 { [_Master]::New().Tree } 
     }
 }

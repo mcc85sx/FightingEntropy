@@ -3,7 +3,7 @@ Class _Services
     Hidden [Object[]] $WMIObject
     [_Service[]]        $Services
 
-    Services([Object]$Template)
+    _Services([Object]$Template)
     {
         $This.WMIObject    = Get-WMIObject -Class Win32_Service | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description
         $This.Services     = @( )

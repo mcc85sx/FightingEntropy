@@ -1,15 +1,8 @@
-# Info
-# QMark
-# Services
-# Service
-
 Class _ViperBomb
 {
-    # Module Details
     [String]               $Name = "FightingEntropy/ViperBomb"
     [String]            $Version = "2020.10.0"
     [String]            $Release = "Development"
-    # Resources
     [String]                $URL = "https://github.com/secure-digits-plus-llc/FightingEntropy"
     [String]            $MadBomb = "https://github.com/madbomb122/BlackViperScript"
     [String]         $BlackViper = "http://www.blackviper.com"
@@ -27,10 +20,8 @@ Class _ViperBomb
                                     "ontract, tort or otherwise,;arising from, out of or in connection with the software or the use or;other dealings" + 
                                     " in the software.;;In other words, these terms of service must be accepted in order to use,;and in no circumstan" + 
                                     "ce may the author(s) be subjected to any liability;or damage resultant to its use.").Split(";")
-    # About the project
     Hidden [String[]]     $About = ("This utility provides an interface to load and customize;service configuration profiles, such as:;;    Default" + 
                                     ": Black Viper (Sparks v1.0);    Custom: If in proper format;    Backup: Created via this utility").Split(";")
-    # Help on usage
     Hidden [String[]]      $Help = (("[Basic];;_-atos___Accepts ToS;_-auto___Automates Process | Aborts upon user input/errors;;[Profile];;_-defaul" + 
                                     "t__Standard;_-safe___Sparks/Safe;_-tweaked__Sparks/Tweaked;_-lcsc File.csv  Loads Custom Service Configuration, " + 
                                     "File.csv = Name of your backup/custom file;;[Template];;_-all___ Every windows services will change;_-min___ Jus" + 
@@ -48,29 +39,20 @@ Class _ViperBomb
                                     "rmation, Stops -auto;_-diagf__   Forced diagnostic information, Script does nothing else;;[Help];;_-help___Shows" +
                                     " list of switches, then exits script.. alt -h;_-copy___Shows Copyright/License Information, then exits script" + 
                                     ";").Replace("_","    ")).Split(";")
-    # GUI/Object Labels
     Hidden [String[]]      $Type = "10H:D+ 10H:D- 10P:D+ 10P:D- DT:S+ DT:S- DT:T+ DT:T- LT:S+ LT:S-".Split(" ")
     Hidden [String[]]     $Title = (("{0} Home | {1};{0} Pro | {1};{2} | Safe;{2} | Tweaked;Laptop | Safe" -f "Windows 10","Default","Desktop"
                                  ).Split(";") | % { "$_ Max" , "$_ Min" })
-    # System Info
     [_Info]                 $Info = [_Info]::New()
-    # Services        
-    Hidden [String[]]       $PID = (Get-Service *_* -EA 0 | ? ServiceType -eq 224 | Select-Object -First 1 ).Name.Split('_')[-1]
-    # Display Filters
     Hidden [Hashtable]  $Display = @{ 
-
                             Xbox = ("XblAuthManager XblGameSave XboxNetApiSvc XboxGipSvc xbgm" -Split " ")
                           NetTCP = ("Msmq Pipe Tcp" -Split " " | % { "Net$_`Activator" })
                             Skip = (@(("AppXSVC BrokerInfrastructure ClipSVC CoreMessagingRegistrar DcomLaunch EntAppSvc gpsvc LSM MpsSvc msiserver NgcCt" + 
                                        "nrSvc NgcSvc RpcEptMapper RpcSs Schedule SecurityHealthService sppsvc StateRepository SystemEventsBroker tiledata" + 
                                        "modelsvc WdNisSvc WinDefend") -Split " " ;
                                        ("BcastDVRUserService DevicePickerUserSvc DevicesFlowUserSvc PimIndexMaintenanceSvc PrintWorkflowUserSvc UnistoreS" + 
-                                       "vc UserDataSvc WpnUserService") -Split " " | % { "{0}_{1}" -f $_,[_QMark]::New().ID }) | Sort-Object)
-}
-
-    # BlackViper Default Config
+                                       "vc UserDataSvc WpnUserService") -Split " " | % { "{0}_{1}" -f $_,[_QMark]::New().ID }) | Sort-Object )
+    }
     Hidden [Hashtable]   $Config = @{
-    
                          Names   = (("AJRouter;ALG;AppHostSvc;AppIDSvc;Appinfo;AppMgmt;AppReadiness;AppVClient;aspnet_state;AssignedAccessManagerSvc;" + 
                                       "AudioEndpointBuilder;AudioSrv;AxInstSV;BcastDVRUserService_{0};BDESVC;BFE;BITS;BluetoothUserService_{0};Browser;B" +
                                       "TAGService;BthAvctpSvc;BthHFSrv;bthserv;c2wts;camsvc;CaptureService_{0};CDPSvc;CDPUserSvc_{0};CertPropSvc;COMSysA" + 
@@ -105,8 +87,6 @@ Class _ViperBomb
                                       ",1,0,1,0;0,0,2,0,2,0,2,0,2,0;4,0,4,0,4,0,4,0,4,0;0,0,2,2,1,1,1,1,1,1;3,3,3,3,3,3,1,1,3,3;4,4,4,4,1,1,1,1,1,1;0,0" + 
                                       ",0,0,0,0,0,0,0,0;1,0,1,0,1,0,1,0,1,0;2,2,2,2,1,1,1,1,2,2;0,0,3,0,3,0,3,0,3,0;3,3,3,3,2,2,2,2,3,3").Split(";"))
     }
-
-    # XAML Import
     Hidden [String]        $Xaml = @"
     <Window             xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                       xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
@@ -579,7 +559,6 @@ Class _ViperBomb
     </Window>
 "@
 
-    # XAML Controls
     [String]         $PassedArgs = $Null
     [Int32]      $TermsOfService = 0
     [Int32]             $ByBuild = 0

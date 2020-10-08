@@ -1,5 +1,6 @@
 Class Install
 {
+    [Object]      $Master
     [String]        $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1"
     [String]         $URL
 
@@ -21,10 +22,7 @@ Class Install
     [Object[]]   $Control
     [Object[]] $Functions
     [Object[]]  $Graphics
-
     [String[]]      $Load
-
-    [Object]      $Master
     
     Install([String]$URL)
     {
@@ -97,21 +95,26 @@ Class Install
             }
         }
 
-        $This.Load = @( )
+        $This.Load                       = @( )
+        $This.Load                      += ""
 
         ForEach ( $I in 0..( $This.Classes.Count - 1 ) )
         {
-            $This.Load += ( Get-Content $This.Classes[$I] )
+            $This.Load                  += ( Get-Content $This.Classes[$I] )
+            $This.Load                  += ""
         }
 
         ForEach ( $I in 0..( $This.Functions.Count - 1 ) )
         {
-            $This.Load += ( Get-Content $This.Functions[$I] )
+            $This.Load                  += ( Get-Content $This.Functions[$I] )
+            $This.Load                  += ""
         }
 
-        Invoke-Expression ( $This.Load -join "`n" )
+        $This.Master                     =  ( $This.Load -join "`n" )
 
-        Invoke-Expression "Get-FEModule"
+        Set-Content -Path "$($This.Path)\FightingEntropy.psm1" -Value $This.Master
+        
+        Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
     }
 }
 

@@ -1,7 +1,3 @@
-# Drives
-# Drive
-# File
-
 Class _Host
 {
     Hidden [String]         $Name = $Env:ComputerName.ToLower()

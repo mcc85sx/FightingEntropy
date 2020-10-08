@@ -1,4 +1,4 @@
-Class _Module                   # // Module Path Definitions
+Class _Module
 {
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.10.0"

@@ -1,4 +1,4 @@
-﻿Class _Service
+Class _Service
 {
     [Int32]               $Index
     [String]               $Name 

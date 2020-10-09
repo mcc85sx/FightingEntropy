@@ -2,7 +2,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
 {
     Hidden [String]        $Xaml
     [String[]]            $Names 
-    [XML.XMLReader]        $Node
+    [Object]               $Node
     [Object]               $Host
 
     _XamlWindow([String]$XAML)
@@ -23,11 +23,13 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
         {
             $This.Host           | Add-Member -MemberType NoteProperty -Name $This.Names[$I] -Value $This.Host.FindName($This.Names[$I]) -Force 
         }
+        
+        $This.IO                 = [Windows.Window]::New()
     }
 
     Invoke()
     {
-        $This.Host.Dispatcher.InvokeAsync({
+        $This.IO.Dispatcher.InvokeAsync({
         
             $Output              = $This.Host.ShowDialog()
             Set-Variable -Name Output -Value $Output -Scope Global

@@ -15,7 +15,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
         $This.Xaml               = $Xaml
         $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
         $This.Node               = [XML.XMLReader]::Create([IO.StringReader]$This.Xaml)
-        $This.Host               = [Windows.Markup.XAMLReader]::Load($This.Node)
+        $This.Host               = Invoke-Expression "[Windows.Markup.XAMLReader]::Load($($This.Node))"
     
         ForEach ( $I in 0..( $This.Names.Count - 1 ) )
         {

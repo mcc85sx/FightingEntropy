@@ -33,7 +33,7 @@ Class _Track
     {
         $This.Index                = $Index
         $This.Name                 = $Index
-        $This.Object               = $This.Faces[(Invoke-Expression $Mask)]
+        $This.Object               = $This.Faces[(Invoke-Expression $Mask)].Replace("Â¯","¯")
         $This.Foreground           = Invoke-Expression $Foreground
         $This.Background           = Invoke-Expression $Background
         $This.GetMask()

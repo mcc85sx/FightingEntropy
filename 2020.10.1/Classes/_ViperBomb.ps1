@@ -129,7 +129,9 @@ Class _ViperBomb
         </Style>
         <Style TargetType    = '{x:Type ToolTip}'>
             <Setter Property = 'Background' 
-                        Value    = '#FFFFFFBF'/>
+                        Value    = 'Black'/>
+            <Setter Property="Foreground"
+                        Value="LightGreen"/>
         </Style>
     </Window.Resources>
     <Window.Effect>
@@ -247,7 +249,7 @@ Class _ViperBomb
                                 <ColumnDefinition Width = '0.33*'/>
                                 <ColumnDefinition Width = "1*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox  Grid.Column = '0' Margin ='5' Name = 'Search' TextWrapping      = 'Wrap'>Search</TextBox>
+                            <TextBox  Grid.Column = '0' Margin ='5' Name = 'Search' TextWrapping      = 'Wrap'></TextBox>
                             <ComboBox Grid.Column = '1' Margin ='5' Name = 'Select' VerticalAlignment = 'Center'>
                                 <ComboBoxItem Content = 'Checked'/>
                                 <ComboBoxItem Content = 'Display Name' IsSelected='True'/>

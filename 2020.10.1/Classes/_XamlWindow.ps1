@@ -1,13 +1,9 @@
-
-"PresentationFramework PresentationCore WindowsBase" -Split " " | % { Add-Type -AssemblyName $_ }
-
 Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight (His method wasn't able to PassThru variables)
 {
     Hidden [String]        $Xaml
     [String[]]            $Names 
     [XML.XMLReader]        $Node
     [Object]               $Host
-    [Windows.Window]         $IO
 
     _XamlWindow([String]$XAML)
     {
@@ -25,13 +21,11 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
         {
             $This.Host           | Add-Member -MemberType NoteProperty -Name $This.Names[$I] -Value $This.Host.FindName($This.Names[$I]) -Force 
         }
-
-        $This.IO                 = [Windows.Window]::new()
     }
 
     Invoke()
     {
-        $This.IO.Dispatcher.InvokeAsync({
+        $This.Host.Dispatcher.InvokeAsync({
         
             $Output              = $This.Host.ShowDialog()
             Set-Variable -Name Output -Value $Output -Scope Global

@@ -6,9 +6,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
     [Object]               $Host
 
     _XamlWindow([String]$XAML)
-    {
-        Add-Type -AssemblyName PresentationFramework
-        
+    {   
         If ( !$Xaml )
         {
             Throw "Invalid XAML Input"

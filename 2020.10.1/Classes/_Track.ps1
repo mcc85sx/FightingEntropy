@@ -1,6 +1,6 @@
 Class _Track
 {
-    Hidden [String[]]      $Faces = @("    ,____,¯¯¯¯,----,   /,\   ,   \,/   ,\__/,/¯¯\,/¯¯¯,¯¯¯\,\___,___/,[ __,__ ]" -Split ",")
+    Hidden [String[]]      $Faces = @("    ","____","¯¯¯¯","----","   /","\   ","   \","/   ","\__/","/¯¯\","/¯¯¯","¯¯¯\","\___","___/","[ __","__ ]")
     
     Hidden [String]         $Name
     [Int32]                $Index
@@ -33,7 +33,7 @@ Class _Track
     {
         $This.Index                = $Index
         $This.Name                 = $Index
-        $This.Object               = $This.Faces[(Invoke-Expression $Mask)].Replace("Â¯","¯")
+        $This.Object               = $This.Faces[(Invoke-Expression $Mask)]
         $This.Foreground           = Invoke-Expression $Foreground
         $This.Background           = Invoke-Expression $Background
         $This.GetMask()

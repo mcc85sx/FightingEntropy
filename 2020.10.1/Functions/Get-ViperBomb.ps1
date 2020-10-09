@@ -1,6 +1,6 @@
 Function Get-ViperBomb
 {
-    Add-Type -AssemblyName PresentationFoundation
+    Add-Type -AssemblyName PresentationFramework
     
     $Viper = [_ViperBomb]::New()
     $UI    = [_XamlWindow]::New($Viper.Xaml)

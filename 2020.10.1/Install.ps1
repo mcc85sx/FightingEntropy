@@ -96,7 +96,7 @@ Class Install
         }
 
         $This.Load                       = @( )
-        $This.Load                      += '"PresentationFramework PresentationCore WindowsBase" -Split " " | % { Add-Type -AssemblyName `$_"
+        $This.Load                      += '"PresentationFramework PresentationCore WindowsBase" -Split " " | % { Add-Type -AssemblyName `$_ }'
         $This.Load                      += ""
 
         ForEach ( $I in 0..( $This.Classes.Count - 1 ) )

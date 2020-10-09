@@ -89,7 +89,7 @@ Class _ViperBomb
                                       ",0,0,0,0,0,0,0,0;1,0,1,0,1,0,1,0,1,0;2,2,2,2,1,1,1,1,2,2;0,0,3,0,3,0,3,0,3,0;3,3,3,3,2,2,2,2,3,3").Split(";"))
     }
     Hidden [String]        $Xaml = @"
-    <Window             xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+<Window             xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                       xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
                         Title = '[FightingEntropy] @ ViperBomb'
                        Height = '800'
@@ -100,6 +100,14 @@ Class _ViperBomb
           HorizontalAlignment = 'Center'
         WindowStartupLocation = 'CenterScreen'>
     <Window.Resources>
+        <Style TargetType    = "Label">
+            <Setter Property = "HorizontalAlignment"
+                                Value    = "Center"/>
+            <Setter Property = "VerticalAlignment"
+                                Value    = "Center"/>
+            <Setter Property = "Padding"
+                                Value    = "5"/>
+        </Style>
         <Style      x:Key = 'SeparatorStyle1' 
                    TargetType = '{x:Type Separator}'>
             <Setter Property = 'SnapsToDevicePixels' 
@@ -172,14 +180,6 @@ Class _ViperBomb
                             Grid.Row         = '1' 
                             Name             = 'TabControl'>
                 <TabControl.Resources>
-                    <Style TargetType    = "Label">
-                        <Setter Property = "HorizontalAlignment"
-                                Value    = "Center"/>
-                        <Setter Property = "VerticalAlignment"
-                                Value    = "Center"/>
-                        <Setter Property = "Padding"
-                                Value    = "5"/>
-                    </Style>
                     <Style TargetType    = 'TabItem'>
                         <Setter Property = 'Template'>
                             <Setter.Value>
@@ -411,17 +411,17 @@ Class _ViperBomb
                                             <RowDefinition Height = '*'/>
                                             <RowDefinition Height = '*'/>
                                         </Grid.RowDefinitions>
-                                        <CheckBox   Grid.Row = '1' Margin = '5' Name = 'ByBuild' Content = "Skip Build/Version Check"/>
+                                        <CheckBox   Grid.Row = '1' Margin = '5' Name = 'ByBuild' Content = "Skip Build/Version Check" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <ComboBox   Grid.Row = '0' VerticalAlignment = 'Center' Height = '24' Name = 'ByEdition'>
                                             <ComboBoxItem Content = 'Override Edition Check' IsSelected = 'True'/>
                                             <ComboBoxItem Content = 'Windows 10 Home'/>
                                             <ComboBoxItem Content = 'Windows 10 Pro'/>
                                         </ComboBox>
-                                        <CheckBox   Grid.Row = '2' Margin = '5' Name = 'ByLaptop' Content = 'Enable Laptop Tweaks'/>
+                                        <CheckBox   Grid.Row = '2' Margin = '5' Name = 'ByLaptop' Content = 'Enable Laptop Tweaks' HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
                                 </GroupBox>
                                 <GroupBox Grid.Row = '1' Header = 'Display' Margin = '5' >
-                                    <Grid >
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height = '30'/>
                                             <RowDefinition Height = '30'/>
@@ -445,7 +445,7 @@ Class _ViperBomb
                                     </ComboBox>
                                 </GroupBox>
                                 <GroupBox Grid.Row = '1' Header = 'Miscellaneous' Margin = '5'>
-                                    <Grid>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height = '30'/>
                                             <RowDefinition Height = '30'/>
@@ -471,7 +471,7 @@ Class _ViperBomb
                                     </ComboBox>
                                 </GroupBox>
                                 <GroupBox Grid.Row='1' Header = 'Development' Margin='5'>
-                                    <Grid >
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height = '30'/>
                                             <RowDefinition Height = '30'/>
@@ -502,12 +502,12 @@ Class _ViperBomb
                                         <RowDefinition Height = '*' />
                                         <RowDefinition Height = '*' />
                                     </Grid.RowDefinitions>
-                                    <CheckBox Grid.Row = '0' Grid.Column = '0' Margin = '5' Name = 'LogSvcSwitch' Content   = 'Services' FlowDirection = 'RightToLeft'/>
+                                    <CheckBox Grid.Row = '0' Grid.Column = '0' Margin = '5' Name = 'LogSvcSwitch' Content   = 'Services' FlowDirection = 'RightToLeft' HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button   Grid.Row = '0' Grid.Column = '1' Margin = '5' Name = 'LogSvcBrowse' Content   = 'Browse'  />
-                                    <TextBox  Grid.Row = '0' Grid.Column = '2' Margin = '5' Name = 'LogSvcFile'   IsEnabled = 'False'   />
-                                    <CheckBox Grid.Row = '1' Grid.Column = '0' Margin = '5' Name = 'LogScrSwitch'  Content   = 'Script'   FlowDirection = 'RightToLeft' />
+                                    <TextBox  Grid.Row = '0' Grid.Column = '2' Margin = '5' Name = 'LogSvcFile'   IsEnabled = 'False' HorizontalAlignment="Stretch" VerticalAlignment="Center"   />
+                                    <CheckBox Grid.Row = '1' Grid.Column = '0' Margin = '5' Name = 'LogScrSwitch'  Content   = 'Script'   FlowDirection = 'RightToLeft' VerticalAlignment="Center" HorizontalAlignment="Center" />
                                     <Button   Grid.Row = '1' Grid.Column = '1' Margin = '5' Name = 'LogScrBrowse'  Content   = 'Browse'  />
-                                    <TextBox  Grid.Row = '1' Grid.Column = '2' Margin = '5' Name = 'LogScrFile'    IsEnabled = 'False'   />
+                                    <TextBox  Grid.Row = '1' Grid.Column = '2' Margin = '5' Name = 'LogScrFile'    IsEnabled = 'False' HorizontalAlignment="Stretch" VerticalAlignment="Center"   />
                                 </Grid>
                             </GroupBox>
                             <GroupBox Grid.Row = '1' Header = 'Backup: Save your current Service Configuration' Margin = '5'>
@@ -521,12 +521,12 @@ Class _ViperBomb
                                         <RowDefinition Height = '*' />
                                         <RowDefinition Height = '*' />
                                     </Grid.RowDefinitions>
-                                    <CheckBox Grid.Row = '0' Grid.Column = '0' Margin = '5' Name = 'RegSwitch' Content   = 'reg.*'   FlowDirection = 'RightToLeft'/>
+                                    <CheckBox Grid.Row = '0' Grid.Column = '0' Margin = '5' Name = 'RegSwitch' Content   = 'reg.*'   FlowDirection = 'RightToLeft' HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button   Grid.Row = '0' Grid.Column = '1' Margin = '5' Name = 'RegBrowse' Content   = 'Browse'  />
-                                    <TextBox  Grid.Row = '0' Grid.Column = '2' Margin = '5' Name = 'RegFile'   IsEnabled = 'False'   />
-                                    <CheckBox Grid.Row = '1' Grid.Column = '0' Margin = '5' Name = 'CsvSwitch' Content   = 'csv.*'  FlowDirection = 'RightToLeft' />
+                                    <TextBox  Grid.Row = '0' Grid.Column = '2' Margin = '5' Name = 'RegFile'   IsEnabled = 'False' HorizontalAlignment="Stretch" VerticalAlignment="Center"   />
+                                    <CheckBox Grid.Row = '1' Grid.Column = '0' Margin = '5' Name = 'CsvSwitch' Content   = 'csv.*'  FlowDirection = 'RightToLeft' HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     <Button   Grid.Row = '1' Grid.Column = '1' Margin = '5' Name = 'CsvBrowse' Content   = 'Browse'  />
-                                    <TextBox  Grid.Row = '1' Grid.Column = '2' Margin = '5' Name = 'CsvFile'   IsEnabled = 'False'   />
+                                    <TextBox  Grid.Row = '1' Grid.Column = '2' Margin = '5' Name = 'CsvFile'   IsEnabled = 'False' VerticalAlignment="Center"   />
                                 </Grid>
                             </GroupBox>
                         </Grid>

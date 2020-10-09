@@ -4,6 +4,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
     [String[]]            $Names 
     [Object]               $Node
     [Object]               $Host
+    [Object]                 $IO
 
     _XamlWindow([String]$XAML)
     {   

@@ -1,5 +1,6 @@
-﻿Function Get-ViperBomb
+Function Get-ViperBomb
 {
+    Invoke-Expression "Using Namespace System.Windows.Markup"
     Add-Type -AssemblyName PresentationFramework
     
     $Viper = [_ViperBomb]::New()
@@ -16,7 +17,7 @@
     $UI.Host.Profile_8.Add_Click({8})
     $UI.Host.Profile_9.Add_Click({9})
 
-    $UI.Host.Title = ("{0}v{1}" -f $Viper.Name, $Viper.Version )
+    $UI.Host.Title = ("{0} v{1}" -f $Viper.Name, $Viper.Version )
 
     $UI.Host.URL.Add_Click(       
     {
@@ -164,8 +165,16 @@
     {
         $UI.Host.ServiceLabel.Content       = $UI.Host.ServiceProfile.SelectedItem.Content
     }
-
-    $UI.Host.DataGrid.ItemsSource           = $Viper.Current.Services
+    
+    $DataSource                             = New-Object System.Collections.ObjectModel.ObservableCollection[Object]
+    
+    ForEach ( $I in 0..( $Viper.Current.Services.Count - 1 ) )
+    {
+        $DataSource.Add([Int32]1)
+        $DataSource[$I] = $Viper.Current.Services[$I]
+    }
+    
+    $UI.Host.DataGrid.ItemsSource            = $DataSource
 
     # SetProfile([Int32]$Index)
     # {

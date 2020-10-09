@@ -34,7 +34,7 @@ Class _Object
         {
             ForEach ( $X in 0..( $This.Output[$I].Count - 1 ) )
             {
-                (Get-Host).UI.Write($Palette[$This.Output[$I][$X].ForegroundColor],$This.Output[$I][$X].BackgroundColor,$This.Output[$I][$X].Object))
+                (Get-Host).UI.Write($Palette[$This.Output[$I][$X].ForegroundColor],$This.Output[$I][$X].BackgroundColor,$This.Output[$I][$X].Object)
             }
 
             (Get-Host).UI.Write("`n")

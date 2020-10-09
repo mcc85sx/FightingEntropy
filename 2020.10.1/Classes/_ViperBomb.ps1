@@ -1,9 +1,10 @@
 Class _ViperBomb
 {
     [String]               $Name = "FightingEntropy/ViperBomb"
-    [String]            $Version = "2020.10.0"
+    [String]            $Version = "2020.10.1"
     [String]            $Release = "Development"
-    [String]                $URL = "https://github.com/secure-digits-plus-llc/FightingEntropy"
+    [String]           $Provider = "Secure Digits Plus LLC"
+    [String]                $URL = "https://github.com/mcc85sx/FightingEntropy"
     [String]            $MadBomb = "https://github.com/madbomb122/BlackViperScript"
     [String]         $BlackViper = "http://www.blackviper.com"
     [String]               $Site = "https://www.securedigitsplus.com"

@@ -1,4 +1,4 @@
-Function Get-ViperBomb
+﻿Function Get-ViperBomb
 {
     Add-Type -AssemblyName PresentationFramework
     
@@ -128,18 +128,27 @@ Function Get-ViperBomb
         $UI.Host.CsvBrowse.IsEnabled       = 0 
     }
 
-    $UI.Host.LogSvcFile.Text               = "<Activate to designate a different file name/path>" 
-    $UI.Host.LogScrFile.Text               = "<Activate to designate a different file name/path>" 
-    $UI.Host.RegFile.Text                  = "<Activate to designate a different file name/path>" 
-    $UI.Host.CsvFile.Text                  = "<Activate to designate a different file name/path>" 
+    $UI.Host.LogSvcFile.Text               = $Viper.LogSvcLabel
+    $UI.Host.LogScrFile.Text               = $Viper.LogScrLabel
+    $UI.Host.RegFile.Text                  = $Viper.RegLabel
+    $UI.Host.CsvFile.Text                  = $Viper.CsvLabel 
 
     $UI.Host.LogSvcBrowse.IsEnabled        = 0
     $UI.Host.LogScrBrowse.IsEnabled        = 0
     $UI.Host.RegBrowse.IsEnabled           = 0
     $UI.Host.CsvBrowse.IsEnabled           = 0
 
-    $UI.Host.ServiceLabel.Content          = $UI.Host.ServiceConfig.SelectedItem.Content
-    $UI.Host.ScriptLabel.Content           = $UI.Host.ScriptConfig.SelectedItem.Content
+    $UI.Host.ServiceLabel.Content          = $Viper.ServiceLabel
+    If ( $UI.Host.ServiceProfile.IsEnabledChanged )
+    {
+        $UI.Host.ServiceLabel.Content      = $UI.Host.ServiceProfile.SelectedItem.Content
+    }
+
+    $UI.Host.ScriptLabel.Content           = $Viper.ScriptLabel
+    If ( $UI.Host.ScriptProfile.IsEnabledChanged )
+    {
+        $UI.Host.ScriptLabel.Content       = $UI.Host.ScriptProfile.SelectedItem.Content
+    }
 
     $UI.Host.Start.Add_Click( 
     {
@@ -151,8 +160,12 @@ Function Get-ViperBomb
         $UI.Host.Close()
     })
 
-    #$UI.Host.DataGridLabel.Content         = "Select a profile from the configuration menu to begin"
-    #$UI.Host.DataGrid.ItemsSource          = $Viper.Current
+    If ( $UI.Host.ServiceProfile.IsEnabledChanged )
+    {
+        $UI.Host.ServiceLabel.Content       = $UI.Host.ServiceProfile.SelectedItem.Content
+    }
+
+    $UI.Host.DataGrid.ItemsSource           = $Viper.Current.Services
 
     # SetProfile([Int32]$Index)
     # {

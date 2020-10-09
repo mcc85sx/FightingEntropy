@@ -1,7 +1,7 @@
 Class Install
 {
     [Object]      $Master
-    [String]        $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1"
+    [String]        $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1" 
     [String]         $URL
 
     Hidden [Hashtable] $Hash = @{ 

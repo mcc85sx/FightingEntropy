@@ -18,14 +18,14 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
         $This.Xaml               = $Xaml
         $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
         $This.Node               = New-Object System.XML.XmlNodeReader([XML]$This.Xaml)
-        $This.Host               = [Windows.Markup.XAMLReader]::Load($This.Node)
+        $This.Host               = [System.Windows.Markup.XAMLReader]::Load($This.Node)
     
         ForEach ( $I in 0..( $This.Names.Count - 1 ) )
         {
             $This.Host           | Add-Member -MemberType NoteProperty -Name $This.Names[$I] -Value $This.Host.FindName($This.Names[$I]) -Force 
         }
         
-        $This.IO                 = [Windows.Window]::New()
+        $This.IO                 = [System.Windows.Window]::New()
     }
 
     Invoke()

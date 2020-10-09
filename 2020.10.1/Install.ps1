@@ -96,7 +96,7 @@ Class Install
         }
 
         $This.Load                       = @( )
-        $This.Load                      += 'Add-Type -AssemblyName PresentationFramework'
+        $This.Load                      += "Add-Type -AssemblyName PresentationFramework"
         $This.Load                      += ""
 
         ForEach ( $I in 0..( $This.Classes.Count - 1 ) )

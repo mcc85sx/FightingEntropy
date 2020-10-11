@@ -5,7 +5,7 @@ Class _Services
 
     _Services([Object]$Template)
     {
-        $This.WMIObject    = Get-WMIObject -Class Win32_Service | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description
+        $This.WMIObject    = Get-WMIObject -Class Win32_Service | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name
         $This.Services     = @( )
 
         For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )

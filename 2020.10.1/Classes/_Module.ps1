@@ -1,10 +1,10 @@
 Class _Module
 {
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2020.10.0"
+    [String]            $Version = "2020.10.1"
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Path = $Env:ProgramData
-    [String]                $URL = "https://github.com/mcc85sx/FightingEntropy/blob/master/2020.10.0"
+    [String]                $URL = "https://github.com/mcc85sx/FightingEntropy/blob/master/2020.10.1"
     [String]           $Registry = "HKLM:\SOFTWARE\Policies"
     [Object]         $Properties
     [Object]               $Base

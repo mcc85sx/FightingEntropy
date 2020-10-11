@@ -9,7 +9,7 @@ Class _Theme
     [Int32]           $Footer
     [Int32[]]         $Colors = @(10,12,15,0)
     
-    Hidden [String[]]$Faces = ( "    ,____,¯¯¯¯,----,   /,\   ,   \,/   ,\__/,/¯¯\,/¯¯¯,¯¯¯\,\___,___/,[ __,__ ]" -Split "," )
+    Hidden [String[]]$Faces = [_Faces]::New().Faces
     
     Hidden [String[]]$String
     Hidden [String[]]$String_ =(("0;1;@(0)*25;1;1;0 4;9;12;@(1)*23;13;9;8;7 6;8;10;@(2)*23;11;8;10;0 0;11;12;14;@(1)*21;15;13" + 

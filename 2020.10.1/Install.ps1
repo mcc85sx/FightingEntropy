@@ -12,7 +12,7 @@ Class Install
                      "_Theme _Object _UISwitch _Toast _XamlWindow _Root _Module _VendorList _V4Network _V6Ne" + 
                      "twork _NetInterface _Network _Info _Service _Services _ViperBomb _Brand _Branding _Cer" + 
                      "tificate _Company _Key _RootVar _Share _Master _Source _Target _ServerDependency _Serv" + 
-                     "erFeature _ServerFeatures _IISFeatures _IIS") -Split " "
+                     "erFeature _ServerFeatures _IISFeatures _IIS _DCPromo") -Split " "
         Control   = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
                      "ClientMod.xml","ServerMod.xml") -Split " "
         Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Install-IISServe" + 

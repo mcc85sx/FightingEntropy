@@ -1,15 +1,13 @@
-
 Class _ServerFeatures
 {
-    [Object[]]      $Feature
+    [String[]]        $Names = ("AD-Domain-Services DHCP DNS GPMC RSAT RSAT-AD-AdminCenter RSAT-AD-PowerShell RSAT-AD-T" +
+                                "ools RSAT-ADDS RSAT-ADDS-Tools RSAT-DHCP RSAT-DNS-Server RSAT-Role-Tools WDS WDS-Admin" + 
+                                "Pack WDS-Deployment WDS-Transport").Split(" ")
+    [Object[]]     $Features
 
-    _ServerFeatures() 
+    _ServerFeatures(){}
+    Get()
     { 
-        $This.Feature        =  Get-WindowsFeature | ? Name -in ("AD-Domain-Services DHCP DNS GPMC RSAT RSAT-AD-AdminCe" + 
-                                "nter RSAT-AD-PowerShell RSAT-AD-Tools RSAT-ADDS RSAT-ADDS-Tools RSAT-DHCP RSAT-DNS-Se" + 
-                                "rver RSAT-Role-Tools WDS WDS-AdminPack WDS-Deployment WDS-Transport").Split(" ") | % {
-                                
-                                    [_ServerFeature]::New($_.Name,$_.DisplayName,$_.Installed) 
-                                }
+        $This.Features       =  Get-WindowsFeature | ? Name -in $This.Names | % { [_ServerFeature]::New($_.Name,$_.DisplayName,$_.Installed) }
     }
 }

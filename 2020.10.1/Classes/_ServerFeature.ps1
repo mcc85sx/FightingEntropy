@@ -2,7 +2,7 @@ Class _ServerFeature
 {
     [String] $Name
     [String] $DisplayName
-    [Int32]  $Installed
+    [Bool]   $Installed
 
     _ServerFeature([String]$Name,[String]$DisplayName,[Int32]$Installed)
     {

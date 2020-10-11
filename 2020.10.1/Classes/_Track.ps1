@@ -15,7 +15,7 @@ Class _Track
         $This.Mask                 = @( )
         ForEach ( $I in 0..( $This.Object.Count - 1 ) )
         {
-            $This.Mask            += [_Block]::New($This.Index,$This.Object[$I].Replace("Â",""),$This.Foreground[$I],$This.Background[$I])
+            $This.Mask            += [_Block]::New($This.Index,$This.Object[$I],$This.Foreground[$I],$This.Background[$I])
         }
     }
     
@@ -33,7 +33,7 @@ Class _Track
     {
         $This.Index                = $Index
         $This.Name                 = $Index
-        $This.Object               = $This.Faces[(Invoke-Expression $Mask)]
+        $This.Object               = $This.Faces[(Invoke-Expression $Mask)].Replace("Â¯","¯")
         $This.Foreground           = Invoke-Expression $Foreground
         $This.Background           = Invoke-Expression $Background
         $This.GetMask()

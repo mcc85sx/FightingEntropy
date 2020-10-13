@@ -1,4 +1,4 @@
-Function Configure-IISServer
+Function Complete-IISServer
 {
     [CmdLetBinding()]Param(
         [Parameter(Mandatory)][String]     $Name = "MDT"       ,

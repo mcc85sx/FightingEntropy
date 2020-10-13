@@ -1,4 +1,4 @@
-"PresentationFoundation PresentationCore WindowsBase" | % { Add-Type -AssemblyName $_ }
+"PresentationFramework PresentationCore WindowsBase" | % { Add-Type -AssemblyName $_ }
 
 Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight (His method wasn't able to PassThru variables)
 {
@@ -10,7 +10,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
 
     _XamlWindow([String]$XAML)
     {   
-        [System.Reflection.Assembly]::LoadWithPartialName("PresentationFoundation")
+        [System.Reflection.Assembly]::LoadWithPartialName("PresentationFramework")
         
         If ( !$Xaml )
         {

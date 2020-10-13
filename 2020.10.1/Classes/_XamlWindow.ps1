@@ -1,4 +1,4 @@
-"PresentationFramework PresentationCore WindowsBase" | % { Add-Type -AssemblyName $_ }
+"PresentationFramework","PresentationCore","WindowsBase" | % { Add-Type -AssemblyName $_ }
 
 Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight (His method wasn't able to PassThru variables)
 {

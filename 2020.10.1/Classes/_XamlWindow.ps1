@@ -10,7 +10,7 @@ Class _XamlWindow # Originally based on Dr. Weltner's work, but also Jason Adkin
 
     _XamlWindow([String]$XAML)
     {   
-        Add-Type -AssemblyName PresentationFramework
+        [System.Reflection.Assembly]::LoadWithPartialName("PresentationFoundation")
         
         If ( !$Xaml )
         {

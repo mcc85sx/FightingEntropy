@@ -16,8 +16,8 @@ Function Show-ToastNotification
 
     $Return                       = Switch([Int32]($Image -eq $Null)) 
     { 
-        0 { [Toast]::New($Type,$Message,$GUID,$Image) } 
-        1 { [Toast]::New($Type,$Message,$GUID) }
+        0 { [_Toast]::New($Type,$Message,$GUID,$Image) } 
+        1 { [_Toast]::New($Type,$Message,$GUID) }
     }
     
     $Return.Header                = If ( $Header -eq $Null ) {    "Message" } Else { $Header }

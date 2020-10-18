@@ -9,10 +9,10 @@ Class Install
         Folders   = ("/Classes/Control/Functions/Graphics" -Split "/")
 
         Classes   = ("_QMark _File _FirewallRule _Drive _Cache _Icons _Shortcut _Drives _Host _Block _Faces " +
-                     "_Track _Theme _Object _UISwitch _Toast _XamlWindow _Root _Module _VendorList _V4Networ" + 
-                     "k _V6Network _NetInterface _Network _Info _Service _Services _ViperBomb _Brand _Brandi" + 
-                     "ng _Certificate _Company _Key _RootVar _Share _Master _Source _Target _ServerDependenc" + 
-                     "y _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo") -Split " "
+                     "_Track _Theme _Object _Flag _Banner _UISwitch _Toast _XamlWindow _Root _Module _Vendor" + 
+                     "List _V4Network _V6Network _NetInterface _Network _Info _Service _Services _ViperBomb " +
+                     "_Brand _Branding _Certificate _Company _Key _RootVar _Share _Master _Source _Target _S" + 
+                     "erverDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo") -Split " "
         Control   = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
                      "ClientMod.xml","ServerMod.xml") -Split " "
         Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Install-IISServe" + 

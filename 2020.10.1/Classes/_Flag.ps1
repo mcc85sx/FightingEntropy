@@ -71,10 +71,10 @@ Class _Flag
 
         ForEach ( $I in 0..3 )
         {
-            $This.Track[24].Mask[13+$I].Object = "____;____;____;____".Split(";")[$I]
+            $This.Track[24].Mask[13+$I].Object = "----;----;----;----".Split(";")[$I]
             $This.Track[25].Mask[13+$I].Object = "  Fi;ghti;ng (;π)  ".Split(";")[$I]
             $This.Track[26].Mask[13+$I].Object = "    ; Ent;ropy;    ".Split(";")[$I]
-            $This.Track[27].Mask[13+$I].Object = "¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯".Split(";")[$I]
+            $This.Track[27].Mask[13+$I].Object = "----;----;----;----".Split(";")[$I]
             $This.Track[32].Mask[13+$I].Object = $This.Date.Split(";")[$I]
         }
 

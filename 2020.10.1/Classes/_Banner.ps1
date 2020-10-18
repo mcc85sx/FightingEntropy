@@ -35,17 +35,17 @@ Class _Banner
         ForEach ( $I in 0..7 )
         {
             $This.Track[ 9].Mask[11+$I].Object = "   S;ecur;e Di;gits; Plu;s LL;C (π;)   ".Split(";")[$I]
-            $This.Track[10].Mask[11+$I].Object = "   ¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯   ".Split(";")[$I]
+            $This.Track[10].Mask[11+$I].Object = "   -;----;----;----;----;----;----;-   ".Split(";")[$I]
             $This.Track[15].Mask[11+$I].Object = "Netw;ork ;& Ha;rdwa;re M;agis;trat;ion ".Split(";")[$I]
-            $This.Track[16].Mask[11+$I].Object = "¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯ ".Split(";")[$I]
+            $This.Track[16].Mask[11+$I].Object = "----;----;----;----;----;----;----;--- ".Split(";")[$I]
         }
 
         ForEach ( $I in 0..9 )
         {
             $This.Track[11].Mask[10+$I].Object = "Dyna;mica;lly ;Engi;neer;ed D;igit;al S;ecur;ity ".Split(";")[$I]
-            $This.Track[12].Mask[10+$I].Object = "¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯ ".Split(";")[$I]
+            $This.Track[12].Mask[10+$I].Object = "----;----;----;----;----;----;----;----;----;--- ".Split(";")[$I]
             $This.Track[13].Mask[10+$I].Object = "Appl;icat;ion ;Deve;lopm;ent ;- Vi;rtua;liza;tion".Split(";")[$I]
-            $This.Track[14].Mask[10+$I].Object = "¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯;¯¯¯¯".Split(";")[$I]
+            $This.Track[14].Mask[10+$I].Object = "----;----;----;----;----;----;----;----;----;----".Split(";")[$I]
         }
     }
 

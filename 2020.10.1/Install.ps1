@@ -1,8 +1,8 @@
 Class Install
 {
-    [Object]      $Master
-    [String]        $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1" 
-    [String]         $URL
+    Hidden [Object]  $Master
+    [String]           $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1" 
+    [String]            $URL
 
     Hidden [Hashtable] $Hash = @{ 
 
@@ -133,4 +133,4 @@ Class Install
 }
 
 Add-Type -AssemblyName PresentationFramework
-[Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
+$Return = [Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")

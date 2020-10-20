@@ -9,15 +9,19 @@ Class Install
         Folders   = ("/Classes/Control/Functions/Graphics" -Split "/")
 
         Classes   = ("_QMark _File _FirewallRule _Drive _Cache _Icons _Shortcut _Drives _Host _Block _Faces " +
-                     "_Track _Theme _Object _Flag _Banner _UISwitch _Toast _XamlWindow _Root _Module _Vendor" + 
-                     "List _V4Network _V6Network _NetInterface _Network _Info _Service _Services _ViperBomb " +
-                     "_Brand _Branding _Certificate _Company _Key _RootVar _Share _Master _Source _Target _S" + 
-                     "erverDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo") -Split " "
+                     "_Track _Theme _Object _Flag _Banner _UISwitch _Toast _XamlWindow _XamlObject _Root _Mo" + 
+                     "dule _VendorList _V4Network _V6Network _NetInterface _Network _Info _Service _Services" + 
+                     "_ViperBomb _Brand _Branding _Certificate _Company _Key _RootVar _Share _Master _Source" +
+                     "_Target _ServerDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo" _" + 
+                     "Xaml _XamlGlossaryItem" ) -Split " "
+                     
         Control   = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
                      "ClientMod.xml","ServerMod.xml") -Split " "
+                     
         Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                      "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                      "tion") -Split " "
+                     
         Graphics  = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
     }
 
@@ -46,6 +50,7 @@ Class Install
             {
                 Classes 
                 {   
+                    Set-Content -Path $This.Path\Classes\__index.txt -Value ($This.Hash.Classes)
                     ForEach ( $X in $This.Hash.Classes )
                     {
                         $File            = "$($This.Path)\Classes\$X.ps1"
@@ -119,6 +124,10 @@ Class Install
         Set-Content -Path "$($This.Path)\FightingEntropy.psm1" -Value $This.Master
         
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
+        
+        Get-FEModule
+        
+        Write-Flag
     }
 }
 

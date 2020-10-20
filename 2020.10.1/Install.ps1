@@ -12,7 +12,7 @@ Class Install
                      "_Track _Theme _Object _Flag _Banner _UISwitch _Toast _XamlWindow _XamlObject _Root _Mo" + 
                      "dule _VendorList _V4Network _V6Network _NetInterface _Network _Info _Service _Services" + 
                      "_ViperBomb _Brand _Branding _Certificate _Company _Key _RootVar _Share _Master _Source" +
-                     "_Target _ServerDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo" _" + 
+                     "_Target _ServerDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo _" + 
                      "Xaml _XamlGlossaryItem" ) -Split " "
                      
         Control   = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 

@@ -50,7 +50,7 @@ Class Install
             {
                 Classes 
                 {   
-                    Set-Content -Path $This.Path\Classes\__index.txt -Value ($This.Hash.Classes)
+                    Set-Content -Path "$($This.Path)\Classes\__index.txt" -Value $This.Hash.Classes -Force
                     ForEach ( $X in $This.Hash.Classes )
                     {
                         $File            = "$($This.Path)\Classes\$X.ps1"

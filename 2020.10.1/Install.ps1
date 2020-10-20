@@ -131,4 +131,5 @@ Class Install
     }
 }
 
-$Test = [Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
+Add-Type -AssemblyName PresentationFramework
+[Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")

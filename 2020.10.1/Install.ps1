@@ -104,6 +104,7 @@ Class Install
         }
 
         $This.Load                       = @( )
+        $This.Load                      += "# FightingEntropy Module Manifest"
         $This.Load                      += "Add-Type -AssemblyName PresentationFramework"
         $This.Load                      += ""
 
@@ -125,7 +126,7 @@ Class Install
         
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
         
-        Get-FEModule
+        Get-FEModule | Out-Null
         
         Write-Flag
     }

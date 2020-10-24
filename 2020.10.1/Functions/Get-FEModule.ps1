@@ -1,15 +1,25 @@
 Function Get-FEModule
 {
-    [CmdLetBinding( DefaultParameterSetName = 0,
+    [CmdLetBinding( DefaultParameterSetName = "Default",
                     HelpUri                 = 'http://www.github.com/secure-digits-plus-llc')]Param(                
-        [Parameter( ParameterSetName        = 0 )][Switch]$All,
-        [Parameter( ParameterSetName        = 1 )][Switch]$Registry,
-        [Parameter( ParameterSetName        = 2 )][Switch]$Root,
-        [Parameter( ParameterSetName        = 3 )][Switch]$Tree
-    )
+        [Parameter( ParameterSetName        = "Default"    )][Switch]         $All ,
+        [Parameter( ParameterSetName        = "Registry"   )][Switch]    $Registry ,
+        [Parameter( ParameterSetName        = "Properties" )][Switch]  $Properties ,
+        [Parameter( ParameterSetName        = "Base"       )][Switch]        $Base , 
+        [Parameter( ParameterSetName        = "Classes"    )][Switch]     $Classes , 
+        [Parameter( ParameterSetName        = "Control"    )][Switch]     $Control , 
+        [Parameter( ParameterSetName        = "Functions"  )][Switch]   $Functions , 
+        [Parameter( ParameterSetName        = "Graphics"   )][Switch]    $Graphics ) 
 
     Switch ($PSCmdlet.ParameterSetName) 
     { 
-        0 { [_Master]::New() } 1 { [_Master]::New().Registry } 2 { [_Master]::New().Root } 3 { [_Master]::New().Tree } 
+        Default    { [_Module]::New()            }
+        Registry   { [_Module]::New().Registry   }
+        Properties { [_Module]::New().Properties }
+        Base       { [_Module]::New().Base       } 
+        Classes    { [_Module]::New().Classes    }
+        Control    { [_Module]::New().Control    }
+        Functions  { [_Module]::New().Functions  }
+        Graphics   { [_Module]::New().Graphics   }
     }
 }

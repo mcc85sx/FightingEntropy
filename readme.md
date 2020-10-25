@@ -1,4 +1,4 @@
-[Install] - This following scriptlet will download all of the necessary files to install FightingEntropy
+# [Install] - This following scriptlet will download all of the necessary files to install FightingEntropy
 
     If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() | % IsInRole Administrators )
     {
@@ -8,13 +8,13 @@
         $Module  = Invoke-Expression $Install
     }
 
-[Description] - This following information describes each class/function
+# [Description] - This following information describes each class/function
 
- ___________[ Control ]
+# ___________[ Control ]
 
                Module : Obtains the root of the module, able to spawn additional tools/shares
 
- ____________[ Server ]
+# ____________[ Server ]
 
      ServerDependency : Dependencies such as the Microsoft Deployment Toolkit, WADK, and WinPE.
         ServerFeature : Server feature objects, used to organize specific set
@@ -23,7 +23,7 @@
           IISFeatures : Additional IIS Features 
               DCPromo : Used to promote a workstation server to a domain controller 
 
- ______[ Command-Line ]
+# ______[ Command-Line ]
 
                 Faces : Array of multiple masks of characters
                 Block : Section of characters with foreground and background colors
@@ -33,7 +33,7 @@
                Banner : Draws custom footer
                  Flag : Draws a flag that represents the full fire and fury, of "The United States of America"
 
- _________[ Graphical ]
+# _________[ Graphical ]
 
                  Xaml : Loads XAML for cleanup, or simply  
      XamlGlossaryItem : Provides an index for shorthand variables
@@ -43,27 +43,27 @@
              UISwitch : Asks the user if they are sure about given options
 
              
- __________[ Services ]
+# __________[ Services ]
 
               Service : Get-WMIObject -Classname Win32_Service (each individual service)
              Services : A collection of services as listed above
             ViperBomb : A GUI for managing Windows Services
             
- ___________[ General ]
+# ___________[ General ]
 
                 Cache : Converts a URL to a filepath
          FirewallRule : Creates a firewall rule for Windows Firewall/netsh
                 Icons : Displays the icons on the desktop
              Shortcut : Creates a shortcut on the desktop
 
- _____[ Configuration ]
+# _____[ Configuration ]
 
                 Brand : Sets the item properties fpr branding
              Branding : Injects the branding properties into a target system 
                  Root : Established root folder for module, and it's properties
               Company : Sets/Obtains company information
 
- __________[ Security ]
+# __________[ Security ]
 
                Source : Deployment Share Source
                Target : Deployment Share Target
@@ -71,7 +71,7 @@
                   Key : Deployment Share Credential Object
               RootVar : Deployment Share Root Script Variables
 
- ___________[ Network ]
+# ___________[ Network ]
 
           Certificate : Obtains a certificate based on external resources
          NetInterface : Gets information for each interface
@@ -80,8 +80,7 @@
             V6Network : IPV6 Network Object/Information
            VendorList : Mac Address -> Vendor List.
 
-
- ___________[ System ]
+# ___________[ System ]
 
                 Drive : An object that represents a drive in any given system
                Drives : A group of drives that are in a given system/network

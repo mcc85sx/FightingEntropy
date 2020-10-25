@@ -35,7 +35,7 @@ Class _Module
                      
         Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                      "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
-                     "tion") -Split " "
+                     "tion New-FECompany") -Split " "
                      
         Graphics  = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
     }

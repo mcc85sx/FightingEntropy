@@ -139,19 +139,17 @@ Class Install
 
         }                                 | % { New-ModuleManifest @_ }
         
-        Write-Flag
+        @{  
+            Type                          = 4
+            Image                         = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
+            GUID                          = $Module.GUID
+            Header                        = "Secure Digits Plus LLC"
+            Body                          = "FightingEntropy"
+            Footer                        = "2020.10.1"
+
+        }                                 | % { Show-ToastNotification @_ }
     }
 }
 
 Add-Type -AssemblyName PresentationFramework
 $Return = [Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
-
-@{  
-    Type        = 4
-    Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-    GUID        = New-GUID
-    Header      = "Secure Digits Plus LLC"
-    Body        = "FightingEntropy"
-    Footer      = "2020.10.1"
-    
-}               | % { Show-ToastNotification @_ }

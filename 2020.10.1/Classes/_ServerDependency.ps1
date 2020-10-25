@@ -71,7 +71,7 @@ Class _ServerDependency
                 For ( $X = 0; $X -le 100; $X++ )
                 {
                     Write-Progress -Activity "[Installing] @: $($This.Name)" -PercentComplete $X -Status "$X% Complete"
-                    Sleep -M 250
+                    Start-Sleep -Milliseconds 250
 
                     If ( $Process.HasExited )
                     {

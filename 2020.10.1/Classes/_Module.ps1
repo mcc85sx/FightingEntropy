@@ -72,9 +72,24 @@ Class _Module
         $This.Base               = Get-ChildItem -Path $This.Path
         $This.File               = Get-Item -Path ( "{0}\FightingEntropy.psm1" -f $This.Path )
         $This.Manifest           = Get-Item -Path ( "{0}\FightingEntropy.psd1" -f $This.Path )
-        $This.Classes            = $This.Base | ? Name -eq Classes   | % { Get-ChildItem $_.FullName }
-        $This.Control            = $This.Base | ? Name -eq Control   | % { Get-ChildItem $_.FullName }
-        $This.Functions          = $This.Base | ? Name -eq Functions | % { Get-ChildItem $_.FullName }
-        $This.Graphics           = $This.Base | ? Name -eq Graphics  | % { Get-ChildItem $_.FullName }
+        $This.Classes            = $This.Base | ? Name -eq Classes   | Get-ChildItem
+        $This.Control            = $This.Base | ? Name -eq Control   | Get-ChildItem
+        $This.Functions          = $This.Base | ? Name -eq Functions | Get-ChildItem 
+        $This.Graphics           = $This.Base | ? Name -eq Graphics  | Get-ChildItem
+    }
+    
+    LoadClassLib()
+    {
+        $This.Classes | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path "{0}\Classes\{1}.ps1" -f $This.Path, $_ }
+    }
+    
+    LoadFunctionLib()
+    {
+        $This.Functions | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path "{0}\Functions\{1}.ps1" -f $This.Path, $_ }
+    }
+    
+    LoadNetwork()
+    {
+        
     }
 }

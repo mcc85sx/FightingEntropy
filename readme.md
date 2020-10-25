@@ -10,55 +10,85 @@
 
 [Description] - This following information describes each class/function
 
-               Banner : 
-                Block : 
-                Brand : 
-             Branding : 
-                Cache : 
-          Certificate : 
-              Company : 
-              DCPromo : 
-                Drive : 
-               Drives : 
-                Faces : 
-                 File : 
-         FirewallRule : 
-                 Flag : 
-                 Host : 
-                Icons : 
-                  IIS : 
-          IISFeatures : 
-                 Info : 
-                  Key : 
-               Master : 
-               Module : 
-         NetInterface : 
-              Network : 
-               Object : 
-                QMark : 
-                 Root : 
-              RootVar : 
-     ServerDependency : 
-        ServerFeature : 
-       ServerFeatures : 
-              Service : 
-             Services : 
-                Share : 
-             Shortcut : 
-               Source : 
-               Target : 
-                Theme : 
-                Toast : 
-                Track : 
-             UISwitch : 
-            V4Network : 
-            V6Network : 
-           VendorList : 
-            ViperBomb : 
-                 Xaml : 
-     XamlGlossaryItem : 
-           XamlObject : 
-           XamlWindow : 
+ ___________[ Control ]
+
+               Module : Obtains the root of the module, able to spawn additional tools/shares
+
+ ____________[ Server ]
+
+     ServerDependency : Dependencies such as the Microsoft Deployment Toolkit, WADK, and WinPE.
+        ServerFeature : Server feature objects, used to organize specific set
+       ServerFeatures : FE Server features, IIS and etc.
+                  IIS : IIS Class Template
+          IISFeatures : Additional IIS Features 
+              DCPromo : Used to promote a workstation server to a domain controller 
+
+ ______[ Command-Line ]
+
+                Faces : Array of multiple masks of characters
+                Block : Section of characters with foreground and background colors
+                Theme : Pulls corresponding object theme
+                Track : Handle/swap details using the track object
+               Object : Function initially creates an object, determines count, and length 
+               Banner : Draws custom footer
+                 Flag : Draws a flag that represents the full fire and fury, of "The United States of America"
+
+ _________[ Graphical ]
+
+                 Xaml : Loads XAML for cleanup, or simply  
+     XamlGlossaryItem : Provides an index for shorthand variables
+           XamlObject : Currently stores a number of chunks of XAML
+           XamlWindow : Creates a Window object for XAML control rigging
+                Toast : Creates a Toast notification, also DOM based.
+             UISwitch : Asks the user if they are sure about given options
+
+             
+ __________[ Services ]
+
+              Service : Get-WMIObject -Classname Win32_Service (each individual service)
+             Services : A collection of services as listed above
+            ViperBomb : A GUI for managing Windows Services
+            
+ ___________[ General ]
+
+                Cache : Converts a URL to a filepath
+         FirewallRule : Creates a firewall rule for Windows Firewall/netsh
+                Icons : Displays the icons on the desktop
+             Shortcut : Creates a shortcut on the desktop
+
+ _____[ Configuration ]
+
+                Brand : Sets the item properties fpr branding
+             Branding : Injects the branding properties into a target system 
+                 Root : Established root folder for module, and it's properties
+              Company : Sets/Obtains company information
+
+ __________[ Security ]
+
+               Source : Deployment Share Source
+               Target : Deployment Share Target
+                Share : Deployment Share
+                  Key : Deployment Share Credential Object
+              RootVar : Deployment Share Root Script Variables
+
+ ___________[ Network ]
+
+          Certificate : Obtains a certificate based on external resources
+         NetInterface : Gets information for each interface
+              Network : Object that obtains all details for a given network or vice versa
+            V4Network : IPV4 Network Object/Information
+            V6Network : IPV6 Network Object/Information
+           VendorList : Mac Address -> Vendor List.
+
+
+ ___________[ System ]
+
+                Drive : An object that represents a drive in any given system
+               Drives : A group of drives that are in a given system/network
+                 File : A file object, for handling
+                 Info : Various Cim-Instance properties
+                 Host : Current host oobject
+                QMark : Obtains the unique QMark code from taskman 
 
 [Microsoft Deployment Toolkit] - Needed for configuring new deployment shares
 

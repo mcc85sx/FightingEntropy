@@ -14,6 +14,7 @@ Class _Module
     [Object]            $Control
     [Object]          $Functions
     [Object]           $Graphics
+    [String]             $Status
     [Object]              $Tools
     [Object]             $Shares
     
@@ -86,10 +87,5 @@ Class _Module
     LoadFunctionLib()
     {
         $This.Functions | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path "{0}\Functions\{1}.ps1" -f $This.Path, $_ }
-    }
-    
-    LoadNetwork()
-    {
-        
     }
 }

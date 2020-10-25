@@ -1,4 +1,14 @@
-[Microsoft Deployment Toolkit]
+[Install] - This following scriptlet will download all of the necessary files to install FightingEntropy
+
+    If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() | % IsInRole Administrators )
+    {
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+        Add-Type -AssemblyName PresentationFramework
+        $Install = Invoke-RestMethod -URI https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1/Install.ps1 -ContentType charset=utf-8
+        $Module  = Invoke-Expression $Install
+    }
+
+[Microsoft Deployment Toolkit] - Needed for configuring new deployment shares
 
     It is *the* toolkit...
     ...that Microsoft themselves uses...
@@ -18,8 +28,8 @@
     The [Microsoft Deployment Toolkit].
     Even Mr. Gates thinks it's awesome.
     
-[Windows Assessment and Deployment Kit]
-[Windows Preinstallation Environment Kit]
+[Windows Assessment and Deployment Kit] - Needed
+[Windows Preinstallation Environment Kit] - Needed
 
 [FightngEntropy]
 
@@ -163,5 +173,4 @@
     But it'll help people feel less salty over time.
 
     It could eventually help build a new generation of smart people...
-    
     

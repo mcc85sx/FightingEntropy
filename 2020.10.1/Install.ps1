@@ -125,7 +125,7 @@ Class Install
         Set-Content -Path "$($This.Path)\FightingEntropy.psm1" -Value $This.Master
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
 
-        $Module                          = Get-FEModule
+        $Module                          = Get-FEModule | Out-Null
         
         @{ 
             GUID                          = "e21f2e0e-36f4-4a22-9094-9206dcef9365"

@@ -1,7 +1,7 @@
 Class Install
 {
     Hidden [Object]  $Master
-    [String]           $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1" 
+    [String]           $Path = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.10.1"
     [String]            $URL
 
     Hidden [Hashtable] $Hash = @{ 
@@ -123,24 +123,21 @@ Class Install
         $This.Master                     =  ( $This.Load -join "`n" )
 
         Set-Content -Path "$($This.Path)\FightingEntropy.psm1" -Value $This.Master
-        
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
-        
         Get-FEModule    | Out-Null
-        
-        @{  
-            Type        = 4
-            Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-            GUID        = New-GUID
-            Header      = "Secure Digits Plus LLC"
-            Body        = "FightingEntropy"
-            Footer      = "2020.10.1"
-
-        }               | % { Show-ToastNotification @_ }
-        
         Write-Flag
     }
 }
 
 Add-Type -AssemblyName PresentationFramework
 $Return = [Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
+
+@{  
+    Type        = 4
+    Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
+    GUID        = New-GUID
+    Header      = "Secure Digits Plus LLC"
+    Body        = "FightingEntropy"
+    Footer      = "2020.10.1"
+    
+}               | % { Show-ToastNotification @_ }

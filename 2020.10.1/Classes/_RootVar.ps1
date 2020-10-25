@@ -36,7 +36,7 @@ Class _RootVar
         $This.LMUser         = 'Administrator'                                             # $R.12
         $This.LMPass         = 'Int3264!'                                                  # $R.13
         $This.Server         = 'dsc2'                                                      # $R.14
-        $This.Source         = [_Source]::New(("{0}\{1}" -f $This.UNC, $This.CompanyName)) # $R.15
-        $This.Target         = [_Target]::New("C:\$($This.CompanyName)")                   # $R.16
+        #$This.Source         = [_Source]::New(("{0}\{1}" -f $This.UNC, $This.CompanyName)) # $R.15
+        #$This.Target         = [_Target]::New("C:\$($This.CompanyName)")                   # $R.16
     }
 }

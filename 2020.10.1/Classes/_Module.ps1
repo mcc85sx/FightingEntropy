@@ -5,6 +5,8 @@ Class _Module
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Path = $Env:ProgramData
     [String]                $URL = "https://github.com/mcc85sx/FightingEntropy/blob/master/2020.10.1"
+    [Object]               $File
+    [Object]           $Manifest
     [String]           $Registry = "HKLM:\SOFTWARE\Policies"
     [Object]         $Properties
     [Object]               $Base
@@ -65,7 +67,9 @@ Class _Module
 
         $This.Properties         = Get-ItemProperty -Path $This.Registry | Select-Object Name, Version, Provider, Date, Path, Status
         $This.Folders            | % { "{0}\$_" -f $This.Path } | ? { ! ( Test-Path $_ ) } | % { New-Item -Path $_ -ItemType Directory -Verbose }
-        $This.Base               = Get-ChildItem $This.Path
+        $This.Base               = Get-ChildItem -Path $This.Path
+        $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
+        $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
         $This.Classes            = $This.Base | ? Name -eq Classes   | % { Get-ChildItem $_.FullName }
         $This.Control            = $This.Base | ? Name -eq Control   | % { Get-ChildItem $_.FullName }
         $This.Functions          = $This.Base | ? Name -eq Functions | % { Get-ChildItem $_.FullName }

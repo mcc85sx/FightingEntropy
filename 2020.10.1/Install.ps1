@@ -124,7 +124,21 @@ Class Install
 
         Set-Content -Path "$($This.Path)\FightingEntropy.psm1" -Value $This.Master
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
-        Get-FEModule    | Out-Null
+
+        $Module                          = Get-FEModule
+        
+        @{ 
+            GUID                          = "e21f2e0e-36f4-4a22-9094-9206dcef9365"
+            Path                          = $Module.Manifest
+            ModuleVersion                 = $Module.Version
+            Copyright                     = "(c) 2020 mcc85sx. All rights reserved."
+            CompanyName                   = "Secure Digits Plus LLC" 
+            Author                        = "mcc85sx / Michael C. Cook Sr."
+            Description                   = "Beginning the fight against Identity Theft, and Cybercriminal Activities"
+            RootModule                    = $Module.File
+
+        }                                 | % { New-ModuleManifest @_ }
+        
         Write-Flag
     }
 }

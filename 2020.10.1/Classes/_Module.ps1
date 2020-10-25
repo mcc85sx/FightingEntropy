@@ -68,8 +68,8 @@ Class _Module
         $This.Properties         = Get-ItemProperty -Path $This.Registry | Select-Object Name, Version, Provider, Date, Path, Status
         $This.Folders            | % { "{0}\$_" -f $This.Path } | ? { ! ( Test-Path $_ ) } | % { New-Item -Path $_ -ItemType Directory -Verbose }
         $This.Base               = Get-ChildItem -Path $This.Path
-        $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
-        $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
+        $This.File               = Get-Item -Path ( "{0}\FightingEntropy.psm1" -f $This.Path )
+        $This.Manifest           = Get-Item -Path ( "{0}\FightingEntropy.psd1" -f $This.Path )
         $This.Classes            = $This.Base | ? Name -eq Classes   | % { Get-ChildItem $_.FullName }
         $This.Control            = $This.Base | ? Name -eq Control   | % { Get-ChildItem $_.FullName }
         $This.Functions          = $This.Base | ? Name -eq Functions | % { Get-ChildItem $_.FullName }

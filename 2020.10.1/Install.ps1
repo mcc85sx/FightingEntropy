@@ -142,7 +142,7 @@ Class Install
         @{  
             Type                          = 4
             Image                         = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-            GUID                          = $Module.GUID
+            GUID                          = New-GUID
             Header                        = "Secure Digits Plus LLC"
             Body                          = "FightingEntropy"
             Footer                        = "2020.10.1"

@@ -126,7 +126,17 @@ Class Install
         
         Import-Module "$($This.Path)\FightingEntropy.psm1" -Verbose
         
-        Get-FEModule | Out-Null
+        Get-FEModule    | Out-Null
+        
+        @{  
+            Type        = 4
+            Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
+            GUID        = New-GUID
+            Header      = "Secure Digits Plus LLC"
+            Body        = "FightingEntropy"
+            Footer      = "2020.10.1"
+
+        }               | % { Show-ToastNotification @_ }
         
         Write-Flag
     }

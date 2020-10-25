@@ -9,11 +9,14 @@ Class _Source
 
     _Source([String]$NetworkPath)
     {
-        $This.NetworkPath   = "$NetworkPath"
-        $This.Branding      = "$NetworkPath\[0]Branding"
-        $This.Certificates  = "$NetworkPath\[1]Certificates"
-        $This.Tools         = "$NetworkPath\[2]Tools"
-        $This.Snapshots     = "$NetworkPath\[3]Snapshots"
-        $This.Profiles      = "$NetworkPath\[4]Profiles"
+        $NetworkPath            | % {
+        
+            $This.NetworkPath   = "$_"
+            $This.Branding      = "$_\Branding"
+            $This.Certificates  = "$_\Certificates"
+            $This.Tools         = "$_\Tools"
+            $This.Snapshots     = "$_\Snapshots"
+            $This.Profiles      = "$_\Profiles"
+        }
     }
 }

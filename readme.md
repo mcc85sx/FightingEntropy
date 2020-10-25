@@ -8,6 +8,10 @@
         $Module  = Invoke-Expression $Install
     }
 
+[Description] - This following information describes each class/function
+
+
+
 [Microsoft Deployment Toolkit] - Needed for configuring new deployment shares
 
     It is *the* toolkit...

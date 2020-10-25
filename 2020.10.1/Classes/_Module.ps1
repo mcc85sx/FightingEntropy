@@ -14,6 +14,8 @@ Class _Module
     [Object]            $Control
     [Object]          $Functions
     [Object]           $Graphics
+    [Object]              $Tools
+    [Object]             $Shares
     
     Hidden [Hashtable]     $Hash = @{ 
     

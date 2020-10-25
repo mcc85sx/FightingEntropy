@@ -4,7 +4,7 @@
     {
         Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
         Add-Type -AssemblyName PresentationFramework
-        $Install = Invoke-RestMethod -URI https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1/Install.ps1 -ContentType charset=utf-8
+        $Install = Invoke-WebRequest -URI https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1/Install.ps1 -ContentType charset=utf-8 | % Content
         $Module  = Invoke-Expression $Install
     }
 

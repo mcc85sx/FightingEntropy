@@ -81,11 +81,11 @@ Class _Module
     
     LoadClassLib()
     {
-        $This.Classes | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path "{0}\Classes\{1}.ps1" -f $This.Path, $_ }
+        $This.Classes | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path ( "{0}\Classes\{1}.ps1" -f $This.Path, $_ ) }
     }
     
     LoadFunctionLib()
     {
-        $This.Functions | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path "{0}\Functions\{1}.ps1" -f $This.Path, $_ }
+        $This.Functions | Get-ChildItem | ? Name -match __index.txt | Get-Content | % { Import-Module -Path ( "{0}\Functions\{1}.ps1" -f $This.Path, $_ ) }
     }
 }

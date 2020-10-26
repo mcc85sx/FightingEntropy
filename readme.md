@@ -200,36 +200,35 @@ This following scriptlet will download all of the necessary files to install Fig
     these people in particular... Maybe there's an instance where Tom Clancy just got up one day after hearing about 
     this story taking place... he just... randomly, out of the blue... said "Hey, I want to write a book about this."
 
-    Perhaps the character for which Tom Clancy successfully envisioned and created as a direct result of observing 
-    the most clever bastards out there, a character based on the real person that Tom Clancy thought would be a perfect 
-    person to recruit as an acting replacement for Tom Cruise...
+    Perhaps the character for which Tom Clancy successfully envisioned, AND created... 
+    ...as a direct result of observing the most clever bastards out there... 
+    ...a character based on none other than the real person that Tom Clancy thought'd be perfect...
+    ...to recruit as an acting replacement for Tom Cruise.
 
-    He figured, Mr. Cruise is in all 14 Mission Impossible movies... 
+    He figured, Mr. Cruise is in all 14 Mission Impossible movies. 
     Sorta has an acting monopoly on good spy operative movies... 
     
-    It is pretty easy to see how he's 'first place' material... 
+    It is pretty easy to see how he's 'first place' material though... 
     Losing Goose in Top Gun really drew out the perfect storm for Tom Cruises acting abilities to take root...
-    ... and manifest into the much more mature version of the character that he's been able to tap into, on command... 
+    ...and manifest into the much more mature version of the character that he's been able to tap into, on command...
+    ...cause his best buddy Goose died.
 
-    Because... 
-    I heard that Tom took it really hard when he lost Goose. 
-    Not Tom Clancy, Tom Cruise. 
-    
-    I gotta say... I think that losing Goose could traumatize anybody, let alone any hardened warrior/soldier.
+    Because... I heard that Tom took it really hard when he lost Goose. Not Tom Clancy... Tom Cruise. 
+    I gotta say... I think that losing Goose could traumatize anybody, let alone any hardened warrior/soldier...
 
-    Now, what I've just spent the last few paragraphs *describing*, is just a preview... 
-    ...of the level I will have to rise to... 
+    Now, look... what I've just spent the last few paragraphs stating...
+    ...that's just a *preview* of the level I will have to rise to... 
     ...in order to merely *describe*... 
-    ...the type of person who could fill Tom Cruises shoes any day of the week. 
+    ...the type of person who could fill Tom Cruises shoes any day of the week.
     
-    Because while Tom acts like he's a super secret top notch spy..?
+    Because while Tom *acts* like he's a super secret top notch spy..?
 
-    Well, the people that this module is written for, and dedicated to... are the type of people that could call 
-    their spy buddies that live down the street, to keep tabs on you anywhere/everywhere..? But they don't. 
-    
-    They could also just out of nowhere, take a vacation whenever, wherever, go, see, do... at the drop of a pin... 
-    ...but they don't do that either. 
-    
+    Well, the people that *this module* is written for, and dedicated to... 
+    They're the type of people that could call their spy buddies that live down the street. 
+    To keep tabs on you, anywhere/everywhere..? 
+    But they don't. 
+    They could also just out of nowhere, take a vacation whenever, wherever, go, see, do... 
+    at the drop of a pin... but- they don't do that either. 
     Why...?
 
     - long pause -
@@ -237,7 +236,7 @@ This following scriptlet will download all of the necessary files to install Fig
     Because they're too busy being awesome. That's why...
 
     So what you're left with, is a description of the type of grade/character of somebody who should have gotten a 
-    Nobel Peace Prize by now. And in this specific (person/people)'s case, in my opinion it just so happens to be the case...
+    Nobel Peace Prize by now. And in this specific (person/people)'s case, in my opinion, it just so happens to be the case...
     That it is actually possible to make something that's too peaceful to receive a Nobel Peace Prize.
 
     It's like what I'd imagine a director at the Oscars goes through, when they get 'snubbed' for an Academy Award/Oscar.
@@ -259,7 +258,7 @@ This following scriptlet will download all of the necessary files to install Fig
     
     "Uh.. Ok? What are you telling *me* for? 12 what?"
     
-    "Ah. I knew you'd ask. Nobel Peace Prizes" you announce, like a king.
+    "Ah. I knew you'd ask. Nobel Peace Prizes." you announce, like a king.
     The person you just said that to, they're confused. 
     "Wait, huh?"
     
@@ -273,27 +272,47 @@ This following scriptlet will download all of the necessary files to install Fig
 
     [End Skit]
 
-    This is the module that hopes, or attempts to be... one that was specifically tailor made.
+    This is the module that hopes, or attempts to be... one that was specifically tailor made...
     ...for the limited few people in this world that happen to have a constant category 5 hurricane going on in their mind every day... 
     ...and yet, they're as peaceful as can be.
 
-    Getting snubbed for that many peace prizes would send any sane man that deserves one, over the edge.
+    Getting snubbed for that many peace prizes should send any sane man that deserves one, over the edge.
     I just don't know how they do it. 
     
-    Being told that you're too peaceful to receive a Nobel Peace Prize? 
-    That should be enough to drive any one of these people I just described... 
-    into a frenzy.
-    
-    Maybe they deserve this prize.
-    I could imagine, some rich guy saying to himself...
+    Being told that you're too peaceful to receive a Nobel Peace Prize?
+    Is it worse than never actually getting one, and everybody fake saying "You'll get one someday buddy!"
 
-    "I've got plenty of money folks. All that time, the money wasn't even what I wanted. 
-    Went around helping people in need... but the world ignored the one need that remains vacant to this day...
-    my need to receive one of these peace prizes."
+    What I just described, it *should* be enough to drive any one of these people I just described... into a frenzy.
     
-    Maybe they earned it fair and square... 
+    Maybe they deserve this prize. Perhaps they have put less thought into it than I have, but... now they realize they
+    don't have a Nobel Peace Prize, but *now* they do.
+
+    I could imagine, in a much less sarcastic tone... that some rich goodie two shoes saying to themselves...
+    "I've got plenty of money folks. All that time... the money wasn't even what I wanted. 
+    People kept giving it to me anyway, so... wasn't gonna turn that down.
+
+    I was so friggen skilled at doing what I did to become rich and famous... 
+    I eventually got bored of destroying my best records. 
+    So... I started going around helping OTHER people in need. 
+    Gave myself an even more difficult challenge. 
+
+    However... all my good deeds aside...? 
+    The world has largely ignored the one need that I still have to this day...
+    That is...? 
+
+    My need to receive one of these peace prizes."
+    
+    You might think i'm just kidding, or that I'm making up a really unbelievable situation... 
+    
+    But you would be shocked at how much of this is an accurate story... about the guy that this module was written for.
+
+    Maybe this guy earned it fair and square. 
+    20 times over, even... 
     And yet...? 
-    The prize continues to not be given to (this legend/these legends)...
+    The man unable to obtain this prize... 
+
+    He and his wife have changed the world... but- still no Nobel Peace Prize.
+    Once everybody realizes how messed up that is... they'll understand what I had to live through to write this thing.
 
     [Final Thought]
     FightingEntropy might not be that extreme, where it winds up earning a Nobel Peace Prize or anything like that.

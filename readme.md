@@ -1,4 +1,15 @@
-[Install] - This following scriptlet will download all of the necessary files to install FightingEntropy
+# Project Information
+
+FightingEntropy is a PowerShell modification for: 1) Microsoft Deployment Toolkit, 2) Windows Assessment and Deployment Kit, 3) Windows Preinstallation Environment, 4) IIS/BITS/ASP.Net Framework, 5) Image Factory derivative, 6) DSC for Active Directory, DNS, DHCP, WDS, 7) Endpoint Service Configuration (ViperBomb), 8) Endpoint branding, 9) automation and installation of these tasks.
+
+In it's current state, the module is broken down into several classes and functions. 
+Running the following installation code in PowerShell will allow a live installation of the modification thus far.
+Intentions to bring this fully cross platform highly depend on WPF and Xamarin still needing implementation.
+In other words, some things work in Linux, some things don't. 
+The things that don't are typically WMF based commands, or CIM/WMI.
+
+# Install
+This following scriptlet will download all of the necessary files to install FightingEntropy
 
     If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() | % IsInRole Administrators )
     {
@@ -8,85 +19,120 @@
         $Module  = Invoke-Expression $Install
     }
 
-[Description] - This following information describes each class/function
+# Classes
 
 [Control]
 
-               Module : Obtains the root of the module, able to spawn additional tools/shares
+               [_Module] : Obtains the root of the module, able to spawn additional tools/shares
+[System]
+
+                [_Drive] : An object that represents a drive in any given system
+               [_Drives] : A group of drives that are in a given system/network
+                 [_File] : A file object, for handling
+                 [_Info] : Various Cim-Instance properties
+                 [_Host] : Current host oobject
+                [_QMark] : Obtains the unique QMark code from taskman
+[General]
+
+                [_Cache] : Converts a URL to a filepath
+         [_FirewallRule] : Creates a firewall rule for Windows Firewall/netsh
+                [_Icons] : Displays the icons on the desktop
+             [_Shortcut] : Creates a shortcut on the desktop
+             
 [Server]
 
-     ServerDependency : Dependencies such as the Microsoft Deployment Toolkit, WADK, and WinPE.
-        ServerFeature : Server feature objects, used to organize specific set
-       ServerFeatures : FE Server features, IIS and etc.
-                  IIS : IIS Class Template
-          IISFeatures : Additional IIS Features 
-              DCPromo : Used to promote a workstation server to a domain controller
+     [_ServerDependency] : Dependencies such as the Microsoft Deployment Toolkit, WADK, and WinPE.
+        [_ServerFeature] : Server feature objects, used to organize specific set
+       [_ServerFeatures] : FE Server features, IIS and etc.
+                  [_IIS] : IIS Class Template
+          [_IISFeatures] : Additional IIS Features 
+              [_DCPromo] : Used to promote a workstation server to a domain controller
 
-[Command-Line]
+[Console]
 
-                Faces : Array of multiple masks of characters
-                Block : Section of characters with foreground and background colors
-                Theme : Pulls corresponding object theme
-                Track : Handle/swap details using the track object
-               Object : Function initially creates an object, determines count, and length 
-               Banner : Draws custom footer
-                 Flag : Draws a flag that represents the full fire and fury, of "The United States of America"
+                [_Faces] : Array of multiple masks of characters
+                [_Block] : Section of characters with foreground and background colors
+                [_Theme] : Pulls corresponding object theme
+                [_Track] : Handle/swap details using the track object
+               [_Object] : Function initially creates an object, determines count, and length 
+               [_Banner] : Draws custom footer
+                 [_Flag] : Draws a flag that represents the full fire and fury, of "The United States of America"
 
 [Graphical]
 
-                 Xaml : Loads XAML for cleanup, or simply  
-     XamlGlossaryItem : Provides an index for shorthand variables
-           XamlObject : Currently stores a number of chunks of XAML
-           XamlWindow : Creates a Window object for XAML control rigging
-                Toast : Creates a Toast notification, also DOM based.
-             UISwitch : Asks the user if they are sure about given options
-
+                 [_Xaml] : Loads XAML for cleanup, or simply  
+     [_XamlGlossaryItem] : Provides an index for shorthand variables
+           [_XamlObject] : Currently stores a number of chunks of XAML
+           [_XamlWindow] : Creates a Window object for XAML control rigging
+                [_Toast] : Creates a Toast notification, also DOM based.
+             [_UISwitch] : Asks the user if they are sure about given options
              
 [Services]
 
-              Service : Get-WMIObject -Classname Win32_Service (each individual service)
-             Services : A collection of services as listed above
-            ViperBomb : A GUI for managing Windows Services
-            
-[General]
-
-                Cache : Converts a URL to a filepath
-         FirewallRule : Creates a firewall rule for Windows Firewall/netsh
-                Icons : Displays the icons on the desktop
-             Shortcut : Creates a shortcut on the desktop
+              [_Service] : Get-WMIObject -Classname Win32_Service (each individual service)
+             [_Services] : A collection of services as listed above
+            [_ViperBomb] : A GUI for managing Windows Services
 
 [Configuration]
 
-                Brand : Sets the item properties fpr branding
-             Branding : Injects the branding properties into a target system 
-                 Root : Established root folder for module, and it's properties
-              Company : Sets/Obtains company information
+                [_Brand] : Sets the item properties fpr branding
+             [_Branding] : Injects the branding properties into a target system 
+                 [_Root] : Established root folder for module, and it's properties
+              [_Company] : Sets/Obtains company information
 
 [Security]
 
-               Source : Deployment Share Source
-               Target : Deployment Share Target
-                Share : Deployment Share
-                  Key : Deployment Share Credential Object
-              RootVar : Deployment Share Root Script Variables
+               [_Source] : Deployment Share Source
+               [_Target] : Deployment Share Target
+                [_Share] : Deployment Share
+                  [_Key] : Deployment Share Credential Object
+              [_RootVar] : Deployment Share Root Script Variables
 
 [Network]
 
-          Certificate : Obtains a certificate based on external resources
-         NetInterface : Gets information for each interface
-              Network : Object that obtains all details for a given network or vice versa
-            V4Network : IPV4 Network Object/Information
-            V6Network : IPV6 Network Object/Information
-           VendorList : Mac Address -> Vendor List.
+          [_Certificate] : Obtains a certificate based on external resources
+         [_NetInterface] : Gets information for each interface
+              [_Network] : Object that obtains all details for a given network or vice versa
+            [_V4Network] : IPV4 Network Object/Information
+            [_V6Network] : IPV6 Network Object/Information
+           [_VendorList] : Mac Address -> Vendor List.
+           
+# Functions
 
-[System]
+                   [Add-ACL] : Adds/creates an access control list for a folder.
+        [Complete-IISServer] : Completes the installation of an IIS Server for BITS/MDT
+           [Get-Certificate] : Obtains external address, telemetry, to use for certificate generation/AD population
+              [Get-FEModule] : Obtains the FightingEntropy module, and exposes its functions and content.
+      [Get-ServerDependency] : Determines if the current server has installation criteria met
+             [Get-ViperBomb] : Opens the ViperBomb GUI
+         [Install-IISServer] : Installs the components needed for a BITS/MDT Server
+             [New-ACLObject] : Creates a template of file system permissions that can be applied to a file/folder
+             [New-FECompany] : Creates a new template for FightingEntropy deployment shares
+            [Remove-FEShare] : Removes a FightingEntropy deployment share
+    [Show-ToastNotification] : Sends a toast notification
+              [Write-Banner] : Writes a colored banner to the console.
+                [Write-Flag] : Writes a colored US American Flag to the console.
+               [Write-Theme] : Stylizes a given object in the console
 
-                Drive : An object that represents a drive in any given system
-               Drives : A group of drives that are in a given system/network
-                 File : A file object, for handling
-                 Info : Various Cim-Instance properties
-                 Host : Current host oobject
-                QMark : Obtains the unique QMark code from taskman 
+# Control
+
+              [Computer.png] : FightingEntropy icon
+           [DefaultApps.xml] : (Outdated, placeholder)
+          [MDTClientMod.xml] : Template for standard MDT client operating system installation
+          [MDTServerMod.xml] : Template for standard MDT server operating system installation
+          [PSDClientMod.xml] : Template for standard PSD client operating system installation
+          [PSDServerMod.xml] : Template for standard PSD server operating system installation
+          [header-image.png] : FightingEntropy style bar
+
+# Graphics
+
+                 [OEMbg.jpg] : 4K resolution picture of the Corning Tower in Albany NY (with banner)
+               [OEMlogo.bmp] : 120x120 bitmap, system icon badge
+            [background.jpg] : 4K resolution picture of the Corning Tower in Albany NY (b/w gradient)
+                [banner.png] : Company badge/banner
+                  [icon.ico] : Icon for applications
+
+# Dependencies
 
 [Microsoft Deployment Toolkit] - Needed for configuring new deployment shares
 
@@ -111,7 +157,8 @@
 [Windows Assessment and Deployment Kit] - Needed
 [Windows Preinstallation Environment Kit] - Needed
 
-[FightngEntropy]
+
+# The philosophy behind "FightingEntropy"
 
     With usage of this module, you will gain the ability to ... *list*
 

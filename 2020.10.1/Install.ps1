@@ -3,19 +3,20 @@ Class Install
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.10.1"
     [String]           $Provider = "Secure Digits Plus LLC"
+    [String]               $Date
+    [String]             $Status
     [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1"
 
     [String]           $Registry
     [String]               $Path
+    [String]             $String
     [Object]               $File 
     [Object]           $Manifest
-    [Object]         $Properties
     [Object]               $Base
     [Object]            $Classes
     [Object]            $Control
     [Object]          $Functions
     [Object]           $Graphics
-    [String]             $Status
     [Object]              $Tools
     [Object]             $Shares
 
@@ -36,11 +37,59 @@ Class Install
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                                     "tion New-FECompany Get-ServerDependency") -Split " "
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
+
+        String                   = "{0}\FightingEntropy.mtn"
     }
+
+    [Object]               $Load
+    [Object]             $Output
 
     [String] Root([String]$Root)
     {
         Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+    }
+
+    BuildModule()
+    {
+        $This.Load               = @( )
+        $This.Load              += "# FightingEntropy Module Manifest"
+        $This.Load              += "Add-Type -AssemblyName PresentationFramework"
+        $This.Load              += ""
+
+        ForEach ( $I in 0..( $This.Classes.Count - 1 ) )
+        {
+            $This.Load          += ( Get-Content $This.Classes[$I] )
+            $This.Load          += ""
+        }
+
+        ForEach ( $I in 0..( $This.Functions.Count - 1 ) )
+        {
+            $This.Load          += ( Get-Content $This.Functions[$I] )
+            $This.Load          += ""
+        }
+
+        $This.Output             = $This.Load -join "`n"
+
+        Set-Content -Path $This.File -Value $This.Output
+
+        Get-Item $This.File
+    }
+
+    BuildManifest()
+    {
+        @{ 
+            GUID                 = "e21f2e0e-36f4-4a22-9094-9206dcef9365"
+            Path                 = $This.Manifest
+            ModuleVersion        = $This.Version
+            Copyright            = "(c) 2020 mcc85sx. All rights reserved."
+            CompanyName          = "Secure Digits Plus LLC" 
+            Author               = "mcc85sx / Michael C. Cook Sr."
+            Description          = "Beginning the fight against Identity Theft, and Cybercriminal Activities"
+            RootModule           = $This.File
+
+        }                        | % { New-ModuleManifest @_ }
+        
+        Get-Item $This.Manifest
     }
 
     Install()
@@ -52,6 +101,12 @@ Class Install
 
         $This.File               = $This.Module.File     -f $This.Path
         $This.Manifest           = $This.Module.Manifest -f $This.Path
+        $This.String             = $This.Module.String   -f $This.Path
+
+        $This.Classes            = $This.Module.Classes
+        $This.Control            = $This.Module.Control
+        $This.Functions          = $This.Module.Functions
+        $This.Graphics           = $This.Module.Graphics
 
         ForEach ( $I in $This.Module.Folders )
         {
@@ -118,43 +173,30 @@ Class Install
             }
         }
 
-        $This.Load                       = @( )
-        $This.Load                      += "# FightingEntropy Module Manifest"
-        $This.Load                      += "Add-Type -AssemblyName PresentationFramework"
-        $This.Load                      += ""
-
-        ForEach ( $I in 0..( $This.Classes.Count - 1 ) )
+        If ( ! ( Test-Path $This.File ) )
         {
-            $This.Load                  += ( Get-Content $This.Classes[$I] )
-            $This.Load                  += ""
+            $This.BuildModule()
         }
 
-        ForEach ( $I in 0..( $This.Functions.Count - 1 ) )
+        If ( ! ( Test-Path $This.Manifest ) )
         {
-            $This.Load                  += ( Get-Content $This.Functions[$I] )
-            $This.Load                  += ""
+            $This.BuildManifest()
         }
 
-        $This.Master                     = $This.Load -join "`n"
-
-        Set-Content -Path $This.File -Value $This.Master
-
-        Import-Module $This.File -Verbose
-
-        # $Module                          = Get-FEModule
-        
-        @{ 
-            GUID                          = "e21f2e0e-36f4-4a22-9094-9206dcef9365"
-            Path                          = $This.Manifest
-            ModuleVersion                 = $This.Version
-            Copyright                     = "(c) 2020 mcc85sx. All rights reserved."
-            CompanyName                   = "Secure Digits Plus LLC" 
-            Author                        = "mcc85sx / Michael C. Cook Sr."
-            Description                   = "Beginning the fight against Identity Theft, and Cybercriminal Activities"
-            RootModule                    = $This.File
-
-        }                                 | % { New-ModuleManifest @_ }
-
+        Import-Module $This.Manifest
         Write-Theme "Module [+] Loaded"
     }
 }
+
+# Add-Type -AssemblyName PresentationFramework
+# $Return = [Install]::new() #"https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
+
+#@{  
+#    Type        = 4
+#    Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
+#    GUID        = New-GUID
+#    Header      = "Secure Digits Plus LLC"
+#    Body        = "FightingEntropy"
+#    Footer      = "2020.10.1"
+#    
+#}               | % { Show-ToastNotification @_ }

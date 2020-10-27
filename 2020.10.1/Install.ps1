@@ -1,51 +1,59 @@
 Class Install
 {
-    Hidden [Object]  $Master
-    [String]           $Name = "FightingEntropy"
-    [String]        $Version = "2020.10.1"
-    [String]       $Provider = "Secure Digits Plus LLC"
-    [String]         $Author = "Michael C. Cook Sr."
-    [String]           $Path
-    [String]            $URL
-    [Object]           $File
-    [Object]       $Manifest
-    [Object[]]      $Classes
-    [Object[]]      $Control
-    [Object[]]    $Functions
-    [Object[]]     $Graphics
-    [String[]]         $Load
+    [String]               $Name = "FightingEntropy"
+    [String]            $Version = "2020.10.1"
+    [String]           $Provider = "Secure Digits Plus LLC"
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1"
 
-    Hidden [Hashtable] $Hash = @{ 
+    [String]           $Registry
+    [String]               $Path
+    [Object]               $File 
+    [Object]           $Manifest
+    [Object]         $Properties
+    [Object]               $Base
+    [Object]            $Classes
+    [Object]            $Control
+    [Object]          $Functions
+    [Object]           $Graphics
+    [String]             $Status
+    [Object]              $Tools
+    [Object]             $Shares
 
-        Folders   = ("/Classes/Control/Functions/Graphics" -Split "/")
+    [Hashtable]          $Module = @{
 
-        Classes   = ("_QMark _File _FirewallRule _Drive _Cache _Icons _Shortcut _Drives _Host _Block _Faces " +
-                     "_Track _Theme _Object _Flag _Banner _UISwitch _Toast _XamlWindow _XamlObject _Root _Mo" + 
-                     "dule _VendorList _V4Network _V6Network _NetInterface _Network _Info _Service _Services" + 
-                     " _ViperBomb _Brand _Branding _Certificate _Company _Key _RootVar _Share _Master _Sourc" + 
-                     "e _Target _ServerDependency _ServerFeature _ServerFeatures _IISFeatures _IIS _DCPromo " + 
-                     "_Xaml _XamlGlossaryItem" ) -Split " "
-                     
-        Control   = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
-                     "ClientMod.xml","ServerMod.xml") -Split " "
-                     
-        Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
-                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
-                     "tion Get-ServerDependency") -Split " "
-                     
-        Graphics  = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
+        Path                     = "{0}"
+        File                     = "{0}\FightingEntropy.psm1"
+        Manifest                 = "{0}\FightingEntropy.psd1"
+        Folders                  = ("/Classes/Control/Functions/Graphics" -Replace "\s+" , " " -Split "/")
+        Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track " + 
+                                    "Theme Object Flag Banner UISwitch Toast XamlWindow XamlObject Root Module VendorList V4Networ" + 
+                                    "k V6Network NetInterface Network Info Service Services ViperBomb Brand Branding Certificate C" + 
+                                    "ompany Key RootVar Share Master Source Target ServerDependency ServerFeature ServerFeatures I" + 
+                                    "ISFeatures IIS DCPromo Xaml XamlGlossaryItem" ) -Split " " | % { "_$_" }
+        Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
+                                    "ClientMod.xml","ServerMod.xml") -Split " "
+        Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
+                                    "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
+                                    "tion New-FECompany Get-ServerDependency") -Split " "
+        Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
     }
-    
-    Install([String]$URL)
+
+    [String] Root([String]$Root)
     {
+        Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+    }
+
+    Install()
+    {
+        $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
+        $This.Path               = $This.Root($Env:ProgramData)
+
         [Net.ServicePointManager]::SecurityProtocol = 3072
 
-        $This.URL         = $URL
-        $This.Path        = $env:ProgramData, $This.Provider, $This.Name, $This.Version -join '\'
-        $This.File        = $This.Path, "FightingEntropy.psm1" -join '\'
-        $This.Manifest    = $This.Path, "FightingEntropy.psd1" -join '\'
+        $This.File               = $This.Module.File     -f $This.Path
+        $This.Manifest           = $This.Module.Manifest -f $This.Path
 
-        ForEach ( $I in $This.Hash.Folders )
+        ForEach ( $I in $This.Module.Folders )
         {
             $Item = $This.Path, $I -join '\'
 
@@ -58,58 +66,53 @@ Class Install
             {
                 Classes 
                 {   
-                    Set-Content -Path "$($This.Path)\Classes\__index.txt" -Value $This.Hash.Classes -Force
-                    ForEach ( $X in $This.Hash.Classes )
+                    ForEach ( $X in $This.Module.Classes )
                     {
-                        $iFile           = "$($This.Path)\Classes\$X.ps1"
-                        $Link            = "$($This.URL )/Classes/$X.ps1"
+                        $URI             = "$($This.Resource)/Classes/$X.ps1"
+                        $Outfile         = "$($This.Path)\Classes\$X.ps1"
 
-                        Invoke-RestMethod -URI $Link -Outfile $iFile -Verbose
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -Verbose
 
-                        $This.Classes   += $iFile
+                        $This.Classes   += $OutFile
                     }
                 }
 
                 Functions
                 {
-                    Set-Content -Path "$($This.Path)\Functions\__index.txt" -Value $This.Hash.Functions -Force
-                    ForEach ( $X in $This.Hash.Functions )
+                    ForEach ( $X in $This.Module.Functions )
                     {
-                        $iFile           = "$($This.Path)\Functions\$X.ps1"
-                        $Link            = "$($This.URL )/Functions/$X.ps1"
+                        $URI             = "$($This.Resource)/Functions/$X.ps1"
+                        $Outfile         = "$($This.Path)\Functions\$X.ps1"
 
-                        Invoke-RestMethod -URI $Link -Outfile $iFile -Verbose
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -Verbose
 
-                        $This.Functions += $iFile
+                        $This.Functions += $OutFile
                     }
                 }
 
                 Control
                 {
-                    Set-Content -Path "$($This.Path)\Control\__index.txt" -Value $This.Hash.Control -Force
-                    ForEach ( $X in $This.Hash.Control )
+                    ForEach ( $X in $This.Module.Control )
                     {
-                        $iFile           = "$($This.Path)\Control\$X"
-                        $Link            = "$($This.URL )/Control/$X"
+                        $URI             = "$($This.Resource)/Control/$X"
+                        $OutFile         = "$($This.Path)\Control\$X"
 
-                        Invoke-RestMethod -URI $Link -OutFile $iFile -Verbose
+                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
 
-                        $This.Control   += $iFile
+                        $This.Control   += $OutFile
                     }
                 }
 
                 Graphics
                 {
-                    Set-Content -Path "$($This.Path)\Graphics\__index.txt" -Value $This.Hash.Functions -Force
-
-                    ForEach ( $X in $This.Hash.Graphics )
+                    ForEach ( $X in $This.Module.Graphics )
                     {
-                        $iFile           = "$($This.Path)\Graphics\$X"
-                        $Link            = "$($This.URL )/Graphics/$X"
+                        $URI             = "$($This.Resource)/Graphics/$X"
+                        $OutFile         = "$($This.Path)\Graphics\$X"
 
-                        Invoke-RestMethod -URI $Link -OutFile $iFile -Verbose
+                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
 
-                        $This.Graphics  += $iFile
+                        $This.Graphics  += $OutFile
                     }
                 }
             }
@@ -138,7 +141,7 @@ Class Install
 
         Import-Module $This.File -Verbose
 
-        $Module                          = Get-FEModule
+        # $Module                          = Get-FEModule
         
         @{ 
             GUID                          = "e21f2e0e-36f4-4a22-9094-9206dcef9365"
@@ -155,16 +158,3 @@ Class Install
         Write-Theme "Module [+] Loaded"
     }
 }
-
-Add-Type -AssemblyName PresentationFramework
-$Return = [Install]::new("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
-
-@{  
-    Type        = 4
-    Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-    GUID        = New-GUID
-    Header      = "Secure Digits Plus LLC"
-    Body        = "FightingEntropy"
-    Footer      = "2020.10.1"
-    
-}               | % { Show-ToastNotification @_ }

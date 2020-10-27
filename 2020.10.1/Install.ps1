@@ -9,10 +9,10 @@ Class Install
 
     [String]           $Registry
     [String]               $Path
-    [String]             $String
     [Object]               $File 
     [Object]           $Manifest
-    [Object]               $Base
+    [Hashtable]            $Base
+
     [Object]            $Classes
     [Object]            $Control
     [Object]          $Functions
@@ -25,19 +25,18 @@ Class Install
         Path                     = "{0}"
         File                     = "{0}\FightingEntropy.psm1"
         Manifest                 = "{0}\FightingEntropy.psd1"
-        Folders                  = ("/Classes/Control/Functions/Graphics" -Replace "\s+" , " " -Split "/")
-        Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track " + 
-                                    "Theme Object Flag Banner UISwitch Toast XamlWindow XamlObject Root Module VendorList V4Networ" + 
-                                    "k V6Network NetInterface Network Info Service Services ViperBomb Brand Branding Certificate C" + 
-                                    "ompany Key RootVar Share Master Source Target ServerDependency ServerFeature ServerFeatures I" + 
-                                    "ISFeatures IIS DCPromo Xaml XamlGlossaryItem" ) -Split " " | % { "_$_" }
-        Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f 
-                                    "ClientMod.xml","ServerMod.xml") -Split " "
+        Folders                  = "/Classes/Control/Functions/Graphics" -Split "/"
+        Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 
+                                    "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
+                                    "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
+                                    "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml " + 
+                                    "XamlGlossaryItem" ).Split(" ") | % { "_$_" }
+        Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
+                                    "ServerMod.xml") -Split " "
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
-                                    "tion New-FECompany Get-ServerDependency") -Split " "
+                                    "tion New-FECompany Get-ServerDependency").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
-
         String                   = "{0}\FightingEntropy.mtn"
     }
 
@@ -50,29 +49,28 @@ Class Install
     }
 
     BuildModule()
-    {
+    {        
         $This.Load               = @( )
-        $This.Load              += "# FightingEntropy Module Manifest"
+        $This.Load              += "# FightingEntropy.psm1 [Module]"
         $This.Load              += "Add-Type -AssemblyName PresentationFramework"
-        $This.Load              += ""
 
-        ForEach ( $I in 0..( $This.Classes.Count - 1 ) )
-        {
-            $This.Load          += ( Get-Content $This.Classes[$I] )
+        $This.Module.Classes     | % { 
+
             $This.Load          += ""
+            $This.Load          += "# Class/$_"
+            $This.Load          += @( Get-Content "$($This.Path)\Classes\$_.ps1" )
         }
 
-        ForEach ( $I in 0..( $This.Functions.Count - 1 ) )
-        {
-            $This.Load          += ( Get-Content $This.Functions[$I] )
-            $This.Load          += ""
-        }
+        $This.Module.Functions   | % {
 
+            $This.Load          += ""
+            $This.Load          += "# Function/$_"
+            $This.Load          += @( Get-Content "$($This.Path)\Functions\$_.ps1" )
+        }
+        
         $This.Output             = $This.Load -join "`n"
 
         Set-Content -Path $This.File -Value $This.Output
-
-        Get-Item $This.File
     }
 
     BuildManifest()
@@ -101,16 +99,10 @@ Class Install
 
         $This.File               = $This.Module.File     -f $This.Path
         $This.Manifest           = $This.Module.Manifest -f $This.Path
-        $This.String             = $This.Module.String   -f $This.Path
-
-        $This.Classes            = $This.Module.Classes
-        $This.Control            = $This.Module.Control
-        $This.Functions          = $This.Module.Functions
-        $This.Graphics           = $This.Module.Graphics
 
         ForEach ( $I in $This.Module.Folders )
         {
-            $Item = $This.Path, $I -join '\'
+            $Item                = $This.Path, $I -join '\'
 
             If ( ! ( Test-Path $Item ) )
             {
@@ -173,18 +165,22 @@ Class Install
             }
         }
 
-        If ( ! ( Test-Path $This.File ) )
-        {
-            $This.BuildModule()
-        }
+        $This.BuildModule()
+        $This.BuildManifest()
 
-        If ( ! ( Test-Path $This.Manifest ) )
-        {
-            $This.BuildManifest()
-        }
+        Import-Module $This.Manifest -Verbose -Force
 
-        Import-Module $This.Manifest
         Write-Theme "Module [+] Loaded"
+
+        @{  
+            Type        = 4
+            Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
+            GUID        = New-GUID
+            Header      = "Secure Digits Plus LLC"
+            Body        = "FightingEntropy"
+            Footer      = "2020.10.1"
+    
+        }               | % { Show-ToastNotification @_ }
     }
 }
 

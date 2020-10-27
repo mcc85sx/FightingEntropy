@@ -31,7 +31,7 @@ Class Install
                      
         Functions = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                      "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
-                     "tion") -Split " "
+                     "tion Get-ServerDependency") -Split " "
                      
         Graphics  = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
     }

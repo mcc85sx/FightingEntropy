@@ -22,6 +22,7 @@ This following scriptlet will download all of the necessary files to install Fig
 # Classes
 
 [Control]
+
                  [_Root] : Stuff
                [_Module] : Obtains the root of the module, able to spawn additional tools/shares
 [System]

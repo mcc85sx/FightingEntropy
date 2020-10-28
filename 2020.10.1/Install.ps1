@@ -3,26 +3,28 @@ Class Install
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.10.1"
     [String]           $Provider = "Secure Digits Plus LLC"
-    [String]               $Date
-    [String]             $Status
+    [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
+    [String]             $Status = "Initialized"
     [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1"
 
-    [String]           $Registry
-    [String]               $Path
+    [String]           $Registry = "HKLM:\SOFTWARE\Policies"
+    [String]               $Path = $Env:ProgramData
     [Object]               $File 
-    [Object]           $Manifest
-    [Hashtable]            $Base
+    [Object]           $Manifest 
+    [Object]               $Base 
 
-    [Object]            $Classes
-    [Object]            $Control
-    [Object]          $Functions
-    [Object]           $Graphics
-    [Object]              $Tools
-    [Object]             $Shares
+    [Object[]]          $Classes
+    [Object[]]          $Control
+    [Object[]]        $Functions
+    [Object[]]         $Graphics
+
+    [Object[]]            $Tools
+    [Object[]]           $Shares
 
     [Hashtable]          $Module = @{
 
         Path                     = "{0}"
+        Names                    = ("Name Version Provider Date Path Status" -Split " ")
         File                     = "{0}\FightingEntropy.psm1"
         Manifest                 = "{0}\FightingEntropy.psd1"
         Folders                  = "/Classes/Control/Functions/Graphics" -Split "/"
@@ -37,11 +39,10 @@ Class Install
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                                     "tion New-FECompany Get-ServerDependency").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
-        String                   = "{0}\FightingEntropy.mtn"
     }
 
-    [Object]               $Load
-    [Object]             $Output
+    Hidden [Object]        $Load
+    Hidden [Object]      $Output
 
     [String] Root([String]$Root)
     {
@@ -86,14 +87,43 @@ Class Install
             RootModule           = $This.File
 
         }                        | % { New-ModuleManifest @_ }
-        
-        Get-Item $This.Manifest
+    }
+
+    BuildRegistry()
+    {
+        ForEach ( $I in 3..5 ) 
+        {      
+            $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
+        }
+
+        $Item                    = Get-ItemProperty -Path $This.Registry
+        $Names                   = ($This.Module.Names)
+        $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status)
+
+        ForEach ( $I in 0..5 )
+        {
+            If ( $Item.$( $Names[$I] ) -eq $Null )
+            {
+                Set-ItemProperty -Path $This.Registry -Name $Names[$I] -Value $Values[$I] -Verbose
+            }
+        }
+    }
+
+    BuildPath()
+    {
+        If ( ! ( Test-Path $This.Path ) )
+        {
+            New-Item -Path $This.Path -ItemType Directory -Verbose
+        }
     }
 
     Install()
     {
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
+        $This.BuildRegistry()
+        
         $This.Path               = $This.Root($Env:ProgramData)
+        $This.BuildPath()
 
         [Net.ServicePointManager]::SecurityProtocol = 3072
 
@@ -167,6 +197,7 @@ Class Install
 
         $This.BuildModule()
         $This.BuildManifest()
+        $This.BuildRegistry()
 
         Import-Module $This.Manifest -Verbose -Force
 
@@ -183,16 +214,3 @@ Class Install
         }               | % { Show-ToastNotification @_ }
     }
 }
-
-# Add-Type -AssemblyName PresentationFramework
-# $Return = [Install]::new() #"https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1")
-
-#@{  
-#    Type        = 4
-#    Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-#    GUID        = New-GUID
-#    Header      = "Secure Digits Plus LLC"
-#    Body        = "FightingEntropy"
-#    Footer      = "2020.10.1"
-#    
-#}               | % { Show-ToastNotification @_ }

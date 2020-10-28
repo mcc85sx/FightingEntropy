@@ -68,7 +68,7 @@ Class _ServerDependency
 
                 Invoke-RestMethod -URI $Resource -OutFile "$Path\$File"
 
-                $Process          = Start-Process -FilePath $Path -ArgumentList $Arguments -WorkingDirectory $Path -PassThru
+                $Process          = Start-Process -FilePath "$Path\$File" -ArgumentList $Arguments -WorkingDirectory $Path -PassThru
 
                 For ( $X = 0; $X -le 100; $X++ )
                 {

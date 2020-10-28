@@ -5,7 +5,7 @@ Class _Share
     [String]           $Root
     [String]    $Description = $Null
     [String]    $NetworkPath
-    [Object]        $Company = [_Company]::New()
+    [Object]        $Company
 
     Hidden [String[]] $Names
     Hidden [String[]] $Roots
@@ -22,11 +22,18 @@ Class _Share
                         "n Mr. Gates thinks it's awesome." ).Replace("_","    ").Split('\')
     }
 
-    _Share([String]$Name,[String]$Root,[String]$Description,[String]$NetworkPath)
+    _Share([String]$ShareName,[String]$Root,[String]$Description,[String]$NetworkPath)
     {
+        $ShareName            = "{0}$" -f $ShareName.TrimEnd("$")
+
         If ( Test-Path $Root )
         {
             Throw "Path exists"
+        }
+
+        If ( ! ( Test-Path $This.Hash.Path ) )
+        {
+            Throw "Microsoft Deployment Toolkit not installed"
         }
 
         Else
@@ -34,22 +41,23 @@ Class _Share
             $This.Root = $Root
         }
 
-        If ( Get-SMBShare | ? Name -eq $Name -or Path -eq $Root )
+        $Shares = Get-SMBShare 
+        
+        If ( $ShareName -in $Shares.Name -or $Root -in $Shares.Path )
         {
             Throw "Share exists"
         }
 
         If ( !$This.Hash.Path )
         {
-            Throw ( "{0} is not installed" -f $_.Names )
+            Throw ( "{0} is not installed" -f $This.Hash.Name )
         }
 
         Import-Module $This.Hash.Path -Verbose
 
-        $This.Names        = ( Get-MDTPersistentDrive ).Name
-        $This.Roots        = ( Get-MDTPersistentDrive ).Path
+        $Shares = Get-MDTPersistentDrive
 
-        If ( $Name -in $This.Names -or $Root -in $This.Roots )
+        If ( $ShareName -in $Shares.Name -or $Root -in $Shares.Root )
         {
             Throw "MDT/FE Share exists"
         }
@@ -67,7 +75,7 @@ Class _Share
         @{  Path           = $Root
             ItemType       = "Directory"      } | % { New-Item @_ -Verbose }
 
-        @{  Name           = $Name
+        @{  Name           = $ShareName
             Path           = $Root 
             FullAccess     = "Administrators" } | % { New-SMBShare @_ -Verbose }
 

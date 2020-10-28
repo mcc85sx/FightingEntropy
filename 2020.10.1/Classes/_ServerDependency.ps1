@@ -2,7 +2,7 @@
 Class _ServerDependency
 {
     [Object]         $Registry = @( "" , "\WOW6432Node" | % { "HKLM:\SOFTWARE$_\Microsoft\Windows\CurrentVersion\Uninstall\*"  } )
-    [Object]             $Root = [_Module]::New().Path
+    [Object]             $Root = ([_Module]::New().Path)
     [Object[]]       $Packages = @(@{
         
         Name                   = "MDT"

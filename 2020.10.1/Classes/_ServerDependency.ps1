@@ -1,3 +1,4 @@
+
 Class _ServerDependency
 {
     [Object]         $Registry = @( "" , "\WOW6432Node" | % { "HKLM:\SOFTWARE$_\Microsoft\Windows\CurrentVersion\Uninstall\*"  } )
@@ -7,9 +8,9 @@ Class _ServerDependency
         Name                   = "MDT"
         DisplayName            = "Microsoft Deployment Toolkit"
         Version                = "6.3.8450.0000"
-        Resource               = "https://download.microsoft.com/download/3/3/9/339BE62D-B4B8-4956-B58D-73C4685FC492/MicrosoftDeploymentToolkit_x{0}.msi" -f $Env:Processor_Architecture
+        Resource               = "https://download.microsoft.com/download/3/3/9/339BE62D-B4B8-4956-B58D-73C4685FC492/MicrosoftDeploymentToolkit_x{0}.msi" -f @{x86 = 86; AMD64 = 64 }[$Env:Processor_Architecture]
         Path                   = "{0}\Tools\MDT"
-        File                   = "MicrosoftDeploymentToolkit_x{0}.msi" -f $Env:Processor_Architecture
+        File                   = "MicrosoftDeploymentToolkit_x{0}.msi" -f @{x86 = 86; AMD64 = 64 }[$Env:Processor_Architecture]
         Arguments              = "/quiet /norestart"
     
     };@{  
@@ -32,14 +33,6 @@ Class _ServerDependency
         File                   = "winpe1903.exe"
         Arguments              = "/quiet /norestart /log `$env:temp\win_adk.log /features +" 
     })
-    
-    [String[]] $Name
-    [String[]] $DisplayName
-    [String[]] $Version
-    [String[]] $Resource
-    [String[]] $Path
-    [String[]] $File
-    [String[]] $Arguments
 
     _ServerDependency()
     { 
@@ -48,49 +41,51 @@ Class _ServerDependency
             New-Item "$($This.Root)\Tools" -ItemType Directory -Verbose 
         }
 
-        $DisplayNames          = Get-ItemProperty $This.Registry
+        $Uninstall             = Get-ItemProperty $This.Registry
 
         ForEach ( $I in 0..2 ) 
         {
-            $Item              = $DisplayNames | ? { $_.DisplayName -match $This.Packages[$I].DisplayName }
+            $Item              = $Uninstall | ? DisplayName -match $This.Packages[$I].DisplayName
 
             If ( $Item -eq $Null -or $Item.DisplayVersion -lt $This.Packages[$I].Version )
             {
                 Write-Host ( "Installing {0}" -f $This.Packages[$I].DisplayName )
 
-                $This.Name        = $This.Packages[$I].Name
-                $This.DisplayName = $This.Packages[$I].DisplayName
-                $This.Version     = $This.Packages[$I].Version
-                $This.Resource    = $This.Packages[$I].Resource
-                $This.Path        = $This.Packages[$I].Path -f $This.Root
-                $This.File        = $This.Packages[$I].File
-                $This.Arguments   = $This.Packages[$I].Arguments
+                $Name        = $This.Packages[$I].Name
+                $DisplayName = $This.Packages[$I].DisplayName
+                $Version     = $This.Packages[$I].Version
+                $Resource    = $This.Packages[$I].Resource
+                $Path        = $This.Packages[$I].Path -f $Root
+                $File        = $This.Packages[$I].File
+                $Arguments   = $This.Packages[$I].Arguments
 
-                $Process          = Start-Process -FilePath $This.Path -ArgumentList $This.Arguments -WorkingDirectory $This.Path -PassThru
+                [Net.ServicePointManager]::SecurityProtocol = 3072
+
+                If ( ! ( Test-Path $Path ) )
+                {
+                    New-Item $Path -ItemType Directory -Verbose
+                }
+
+                Invoke-RestMethod -URI $Resource -OutFile "$Path\$File"
+
+                $Process          = Start-Process -FilePath $Path -ArgumentList $Arguments -WorkingDirectory $Path -PassThru
 
                 For ( $X = 0; $X -le 100; $X++ )
                 {
-                    Write-Progress -Activity "[Installing] @: $($This.Name)" -PercentComplete $X -Status "$X% Complete"
-                    Start-Sleep -Milliseconds 250
+                    Write-Progress -Activity "[Installing] @: $($Name)" -PercentComplete $X -Status "$X% Complete"
+                    Sleep -M 250
 
                     If ( $Process.HasExited )
                     {
-                        Write-Progress -Activity "[Installed] @: $($This.Name)" -Completed
+                        Write-Progress -Activity "[Installed] @: $($Name)" -Completed
                     }
                 }
             }
 
             Else
             {
-                Write-Host ( "{0} is already installed" -f $This.Packages[$I].DisplayName )
+                Write-Host ( "{0} is already installed" -f $Packages[$I].DisplayName )
             }
         }
-    }
-
-    Download()
-    {
-        [Net.ServicePointManager]::SecurityProtocol = 3072
-
-        Invoke-RestMethod -URI $This.Resource -OutFile ( $This.Path, $This.File -join '\' )
     }
 }

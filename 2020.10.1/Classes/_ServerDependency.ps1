@@ -2,7 +2,7 @@
 Class _ServerDependency
 {
     [Object]         $Registry = @( "" , "\WOW6432Node" | % { "HKLM:\SOFTWARE$_\Microsoft\Windows\CurrentVersion\Uninstall\*"  } )
-    [Object]             $Root = (Get-FEModule).Path
+    [Object]             $Root = [_Module]::New().Path
     [Object[]]       $Packages = @(@{
         
         Name                   = "MDT"
@@ -55,7 +55,7 @@ Class _ServerDependency
                 $DisplayName = $This.Packages[$I].DisplayName
                 $Version     = $This.Packages[$I].Version
                 $Resource    = $This.Packages[$I].Resource
-                $Path        = $This.Packages[$I].Path -f $Root
+                $Path        = $This.Packages[$I].Path -f $This.Root
                 $File        = $This.Packages[$I].File
                 $Arguments   = $This.Packages[$I].Arguments
 

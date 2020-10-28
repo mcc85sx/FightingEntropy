@@ -214,3 +214,5 @@ Class Install
         }               | % { Show-ToastNotification @_ }
     }
 }
+
+$Return = [Install]::New()

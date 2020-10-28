@@ -21,7 +21,7 @@ Class _ServerDependency
         Resource               = "https://go.microsoft.com/fwlink/?linkid=2086042"
         Path                   = "{0}\Tools\WinADK"
         File                   = "winadk1903.exe"
-        Arguments              = "/quiet /norestart /log `$env:temp\win_adk.log /features +" 
+        Arguments              = "/quiet /norestart /log $env:temp\win_adk.log /features +" 
         
     };@{  
         
@@ -31,7 +31,7 @@ Class _ServerDependency
         Resource               = "https://go.microsoft.com/fwlink/?linkid=2087112"
         Path                   = "{0}\Tools\WinPE"
         File                   = "winpe1903.exe"
-        Arguments              = "/quiet /norestart /log `$env:temp\win_adk.log /features +" 
+        Arguments              = "/quiet /norestart /log $env:temp\win_adk.log /features +" 
     })
 
     _ServerDependency()

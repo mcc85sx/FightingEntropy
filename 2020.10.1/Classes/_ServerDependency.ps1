@@ -84,7 +84,7 @@ Class _ServerDependency
 
             Else
             {
-                Write-Host ( "{0} is already installed" -f $Packages[$I].DisplayName )
+                Write-Host ( "{0} is already installed" -f $This.Packages[$I].DisplayName )
             }
         }
     }

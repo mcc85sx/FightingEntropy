@@ -20,6 +20,8 @@ Class _Module
 
     [Object[]]            $Tools
     [Object[]]           $Shares
+    [Object[]]           $Drives
+    [Object[]]     $Certificates
 
     [Hashtable]          $Module = @{
 
@@ -48,7 +50,7 @@ Class _Module
     {
         Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
-    
+
     [Object[]] Content([String]$Folder)
     {
         Return ( $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName )
@@ -71,13 +73,12 @@ Class _Module
         $This.Path               = $This.Root($Env:ProgramData)
         $This.File               = $This.Module.File -f $This.Path
         $This.Manifest           = $This.Module.Manifest -f $This.Path
-        
         $This.Base               = Get-ChildItem -Path $This.Path
         $This.Classes            = $This.Content("Classes")
         $This.Control            = $This.Content("Control")
         $This.Functions          = $This.Content("Functions")
         $This.Graphics           = $This.Content("Graphics")
         $This.Tools              = Get-ChildItem -Path "$($This.Path)\Tools"
-        $This.Shares             = Get-ChildItem -Path "$($This.Registry)\Shares"
+        $This.Shares             = Get-ChildItem -Path "$($This.Registry)\Shares" | Get-ItemProperty | Select-Object Name, Path, Description
     }
 }

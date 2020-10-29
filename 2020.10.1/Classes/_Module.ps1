@@ -48,6 +48,11 @@ Class _Module
     {
         Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
+    
+    Content([String]$Folder)
+    {
+        $This.$($Folder)         = $This.Base | ? Name -eq ($Folder) | Get-ChildItem | % FullName
+    }
 
     _Module()
     {
@@ -70,9 +75,9 @@ Class _Module
         Import-Module $This.Manifest -Verbose -Force
 
         $This.Base               = Get-ChildItem -Path $This.Path
-        $This.Classes            = $This.Base | ? Name -eq Classes   | Get-ChildItem
-        $This.Control            = $This.Base | ? Name -eq Control   | Get-ChildItem
-        $This.Functions          = $This.Base | ? Name -eq Functions | Get-ChildItem 
-        $This.Graphics           = $This.Base | ? Name -eq Graphics  | Get-ChildItem
+        $This.Classes            = $This.Content("Classes")
+        $This.Control            = $This.Content("Control")
+        $This.Functions          = $This.Content("Functions")
+        $This.Graphics           = $This.Content("Graphics")
     }
 }

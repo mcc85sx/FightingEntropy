@@ -77,6 +77,7 @@ Class _Module
         $This.Control            = $This.Content("Control")
         $This.Functions          = $This.Content("Functions")
         $This.Graphics           = $This.Content("Graphics")
+        $This.Tools              = Get-ChildItem -Path "$($This.Path)\Tools"
         $This.Shares             = Get-ChildItem -Path "$($This.Registry)\Shares"
     }
 }

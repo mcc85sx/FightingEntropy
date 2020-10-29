@@ -49,9 +49,9 @@ Class _Module
         Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
     
-    Content([String]$Folder)
+    [Object[]] Content([String]$Folder)
     {
-        $This.$($Folder)         = $This.Base | ? Name -eq ($Folder) | Get-ChildItem | % FullName
+        $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName
     }
 
     _Module()

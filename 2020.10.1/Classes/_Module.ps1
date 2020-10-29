@@ -71,9 +71,7 @@ Class _Module
         $This.Path               = $This.Root($Env:ProgramData)
         $This.File               = $This.Module.File -f $This.Path
         $This.Manifest           = $This.Module.Manifest -f $This.Path
-
-        Import-Module $This.Manifest -Verbose -Force
-
+        
         $This.Base               = Get-ChildItem -Path $This.Path
         $This.Classes            = $This.Content("Classes")
         $This.Control            = $This.Content("Control")

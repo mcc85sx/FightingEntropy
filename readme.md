@@ -1,5 +1,5 @@
 # Project Information
-FightingEntropy is a PowerShell modification for: 
+FightingEntropy is a PowerShell modification for: `
     1) Microsoft Deployment Toolkit 
     2) Windows Assessment and Deployment Kit
     3) Windows Preinstallation Environment
@@ -8,7 +8,7 @@ FightingEntropy is a PowerShell modification for:
     6) DSC for Active Directory, DNS, DHCP, WDS
     7) Endpoint Service Configuration (ViperBomb)
     8) Endpoint branding
-    9) Automation and installation of these tasks
+    9) Automation and installation of these tasks`
 
 In it's current state, the module is broken down into several classes and functions. 
 Running the following installation code in PowerShell will allow a live installation

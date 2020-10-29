@@ -215,4 +215,4 @@ Class Install
     }
 }
 
-$Return = [Install]::New()
+[Install]::New()

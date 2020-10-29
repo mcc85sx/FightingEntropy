@@ -51,7 +51,7 @@ Class _Module
     
     [Object[]] Content([String]$Folder)
     {
-        $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName
+        Return ( $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName )
     }
 
     _Module()

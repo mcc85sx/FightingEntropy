@@ -39,7 +39,7 @@ Class Install
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                                     "tion New-FECompany Get-ServerDependency").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
-        MDTModPath               = "Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Deployment 4" | % Install_Dir | Get-ChildItem -Filter *Toolkit.psd1 -Recurse | % FullName"           
+        MDTModPath               = "Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Deployment 4' | % Install_Dir | Get-ChildItem -Filter *Toolkit.psd1 -Recurse | % FullName"           
     }
 
     Hidden [Object]        $Load

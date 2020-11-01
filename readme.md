@@ -1,9 +1,9 @@
 # Project Information
-FightingEntropy is a PowerShell modification for: `
-    1) Microsoft Deployment Toolkit 
-    2) Windows Assessment and Deployment Kit
-    3) Windows Preinstallation Environment
-    4) IIS/BITS/ASP.Net Framework
+FightingEntropy is a PowerShell modification for: <br>
+    1) Microsoft Deployment Toolkit <br>
+    2) Windows Assessment and Deployment Kit <br>
+    3) Windows Preinstallation Environment <br>
+    4) IIS/BITS/ASP.Net Framework <br>
     5) Image Factory derivative
     6) DSC for Active Directory, DNS, DHCP, WDS
     7) Endpoint Service Configuration (ViperBomb)
@@ -43,7 +43,7 @@ FightingEntropy
                [_Drives] : A group of drives that are in a given system/network
                  [_File] : A file object, for handling
                  [_Info] : Various Cim-Instance properties
-                 [_Host] : Current host oobject
+                 [_Host] : Current host object
                 [_QMark] : Obtains the unique QMark code from taskman
 [General]
 

@@ -4,11 +4,11 @@ FightingEntropy is a PowerShell modification for: <br>
     2) Windows Assessment and Deployment Kit <br>
     3) Windows Preinstallation Environment <br>
     4) IIS/BITS/ASP.Net Framework <br>
-    5) Image Factory derivative
-    6) DSC for Active Directory, DNS, DHCP, WDS
-    7) Endpoint Service Configuration (ViperBomb)
-    8) Endpoint branding
-    9) Automation and installation of these tasks`
+    5) Image Factory derivative <br>
+    6) DSC for Active Directory, DNS, DHCP, WDS <br>
+    7) Endpoint Service Configuration (ViperBomb) <br>
+    8) Endpoint branding <br>
+    9) Automation and installation of these tasks <br>
 
 In it's current state, the module is broken down into several classes and functions. 
 Running the following installation code in PowerShell will allow a live installation
@@ -116,7 +116,7 @@ FightingEntropy
         [Complete-IISServer] : Completes the installation of an IIS Server for BITS/MDT
            [Get-Certificate] : Obtains external address, telemetry, to use for certificate generation/AD population
               [Get-FEModule] : Obtains the FightingEntropy module, and exposes its functions and content.
-      [Get-ServerDependency] : Determines if the current server has installation criteria met
+      [Get-ServerDependency] : Determines if the current server has installation criteria met (WinADK/WinPE/MDT), installs
              [Get-ViperBomb] : Opens the ViperBomb GUI
          [Install-IISServer] : Installs the components needed for a BITS/MDT Server
              [New-ACLObject] : Creates a template of file system permissions that can be applied to a file/folder
@@ -167,7 +167,7 @@ FightingEntropy
     The [Microsoft Deployment Toolkit].
     Even Mr. Gates thinks it's awesome.
     
-[Windows Assessment and Deployment Kit] - Needed
+[Windows Assessment and Deployment Kit] - Needed <br>
 [Windows Preinstallation Environment Kit] - Needed
 
 

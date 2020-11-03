@@ -35,6 +35,8 @@ Class _Images
         Start-Sleep -Seconds 1
 
         $This.Items | % { $This.Files += [_Image]::New($_.SourceIndex,$_.SourceImagePath,$_.DestinationImagePath,$_.DestinationName) }
+
+        Write-Theme @("Image Extraction Complete"," ","Image Loadout --------------";$This.Files)
     }
 
     ExtractImages([String]$Type,[String]$ISO)
@@ -69,7 +71,7 @@ Class _Images
                 
                 }
                 
-                Write-Theme @("Extracting...";$Splat)
+                Write-Theme @("Extracting...";$Splat) -Palette 11,15,10,0
                     
                 Export-WindowsImage @Splat
 
@@ -101,7 +103,7 @@ Class _Images
 
                     }
 
-                    Write-Theme @("Extracting...";$Splat)
+                    Write-Theme @("Extracting...";$Splat) -Palette 11,15,10,0
                     
                     Export-WindowsImage @Splat
 

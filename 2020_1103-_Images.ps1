@@ -1,10 +1,10 @@
 Class _Images
 {
     [String]          $Root = ("{0}\Images" -f ( Get-FEModule | % Path ) )
-    [String]         $Drive = ([Char]( [Int32]( Get-Volume | Sort-Object DriveLetter | % DriveLetter )[-1] + 1 ))
-    [String[]]        $Tags = ("DC2016 10E64 10H64 10P64 10E86 10H86 10P86" -Split " ")
+    Hidden [String]  $Drive = ([Char]( [Int32]( Get-Volume | Sort-Object DriveLetter | % DriveLetter )[-1] + 1 ))
+    Hidden [String[]] $Tags = ("DC2016 10E64 10H64 10P64 10E86 10H86 10P86" -Split " ")
     [String[]]        $Tree
-    [Object]         $Items
+    Hidden [Object]  $Items
     [Object]         $Files
 
     _Images()
@@ -84,12 +84,12 @@ Class _Images
 
                     $DisplayName         = Switch ($Label) 
                     {
-                        10E64 { "Windows 10 Education x64" }
-                        10H64 { "Windows 10 Home x64"      }
-                        10P64 { "Windows 10 Pro x64"       }
-                        10E86 { "Windows 10 Education x86" }
-                        10H86 { "Windows 10 Home x86"      }
-                        10P86 { "Windows 10 Pro x86"       }
+                        "10E64" { "Windows 10 Education x64" }
+                        "10H64" { "Windows 10 Home x64"      }
+                        "10P64" { "Windows 10 Pro x64"       }
+                        "10E86" { "Windows 10 Education x86" }
+                        "10H86" { "Windows 10 Home x86"      }
+                        "10P86" { "Windows 10 Pro x86"       }
                     }
 
                     $Splat                   = @{

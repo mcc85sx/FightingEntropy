@@ -4,11 +4,13 @@ Class _Images
     [String]         $Drive = ([Char]( [Int32]( Get-Volume | Sort-Object DriveLetter | % DriveLetter )[-1] + 1 ))
     [String[]]        $Tags = ("DC2016 10E64 10H64 10P64 10E86 10H86 10P86" -Split " ")
     [String[]]        $Tree
+    [Object]         $Items
     [Object]         $Files
 
     _Images()
     {
         $This.Tree  = @( )
+        $This.Items = @( )
         $This.Files = @( )
 
         Test-Path $This.Root | ? { $_ -eq $False } | New-Item $This.Root -ItemType Directory -Verbose
@@ -31,6 +33,8 @@ Class _Images
         
         $This.ExtractImages("Client","C:\Users\mcook85\Downloads\Win10_20H2_English_x32.iso")
         Start-Sleep -Seconds 1
+
+        $This.Items | % { $This.Files += [_Image]::New($_.SourceIndex,$_.SourceImagePath,$_.DestinationImagePath,$_.DestinationName) }
     }
 
     ExtractImages([String]$Type,[String]$ISO)
@@ -68,24 +72,25 @@ Class _Images
                 Write-Theme @("Extracting...";$Splat)
                     
                 Export-WindowsImage @Splat
+
+                $This.Items             += $Splat
             }
 
             Client 
             {
                 ForEach ( $I in 4,1,6 )
                 {
-                    $Label       = "10{0}{1}" -f @{ 1 = "H"; 4 = "E"; 6 = "P" }[$I],@(86,64)[[Int32]($Iso -match "x64")]
+                    $Label               = "10{0}{1}" -f @{ 1 = "H"; 4 = "E"; 6 = "P" }[$I],@(86,64)[[Int32]($Iso -match "x64")]
 
-                    $DisplayName = @{  
-                        
-                        "10E64"  = "Windows 10 Education x64"
-                        "10H64"  = "Windows 10 Home x64"
-                        "10P64"  = "Windows 10 Pro x64"
-                        "10E86"  = "Windows 10 Education x86"
-                        "10H86"  = "Windows 10 Home x86"
-                        "10P86"  = "Windows 10 Pro x86"
-                    
-                    }[$Label]
+                    $DisplayName         = Switch ($Label) 
+                    {
+                        10E64 { "Windows 10 Education x64" }
+                        10H64 { "Windows 10 Home x64"      }
+                        10P64 { "Windows 10 Pro x64"       }
+                        10E86 { "Windows 10 Education x86" }
+                        10H86 { "Windows 10 Home x86"      }
+                        10P86 { "Windows 10 Pro x86"       }
+                    }
 
                     $Splat                   = @{
 
@@ -99,6 +104,8 @@ Class _Images
                     Write-Theme @("Extracting...";$Splat)
                     
                     Export-WindowsImage @Splat
+
+                    $This.Items             += $Splat
                 }
             }
         }
@@ -106,3 +113,25 @@ Class _Images
         Dismount-DiskImage -ImagePath $ISO -Verbose
     }
 }
+
+Class _Image
+{
+    [String]          $SourceIndex
+    [String]      $SourceImagePath
+    [String] $DestinationImagePath
+    [String]      $DestinationName
+
+    _Image(
+    [String]          $SourceIndex ,
+    [String]      $SourceImagePath ,
+    [String] $DestinationImagePath ,
+    [String]      $DestinationName )
+    {
+        $This.SourceIndex          = $SourceIndex
+        $This.SourceImagePath      = $SourceImagePath
+        $This.DestinationImagePath = $DestinationImagePath
+        $This.DestinationName      = $DestinationName
+    }
+}
+
+$Images = [_Images]::New()

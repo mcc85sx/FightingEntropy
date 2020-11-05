@@ -5,7 +5,7 @@ Class Install
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
     [String]             $Status = "Initialized"
-    [String]               $Type = @("Client","Server")[[Int32](Get-Ciminstance -Class Win32_OperatingSystem | % Caption | ? { $_ -match "Server" })]
+    [String]               $Type
     [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.11.0"
 
     [String]           $Registry = "HKLM:\SOFTWARE\Policies"
@@ -97,9 +97,9 @@ Class Install
 
         $Item                    = Get-ItemProperty -Path $This.Registry
         $Names                   = ($This.Module.Names)
-        $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status)
+        $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Type, $This.Status)
 
-        ForEach ( $I in 0..5 )
+        ForEach ( $I in 0..6 )
         {
             If ( $Item.$( $Names[$I] ) -eq $Null )
             {
@@ -118,6 +118,7 @@ Class Install
 
     Install()
     {
+        $This.Type               = @("Client","Server")[(( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" )]
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
         $This.BuildRegistry()
         

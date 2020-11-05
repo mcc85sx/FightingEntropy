@@ -97,7 +97,7 @@ Class Install
 
         $Item                    = Get-ItemProperty -Path $This.Registry
         $Names                   = ($This.Module.Names)
-        $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Type, $This.Status)
+        $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status, $This.Type)
 
         ForEach ( $I in 0..6 )
         {

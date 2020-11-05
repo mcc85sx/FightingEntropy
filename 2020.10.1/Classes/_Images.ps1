@@ -1,7 +1,7 @@
-Class _Images
+Class _Images # Testing
 {
     [String]          $Root = ("{0}\Images" -f ( Get-FEModule | % Path ) )
-    Hidden [String]  $Drive = ([Char]( [Int32]( Get-Volume | Sort-Object DriveLetter | % DriveLetter )[-1] + 1 ))
+    [String]         $Drive
     Hidden [String[]] $Tags = ("DC2016 10E64 10H64 10P64 10E86 10H86 10P86" -Split " ")
     [String[]]        $Tree
     Hidden [Object]  $Items
@@ -25,13 +25,13 @@ Class _Images
             $This.Tree += $_
         }
 
-        $This.ExtractImages("Server","C:\Users\mcook85\Downloads\Windows Server 2016.iso")     # <- Replace path via function
+        $This.ExtractImages("Server","C:\Users\mcook85\Downloads\Windows Server 2016.iso")
         Start-Sleep -Seconds 1
 
-        $This.ExtractImages("Client","C:\Users\mcook85\Downloads\Win10_20H2_English_x64.iso")  # <- Replace path via function
+        $This.ExtractImages("Client","C:\Users\mcook85\Downloads\Win10_20H2_English_x64.iso")
         Start-Sleep -Seconds 1
         
-        $This.ExtractImages("Client","C:\Users\mcook85\Downloads\Win10_20H2_English_x32.iso")  # <- Replace path via function
+        $This.ExtractImages("Client","C:\Users\mcook85\Downloads\Win10_20H2_English_x32.iso")
         Start-Sleep -Seconds 1
 
         $This.Items | % { $This.Files += [_Image]::New($_.SourceIndex,$_.SourceImagePath,$_.DestinationImagePath,$_.DestinationName) }
@@ -56,7 +56,9 @@ Class _Images
             Throw "Not a valid image type"
         }
 
-        Mount-DiskImage -ImagePath $ISO
+        Write-Theme "Mounting [~] $Iso"
+        Get-DiskImage $ISO | Mount-DiskImage
+        $This.Drive = Get-DiskImage $ISO | Get-Volume | % DriveLetter
 
         Switch ($Type)
         {
@@ -112,6 +114,7 @@ Class _Images
             }
         }
         
+        Write-Theme "Unmounting [~] $Iso"
         Dismount-DiskImage -ImagePath $ISO -Verbose
     }
 }

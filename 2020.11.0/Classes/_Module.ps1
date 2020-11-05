@@ -1,11 +1,12 @@
 Class _Module
 {
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2020.10.1"
+    [String]            $Version = "2020.11.0"
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date
     [String]             $Status
-    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.10.1"
+    [String]               $Type
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.11.0"
 
     [String]           $Registry
     [String]               $Path
@@ -25,23 +26,19 @@ Class _Module
 
     [Hashtable]          $Module = @{
 
-        Path                     = "{0}"
-        Names                    = ("Name Version Provider Date Path Status" -Split " ")
-        File                     = "{0}\FightingEntropy.psm1"
-        Manifest                 = "{0}\FightingEntropy.psd1"
+        Names                    = ("Name Version Provider Date Path Status Type" -Split " ")
         Folders                  = "/Classes/Control/Functions/Graphics" -Split "/"
         Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 
                                     "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                                     "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
                                     "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml " + 
-                                    "XamlGlossaryItem" ).Split(" ") | % { "_$_" }
+                                    "XamlGlossaryItem Image Images Updates" ).Split(" ") | % { "_$_" }
         Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                                     "ServerMod.xml") -Split " "
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                                     "tion New-FECompany Get-ServerDependency").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
-        MDTModPath               = "Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Deployment 4' | % Install_Dir | Get-ChildItem -Filter *Toolkit.psd1 -Recurse | % FullName"
     }
 
     Hidden [Object]        $Load

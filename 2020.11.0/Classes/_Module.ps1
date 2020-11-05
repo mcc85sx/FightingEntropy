@@ -65,12 +65,13 @@ Class _Module
             $This.Provider       = $_.Provider
             $This.Date           = $_.Date
             $This.Status         = $_.Status
+            $This.Type           = $_.Type
             $This.Path           = $_.Path
         }
 
         $This.Path               = $This.Root($Env:ProgramData)
-        $This.File               = $This.Module.File -f $This.Path
-        $This.Manifest           = $This.Module.Manifest -f $This.Path
+        $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
+        $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
         $This.Base               = Get-ChildItem -Path $This.Path
         $This.Classes            = $This.Content("Classes")
         $This.Control            = $This.Content("Control")

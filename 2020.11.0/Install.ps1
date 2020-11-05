@@ -126,8 +126,8 @@ Class Install
 
         [Net.ServicePointManager]::SecurityProtocol = 3072
 
-        $This.File               = $This.Module.File     -f $This.Path
-        $This.Manifest           = $This.Module.Manifest -f $This.Path
+        $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
+        $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
 
         ForEach ( $I in $This.Module.Folders )
         {

@@ -5,7 +5,7 @@ Class _Network
 
     _Network()
     {
-        $This.Vendor         = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/VendorList.txt")
+        $This.Vendor         = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/scratch/VendorList.txt")
         $This.Interface      = @( )
 
         ForEach ( $Interface in Get-NetIPConfiguration -Detailed )

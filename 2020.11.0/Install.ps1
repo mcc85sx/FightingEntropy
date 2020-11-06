@@ -220,18 +220,6 @@ Class Install
         $This.BuildManifest()
 
         Import-Module FightingEntropy -Verbose -Force
-
-        Write-Theme "Module [+] Loaded"
-
-        @{  
-            Type        = 4
-            Image       = "https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg"
-            GUID        = "6b0418f5-adc3-4020-a0f9-7010439a93ce"
-            Header      = "Secure Digits Plus LLC"
-            Body        = "FightingEntropy"
-            Footer      = "2020.11.0"
-    
-        }               | % { Show-ToastNotification @_ }
     }
 }
 

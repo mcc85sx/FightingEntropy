@@ -467,271 +467,267 @@ Class _XamlObject
         </Window>
 "@
         ProvisionDSC = @"
-        <Window
+<Window
                                                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                                                      Title = 'Secure Digits Plus LLC | Hybrid @ DSC Deployment Share'
+                                                      Title = 'Secure Digits Plus LLC | FightingEntropy @ New Deployment Share'
                                                       Width = '640'
                                                      Height = '960'
                                                     Topmost = 'True' 
-                                                       Icon = ''
+                                                       Icon = '/icon.ico'
                                                  ResizeMode = 'NoResize'
                                         HorizontalAlignment = 'Center'
                                       WindowStartupLocation = 'CenterScreen' >
-    <Window.Resources>
-        <Style TargetType    = 'Label' x:Key = 'HeadLabel' >
-            <Setter Property = 'TextBlock.TextAlignment' Value = 'Center' />
-            <Setter Property = 'FontWeight' Value = 'Heavy' />
-            <Setter Property = 'FontSize' Value = '18' />
-            <Setter Property = 'Margin' Value = '5' />
-            <Setter Property = 'Foreground' Value = 'White' />
-            <Setter Property = 'Template' >
-                <Setter.Value>
-                    <ControlTemplate TargetType = 'Label' >
-                        <Border CornerRadius = '2,2,2,2' 
+	<Window.Resources>
+		<Style TargetType    = 'Label' x:Key = 'HeadLabel' >
+			<Setter Property = 'TextBlock.TextAlignment' Value = 'Center' />
+			<Setter Property = 'FontWeight' Value = 'Heavy' />
+			<Setter Property = 'FontSize' Value = '18' />
+			<Setter Property = 'Margin' Value = '5' />
+			<Setter Property = 'Foreground' Value = 'White' />
+			<Setter Property = 'Template' >
+				<Setter.Value>
+					<ControlTemplate TargetType = 'Label' >
+						<Border CornerRadius = '2,2,2,2' 
                                 Background = '#FF0080FF' 
                                 BorderBrush = 'Black'
                                 BorderThickness = '3'>
-                            <ContentPresenter x:Name = 'contentPresenter'
+							<ContentPresenter x:Name = 'contentPresenter'
                                               ContentTemplate = '{ TemplateBinding ContentTemplate }'
-                                              Margin = '5' /> 
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType = 'RadioButton' x:Key = 'RadButton' >
-            <Setter Property = 'HorizontalAlignment' Value = 'Center' />
-            <Setter Property = 'VerticalAlignment' Value = 'Center' />
-            <Setter Property = 'Foreground' Value = 'Black' />
-        </Style>
-        <Style TargetType = 'TextBox' x:Key = 'TextBro'>
-            <Setter Property = 'VerticalContentAlignment' Value = 'Center' />
-            <Setter Property = 'Margin' Value = '2' />
-            <Setter Property = 'TextWrapping' Value = 'Wrap' />
-            <Setter Property = 'Height' Value = '24' />
-            </Style>
-        </Window.Resources>
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height = '250' />
-            <RowDefinition Height = '*' />
-            <RowDefinition Height = '40' />
-        </Grid.RowDefinitions>
-        <Grid.Background>
-            <ImageBrush Stretch = 'UniformToFill'
-                        ImageSource = '' />
-        </Grid.Background>
-        <Image Grid.Row = '0'
-               Source = ''/>
-        <TabControl Grid.Row = '1'
+                                              Margin = '5' />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style TargetType = 'RadioButton' x:Key = 'RadButton' >
+			<Setter Property = 'HorizontalAlignment' Value = 'Center' />
+			<Setter Property = 'VerticalAlignment' Value = 'Center' />
+			<Setter Property = 'Foreground' Value = 'Black' />
+		</Style>
+		<Style TargetType = 'TextBox' x:Key = 'TextBro'>
+			<Setter Property = 'VerticalContentAlignment' Value = 'Center' />
+			<Setter Property = 'Margin' Value = '2' />
+			<Setter Property = 'TextWrapping' Value = 'Wrap' />
+			<Setter Property = 'Height' Value = '24' />
+		</Style>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height = '250' />
+			<RowDefinition Height = '*' />
+			<RowDefinition Height = '40' />
+		</Grid.RowDefinitions>
+		<Grid.Background>
+			<ImageBrush Stretch = 'UniformToFill'
+                        ImageSource = '/background.jpg' />
+		</Grid.Background>
+		<Image Grid.Row = '0'
+               Source = '/banner.png'/>
+		<TabControl Grid.Row = '1'
                     Background = '{x:Null}'
                     BorderBrush = '{x:Null}'
                     Foreground = '{x:Null}'
                     HorizontalAlignment = 'Center'>
-            <TabItem Header = 'Stage Deployment Server'
+			<TabItem Header = 'Stage Deployment Server'
                     BorderBrush = '{x:Null}'
                     Width = '280' >
-                <TabItem.Effect>
-                    <DropShadowEffect/>
-                </TabItem.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height = '6*' />
-                        <RowDefinition Height = '5*' />
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row = '0'
+				<TabItem.Effect>
+					<DropShadowEffect/>
+				</TabItem.Effect>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height = '*' />
+						<RowDefinition Height = '*' />
+					</Grid.RowDefinitions>
+					<GroupBox Grid.Row = '0'
                                 Margin = '10'
                                 Padding = '5'
                                 Foreground = 'Black'
                                 Background = 'White'>
-                        <Grid Grid.Row = '0'>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height = '50'/>
-                                <RowDefinition Height = '30'/>
-                                <RowDefinition Height = '*'/>
-                                <RowDefinition Height = '*'/>
-                                <RowDefinition Height = '*'/>
-                                <RowDefinition Height = '*'/>
-                            </Grid.RowDefinitions>
-                            <Label Content = 'Deployment Share Settings'
+						<Grid Grid.Row = '0'>
+							<Grid.RowDefinitions>
+								<RowDefinition Height = '50'/>
+								<RowDefinition Height = '30'/>
+								<RowDefinition Height = '*'/>
+								<RowDefinition Height = '*'/>
+								<RowDefinition Height = '*'/>
+							</Grid.RowDefinitions>
+							<Label Content = 'Deployment Share Settings'
                                         Style = '{ StaticResource HeadLabel }'
                                         Foreground = 'White'
                                         Grid.Row = '0'/>
-                            <Grid Grid.Row = '1'>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*' />
-                                    <ColumnDefinition Width = '*' />
-                                </Grid.ColumnDefinitions>
-                                <RadioButton Grid.Column = '0' Content = 'Legacy MDT' Name = 'Legacy' Style = '{ StaticResource RadButton }' />
-                                <RadioButton Grid.Column = '1' Content = 'PSD-Remaster' Name = 'Remaster' Style = '{ StaticResource RadButton }' />
-                            </Grid>
-                            <GroupBox Grid.Row = '2' Header = 'Drive Label'>
-                                <ComboBox Height = '24' Margin = '2' Name = 'Drive' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '3' Header = 'Directory Path'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'Directory' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '4' Header = 'Samba Share'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'Samba' />
-                            </GroupBox>
-                            <Grid Grid.Row = '5'>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*' />
-                                    <ColumnDefinition Width = '2*' />
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column = '0' Header = 'PS Drive'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Name = 'DSDrive' />
-                                </GroupBox>
-                                <GroupBox Grid.Column = '1' Header = 'Description'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Name = 'Description' />
-                                </GroupBox>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row = '1' 
+							<Grid Grid.Row = '1'>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*' />
+									<ColumnDefinition Width = '*' />
+								</Grid.ColumnDefinitions>
+								<RadioButton Grid.Column = '0' Content = 'Standard @ MDT Share' Name = 'Legacy' Style = '{ StaticResource RadButton }' />
+								<RadioButton Grid.Column = '1' Content = 'Enhanced @ PSD Share' Name = 'Remaster' Style = '{ StaticResource RadButton }' />
+							</Grid>
+							<GroupBox Grid.Row = '2' Header = 'Directory Path'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'Directory' />
+							</GroupBox>
+							<GroupBox Grid.Row = '3' Header = 'Samba Share'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'Samba' />
+							</GroupBox>
+							<Grid Grid.Row = '4'>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*' />
+									<ColumnDefinition Width = '2*' />
+								</Grid.ColumnDefinitions>
+								<GroupBox Grid.Column = '0' Header = 'PS Drive'>
+									<TextBox Style = '{ StaticResource TextBro }' Name = 'DSDrive' />
+								</GroupBox>
+								<GroupBox Grid.Column = '1' Header = 'Description'>
+									<TextBox Style = '{ StaticResource TextBro }' Name = 'Description' />
+								</GroupBox>
+							</Grid>
+						</Grid>
+					</GroupBox>
+					<GroupBox Grid.Row = '1' 
                               Margin = '10'
                               Padding = '5' 
                               Foreground = 'Black'
                               Background = 'White'>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height = '50' />
-                                <RowDefinition Height = '30' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                            </Grid.RowDefinitions>
-                            <Label Content = 'BITS / IIS Settings' Style = '{ StaticResource HeadLabel }' Foreground = 'White' Grid.Row = '0'/>
-                            <Grid Grid.Row = '1'>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*' />
-                                    <ColumnDefinition Width = '*' />
-                                </Grid.ColumnDefinitions>
-                                <RadioButton Grid.Column = '0' Name = 'IIS_Install' Content = 'Install / Configure IIS' Style = '{ StaticResource RadButton }'/>
-                                <RadioButton Grid.Column = '1' Name = 'IIS_Skip' Content = 'Skip IIS Setup' Style = '{ StaticResource RadButton }'/>
-                            </Grid>
-                            <GroupBox Grid.Row = '2' Header = 'Name'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_Name' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '3' Header = 'App Pool'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_AppPool' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '4' Header = 'Virtual Host'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_Proxy' />
-                            </GroupBox>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
-            </TabItem>
-            <TabItem Header = 'Image Info' HorizontalAlignment = 'Center' Width = '280' BorderBrush = '{x:Null}' >
-                <TabItem.Effect>
-                    <DropShadowEffect/>
-                </TabItem.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height = '7*'/>
-                        <RowDefinition Height = '5*'/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row = '0'
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height = '50' />
+								<RowDefinition Height = '30' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+							</Grid.RowDefinitions>
+							<Label Content = 'BITS / IIS Settings' Style = '{ StaticResource HeadLabel }' Foreground = 'White' Grid.Row = '0'/>
+							<Grid Grid.Row = '1'>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*' />
+									<ColumnDefinition Width = '*' />
+								</Grid.ColumnDefinitions>
+								<RadioButton Grid.Column = '0' Name = 'IIS_Install' Content = 'Install BITS/IIS for MDT' Style = '{ StaticResource RadButton }'/>
+								<RadioButton Grid.Column = '1' Name = 'IIS_Skip' Content = 'Do not install BITS/IIS for MDT' Style = '{ StaticResource RadButton }'/>
+							</Grid>
+							<GroupBox Grid.Row = '2' Header = 'Name'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_Name' />
+							</GroupBox>
+							<GroupBox Grid.Row = '3' Header = 'App Pool'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_AppPool' />
+							</GroupBox>
+							<GroupBox Grid.Row = '4' Header = 'Virtual Host'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'IIS_Proxy' />
+							</GroupBox>
+						</Grid>
+					</GroupBox>
+				</Grid>
+			</TabItem>
+			<TabItem Header = 'Image Info' HorizontalAlignment = 'Center' Width = '280' BorderBrush = '{x:Null}' >
+				<TabItem.Effect>
+					<DropShadowEffect/>
+				</TabItem.Effect>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height = '7*'/>
+						<RowDefinition Height = '5*'/>
+					</Grid.RowDefinitions>
+					<GroupBox Grid.Row = '0'
                               Margin = '10'
                               Padding = '5' 
                               Foreground = 'Black'
                               Background = 'White'>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height = '50' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row = '0' Style = '{ StaticResource HeadLabel }' Content = 'Image Branding Settings' />
-                            <GroupBox Grid.Row = '1' Header = 'Company Name'>
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'Company' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '2' Header = 'Support Website' >
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'WWW' />
-                            </GroupBox>
-                            <Grid Grid.Row = '3'>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*' />
-                                    <ColumnDefinition Width = '*' />
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column = '0' Header = 'Support Phone'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Name = 'Phone' />
-                                </GroupBox>
-                                <GroupBox Grid.Column = '1' Header = 'Support Hours'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Name = 'Hours' />
-                                </GroupBox>
-                            </Grid>
-                            <Grid Grid.Row = '4' Grid.RowSpan = '2' >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*'/>
-                                    <ColumnDefinition Width = '100'/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height = '*' />
-                                    <RowDefinition Height = '*' />
-                                </Grid.RowDefinitions>
-                                <GroupBox Header = 'Logo [ 120x120 ]' Grid.Row = '0' Grid.Column = '0'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Width = '400' Grid.Column = '1' Name = 'Logo' />
-                                </GroupBox>
-                                <Button Margin = '5,15,5,5' Height = '20' Grid.Row = '0' Grid.Column = '1' Content = 'Logo' Name = 'LogoBrowse' />
-                                <GroupBox Header = 'Background' Grid.Row = '1' Grid.Column = '0'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Width = '400' Grid.Column = '1' Name = 'Background' />
-                                </GroupBox>
-                                <Button Margin = '5,15,5,5' Height = '20' Grid.Row = '1' Grid.Column = '1' Content = 'Background' Name = 'BackgroundBrowse' />
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row = '1'
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height = '50' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+							</Grid.RowDefinitions>
+							<Label Grid.Row = '0' Style = '{ StaticResource HeadLabel }' Content = 'Image Branding Settings' />
+							<GroupBox Grid.Row = '1' Header = 'Organization'>
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'Company' />
+							</GroupBox>
+							<GroupBox Grid.Row = '2' Header = 'Support Website' >
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'WWW' />
+							</GroupBox>
+							<Grid Grid.Row = '3'>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*' />
+									<ColumnDefinition Width = '*' />
+								</Grid.ColumnDefinitions>
+								<GroupBox Grid.Column = '0' Header = 'Support Phone'>
+									<TextBox Style = '{ StaticResource TextBro }' Name = 'Phone' />
+								</GroupBox>
+								<GroupBox Grid.Column = '1' Header = 'Support Hours'>
+									<TextBox Style = '{ StaticResource TextBro }' Name = 'Hours' />
+								</GroupBox>
+							</Grid>
+							<Grid Grid.Row = '4' Grid.RowSpan = '2' >
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*'/>
+									<ColumnDefinition Width = '100'/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height = '*' />
+									<RowDefinition Height = '*' />
+								</Grid.RowDefinitions>
+								<GroupBox Header = 'Logo [120x120]' Grid.Row = '0' Grid.Column = '0'>
+									<TextBox Style = '{ StaticResource TextBro }' Width = '400' Grid.Column = '1' Name = 'Logo' />
+								</GroupBox>
+								<Button Margin = '5,15,5,5' Height = '20' Grid.Row = '0' Grid.Column = '1' Content = 'Logo' Name = 'LogoBrowse' />
+								<GroupBox Header = 'Background' Grid.Row = '1' Grid.Column = '0'>
+									<TextBox Style = '{ StaticResource TextBro }' Width = '400' Grid.Column = '1' Name = 'Background' />
+								</GroupBox>
+								<Button Margin = '5,15,5,5' Height = '20' Grid.Row = '1' Grid.Column = '1' Content = 'Background' Name = 'BackgroundBrowse' />
+							</Grid>
+						</Grid>
+					</GroupBox>
+					<GroupBox Grid.Row = '1'
                               Margin = '10'
                               Padding = '5'
                               Foreground = 'Black'
                               Background = 'White'>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height = '50' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                                <RowDefinition Height = '*' />
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row = '0' Style = '{ StaticResource HeadLabel }' Content = 'Domain / Network Credentials' />
-                            <GroupBox Grid.Row = '1' Header = 'Branch Name' >
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'Branch' />
-                            </GroupBox>
-                            <GroupBox Grid.Row = '2' Header = 'NetBIOS Domain' >
-                                <TextBox Style = '{ StaticResource TextBro }' Name = 'NetBIOS' />
-                            </GroupBox>
-                            <Grid Grid.Row = '3'>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width = '*' />
-                                    <ColumnDefinition Width = '*' />
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column = '0' Header = 'Administrator Account'>
-                                    <TextBox Style = '{ StaticResource TextBro }' Name = 'LMCred_User' />
-                                </GroupBox>
-                                <GroupBox Grid.Column = '1' Header = 'Administrator Password'>
-                                    <PasswordBox Margin = '5' Name = 'LMCred_Pass' PasswordChar = '*' />
-                                </GroupBox>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
-            </TabItem>
-        </TabControl>
-        <Grid Grid.Row = '2' >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width = '*' />
-                <ColumnDefinition Width = '*' />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column = '0' Name = 'Start' Content = 'Start' Width = '100' Height = '24' />
-            <Button Grid.Column = '1' Name = 'Cancel' Content = 'Cancel' Width = '100' Height = '24' />
-        </Grid>
-    </Grid>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height = '50' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+								<RowDefinition Height = '*' />
+							</Grid.RowDefinitions>
+							<Label Grid.Row = '0' Style = '{ StaticResource HeadLabel }' Content = 'Domain / Network Credentials' />
+							<GroupBox Grid.Row = '1' Header = 'Domain Name' >
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'Branch' />
+							</GroupBox>
+							<GroupBox Grid.Row = '2' Header = 'NetBIOS Domain' >
+								<TextBox Style = '{ StaticResource TextBro }' Name = 'NetBIOS' />
+							</GroupBox>
+							<Grid Grid.Row = '3'>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width = '*' />
+									<ColumnDefinition Width = '*' />
+								</Grid.ColumnDefinitions>
+								<GroupBox Grid.Column = '0' Header = 'Target/Local Administrator Username'>
+									<TextBox Style = '{ StaticResource TextBro }' Name = 'LMCred_User' />
+								</GroupBox>
+								<GroupBox Grid.Column = '1' Header = 'Target/Local Administrator Password'>
+									<PasswordBox Margin = '5' Name = 'LMCred_Pass' PasswordChar = '*' />
+								</GroupBox>
+							</Grid>
+						</Grid>
+					</GroupBox>
+				</Grid>
+			</TabItem>
+		</TabControl>
+		<Grid Grid.Row = '2' >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width = '*' />
+				<ColumnDefinition Width = '*' />
+			</Grid.ColumnDefinitions>
+			<Button Grid.Column = '0' Name = 'Start' Content = 'Start' Width = '100' Height = '24' />
+			<Button Grid.Column = '1' Name = 'Cancel' Content = 'Cancel' Width = '100' Height = '24' />
+		</Grid>
+	</Grid>
 </Window>
 "@
         Service = @"

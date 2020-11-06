@@ -69,8 +69,9 @@ Class Install
         
         $This.Load              += "Write-Theme 'Module [+] Loaded'"
 
-        $This.Load              += "@{"  
-        $This.Load              += "    Type        = 4
+        $This.Load              += "@{"
+        $This.Load              += ""
+        $This.Load              += "    Type        = 4"
         $This.Load              += "    Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'"
         $This.Load              += "    GUID        = '6b0418f5-adc3-4020-a0f9-7010439a93ce'"
         $This.Load              += "    Header      = 'Secure Digits Plus LLC'"

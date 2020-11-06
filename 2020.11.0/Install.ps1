@@ -67,6 +67,18 @@ Class Install
             $This.Load          += @( Get-Content "$($This.Path)\Functions\$_.ps1" )
         }
         
+        $This.Load              += "Write-Theme 'Module [+] Loaded'"
+
+        $This.Load              += "@{"  
+        $This.Load              += "    Type        = 4
+        $This.Load              += "    Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'"
+        $This.Load              += "    GUID        = '6b0418f5-adc3-4020-a0f9-7010439a93ce'"
+        $This.Load              += "    Header      = 'Secure Digits Plus LLC'"
+        $This.Load              += "    Body        = 'FightingEntropy'"
+        $This.Load              += "    Footer      = '2020.11.0'"
+        $This.Load              += ""
+        $This.Load              += "}               | % { Show-ToastNotification @_ }"
+        
         $This.Output             = $This.Load -join "`n"
 
         Set-Content -Path $This.File -Value $This.Output
@@ -85,6 +97,16 @@ Class Install
             RootModule           = $This.File
 
         }                        | % { New-ModuleManifest @_ }
+
+        "$Env:ProgramFiles\WindowsPowershell\Modules\{0}\{1}" -f $This.Name, $This.Version | % { 
+
+            If ( ! ( Test-Path $_ ) )
+            {
+                New-Item -Path $_ -ItemType Directory -Verbose
+            }
+            
+            Copy-Item -Path $This.Manifest $_ -Verbose -Force
+        }
     }
 
     BuildRegistry()
@@ -117,11 +139,11 @@ Class Install
 
     Install()
     {
-        $This.Type               = @("Client","Server")[(( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" )]
+        $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
         $This.BuildRegistry()
         
-        $This.Path               = $This.Root($Env:ProgramData)
+        $This.Path               = $This.Root($env:ProgramData)
         $This.BuildPath()
 
         [Net.ServicePointManager]::SecurityProtocol = 3072
@@ -196,9 +218,8 @@ Class Install
 
         $This.BuildModule()
         $This.BuildManifest()
-        $This.BuildRegistry()
 
-        Import-Module $This.Manifest -Verbose -Force
+        Import-Module FightingEntropy -Verbose -Force
 
         Write-Theme "Module [+] Loaded"
 

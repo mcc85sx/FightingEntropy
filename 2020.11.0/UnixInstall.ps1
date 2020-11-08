@@ -1,3 +1,39 @@
+# hostnamectl set-hostname centos-lab.securedigitsplus.com
+
+Class UnixHost
+{
+    Hidden [Object] $Obj = (hostnamectl)
+    [String] $Hostname
+    [String] $Chassis
+    [String] $MachineID
+    [String] $BootID
+    [String] $VMProvider
+    [String] $OS
+    [String] $CPE
+    [String] $Kernel
+    [String] $Architecture
+
+    [String] Item([String]$I)
+    {
+        $Item = ( $This.Obj | ? { $_ -cmatch $I } )
+
+        Return @( If (!!$Item) {$Item.Substring(20)} Else {"-"} )
+    }
+
+    UnixHost()
+    {
+        $This.Hostname      = $This.Item("Static hostname")
+        $This.Chassis       = $This.Item("Chassis")
+        $This.MachineID     = $This.Item("Machine ID")
+        $This.BootID        = $This.Item("Boot ID")
+        $This.VMProvider    = $This.Item("Virtualization")
+        $This.OS            = $This.Item("Operating System")
+        $This.CPE           = $This.Item("CPE OS Name")
+        $This.Kernel        = $This.Item("Kernel")
+        $This.Architecture  = $This.Item("Architecture")
+    }
+}
+
 class NetInterface
 {
     [String] $Name
@@ -50,25 +86,27 @@ class NetInterface
 Class Network
 {
     [Object]            $Host
-    [Object]          $Object
-    [String[]]        $Config
+    [Object]       $Interface
 
     Network()
     {
-        $This.Host            = hostnamectl
-        $This.Config          = (ifconfig) -Split "`n"
-        $This.Object          = @( )
-        $Array                = ""
+        $This.Host               = [UnixHost]::New()
+        $This.Interface          = @( )
 
-        ForEach ( $I in 0..($This.Config.Count - 1 ) )
+        $Config                  = (ifconfig) -Split "`n"
+        $Array                   = ""
+
+        ForEach ( $I in 0..($Config.Count - 1 ))
         {
-            $Array           += $This.Config[$I]
+            $Array              += $Config[$I]
 
-            If ( $This.Config[$I].Length -eq 0 )
+            If ( $Config[$I].Length -eq 0 )
             {
-                $This.Object += [NetInterface]::New($Array)
-                $Array        = ""
+                $This.Interface += [NetInterface]::New($Array)
+                $Array           = ""
             }
         } 
     }
 }
+
+$Net = [Network]::New()

@@ -216,6 +216,61 @@ Class Network  # 2020_1111 @ MCC
     }
 }
 
+Function Set-Selinux
+{
+    [Content]::New("/etc/sysconfig/selinux","SELINUX=enforcing","SELINUX=disabled")
+}
+
+
+Function Install-Network ([String]$Hostname)
+{
+    sudo yum install wget tar net-tools -y
+}
+
+Function Configure-Network
+{
+    $Network = [Network]::New()
+
+    $Network.Host
+    $Network.Interface
+    $Network.Network
+
+    #If ( $Network.Host.Hostname -ne $Target )
+    #{
+    #    hostnamectl set-hostname $Target
+    #}
+            
+    $IPAddress = $Network.Interface | ? Flags -match 4163 | % IPV4Address
+    $Content   = Get-Content -Path "/etc/hosts"
+    
+    Switch ($IPAddress.Count)
+    {
+        0
+        { 
+            Throw "Invalid entry" 
+        }
+
+        1
+        {
+            $Content += ( "{0} {1} {2}" -f $IPAddress,$Network.Host.HostID, $Network.Host.HostName )
+        }
+
+        Default 
+        { 
+            ForEach ( $IP in $IPAddress )
+            {
+                $Item = ( "{0} {1} {2}" -f $IP, $Network.Host.HostID, $Network.Host.HostName )
+                If ( $Item -notin $Content )
+                {
+                    $Content += $Item
+                }
+            }
+        }
+    }
+
+    Set-Content -Path "/etc/hosts" -Value @($Content)
+}
+
 Function Install-VSCode
 {
     "https://packages.microsoft.com" | % { 
@@ -337,97 +392,9 @@ Function Configure-PostFix
     
     # DEBUG | 0..( $Content.Count - 1 ) | % { "[{0:d3}] {1}" -f $_,$Content[$_] }
 }
-Class Content # Gets content, makes replacements, and sets the updated content back to source
-{
-    [String]      $Path
-    [Object]   $Content
-    [String[]]  $Search
-    [String[]]  $Target
-
-    Content([String]$Path,[String[]]$Search,[String[]]$Target)
-    {
-        If ( $Search.Count -ne $Target.Count -or $Search.Count -eq 0 -or $Target.Count -eq 0 )
-        {
-            Throw "Invalid input" 
-        }
-
-        $This.Path    = $Path
-        $This.Content = Get-Content $This.Path
-        $This.Search  = $Search
-        $This.Target  = $Target
-
-        Switch($This.Search.Count)
-        {
-            Default 
-            {
-                ForEach ( $I in 0..( $This.Search.Count - 1 ) )
-                { 
-                    $This.Content = $This.Content -Replace $This.Search[$I], $This.Target[$I] 
-                }
-            }
-
-            1 
-            {
-                $This.Content = $This.Content -Replace $This.Search, $This.Target
-            }
-        }
-
-        Set-Content $This.Path $This.Content
-    }
-}
-
-# ____________________________________________________________________________________________________
-#/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\ Join ADDS Domain \\
-Function Install-ADDS
-{
-    Param ( $Username )
-
-    yum install realmd sssd oddjob oddjob-mkhomedir adcli samba samba-common samba-common-tools krb5-workstation -y
-    realm join -v -U $Username
-}
-#\___________________________________________________________________________________________________//
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-
-# ____________________________________________________________________________________________________
-#/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\ CIFS for Windows Shares \\
-    Function Install-CIFS
-    {
-        Param ( $Server , $Share , $Mount = "/mnt" , $Username )
-
-        yum install cifs-utils
-        sudo mount.cifs //$Server/$Share $Mount -o user=$Username
-    }
-#\___________________________________________________________________________________________________//
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-
-# ____________________________________________________________________________________________________
-#/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\ Visual Studio Code \\
-    Function Install-VSCode
-    {
-        "https://packages.microsoft.com" | % {
-            
-            @{
-                Name = $_ 
-                Keys = "$_/keys/microsoft.asc"
-                Repo = "$_/yumrepos/vscode"
-            }
-                
-            sudo rpm --import $_.Keys
-            Set-Content "/etc/yum.repos.d/vscode.repo" "[code]|name=Visual Studio Code|baseurl=$( $_.Repo )|enabled=1|gpgcheck=1|gpgkey=$( $_.Keys )".Split('|') -VB
-        }
-
-        sudo yum install code
-        code --install-extension ms-vscode.powershell
-    }
-#\___________________________________________________________________________________________________//
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
 yum update
-
-Function Set-Selinux
-{
-    [Content]::("/etc/sysconfig/selinux","SELINUX=enforcing","SELINUX=disabled")
-}
+Set-Selinux
 
 Function Set-Network
 {

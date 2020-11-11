@@ -7,46 +7,374 @@
 #\________________________________________________________________________/
 # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-    Class Content # Gets content, makes replacements, and sets the updated content back to source
+Class Content  # 2020_1111 @ MCC 
+{
+    [String]      $Path
+    [Object]   $Content
+    [String[]]  $Search
+    [String[]]  $Target
+
+    Content([String]$Path,[String[]]$Search,[String[]]$Target)
     {
-        [ String    ] $Path
-        [ String [] ] $Content
-        [ String [] ] $Search
-        [ String [] ] $Target
-
-        Content( [ String ] $Path , [ String [] ] $Search , [ String [] ] $Target )
+        If ( $Search.Count -ne $Target.Count -or $Search.Count -eq 0 -or $Target.Count -eq 0 )
         {
-            $This.Path    = $Path
-            $This.Content = Get-Content $This.Path
-            $This.Search  = $Search
-            $This.Target  = $Target
+            Throw "Invalid input" 
+        }
 
-            ForEach ( $I in $This.Content )
+        $This.Path    = $Path
+        $This.Content = Get-Content $This.Path
+        $This.Search  = $Search
+        $This.Target  = $Target
+
+        Switch($This.Search.Count)
+        {
+            Default 
             {
-                If ( $This.Search.Count -gt 1 )
-                {
-                    ForEach ( $J in 0..( $This.Search.Count - 1 ) )
-                    {
-                        If ( $This.Content[$I] -match $This.Search[$J] )
-                        {
-                            $This.Content[$I] = $This.Content[$I] -Replace $This.Search[$J] , $This.Target[$J]
-                        }
-                    }
-                }
-
-                Else
-                {
-                    If ( $This.Content[$I] -match $This.Search )
-                    {
-                        $This.Content[$I] = $This.Content[$I] -Replace $This.Search , $This.Target
-                    }
+                ForEach ( $I in 0..( $This.Search.Count - 1 ) )
+                { 
+                    $This.Content = $This.Content -Replace $This.Search[$I], $This.Target[$I] 
                 }
             }
 
-            Set-Content $This.Path $This.Content
+            1 
+            {
+                $This.Content = $This.Content -Replace $This.Search, $This.Target
+            }
+        }
+
+        Set-Content $This.Path $This.Content
+    }
+}
+
+Class Service # 2020_1111 @ MCC 
+{
+    [String]             $Name
+    [Object]           $Object
+    [String[]]         $Status = ("start enable reload restart status" -Split " ")
+
+    [ValidateSet("Launch","Status","Restart")]
+    [String]             $Mode
+
+    [String]            $Title
+    [String[]]           $Slot
+
+    Service([String]$Mode,[String]$Name)
+    {
+        $This.Name             = $Name
+        $This.Object           = (systemctl status $Name)
+        $This.Mode             = $Mode
+        $This.Title            = @{ 
+            
+            Launch             = "Launching"
+            Status             = "Launch w/ Status"
+            Restart            = "Restarting" 
+        
+        }[$Mode]
+        
+        $This.Slot             = @{ 
+            
+            Launch             = 0,1,2
+            Status             = 0,1,4
+            Restart            = 3 
+        
+        }[$Mode]
+        
+        $This.Slot             = [Int32[]]$This.Slot | % { $This.Status[$_] }
+
+        ForEach ( $Item in $This.Slot )
+        {
+            systemctl $Item $This.Name
+        }
+    }
+}
+
+Class UnixHost # 2020_1111 @ MCC
+{
+    Hidden [Object]         $Obj = (hostnamectl)
+    Hidden [String[]]     $Order = ("Hostname Chassis MachineID BootID VMProvider OS CPE Kernel Architecture" -Split " ") 
+    [String]           $Hostname
+    [String]            $Chassis
+    [String]          $MachineID
+    [String]             $BootID
+    [String]         $VMProvider
+    [String]                 $OS
+    [String]                $CPE
+    [String]             $Kernel
+    [String]       $Architecture
+
+    [String]                Item([String]$I)
+    {
+        $Item = ( $This.Obj | ? { $_ -cmatch $I } )
+
+        Return @( If (!!$Item) {$Item.Substring(20)} Else {"-"} )
+    }
+
+    UnixHost()
+    {
+        $This.Hostname      = $This.Item("Static hostname")
+        $This.Chassis       = $This.Item("Chassis")
+        $This.MachineID     = $This.Item("Machine ID")
+        $This.BootID        = $This.Item("Boot ID")
+        $This.VMProvider    = $This.Item("Virtualization")
+        $This.OS            = $This.Item("Operating System")
+        $This.CPE           = $This.Item("CPE OS Name")
+        $This.Kernel        = $This.Item("Kernel")
+        $This.Architecture  = $This.Item("Architecture")
+    }
+}
+
+Class NetInterface  # 2020_1111 @ MCC
+{
+    [String] $Name
+    [String] $Type
+    [String] $Flags
+    [Int32]  $Active
+    [Int32]  $MTU
+    [String] $IPV4Address
+    [String] $Netmask
+    [String] $Broadcast
+    [String] $IPV4PrefixLength
+    [String] $IPV4Network
+    [String] $IPV6Address
+    [String] $PrefixLength
+    [String] $ScopeID
+    [String] $MacAddress
+    [Int32]  $TXQueueLength
+    [String[]] $Interface
+
+    [String] Item([String]$I)
+    {
+        $Item = $This.Interface | ? { $_ -cmatch $I }
+        
+        Return @( If (!!$Item) {$Item.Split(" ")[1]} Else {"-"} )
+    }
+
+    [String] Slot()
+    {
+        $Item = $This.Interface | ? { $_ -match "(\(\w+\))" }
+
+        Return @( If (!!$Item) {$Item} Else {"-"} )
+    }
+
+    [String] IPV4Prefix ([String]$NetMask)
+    {
+        Return @( ( $NetMask.Split(".") | % { [Convert]::ToString($_,2) | % ToCharArray } ) | ? { $_ -match 1 } ).Count
+    }
+
+    [String] IPV4Net([String]$IPV4Address)
+    {
+        Return @( ip route | ? { $_ -match $IPV4Address } | % Split " " )[0]
+    }
+
+    NetInterface([String]$IF)
+    {
+        $This.Interface        = $IF -Split "\s{2}" | ? Length -gt 0
+        $This.Type             = $This.Slot()
+        $This.Name             = ($This.Interface[0] -Split ":")[0]
+        $This.Flags            = ($This.Interface[0] -Split "=")[1]
+        $This.MTU              = $This.Item("mtu")
+        $This.IPV4Address      = $This.Item("inet ")
+        $This.Netmask          = $This.Item("netmask")
+        $This.IPV4PrefixLength = $This.IPV4Prefix($This.NetMask)
+        $This.IPV4Network      = $This.IPV4Net($This.IPV4Address)
+        $This.Broadcast        = $This.Item("broadcast")
+        $This.IPV6Address      = $This.Item("inet6")
+        $This.PrefixLength     = $This.Item("prefixlen")
+        $This.ScopeID          = $This.Item("scopeid")
+        $This.MacAddress       = $This.Item("ether")
+        $This.TXQueueLength    = $This.Item("txqueuelen")
+    }
+}
+
+Class Network  # 2020_1111 @ MCC
+{
+    [Object]            $Host
+    [Object]       $Interface
+    [Object]         $Network
+
+    Network()
+    {
+        $This.Host               = [UnixHost]::New()
+        $This.Interface          = @( )
+
+        $Config                  = (ifconfig) -Split "`n"
+        $Array                   = ""
+
+        ForEach ( $I in 0..($Config.Count - 1 ))
+        {
+            $Array              += $Config[$I]
+
+            If ( $Config[$I].Length -eq 0 )
+            {
+                $This.Interface += [NetInterface]::New($Array)
+                $Array           = ""
+            }
+        }
+
+        $This.Network            = @( )
+        $This.Interface          | ? Flags -match "4163" | % { $This.Network += $_.IPV4Network }
+    }
+}
+
+Function Install-VSCode
+{
+    "https://packages.microsoft.com" | % { 
+    
+    	[Object]    $Keys = "$_/keys/microsoft.asc"
+    	[Object]    $Repo = "$_/yumrepos/vscode"
+    }
+                
+    sudo rpm --import $Keys
+    Set-Content -Path "/etc/yum.repos.d/vscode.repo" -Value @("[code];name=Visual Studio Code;baseurl=$Repo;enabled=1;gpgcheck=1;gpgkey=$Keys".Split(';')) -Verbose
+
+    sudo yum install code -y
+    code --install-extension ms-vscode.powershell
+}
+
+Function Install-MicrosoftEdge
+{
+    "https://packages.microsoft.com" | % {
+
+	sudo rpm --import $_/keys/microsoft.asc
+	sudo dnf config-manager --add-repo $_/yumrepos/edge
+    	sudo mv /etc/yum.repos.d/packages.microsoft.com_yumrepos_edge.repo /etc/yum.repos.d/microsoft-edge-dev.repo
+        sudo dnf install microsoft-edge-dev -y
+    }
+}
+
+Function Install-ADDS
+{
+    yum install realmd sssd oddjob oddjob-mkhomedir adcli samba samba-common samba-common-tools krb5-workstation -y
+}
+
+Function Install-CIFS
+{
+    yum install cifs-utils -y
+}
+
+Function Get-ADLogin ([String]$Username)
+{
+    realm join -v -U $Username.ToUpper()
+}
+
+Function Get-CIFSShare ([String]$Server,[String]$Share,[String]$Mount="/mnt",[String]$Username)
+{
+    sudo mount.cifs //$Server/$Share $Mount -o user=$UserName
+}
+
+Function Install-Apache
+{
+    sudo yum install epel-release httpd httpd-tools -y
+    chown apache:apache /var/www/html -R
+}
+
+Function Configure-Apache
+{
+    [String]            $Root = "/etc/httpd/conf/httpd.conf"
+    [String]      $ServerName = (hostname)
+    [String[]]       $Content = (Get-Content $Root)
+
+    0..( $Content.Count - 1 ) | % { 
+        
+        If ( $Content[$_] -match "(<Directory />)" )
+        {
+            $Content[$_+1]    = $Content[$_+1] -Replace "none","all" 
+        }
+        
+        If ( $Content[$_] -match "(#ServerName)" ) 
+        { 
+            $Content[$_]      = $Content[$_] -Replace "www.example.com", $ServerName -Replace "#Ser","Ser" 
         }
     }
 
+    Set-Content -Path $Root -Value $Content -Verbose
+
+    "http","https" | % { firewall-cmd --zone=public --permanent --add-service=$_ }
+
+    [Service]::New("Launch","httpd")
+}
+
+Function Install-MariaDB
+{
+    sudo yum install mariadb mariadb-server -y
+    [Service]::New("Launch","mariadb")
+}
+
+Function Install-PostFix
+{
+    sudo yum install postfix -y
+}
+
+Function Configure-PostFix
+{
+    [Object] $Network   = [Network]::New().Network
+    [String] $Hostname  = (hostname)
+    [String] $Domain    = $Hostname -Replace "$($Hostname.Split(".")[0]).",""
+    [String[]] $Content = Get-Content "/etc/postfix/main.cf"
+
+    If ( $Network.Count -gt 1 )
+    {
+        $Network        = $Network -join ', '
+    }
+    
+    #[Content]::New("/etc/postfix/main.cf")
+    $Replace            = @{ }
+
+    $Replace            | % Add 0 ("#myhostname = host.domain.tld","myhostname = $hostname")
+    $Replace            | % Add 1 ("#mydomain =","mydomain = $Domain")
+    $Replace            | % Add 2 ('myorigin = $mydomain'  | % { "#$_", $_ })
+    $Replace            | % Add 3 ('inet_interfaces = all' | % { "#$_", $_ })
+    $Replace            | % Add 4 ('mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,' | % { "#$_", $_ })
+    $Replace            | % Add 5 ('  mail.$mydomain, www.$mydomain, ftp.$mydomain' | % { "#$_", $_ })
+    $Replace            | % Add 6 ("local_recipient_maps" | % { "#$_", $_ })
+    $Replace            | % Add 7 ("mynetworks_style = subnet" | % { "#$_", $_ })
+    $Replace            | % Add 8 ("mynetworks = 168.100.189.0/28, 127.0.0.0/8" | % {"#$_",$_.Replace("168.100.189.0/28",$Network)})
+
+    ForEach ( $I in 0..($Replace.Count - 1 ) )
+    {
+        $Content        = $Content.Replace($Replace[$I][0],$Replace[$I][1])
+    }
+    
+    # DEBUG | 0..( $Content.Count - 1 ) | % { "[{0:d3}] {1}" -f $_,$Content[$_] }
+}
+Class Content # Gets content, makes replacements, and sets the updated content back to source
+{
+    [String]      $Path
+    [Object]   $Content
+    [String[]]  $Search
+    [String[]]  $Target
+
+    Content([String]$Path,[String[]]$Search,[String[]]$Target)
+    {
+        If ( $Search.Count -ne $Target.Count -or $Search.Count -eq 0 -or $Target.Count -eq 0 )
+        {
+            Throw "Invalid input" 
+        }
+
+        $This.Path    = $Path
+        $This.Content = Get-Content $This.Path
+        $This.Search  = $Search
+        $This.Target  = $Target
+
+        Switch($This.Search.Count)
+        {
+            Default 
+            {
+                ForEach ( $I in 0..( $This.Search.Count - 1 ) )
+                { 
+                    $This.Content = $This.Content -Replace $This.Search[$I], $This.Target[$I] 
+                }
+            }
+
+            1 
+            {
+                $This.Content = $This.Content -Replace $This.Search, $This.Target
+            }
+        }
+
+        Set-Content $This.Path $This.Content
+    }
+}
 
 # ____________________________________________________________________________________________________
 #/¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\ Join ADDS Domain \\

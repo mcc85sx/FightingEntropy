@@ -221,8 +221,24 @@ Function Set-Selinux
     [Content]::New("/etc/sysconfig/selinux","SELINUX=enforcing","SELINUX=disabled")
 }
 
+Function Set-VideoResolution
+{
+    grubby --update-kernel=ALL --args ="video=hyperv_fb:1920x1080"
+    # There's a way to do this without rebooting...
+    reboot
+}
 
-Function Install-Network ([String]$Hostname)
+Function Set-PowerShellLink
+{
+    [String] $User  = (who).Split("  :")[0]
+    [String] $Path  = "/home/$User/Desktop/PowerShell.desktop"
+    [Object] $Value = ("[Desktop Entry];Version=1.0;Type=Application;Terminal=true;Exec=/opt/microsoft/powershell/7/pwsh;Name=PowerShell 7;Comment=;Icon=".Split(";"))
+    
+    Set-Content -Path $Path -Value $Value
+    sudo chmod 755 $Path
+}
+
+Function Install-Network
 {
     sudo yum install wget tar net-tools -y
 }
@@ -296,6 +312,8 @@ Function Install-MicrosoftEdge
         sudo dnf install microsoft-edge-dev -y
     }
 }
+
+
 
 Function Install-ADDS
 {
@@ -372,142 +390,8 @@ Function Configure-PostFix
         $Network        = $Network -join ', '
     }
     
-    #[Content]::New("/etc/postfix/main.cf")
-    $Replace            = @{ }
-
-    $Replace            | % Add 0 ("#myhostname = host.domain.tld","myhostname = $hostname")
-    $Replace            | % Add 1 ("#mydomain =","mydomain = $Domain")
-    $Replace            | % Add 2 ('myorigin = $mydomain'  | % { "#$_", $_ })
-    $Replace            | % Add 3 ('inet_interfaces = all' | % { "#$_", $_ })
-    $Replace            | % Add 4 ('mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,' | % { "#$_", $_ })
-    $Replace            | % Add 5 ('  mail.$mydomain, www.$mydomain, ftp.$mydomain' | % { "#$_", $_ })
-    $Replace            | % Add 6 ("local_recipient_maps" | % { "#$_", $_ })
-    $Replace            | % Add 7 ("mynetworks_style = subnet" | % { "#$_", $_ })
-    $Replace            | % Add 8 ("mynetworks = 168.100.189.0/28, 127.0.0.0/8" | % {"#$_",$_.Replace("168.100.189.0/28",$Network)})
-
-    ForEach ( $I in 0..($Replace.Count - 1 ) )
-    {
-        $Content        = $Content.Replace($Replace[$I][0],$Replace[$I][1])
-    }
+    <#[Content]::New("/etc/postfix/main.cf")
     
-    # DEBUG | 0..( $Content.Count - 1 ) | % { "[{0:d3}] {1}" -f $_,$Content[$_] }
-}
-
-yum update
-Set-Selinux
-
-Function Set-Network
-{
-    Param ( $Target )
-
-    sudo yum install wget tar net-tools
-
-    If ( ( hostname ) -ne $Target )
-    {
-        hostnamectl set-hostname $Target
-    }
-
-    ifconfig | % { 
-        
-        If ( $_ -match "inet " -and $_ -notmatch "127.0.0.1" ) 
-        {
-            $X            = $_ -Split " " | ? { $_.Length -gt 0 }
-            $Y            = GC /etc/hosts
-            $Z            = [ PSCustomObject ]@{
-
-                IPAddress = $X[1]
-                Hostname  = ( $Target -Split '.' )[0]
-                FullName  = $Target
-                Netmask   = $X[3]
-                Broadcast = $X[5]
-            
-            } 
-            
-            If ( $Z.IPAddress -notin $Y )
-            {
-                Set-Content /etc/hosts "{0} {1} {2}" -f $Z.IPAddress , $Z.HostName , $Z.FullName
-            }
-        }
-    }
-}
-
-Function Initialize-Service
-{
-    [ CmdLetBinding () ] Param ( 
-    
-        [ Parameter ( Mandatory , Position = 0 ) ] [ String ] $Name ,
-        [ ValidateSet ( "Launch" , "Status" , "Restart" ) ]
-        [ Parameter ( Mandatory , Position = 1 ) ] [ String ] $Mode )
-
-        $Line, $Top, $Bot = ForEach ( $I in 0..2 )
-        { 
-            "#" + " /\"[$I] + ( @( "-¯_"[$I] ) * 44 -join '' ) + " \/"[$I] + "#"
-        }
-
-        @{   Launch = @{ 0 = "Launching"        ; 1 = 0, 1, 2 }
-             Status = @{ 0 = "Launch w/ Status" ; 1 = 0, 1, 4 }
-            Restart = @{ 0 = "Restarting"       ; 1 = 3       } }[ $Mode ] | % {
-
-            $Line , $Top , "    $( $_[0] ): $Name", $Bot
-
-            ForEach ( $Run in "start,enable,reload,restart,status".Split(',')[ $_[1] ] )
-            {
-                $Top , "    systemctl $Run $Name"
-
-                @{  $True  = "[+] Successful" ; 
-                    $False = "[!] Exception"  }[$?] | % { 
-
-                    "#\_{0} {1} _/#" -f ("_" * ( 40 - $_.Length ) ), $_
-                    $Line
-                }
-            }
-
-            $Top , "    Operation [+] Complete" , $Bot , $Line
-        }
-}
-
-Function Install-Apache
-{
-    sudo yum install epel-release httpd httpd-tools -y
-    chown apache:apache /var/www/html -R
-
-    "/etc/httpd/conf/httpd.conf" | % { @{ Path = $_ ; Content = GC $_ } | % {
-
-        ForEach ( $I in 0..( $_.Content.Length - 1 ) )
-        {
-            If ( $_.Content[$I] -match "(<Directory />)" )
-            { 
-                $_.Content[$I+1] = "    AllowOverride All" 
-            }
-        }
-
-        Set-Content @_
-
-        "" , "s" | % { IEX "firewall-cmd --zone=public --permanent --add-service=http$_" }
-
-        @{ Name = "httpd" ; Mode = "Launch" } | % { Initialize-Service @_ }
-
-        Initialize-Service -Name httpd -Mode Launch
-    }
-}
-
-Function Install-MariaDB
-{
-    sudo yum install mariadb mariadb-server -y
-    Initialize-Service mariadb
-}
-
-Function Install-PostFix
-{
-    sudo yum install postfix -y
-
-    [Content]::New("/etc/postfix/main.cf" | % { 
-
-        @{
-            Path    = $_
-            Content = GC $_ 
-        }
-
     #   30 | compatibility_level = 2
     #   41 | #soft_bounce = no
     #   50 | queue_directory = /var/spool/postfix
@@ -601,33 +485,61 @@ Function Install-PostFix
        731 | smtpd_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
        736 | smtp_tls_security_level = may
        737 | meta_directory = /etc/postfix
-       738 | shlib_directory = /usr/lib64/postfix
+       738 | shlib_directory = /usr/lib64/postfix #>
+
+    $Replace            = @{ }
+
+    $Replace            | % Add 0 ("#myhostname = host.domain.tld","myhostname = $hostname")
+    $Replace            | % Add 1 ("#mydomain =","mydomain = $Domain")
+    $Replace            | % Add 2 ('myorigin = $mydomain'  | % { "#$_", $_ })
+    $Replace            | % Add 3 ('inet_interfaces = all' | % { "#$_", $_ })
+    $Replace            | % Add 4 ('mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,' | % { "#$_", $_ })
+    $Replace            | % Add 5 ('  mail.$mydomain, www.$mydomain, ftp.$mydomain' | % { "#$_", $_ })
+    $Replace            | % Add 6 ("local_recipient_maps" | % { "#$_", $_ })
+    $Replace            | % Add 7 ("mynetworks_style = subnet" | % { "#$_", $_ })
+    $Replace            | % Add 8 ("mynetworks = 168.100.189.0/28, 127.0.0.0/8" | % {"#$_",$_.Replace("168.100.189.0/28",$Network)})
+
+    ForEach ( $I in 0..($Replace.Count - 1 ) )
+    {
+        $Content        = $Content.Replace($Replace[$I][0],$Replace[$I][1])
     }
+    
+    # DEBUG | 0..( $Content.Count - 1 ) | % { "[{0:d3}] {1}" -f $_,$Content[$_] }
 }
 
 Function Install-RoundCube
 {
-    [ CmdLetBinding () ] Param ( 
+    [String] $Name = "roundcubemail-1.4.9"
+    [String] $File = "$Name-complete.tar.gz"
+    [String] $Path = "/var/www/roundcube"
+
+    wget "https://github.com/roundcube/roundcubemail/releases/download/1.4.9/$File"
+    sudo tar xvzf $File
     
-        [ Parameter ( Position = 0, Mandatory, HelpMessage =    "File Path" ) ] [ String ] $Path ,
-        [ Parameter ( Position = 1, Mandatory, HelpMessage =   "ServerName" ) ] [ String ] $Name ,
-        [ Parameter ( Position = 2,            HelpMessage =         "Port" ) ] [ Int32  ] $Port = 80 ,
-        [ Parameter ( Position = 3,            HelpMessage = "DocumentRoot" ) ] [ String ] $Root = "/var/www/html/" , 
-        [ Parameter ( Position = 4,            HelpMessage =    "Log Paths" ) ] [ String ] $Logs = "/var/log/httpd" )
-
-    roundcubemail-1.4.2 | % {
-
-        wget https://github.com/roundcube/roundcubemail/releases/download/1.4.2/$_-complete.tar.gz
-        sudo tar xvzf $_-complete.tar.gz
-        sudo mv $_ /var/www/roundcube/
+    If ( ! ( Test-Path $Path ) ) 
+    { 
+        New-Item -Path $Path -ItemType Directory -Verbose 
     }
 
+    sudo mv $Name $Path
+
     sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-    sudo dnf module reset php
+    sudo dnf module reset php -y
     sudo dnf module enable php:remi-7.4 -y
 
-    sudo dnf install -y " ldap imagick common gd imap json curl zip xml mbstring bz2 intl gmp" -Replace " "," php-"
-    
+    sudo dnf install php-ldap php-imagick php-common php-gd php-imap php-json php-curl php-zip php-xml php-mbstring php-bz2 php-intl php-gmp -y 
+    #(("ldap imagick common gd imap json curl zip xml mbstring bz2 intl gmp" -Split " ") | % { "php-$_" }) -join " "
+}
+
+Function Configure-RoundCube 
+(    
+    [String]$Path="/var/www/roundcube"
+    [String]$Name=[Network]::New().Host.Hostname,
+    [Int32]$Port=80,
+    [String]$Root="/var/www/html/",
+    [String]$Logs="/var/log/httpd"
+)
+{   
     Set-Content -Path $Path -Value (("|<{0} *:$Port>|  ServerName $Name|  DocumentRoot $Root||  ErrorLog $Logs`_error.log|"+
     "  CustomLog $Logs`_access.log combined||  <{1} />|    {2}|    {3}|  </{1}>||  <{1} $Root>|    {2} MultiViews|    {3}|"+
     "    Order allow,deny|    allow from all|  </{1}>||</{0}>" ) -f  "VirtualHost" , "Directory" , "Options FollowSymLinks",

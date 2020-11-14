@@ -110,6 +110,7 @@ Class _Object
                 $This.Name   = "Function"
                 $This.Mode   = 0 
             }
+
             Else                                   
             { 
                 $This.Name   = "Action"
@@ -185,6 +186,13 @@ Class _Object
             }
 
             $NameIndex ++
+        }
+
+        If ( $This.Name -eq "Action" )
+        {
+            $This.Output[2][ 2].Object = "/¯¯¯"
+            $This.Output[2][-4].Object = "    "
+            $This.Output[2] | ? { $_.Object -match "]___" -or $_.Object -match "____" } | % { $_.Object = "    " }
         }
     }
 }

@@ -134,6 +134,14 @@ Class Install
 
     Install()
     {
+        If ( $PSVersionTable.PSVersion.Major -ge 6 )
+        {
+            If ( $IsLinux )
+            {
+                Throw "Linux Installation Not Yet Supported"
+            }
+        }
+        
         $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
         $This.BuildRegistry()

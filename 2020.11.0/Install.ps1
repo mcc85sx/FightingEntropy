@@ -48,13 +48,21 @@ Class Install
     }
 
     BuildModule()
-    {        
+    {
+        If ( $PSVersionTable.PSVersion | ? Major -ge 6 )
+        {
+            If ( $IsLinux )
+            {
+                Throw "Linux install not yet supported"
+            }
+        }
+        
         $This.Load               = @( )
         $This.Load              += "# FightingEntropy.psm1 [Module]"
 
         ( "{0}.AccessControl,{0}.Principal,Management.Automation,DirectoryServices" -f "Security" ).Split(',') | % { 
         
-            $This.Load          += "System.$_" 
+            $This.Load          += "using namespace System.$_" 
         }
         
         $This.Load              += "using namespace Windows.UI.Notifications"

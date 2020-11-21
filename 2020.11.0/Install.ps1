@@ -51,6 +51,13 @@ Class Install
     {        
         $This.Load               = @( )
         $This.Load              += "# FightingEntropy.psm1 [Module]"
+
+        ( "{0}.AccessControl,{0}.Principal,Management.Automation,DirectoryServices" -f "Security" ).Split(',') | % { 
+        
+            $This.Load          += "System.$_" 
+        }
+        
+        $This.Load              += "using namespace Windows.UI.Notifications"
         $This.Load              += "Add-Type -AssemblyName PresentationFramework"
 
         $This.Module.Classes     | % { 

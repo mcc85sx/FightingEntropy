@@ -134,7 +134,7 @@ Class Install
 
     Install()
     {
-        If ( $PSVersionTable.PSVersion.Major -ge 6 )
+        If ( $Host.Version.Major -ge 6 )
         {
             If ( $IsLinux )
             {

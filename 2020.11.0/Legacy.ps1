@@ -24,7 +24,7 @@ Using Namespace System.Management.Automation
 Using Namespace System.DirectoryServices
 Add-Type -AssemblyName PresentationFramework
 
-#(host).ui.promptforchoice("Title","Has this message surprised you in any way?",[String[]]@("Yes","No","Maybe"),0)
+#(host).ui.promptforchoice("Title","Has this message surprised you in any way?",[String[]]@("&Yes","&No","&Maybe","&Piss off..."),0)
 
                                                                                     #____ -- ____    ____ -- ____    ____ -- ____    ____ -- ____      
 # ____                                                                            __//¯¯\\__//==\\__/----\__//==\\__/----\__//==\\__/----\__//¯¯\\___  

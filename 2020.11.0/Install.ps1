@@ -49,7 +49,7 @@ Class Install
 
     BuildModule()
     {
-        If ( $PSVersionTable.PSVersion | ? Major -ge 6 )
+        If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
         {
             If ( $IsLinux )
             {

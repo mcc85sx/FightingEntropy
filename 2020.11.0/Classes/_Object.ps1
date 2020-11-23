@@ -190,7 +190,7 @@ Class _Object
 
         If ( $This.Name -eq "Action" )
         {
-            $This.Output[2][ 2].Object = "/¯¯¯"
+            $This.Output[2][ 2].Object = [char[]]@(47,175,175,175)
             $This.Output[2][-4].Object = "    "
             $This.Output[2] | ? { $_.Object -match "]___" -or $_.Object -match "____" } | % { $_.Object = "    " }
         }

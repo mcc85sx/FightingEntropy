@@ -37,7 +37,7 @@ Class _Module
                                     "ServerMod.xml") -Split " "
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
-                                    "tion New-FECompany Get-ServerDependency").Split(" ") | % { "$_" }
+                                    "tion New-FECompany Get-ServerDependency Get-FEServices Get-FEHost").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
     }
 

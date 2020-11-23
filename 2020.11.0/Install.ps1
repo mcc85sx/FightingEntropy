@@ -49,14 +49,6 @@ Class Install
 
     BuildModule()
     {
-        If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
-        {
-            If ( $IsLinux )
-            {
-                Throw "Linux install not yet supported"
-            }
-        }
-        
         $This.Load               = @( )
         $This.Load              += "# FightingEntropy.psm1 [Module]"
 
@@ -142,11 +134,11 @@ Class Install
 
     Install()
     {
-        If ( $Host.Version.Major -ge 6 )
+        If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
         {
             If ( $IsLinux )
             {
-                Throw "Linux Installation Not Yet Supported"
+                Throw "Linux install not yet supported"
             }
         }
         

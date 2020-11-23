@@ -136,7 +136,7 @@ Class Install
     {
         If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
         {
-            If ( $IsLinux )
+            If ( Get-Item Variable:\IsLinux | % Value )
             {
                 Throw "Linux install not yet supported"
             }

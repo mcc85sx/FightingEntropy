@@ -1,3 +1,5 @@
+# Original by Picheljitsu @ https://github.com/picheljitsu/Powershell-Pentesting/blob/master/Get-DCOMSec.ps1
+
 Function Get-DCOMSecurity # Cause who likes looking at MMC -> Add-SnapIn -> Component Services...?
 {
     <#

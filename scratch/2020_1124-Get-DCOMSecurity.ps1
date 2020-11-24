@@ -15,8 +15,9 @@ Function Get-DCOMSecurity # Cause who likes looking at MMC -> Add-SnapIn -> Comp
             
             You can also use it to prove what grade of badass you are, at detecting threats.
             This version has optimized the process created by the original author, Picheljitsu.
-            The process used to take several minutes to look through each entry.
-            Now it takes like 10 seconds
+            The process used to take several minutes.
+            Now it takes like 6 seconds.
+            Because process optimization is key to efficiency.
             
             For more information on DCOM-based lateral movement concept, refer to the 
             following article: https://enigma0x3.net/2017/01/23/lateral-movement-via-dcom-round-2/

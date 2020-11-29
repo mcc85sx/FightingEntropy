@@ -46,19 +46,51 @@ Class _Module
 
     [String] Root([String]$Root)
     {
-        Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+        Return @( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
 
     [Object[]] Content([String]$Folder)
     {
-        Return ( $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName )
+        Return @( $This.Base | ? Name -eq $Folder | Get-ChildItem | % FullName )
     }
 
+    [String[]] GetClasses()
+    {
+        Return @( ForEach ( $Item in ( $This.Module.Classes | % { "{0}\Classes\$_.ps1" -f $This.Path } ) )
+        {
+            If ( Test-Path $Item )
+            {
+                Import-Module $Item -Verbose
+            }
+
+            Else
+            {
+                Write-Host "File Missing, $Item"
+            }
+        })
+    }
+
+    [String[]] GetFunctions()
+    {
+        Return @( ForEach ( $Item in ( $This.Module.Functions | % { "{0}\Functions\$_.ps1" -f $This.Path } ) )
+        {
+            If ( Test-Path $Item )
+            {
+                Import-Module $Item -Verbose
+            }
+
+            Else
+            {
+                Write-Host "File Missing, $Item"
+            }
+        })
+    }
+    
     _Module()
     {
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
 
-        Get-ItemProperty $This.Registry | % { 
+        Get-ItemProperty -Path $This.Registry | % { 
 
             $This.Name           = $_.Name
             $This.Version        = $_.Version

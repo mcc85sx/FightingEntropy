@@ -1,1 +1,9 @@
-Placeholder for server based resources
+# Placeholder for server based resources
+# TODO
+# -Process/Schema | Domain Controller Promotion
+# -Server Type (Main, Backup)
+# -Stage, Name, etc.
+# -Features/ADDS Install
+# -DHCP/DNS/AD
+# -Domain Controller Promotion
+# -Dependencies/Roles

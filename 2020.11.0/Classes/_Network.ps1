@@ -1,11 +1,14 @@
 Class _Network
 {
+    [Object]           $Adapter
     [Object]            $Vendor
+    [Object]           $NBTScan
     [Object[]]       $Interface
 
     _Network()
     {
         $This.Vendor         = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/scratch/VendorList.txt")
+        $This.NBTScan        = [_NBTScan]::New().Output
         $This.Interface      = @( )
 
         ForEach ( $Interface in Get-NetIPConfiguration -Detailed )

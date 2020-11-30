@@ -9,6 +9,7 @@ Class _NetInterface
     [Object] $IPV4
     [Object] $IPV6
     [Object] $DNS
+    [Object] $ARP
     [Object] $NBT
 
     _NetInterface([Object]$Interface)

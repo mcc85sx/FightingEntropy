@@ -1,11 +1,11 @@
-Class _NBTStat
+Class _NbtStat
 {
     Hidden [Object]   $Object
     [String]            $Name
     [String]       $IPAddress
     [Object[]]         $Hosts
         
-    _NBTStat([Object[]]$Object)
+    _NbtStat([Object[]]$Object)
     {
         $This.Object     = $Object
         $This.Name       = $Object[0].Split(":")[0]

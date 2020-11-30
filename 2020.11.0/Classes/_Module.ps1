@@ -58,12 +58,12 @@ Class _Module
 
     [String[]] GetClasses()
     {
-        Return @( ForEach ( $Item in ( $This.Module.Classes | % { "{0}\Classes\$_.ps1" -f $This.Path } ) ) )
+        Return @( $This.Module.Classes | % { "{0}\Classes\$_.ps1" -f $This.Path } )
     }
 
     [String[]] GetFunctions()
     {
-        Return @( ForEach ( $Item in ( $This.Module.Functions | % { "{0}\Functions\$_.ps1" -f $This.Path } ) ) )
+        Return @( $This.Module.Functions | % { "{0}\Functions\$_.ps1" -f $This.Path } )
     }
     
     _Module()

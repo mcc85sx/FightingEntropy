@@ -1,4 +1,4 @@
-Class _NBTHost
+Class _NbtHost
 {
     Hidden [String]    $Line
     [String]           $Name
@@ -11,7 +11,7 @@ Class _NBTHost
         Return @( $This.Line.Substring($Start,$End).TrimEnd(" ") )
     }
 
-    _NBTHost([String]$Line)
+    _NbtHost([String]$Line)
     {
         $This.Line    = $Line
         $This.Name    = $This.X(0,19).TrimStart(" ")

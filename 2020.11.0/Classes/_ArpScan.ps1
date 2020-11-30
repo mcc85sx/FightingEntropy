@@ -5,6 +5,11 @@ Class _ArpScan
     Hidden [Hashtable] $Process
     [Object[]]          $Output
 
+    [String] NameHost ([String]$IPAddress)
+    {
+        Return @( Try { Resolve-DnsName $IPAddress | % NameHost } Catch { "-" } )
+    }
+
     _ArpScan()
     {
         $This.Process = @{ }
@@ -32,18 +37,32 @@ Class _ArpScan
         {
             1 
             {
-                $This.Output = [_ArpStat]::New($This.Process[0])
+                $Item = [_ArpStat]::New($This.Process[0])
+
+                ForEach ( $X in 0..( $Item.Hosts.Count - 1 ) )
+                {
+                    $Item.Hosts[$X].Host = $This.NameHost($Item.Hosts[$X].IPAddress)
+                }
+
+                $This.Output += $Item
             }
 
             Default 
-            { 
-                ForEach ( $X in 0..( $This.Process.Count - 1 ) )
+            {
+                ForEach ( $I in 0..( $This.Process.Count - 1 ) )
                 {
-                    $This.Output += [_ArpStat]::New($This.Process[$X])
+                    $Item = [_ArpStat]::New($This.Process[$I])
+
+                    ForEach ( $X in 0..($Item.Hosts.Count - 1 ) )
+                    {
+                        $Item.Hosts[$X].Host = $This.NameHost($Item.Hosts[$X].IPAddress)
+                    }
+
+                    $This.Output += $Item
                 }
             }
         }
 
-        $This.Output = $This.Output | Sort-Object Name
+        $This.Output = $This.Output | Sort-Object IPAddress
     }
 }

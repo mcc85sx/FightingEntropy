@@ -33,8 +33,8 @@ Class _Module
         Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 
                                     "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                                     "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
-                                    "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml " + 
-                                    "XamlGlossaryItem Image Images Updates" ).Split(" ") | % { "_$_" }
+                                    "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml XamlGlossar" + 
+                                    "yItem Image Images Updates ARPHost ARPScan ARPStat NBTHost NBTScan NBTStat" ).Split(" ") | % { "_$_" }
         Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                                     "ServerMod.xml") -Split " "
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 

@@ -30,7 +30,7 @@ Class Install
                                     "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                                     "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
                                     "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml XamlGlossar" + 
-                                    "yItem Image Images Updates ARPHost ARPScan ARPStat NBTHost NBTScan NBTStat" ).Split(" ") | % { "_$_" }
+                                    "yItem Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat" ).Split(" ") | % { "_$_" }
         Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                                     "ServerMod.xml") -Split " "
         Functions                = @("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 

@@ -87,11 +87,6 @@ Class _Module
             }
         })
     }
-
-    [Object] GetHost()
-    {
-        $This.Host = [_Host]::New()
-    }
     
     _Module()
     {
@@ -112,6 +107,7 @@ Class _Module
         $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
         $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
         $This.Base               = Get-ChildItem -Path $This.Path
+        $This.Host               = [_Host]::New()
         $This.Classes            = $This.Content("Classes")
         $This.Control            = $This.Content("Control")
         $This.Functions          = $This.Content("Functions")

@@ -10,6 +10,6 @@ Class _ArpStat
         $This.Object    = $Object
         $This.IPAddress = $Object[0].Replace("Interface: ","").Split(" ")[0]
         $This.IFIndex   = $Object[0].Split(" ")[-1]
-        $This.Hosts     = $Object | ? { $_ -notmatch "Interface" } | % { [_ArpHost]::New($_) }
+        $This.Hosts     = $Object | ? { $_ -notmatch "(Interface|static)" } | % { [_ArpHost]::New($_) }
     }
 }

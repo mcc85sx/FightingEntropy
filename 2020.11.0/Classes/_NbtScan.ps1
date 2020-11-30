@@ -1,4 +1,4 @@
-Class _NBTScan
+Class _NbtScan
 {
     Hidden [Object]    $NBTStat = (nbtstat -N)
     Hidden [Object[]]  $Adapter = (Get-NetAdapter)
@@ -19,7 +19,7 @@ Class _NBTScan
         Return @( $This.Service | ? { $_ -match "$($Hosts.ID)/$($Hosts.Type)" } | % { $_.Split("/")[-1] } )
     }
 
-    _NBTScan()
+    _NbtScan()
     {
         ForEach ( $I in 0..( $This.Service.Count - 1 ) )
         { 

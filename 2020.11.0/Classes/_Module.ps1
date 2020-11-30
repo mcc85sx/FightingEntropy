@@ -12,7 +12,9 @@ Class _Module
     [String]               $Path
     [Object]               $File 
     [Object]           $Manifest 
-    [Object]               $Base 
+    [Object]               $Base
+
+    [Object]               $Host
 
     [Object[]]          $Classes
     [Object[]]          $Control
@@ -32,7 +34,7 @@ Class _Module
                                     "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                                     "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
                                     "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml " + 
-                                    "XamlGlossaryItem Image Images Updates NBTHost NBTStat NBTScan" ).Split(" ") | % { "_$_" }
+                                    "XamlGlossaryItem Image Images Updates" ).Split(" ") | % { "_$_" }
         Control                  = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                                     "ServerMod.xml") -Split " "
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
@@ -84,6 +86,11 @@ Class _Module
                 Write-Host "File Missing, $Item"
             }
         })
+    }
+
+    [Object] GetHost()
+    {
+        $This.Host = [_Host]::New()
     }
     
     _Module()

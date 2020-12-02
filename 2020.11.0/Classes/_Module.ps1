@@ -16,21 +16,17 @@ Class _Module
 
     [Object]               $Host
     [Object]               $Info
-
+    [Object]               $Role
+    
     [Object[]]          $Classes
     [Object[]]          $Control
     [Object[]]        $Functions
     [Object[]]         $Graphics
 
-    [Object[]]            $Tools
-    [Object[]]           $Shares
-    [Object[]]           $Drives
-    [Object[]]     $Certificates
-
     [Hashtable]          $Module = @{
 
         Names                    = ("Name Version Provider Date Path Status Type" -Split " ")
-        Folders                  = "/Classes/Control/Functions/Graphics" -Split "/"
+        Folders                  = (" Classes Control Functions Graphics Role" -Split " ")
         Classes                  = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 
                                     "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                                     "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
@@ -42,7 +38,9 @@ Class _Module
         Functions                = ("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write" + 
                                     "-Banner Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotifica" + 
                                     "tion New-FECompany Get-ServerDependency Get-FEServices Get-FEHost").Split(" ") | % { "$_" }
-        Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp") -Split " "
+        Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
+
+        Role                     = ("{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " ")
     }
 
     Hidden [Object]        $Load
@@ -103,6 +101,7 @@ Class _Module
         $This.Control            = $This.Content("Control")
         $This.Functions          = $This.Content("Functions")
         $This.Graphics           = $This.Content("Graphics")
+        $This.Role
         $This.Tools              = Get-ChildItem -Path "$($This.Path)\Tools" -EA 0 
         $This.Shares             = Get-ChildItem -Path "$($This.Registry)\Shares" -EA 0 | Get-ItemProperty | Select-Object Name, Path, Description
     }

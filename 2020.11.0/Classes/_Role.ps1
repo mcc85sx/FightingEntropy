@@ -4,7 +4,7 @@ Class _Role
     [String] $Name
     [Object] $Role
 
-    [Int32] GetVersion ()
+    [Int32] GetVersion()
     {
         Return @( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major )
     }
@@ -20,7 +20,7 @@ Class _Role
     
     [Int32] GetOSType()
     {
-        Return @( If ( $This.GetVersion -gt 5 )
+        Return @( If ( $This.GetVersion() -gt 5 )
         {
             If ( Get-Item Variable:\IsLinux | % Value )
             {

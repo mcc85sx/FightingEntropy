@@ -63,9 +63,19 @@ Class _Module
         Return @( $This.Module.Classes | % { "{0}\Classes\$_.ps1" -f $This.Path } )
     }
 
+    LoadClassLibrary()
+    {
+        Invoke-Expression ( @( $This.GetClasses() | % { Get-Content $_ } ) -join "`n" )
+    }
+
     [String[]] GetFunctions()
     {
         Return @( $This.Module.Functions | % { "{0}\Functions\$_.ps1" -f $This.Path } )
+    }
+
+    LoadFunctionLibrary()
+    {
+        Invoke-Expression ( @( $This.GetClasses() | % { Get-Content $_ } ) -join "`n" )
     }
     
     _Module()

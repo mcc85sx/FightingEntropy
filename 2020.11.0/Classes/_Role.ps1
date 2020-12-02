@@ -6,7 +6,7 @@ Class _Role
 
     [Int32] GetVersion()
     {
-        Return @( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major )
+        Return @([UInt32](Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major))
     }
     
     [Int32] GetWinType()

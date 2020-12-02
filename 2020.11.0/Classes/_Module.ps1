@@ -41,6 +41,41 @@ Class _Module
                                     "tion New-FECompany Get-ServerDependency Get-FEServices Get-FEHost").Split(" ") | % { "$_" }
         Graphics                 = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
     }
+    
+    [Int32] GetVersion ()
+    {
+        Return @( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major )
+    }
+    
+    [Int32] GetWinType()
+    {
+        Return @( Invoke-Expression "Get-CimInstance -ClassName Win32_OperatingSystem | % Caption" | % { 
+        
+            If ( $_ -match "Windows 10"     ) { 0 } 
+            If ( $_ -match "Windows Server" ) { 1 }
+        })
+    }
+    
+    [Int32] GetOSType()
+    {
+        Return @( If ( $This.GetVersion -gt 5 )
+        {
+            If ( Get-Item Variable:\IsLinux | % Value )
+            {
+                2
+            }
+            
+            Else
+            {
+                $This.GetWinType()
+            }
+        }
+        
+        Else
+        {
+            $This.GetWinType()
+        })
+    }   
 
     [String] Root([String]$Root)
     {
@@ -49,7 +84,16 @@ Class _Module
     
     [String] GetRole()
     {
-        $Caption = 
+        $Version = Get-Item Variable:\PSVersionTable | % Value
+
+        If ( $Version.PSVersion.Major -gt 5 )
+        {
+            
+        Switch($Slot)
+        {
+            Win32_Client { [_Win32_Client]::New() } Win32_Server { [_Win32_Server]::New() } 
+            UnixBSD      { [_UnixBSD]::New()      } RHELCentOS   { [_RHELCentOS]::New()   }
+        }
     }
 
     [Object[]] Content([String]$Folder)

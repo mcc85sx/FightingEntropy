@@ -46,6 +46,11 @@ Class _Module
     {
         Return @( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
+    
+    [String] GetRole()
+    {
+        $Caption = 
+    }
 
     [Object[]] Content([String]$Folder)
     {

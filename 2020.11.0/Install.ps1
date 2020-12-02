@@ -19,9 +19,6 @@ Class Install
     [Object[]]        $Functions
     [Object[]]         $Graphics
 
-    [Object[]]            $Tools
-    [Object[]]           $Shares
-
     [Hashtable]          $Module = @{
 
         Names                    = ("Name Version Provider Date Path Status Type" -Split " ")

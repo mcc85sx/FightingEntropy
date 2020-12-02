@@ -4,9 +4,9 @@ Class _Role
     [String] $Name
     [Object] $Role
 
-    [Int32] GetVersion()
+    [Object[]] GetVersion()
     {
-        Return @([UInt32](Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major))
+        Return @( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major )
     }
     
     [Int32] GetWinType()

@@ -3,11 +3,6 @@ Class _Role
     [UInt32] $Type
     [String] $Name
     [Object] $Role
-
-    [Object[]] GetVersion()
-    {
-        Return @( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major )
-    }
     
     [Int32] GetWinType()
     {
@@ -20,7 +15,7 @@ Class _Role
     
     [Int32] GetOSType()
     {
-        Return @( If ( $This.GetVersion() -gt 5 )
+        Return @( If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major -gt 5 )
         {
             If ( Get-Item Variable:\IsLinux | % Value )
             {

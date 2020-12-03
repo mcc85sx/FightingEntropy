@@ -13,7 +13,7 @@ Class _Win32_Client
         $This.Host      = [_Host]::New()
         $This.Info      = [_Info]::New()
         $This.Tools     = @("ViperBomb","Chocolatey")
-        $This.Services  = [_Services]::new()
+        $This.Services  = (Get-Service)
         $This.Processes = (Get-Process)
         $This.Network   = [_Network]::new().Interface
     }

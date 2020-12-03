@@ -6,11 +6,9 @@ Class _Role
     
     [Int32] GetWinType()
     {
-        Return @( Invoke-Expression "Get-CimInstance -ClassName Win32_OperatingSystem | % Caption" | % { 
-
-            If ( $_ -match "Windows 10"     ) { 0 } 
-            If ( $_ -match "Windows Server" ) { 1 }
-        })
+        $Caption = Invoke-Expression "Get-CimInstance -ClassName Win32_OperatingSystem | % Caption"
+        
+        Return @( If ( $Caption -match "Windows 10" ) { 0 } If ( $Caption -match "Windows Server" ) { 1 } )
     }
     
     GetOSType()

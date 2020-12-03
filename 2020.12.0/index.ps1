@@ -2,6 +2,7 @@
 $Manifest     = @{
 
     Names     = ("Name Version Provider Date Path Status Type" -Split " ")
+    GUID      = ("67b283d9-72c6-413a-aa80-a24af5d4ea8f")
     Role      = ("{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " ")
     Folders   = (" Classes Control Functions Graphics Role" -Split " ")
     Classes   = ("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 

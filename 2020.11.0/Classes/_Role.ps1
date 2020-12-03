@@ -3,21 +3,29 @@ Class _Role
     [UInt32] $Type
     [String] $Name
     [Object] $Role
-    
-    [Int32] GetWinType()
+
+    GetWinType()
     {
         $Caption = Invoke-Expression "Get-CimInstance -ClassName Win32_OperatingSystem | % Caption"
+
+        If ( $Caption -match "Windows 10" ) 
+        { 
+            $This.Type = 0 
+        }
         
-        Return @( If ( $Caption -match "Windows 10" ) { 0 } If ( $Caption -match "Windows Server" ) { 1 } )
+        If ( $Caption -match "Windows Server" )
+        { 
+            $This.Type = 1 
+        }
     }
     
-    GetOSType()
+    _Role()
     {
-        If ( ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | % Major ) -gt 5 )
+        If ( ( Get-Item "Variable:\PSVersionTable" | % Value | % PSVersion | % Major ) -gt 5 )
         {
-            If ( Get-Item Variable:\IsLinux | % Value )
+            If ( Get-Item "Variable:\IsLinux" | % Value )
             {
-                2
+                $This.Type = 2
             }
             
             Else
@@ -28,13 +36,9 @@ Class _Role
         
         Else
         {
-            $This.GetWinType()
-        }
-    }   
-
-    _Role()
-    {
-        $This.Type = $This.GetOSType()
+            $This.GetWinType()   
+        })
+        
         $This.Name = ("{0}Client {0}Server UnixBSD RHELCentOS" -f "Win32_" -Split " ")[$This.Type]
         $This.Role = Switch($This.Name)
         {

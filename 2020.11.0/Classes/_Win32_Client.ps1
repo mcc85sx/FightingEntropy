@@ -15,6 +15,5 @@ Class _Win32_Client
         $This.Tools     = @("ViperBomb","Chocolatey")
         $This.Services  = (Get-Service)
         $This.Processes = (Get-Process)
-        $This.Network   = [_Network]::new().Interface
     }
 }

@@ -36,8 +36,8 @@ Class _Role
         
         Else
         {
-            $This.GetWinType()   
-        })
+            $This.GetWinType()
+        }
         
         $This.Name = ("{0}Client {0}Server UnixBSD RHELCentOS" -f "Win32_" -Split " ")[$This.Type]
         $This.Role = Switch($This.Name)

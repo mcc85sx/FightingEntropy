@@ -15,6 +15,5 @@ Class _Win32_Server
         $This.Tools     = ("ViperBomb Chocolatey MDT WinPE WinADK WDS IIS/BITS ASP.Net DNS DHCP ADDS" -Split " ")
         $This.Services  = (Get-Service)
         $This.Processes = (Get-Process)
-        $This.Network   = [_Network]::new().Interface
     }
 }

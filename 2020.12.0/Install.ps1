@@ -1,6 +1,8 @@
+Invoke-Expression ( Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0/Manifest.ps1 )
+
 Class Install
 {
-    [Object]             $Module
+    [Object]             $Module = [Manifest]::New()
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.12.0"
     [String]           $Provider = "Secure Digits Plus LLC"
@@ -123,8 +125,6 @@ Class Install
             }
         }
 
-        Invoke-Expression ( Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0/Manifest.ps1 )
-
         $This.Module             = [Manifest]::New()
         $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
@@ -222,3 +222,5 @@ Class Install
         }               | % { Show-ToastNotification @_ }
     }
 }
+
+[Install]::New()

@@ -123,7 +123,7 @@ Class Install
             }
         }
         
-        $This.Module             = Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/2020.12.0/Manifest.ps1"
+        $This.Module             = Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0/Manifest.ps1 | % Content
         
         $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")

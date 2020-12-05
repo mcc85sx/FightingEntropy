@@ -1,7 +1,7 @@
 Class _Module
 {
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2020.11.0"
+    [String]            $Version = "2020.12.0"
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date
     [String]             $Status
@@ -45,11 +45,6 @@ Class _Module
     [String] Root([String]$Root)
     {
         Return @( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
-    }
-    
-    [String] GetRole()
-    {
-        $Caption = 
     }
 
     [Object[]] Content([String]$Folder)

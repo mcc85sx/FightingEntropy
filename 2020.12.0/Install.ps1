@@ -35,7 +35,7 @@ Class Install
         $This.Load               = @( )
         $This.Load              += "# FightingEntropy.psm1 [Module]"
 
-        ( "{0}.AccessControl,{0}.Principal,Management.Automation,DirectoryServices" -f "Security" ).Split(',') | % { 
+        "{0}.AccessControl {0}.Principal Management.Automation DirectoryServices" -f "Security" -Split " " | % { 
         
             $This.Load          += "using namespace System.$_" 
         }
@@ -156,7 +156,7 @@ Class Install
                         $URI             = "$($This.Resource)/Classes/$X.ps1"
                         $Outfile         = "$($This.Path)\Classes\$X.ps1"
 
-                        Invoke-RestMethod -URI $URI -Outfile $OutFile -Verbose
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
 
                         $This.Classes   += $OutFile
                     }
@@ -169,7 +169,7 @@ Class Install
                         $URI             = "$($This.Resource)/Functions/$X.ps1"
                         $Outfile         = "$($This.Path)\Functions\$X.ps1"
 
-                        Invoke-RestMethod -URI $URI -Outfile $OutFile -Verbose
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
 
                         $This.Functions += $OutFile
                     }
@@ -214,10 +214,10 @@ Class Install
 
             Type        = 4
             Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'
-            GUID        = '6b0418f5-adc3-4020-a0f9-7010439a93ce'
+            GUID        = '67b283d9-72c6-413a-aa80-a24af5d4ea8f'
             Header      = 'Secure Digits Plus LLC'
             Body        = 'FightingEntropy'
-            Footer      = '2020.11.0'
+            Footer      = '2020.12.0'
         
         }               | % { Show-ToastNotification @_ }
     }

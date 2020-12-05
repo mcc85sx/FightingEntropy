@@ -1,4 +1,4 @@
-Class _Manifest
+Class Manifest
 {
     [Object]   $Module
     [String[]] $Names     = ( "Name Version Provider Date Path Status Type" -Split " " )
@@ -18,8 +18,5 @@ Class _Manifest
                               "rDependency Get-FEServices Get-FEHost").Split(" ") | % { "$_" })
     [String[]] $Graphics  = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
 
-    _Manifest()
-    {
-        
-    }
+    Manifest(){}
 }

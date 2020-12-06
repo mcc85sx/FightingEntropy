@@ -99,7 +99,8 @@ FightingEntropy
         $Module  = Invoke-Expression $Install
     }
 
-# Classes [These are updated a fair amount... Also, some aren't used anymore. Still, here's an idea of what they are]
+# Classes 
+These are updated a fair amount... Some aren't used anymore. Still, here's an idea of what they are
 
 [Control]
 

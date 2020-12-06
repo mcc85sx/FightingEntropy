@@ -24,6 +24,8 @@ Class Manifest
 Class Install
 {
     [Object]             $Module
+    Hidden [Object]         $Env
+    Hidden [Object]         $Var
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.12.0"
     [String]           $Provider = "Secure Digits Plus LLC"
@@ -49,6 +51,18 @@ Class Install
     [String] Root([String]$Root)
     {
         Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+    }
+    
+    [Object] GetItem([String]$Object)
+    {
+        $Return = @{ }
+
+        Foreach ( $Item in ( Get-Item -Path $Object | % GetEnumerator ) ) 
+        { 
+            $Return.Add($Item.Name,$Item.Value) 
+        }
+            
+        Return $Return
     }
 
     BuildModule()
@@ -138,21 +152,31 @@ Class Install
 
     Install()
     {
-        If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
+        $This.Module             = [Manifest]::New()
+        $This.Env                = $This.GetItem("Env:\")
+        $This.Var                = $This.GetItem("Variable:\")
+
+        If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
         {
-            If ( Get-Item Variable:\IsLinux | % Value )
+            If ( $This.Var.IsLinux )
             {
-                Throw "Linux install not yet supported"
+                $This.Type       = "Linux"
+                $This.Registry   = $This.Root("/etc/SDP")
+                $This.Path       = $This.Root("/etc/SDP")
+            }
+
+            If ( $This.Var.IsWindows )
+            {
+                $Item                    = Invoke-Expression "( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match 'Server'"
+
+                $This.Type               = @("Client","Server")[$Item]
+                $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
+                $This.BuildRegistry()
+
+                $This.Path               = $This.Root($env:ProgramData)
+                $This.BuildPath()
             }
         }
-
-        $This.Module             = [Manifest]::New()
-        $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
-        $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
-        $This.BuildRegistry()
-        
-        $This.Path               = $This.Root($env:ProgramData)
-        $This.BuildPath()
 
         [Net.ServicePointManager]::SecurityProtocol = 3072
 

@@ -2,7 +2,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 {
     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
     Add-Type -AssemblyName PresentationFramework
-
+    
     Class Manifest
     {
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
@@ -28,6 +28,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     Class Install
     {
         [Object]             $Module
+        [Object]                $Env = ( Get-Item -Path Env:\
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
         [String]           $Provider = "Secure Digits Plus LLC"
@@ -53,6 +54,11 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         [String] Root([String]$Root)
         {
             Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
+        }
+        
+        [Object] GetEnvironment()
+        {
+            Return ( Get-Item Env:\ | GetEnumerator() | Sort-Object Name )
         }
         
         BuildRegistry()
@@ -237,5 +243,5 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         }
     }
 
-    [Install]::New()
+    $Module = [Install]::New()
 }

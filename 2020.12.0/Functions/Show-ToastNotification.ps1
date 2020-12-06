@@ -97,7 +97,7 @@ Function Show-ToastNotification
 
         ShowMessage()
         {
-            "[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier({0}).Show({1})" -f $This.GUID,$This.Toast
+            Invoke-Expression ( "[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier({0}).Show({1})" -f $This.GUID,$This.Toast )
         }
     }
 

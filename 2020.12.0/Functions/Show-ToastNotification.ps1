@@ -90,14 +90,14 @@ Function Show-ToastNotification
 
         GetXML()
         {
-            $This.XML             = [Windows.Data.Xml.Dom.XmlDocument]::new()
+            $This.XML             = Invoke-Expression "[Windows.Data.Xml.Dom.XmlDocument]::new()"
             $This.XML.LoadXml($This.Template)
-            $This.Toast           = [Windows.UI.Notifications.ToastNotification]::new($This.XML)
+            $This.Toast           = Invoke-Expression ( "[Windows.UI.Notifications.ToastNotification]::new({0})" -f $This.XML )
         }
 
         ShowMessage()
         {
-            [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($This.GUID).Show($This.Toast)
+            "[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier({0}).Show({1})" -f $This.GUID,$This.Toast
         }
     }
 

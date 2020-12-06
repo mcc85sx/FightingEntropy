@@ -3,23 +3,9 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
     Add-Type -AssemblyName PresentationFramework
     
-    Class File
-    {
-        [String] $URI
-        [String] $Outfile
-        [Object] $Object
-        
-        File([String]$URI,[String]$Outfile)
-        {
-            $This.URI = $URI
-            $This.Outfile = $Outfile
-            
-            
-        }
-    }
-    
     Class Manifest
     {
+        [Object]      $Module
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
         [String]        $GUID = ( "67b283d9-72c6-413a-aa80-a24af5d4ea8f" )
         [String[]]      $Role = ( "{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " " )
@@ -43,8 +29,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     Class Install
     {
         [Object]             $Module
-        [Object]                $Env
-        [Object]                $Var
+        Hidden [Object]         $Env
+        Hidden [Object]         $Var
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
         [String]           $Provider = "Secure Digits Plus LLC"
@@ -71,7 +57,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         {
             Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
         }
-        
+
         [Object] GetItem([String]$Object)
         {
             $Return = @{ }
@@ -80,36 +66,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             { 
                 $Return.Add($Item.Name,$Item.Value) 
             }
-            
+
             Return $Return
-        }
-        
-        BuildRegistry()
-        {
-            ForEach ( $I in 3..5 ) 
-            {      
-                $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
-            }
-
-            $Item                    = Get-ItemProperty -Path $This.Registry
-            $Names                   = ($This.Module.Names)
-            $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status, $This.Type)
-
-            ForEach ( $I in 0..6 )
-            {
-                If ( $Item.$( $Names[$I] ) -eq $Null )
-                {
-                    Set-ItemProperty -Path $This.Registry -Name $Names[$I] -Value $Values[$I] -Verbose
-                }
-            }
-        }
-
-        BuildPath()
-        {
-            If ( ! ( Test-Path $This.Path ) )
-            {
-                New-Item -Path $This.Path -ItemType Directory -Verbose
-            }
         }
 
         BuildModule()
@@ -169,26 +127,61 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             }
         }
 
+        BuildRegistry()
+        {
+            ForEach ( $I in 3..5 ) 
+            {      
+                $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
+            }
+
+            $Item                    = Get-ItemProperty -Path $This.Registry
+            $Names                   = ($This.Module.Names)
+            $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status, $This.Type)
+
+            ForEach ( $I in 0..6 )
+            {
+                If ( $Item.$( $Names[$I] ) -eq $Null )
+                {
+                    Set-ItemProperty -Path $This.Registry -Name $Names[$I] -Value $Values[$I] -Verbose
+                }
+            }
+        }
+
+        BuildPath()
+        {
+            If ( ! ( Test-Path $This.Path ) )
+            {
+                New-Item -Path $This.Path -ItemType Directory -Verbose
+            }
+        }
+
         Install()
         {
             $This.Module             = [Manifest]::New()
             $This.Env                = $This.GetItem("Env:\")
             $This.Var                = $This.GetItem("Variable:\")
-            
-            If ( $This.Var.PSVersionTable | % Value | ? Major -ge 6 )
+
+            If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
             {
-                If ( $This.Var.IsLinux | % Value )
+                If ( $This.Var.IsLinux )
                 {
-                    Throw "Linux install not yet supported"
+                    $This.Type       = "Linux"
+                    $This.Registry   = $This.Root("/etc/SDP")
+                    $This.Path       = $This.Root("/etc/SDP")
+                }
+
+                If ( $This.Var.IsWindows )
+                {
+                    $Item                    = Invoke-Expression "( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match 'Server'"
+
+                    $This.Type               = @("Client","Server")[$Item]
+                    $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
+                    $This.BuildRegistry()
+
+                    $This.Path               = $This.Root($env:ProgramData)
+                    $This.BuildPath()
                 }
             }
-
-            $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
-            $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
-            $This.BuildRegistry()
-
-            $This.Path               = $This.Root($env:ProgramData)
-            $This.BuildPath()
 
             [Net.ServicePointManager]::SecurityProtocol = 3072
 
@@ -206,7 +199,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
                 Switch ($I)
                 {
-                    Classes
+                    Classes 
                     {   
                         ForEach ( $X in $This.Module.Classes )
                         {
@@ -265,7 +258,18 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
             Import-Module FightingEntropy -Verbose -Force
 
-            Write-Theme 'Module [:] Installed'
+            Write-Theme 'Module [+] Installed'
+
+            @{
+
+                Type        = 4
+                Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'
+                GUID        = '67b283d9-72c6-413a-aa80-a24af5d4ea8f'
+                Header      = 'Secure Digits Plus LLC'
+                Body        = 'FightingEntropy'
+                Footer      = '2020.12.0'
+
+            }               | % { Show-ToastNotification @_ }
         }
     }
 

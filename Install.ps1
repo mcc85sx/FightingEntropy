@@ -58,7 +58,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         
         [Object] GetEnvironment()
         {
-            Return ( Get-Item Env:\ | GetEnumerator() | Sort-Object Name )
+            Return ( Get-Item Env:\ | % GetEnumerator | Sort-Object Name )
         }
         
         BuildRegistry()

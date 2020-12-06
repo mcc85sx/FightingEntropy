@@ -1,62 +1,62 @@
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
 
-About "My Briefcase"... used to be a thing that everybody used in 95/98.<br>
-It's not called 'My Briefcase' anymore, but whatever bro.<br>
-It was called, "My Briefcase" because... badass detectives used this friggen thing to catalog 
-their adventures throughout the crime riddled badlands of suburban America... a long and tedious 
-drawn out battle where they're always fighting crime and evil doers... when and where they are 
-able to accurately document those events. 
+    About "My Briefcase"... used to be a thing that everybody used in 95/98.
+    It's not called 'My Briefcase' anymore, but whatever bro.<br>
+    It was called, "My Briefcase" because... badass detectives used this friggen thing to catalog 
+    their adventures throughout the crime riddled badlands of suburban America... a long and tedious 
+    drawn out battle where they're always fighting crime and evil doers... when and where they are 
+    able to accurately document those events. 
 
-You would not believe some of the true entries that exist in each hair raising entry/hour of 
-their patrols and journeys...
+    You would not believe some of the true entries that exist in each hair raising entry/hour of 
+    their patrols and journeys...
 
-I know what you're thinking... "Sounds like a pretty cool briefcase to have on hand..."<br>
+    I know what you're thinking... "Sounds like a pretty cool briefcase to have on hand..."<br>
 
-Yep.<br>
-My Briefcase.<br>
-They call it a bunch of other things now, but it used to be, "My Briefcase" and it would even 
-help Scruff McGruff take a mean bite out of crime.
+    Yep.<br>
+    My Briefcase.<br>
+    They call it a bunch of other things now, but it used to be, "My Briefcase" and it would even 
+    help Scruff McGruff take a mean bite out of crime.
 
-When you want some real top notch document storage...? 
+    When you want some real top notch document storage...? 
 
-You need the Windows 95/98 "My Briefcase", limited 25 year minted lunchbox that you can get by 
-calling xxx-yyy-zzzz or going to www.website.org and then submit for whatever your chances to win...
+    You need the Windows 95/98 "My Briefcase", limited 25 year minted lunchbox that you can get by 
+    calling xxx-yyy-zzzz or going to www.website.org and then submit for whatever your chances to win...
 
-You just- you put either your documents, OR your lunch in this thing.<br>
-Sometimes even both.<br>
+    You just- you put either your documents, OR your lunch in this thing.<br>
+    Sometimes even both.<br>
  
-You could go pro, and get yourself the backpack edition if you wanna do a little MORE damage.<br>
-The backpack makes the lunchbox look like a little happy meal toy... 
+    You could go pro, and get yourself the backpack edition if you wanna do a little MORE damage.<br>
+    The backpack makes the lunchbox look like a little happy meal toy... 
 
-But- if you *really* want to show those evil doers who the boss is...? <br>
-...and you want to be referred to as a top-notch, platinum-grade, crime fighter..?<br>
-Like the dude from Netflix Daredevil that got axed for no reason...? <br>
-You just, you don't take a bite out of crime like some little kids coloring book hero... (Scruff McGruff)<br>
-That's what you do when you're in elementary school, kids.<br>
+    But- if you *really* want to show those evil doers who the boss is...? <br>
+    ...and you want to be referred to as a top-notch, platinum-grade, crime fighter..?<br>
+    Like the dude from Netflix Daredevil that got axed for no reason...? <br>
+    You just, you don't take a bite out of crime like some little kids coloring book hero... (Scruff McGruff)<br>
+    That's what you do when you're in elementary school, kids.<br>
 
-For the people who want to be seen as adults that can handle things like a boss...?<br>
-You need "My Briefcase"... Roaming RV Edition. Why not.<br>
+    For the people who want to be seen as adults that can handle things like a boss...?<br>
+    You need "My Briefcase"... Roaming RV Edition. Why not.<br>
 
-It's a camper...? Kitchen..? Bathroom..? Bedroom...? <br>
-It's a mobile domicile that you could park wherever.<br>
+    It's a camper...? Kitchen..? Bathroom..? Bedroom...? <br>
+    It's a mobile domicile that you could park wherever.<br>
 
-When you really want to kick the crap out of crime...?<br>
-Then, you need one of these bad boys. <br>
-Comes with a lifetime supply of iced peas, just in case you need to ice down your swollen knuckles...<br>
-Because, driving around in a crime fighting RV...? <br>
-Your knuckles might get swollen from feeling a need to knock out bad guys left and right... <br>
-Which, you'll be tempted to do quite often in this thing.<br>
+    When you really want to kick the crap out of crime...?<br>
+    Then, you need one of these bad boys. <br>
+    Comes with a lifetime supply of iced peas, just in case you need to ice down your swollen knuckles...<br>
+    Because, driving around in a crime fighting RV...? <br>
+    Your knuckles might get swollen from feeling a need to knock out bad guys left and right... <br>
+    Which, you'll be tempted to do quite often in this thing.<br>
 
-It'll set you back a good couple hundred grand for the premium deluxe edition of the cleaner edition, 
-"Crime Fighting Lab"... that's the official DMV Registration Code... they'll find a way to get it onto a 
-license plate I'm sure... but whatever.
+    It'll set you back a good couple hundred grand for the premium deluxe edition of the cleaner edition, 
+    "Crime Fighting Lab"... that's the official DMV Registration Code... they'll find a way to get it onto a 
+    license plate I'm sure... but whatever.
 
-Think about how much crime you could stop with any of these things...
-Pretty sure Scruff McGruff will be proud of however much crime you take a bite out of.
+    Think about how much crime you could stop with any of these things...
+    Pretty sure Scruff McGruff will be proud of however much crime you take a bite out of.
 
-Cause, you don't just stop at taking a bite out of crime there, Scruff McGruff.
-Nah. Sometimes you have to kick the crap out of it too. Show crime who the boss is.
+    Cause, you don't just stop at taking a bite out of crime there, Scruff McGruff.
+    Nah. Sometimes you have to kick the crap out of it too. Show crime who the boss is.
 
 # Project Information
 FightingEntropy is a PowerShell modification for: <br>

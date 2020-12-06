@@ -6,7 +6,7 @@ Class _Module
     [String]               $Date
     [String]             $Status
     [String]               $Type
-    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.11.0"
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0"
 
     [String]           $Registry
     [String]               $Path

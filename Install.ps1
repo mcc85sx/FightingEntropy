@@ -1,4 +1,4 @@
-    
+
     Class OS
     {
         [Object[]] $Environment
@@ -328,5 +328,3 @@
     }
     
     $Module = [Install]::New($OS,$Manifest)
-
-}

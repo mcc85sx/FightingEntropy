@@ -54,6 +54,34 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         {
             Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
         }
+        
+        BuildRegistry()
+        {
+            ForEach ( $I in 3..5 ) 
+            {      
+                $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
+            }
+
+            $Item                    = Get-ItemProperty -Path $This.Registry
+            $Names                   = ($This.Module.Names)
+            $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status, $This.Type)
+
+            ForEach ( $I in 0..6 )
+            {
+                If ( $Item.$( $Names[$I] ) -eq $Null )
+                {
+                    Set-ItemProperty -Path $This.Registry -Name $Names[$I] -Value $Values[$I] -Verbose
+                }
+            }
+        }
+
+        BuildPath()
+        {
+            If ( ! ( Test-Path $This.Path ) )
+            {
+                New-Item -Path $This.Path -ItemType Directory -Verbose
+            }
+        }
 
         BuildModule()
         {
@@ -109,34 +137,6 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
                 }
 
                 Copy-Item -Path $This.Manifest $_ -Verbose -Force
-            }
-        }
-
-        BuildRegistry()
-        {
-            ForEach ( $I in 3..5 ) 
-            {      
-                $This.Registry.Split('\')[0..$I] -join '\' | ? { ! ( Test-Path $_ ) } | % { New-Item $_ -Verbose }
-            }
-
-            $Item                    = Get-ItemProperty -Path $This.Registry
-            $Names                   = ($This.Module.Names)
-            $Values                  = ($This.Name, $This.Version, $This.Provider, $This.Date, $This.Path, $This.Status, $This.Type)
-
-            ForEach ( $I in 0..6 )
-            {
-                If ( $Item.$( $Names[$I] ) -eq $Null )
-                {
-                    Set-ItemProperty -Path $This.Registry -Name $Names[$I] -Value $Values[$I] -Verbose
-                }
-            }
-        }
-
-        BuildPath()
-        {
-            If ( ! ( Test-Path $This.Path ) )
-            {
-                New-Item -Path $This.Path -ItemType Directory -Verbose
             }
         }
 

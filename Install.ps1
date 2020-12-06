@@ -271,24 +271,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
             $This.BuildModule()
             $This.BuildManifest()
-
-            Import-Module FightingEntropy -Verbose -Force
-
-            Write-Theme 'Module [+] Installed'
-
-            If ( $This.Var.IsWindows )
-            {
-                @{
-
-                    Type        = 4
-                    Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'
-                    GUID        = '67b283d9-72c6-413a-aa80-a24af5d4ea8f'
-                    Header      = 'Secure Digits Plus LLC'
-                    Body        = 'FightingEntropy'
-                    Footer      = '2020.12.0'
-
-                }               | % { Show-ToastNotification @_ }
-            }
+            
+            Write-Theme @("--- Module Installed ---"," ";@{ Info = "To load the module, use Get-FEModule };"Installation variable saved to `$Module")
         }
     }
 

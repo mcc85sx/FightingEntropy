@@ -31,6 +31,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         [Object]             $Module
         Hidden [Object]         $Env
         Hidden [Object]         $Var
+
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
         [String]           $Provider = "Secure Digits Plus LLC"
@@ -39,8 +40,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         [String]               $Type
         [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0"
 
-        [String]           $Registry = "HKLM:\SOFTWARE\Policies"
-        [String]               $Path = $Env:ProgramData
+        [String]           $Registry
+        [String]               $Path
         [Object]               $File 
         [Object]           $Manifest 
         [Object]               $Base 
@@ -271,8 +272,10 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
             $This.BuildModule()
             $This.BuildManifest()
+
+            Import-Module FightingEntropy -Verbose -Force
             
-            Write-Theme @("--- Module Installed ---"," ";@{ Info = "To load the module, use Get-FEModule };"Installation variable saved to `$Module")
+            Write-Theme @("--- Module Installed ---";@{ Info = "To load the module, use Get-FEModule" };" ","Installation variable saved to `$Module")
         }
     }
 

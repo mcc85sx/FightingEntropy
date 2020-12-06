@@ -1,5 +1,7 @@
 Class _Module
 {
+    Hidden [Object]         $Env
+    Hidden [Object]         $Var
     [String]               $Name = "FightingEntropy"
     [String]            $Version = "2020.12.0"
     [String]           $Provider = "Secure Digits Plus LLC"
@@ -46,6 +48,18 @@ Class _Module
     {
         Return @( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
     }
+    
+    [Object] GetItem([String]$Object)
+    {
+        $Return = @{ }
+
+        Foreach ( $Item in ( Get-Item -Path $Object | % GetEnumerator ) ) 
+        { 
+            $Return.Add($Item.Name,$Item.Value) 
+        }
+            
+        Return $Return
+    }
 
     [Object[]] Content([String]$Folder)
     {
@@ -74,6 +88,8 @@ Class _Module
     
     _Module()
     {
+        $This.Env                = $This.GetItem("Env:\")
+        $This.Var                = $This.GetItem("Variable:\")
         $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
 
         Get-ItemProperty -Path $This.Registry | % { 

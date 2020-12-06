@@ -5,7 +5,6 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
     Class Manifest
     {
-        [Object]      $Module
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
         [String]        $GUID = ( "67b283d9-72c6-413a-aa80-a24af5d4ea8f" )
         [String[]]      $Role = ( "{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " " )
@@ -234,18 +233,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
             Import-Module FightingEntropy -Verbose -Force
 
-            Write-Theme 'Module [+] Installed'
-
-            @{
-
-                Type        = 4
-                Image       = 'https://raw.githubusercontent.com/secure-digits-plus-llc/FightingEntropy/master/Graphics/logo.jpg'
-                GUID        = '67b283d9-72c6-413a-aa80-a24af5d4ea8f'
-                Header      = 'Secure Digits Plus LLC'
-                Body        = 'FightingEntropy'
-                Footer      = '2020.12.0'
-
-            }               | % { Show-ToastNotification @_ }
+            Write-Theme 'Module [:] Installed'
         }
     }
 

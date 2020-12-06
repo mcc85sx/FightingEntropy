@@ -14,6 +14,8 @@ Function Show-ToastNotification
         [Parameter(ParameterSetName= "Text",Position=4,HelpMessage=              "Foot")]
         [Parameter(ParameterSetName="Image",Position=5,HelpMessage=              "Foot")][String] $Footer )
 
+    Invoke-Expression "using namespace System.Windows.UI.Notifications"
+
     Class _Toast
     {
         [Validateset(1,2,3,4)]

@@ -1,3 +1,12 @@
+# Install v2020.12.0 [BETA]
+
+    $Install = Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1
+    $Module  = Invoke-Expression $Install
+    
+    #  Or ... 
+    
+    IEX ( IRM https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1 )
+
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
 
@@ -77,15 +86,6 @@ depend on WPF and Xamarin still needing implementation.
 
 In other words, some things work in Linux, some things don't. 
 The things that don't are typically WMF based commands, or CIM/WMI.
-
-# Install v2020.12.0 [BETA]
-
-    $Install = Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1
-    $Module  = Invoke-Expression $Install
-    
-    #  Or ... 
-    
-    IEX ( IRM https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1 )
 
 # Install v2020.11.0
 This following scriptlet will download all necessary files to (provision/install) 

@@ -154,6 +154,40 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
                 New-Item -Path $This.Path -ItemType Directory -Verbose
             }
         }
+        
+        GetWinType()
+        {
+            $This.Type                       = Switch -Regex ( Invoke-Expression "[wmiclass]'\\.\ROOT\CIMV2:Win32_OperatingSystem' | % GetInstances | % Caption" )
+            {
+                "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
+            }
+
+            $This.Registry                   = $This.Root("HKLM:\SOFTWARE\Policies")
+            $This.Path                       = $This.Root($env:ProgramData)
+        }
+
+        GetOS()
+        {
+            If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
+            {
+                If ( $This.Var.IsLinux )
+                {
+                    $This.Type               = "RHELCentOS"
+                    $This.Registry           = $This.Root("/etc/SDP")
+                    $This.Path               = $This.Root("/etc/SDP")
+                }
+
+                Else
+                {
+                    $This.GetWinType()
+                }
+            }
+
+            Else
+            {
+                $This.GetWinType()
+            }
+        }
 
         Install()
         {
@@ -161,27 +195,9 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             $This.Env                = $This.GetItem("Env:\")
             $This.Var                = $This.GetItem("Variable:\")
 
-            If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
-            {
-                If ( $This.Var.IsLinux )
-                {
-                    $This.Type       = "Linux"
-                    $This.Registry   = $This.Root("/etc/SDP")
-                    $This.Path       = $This.Root("/etc/SDP")
-                }
-
-                If ( $This.Var.IsWindows )
-                {
-                    $Item                    = Invoke-Expression "( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match 'Server'"
-
-                    $This.Type               = @("Client","Server")[$Item]
-                    $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
-                    $This.BuildRegistry()
-
-                    $This.Path               = $This.Root($env:ProgramData)
-                    $This.BuildPath()
-                }
-            }
+            $This.GetOS()
+            $This.BuildRegistry()
+            $This.BuildPath()
 
             [Net.ServicePointManager]::SecurityProtocol = 3072
 

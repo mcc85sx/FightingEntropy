@@ -24,7 +24,7 @@ Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
     calling xxx-yyy-zzzz or going to www.website.org and then submit for whatever your chances to win...
 
     You just- you put either your documents, OR your lunch in this thing.
-    Sometimes even both.<br>
+    Sometimes even both.
  
     You could go pro, and get yourself the backpack edition if you wanna do a little MORE damage.
     The backpack makes the lunchbox look like a little happy meal toy... 
@@ -32,7 +32,7 @@ Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
     But- if you *really* want to show those evil doers who the boss is...?
     ...and you want to be referred to as a top-notch, platinum-grade, crime fighter..?
     Like the dude from Netflix Daredevil that got axed for no reason...?
-    You just, you don't take a bite out of crime like some little kids coloring book hero... (Scruff McGruff)<br>
+    You just, you don't take a bite out of crime like some little kids coloring book hero... (Scruff McGruff)
     That's what you do when you're in elementary school, kids.
 
     For the people who want to be seen as adults that can handle things like a boss...?

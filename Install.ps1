@@ -57,10 +57,9 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
         }
         
-        GetEnvironment()
+        [Object] GetItem([String]$Object)
         {
-            $This.Env  = ( Get-Item -Path Env:\      | % GetEnumerator | Sort-Object Name )
-            $This.Var  = ( Get-Item -Path Variable:\ | % GetEnumerator | Sort-Object Name )
+            Return ( Get-Item -Path $Object | % GetEnumerator | Sort-Object Name )
         }
         
         BuildRegistry()
@@ -159,7 +158,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             }
 
             $This.Module             = [Manifest]::New()
-            $This.Env                = $This.GetEnvironment()
+            $This.Env                = $This.GetItem("Env:\")
+            $This.Var                = $This.GetItem("Variable:\")
             $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
             $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
             $This.BuildRegistry()

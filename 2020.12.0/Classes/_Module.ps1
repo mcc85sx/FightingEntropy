@@ -68,12 +68,49 @@ Class _Module
         Invoke-Expression ( @( $This.GetClasses() | % { Get-Content $_ } ) -join "`n" )
     }
     
+    GetWinType()
+    {
+        $This.Type                       = Switch -Regex ( Invoke-Expression "[wmiclass]'\\.\ROOT\CIMV2:Win32_OperatingSystem' | % GetInstances | % Caption" )
+        {
+            "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
+        }
+        
+        $This.Registry                   = $This.Root("HKLM:\SOFTWARE\Policies")
+        $This.Path                       = $This.Root($env:ProgramData)
+    }
+
+    GetOS()
+    {
+        If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
+        {
+            If ( $This.Var.IsLinux )
+            {
+                $This.Type               = "RHELCentOS"
+                $This.Registry           = $This.Root("/etc/SDP")
+                $This.Path               = $This.Root("/etc/SDP")
+            }
+
+            Else
+            {
+                $This.GetWinType()
+            }
+        }
+
+        Else
+        {
+            $This.GetWinType()
+        }
+    }
+    
     _Module()
     {
         $This.Module             = [_Manifest]::New()
         $This.Env                = $This.GetItem("Env:\")
         $This.Var                = $This.GetItem("Variable:\")
-        $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
+
+        $This.GetOS()
+        $This.BuildRegistry()
+        $This.BuildPath()
 
         Get-ItemProperty -Path $This.Registry | % { 
 
@@ -82,11 +119,9 @@ Class _Module
             $This.Provider       = $_.Provider
             $This.Date           = $_.Date
             $This.Status         = $_.Status
-            $This.Type           = $_.Type
             $This.Path           = $_.Path
         }
-
-        $This.Path               = $This.Root($Env:ProgramData)
+        
         $This.File               = "{0}\FightingEntropy.psm1" -f $This.Path
         $This.Manifest           = "{0}\FightingEntropy.psd1" -f $This.Path
         $This.Base               = Get-ChildItem -Path $This.Path

@@ -28,7 +28,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     Class Install
     {
         [Object]             $Module
-        [Object]                $Env = ( Get-Item -Path Env:\
+        [Object]                $Env
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
         [String]           $Provider = "Secure Digits Plus LLC"
@@ -157,6 +157,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             }
 
             $This.Module             = [Manifest]::New()
+            $This.Env                = $This.GetEnvironment()
             $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
             $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
             $This.BuildRegistry()

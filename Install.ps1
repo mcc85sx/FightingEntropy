@@ -42,7 +42,7 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
     Class Install
     {
-        [Object]           $Manifest
+        [Object]             $Module
         [Object]                $Env
         [Object]                $Var
         [String]               $Name = "FightingEntropy"

@@ -27,8 +27,9 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
     Class Install
     {
-        [Object]             $Module
+        [Object]           $Manifest
         [Object]                $Env
+        [Object]                $Var
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
         [String]           $Provider = "Secure Digits Plus LLC"
@@ -56,9 +57,10 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
             Return ( $Root, $This.Provider, $This.Name, $This.Version -join '\' )
         }
         
-        [Object] GetEnvironment()
+        GetEnvironment()
         {
-            Return ( Get-Item Env:\ | % GetEnumerator | Sort-Object Name )
+            $This.Env  = ( Get-Item -Path Env:\      | % GetEnumerator | Sort-Object Name )
+            $This.Var  = ( Get-Item -Path Variable:\ | % GetEnumerator | Sort-Object Name )
         }
         
         BuildRegistry()

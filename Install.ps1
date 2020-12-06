@@ -1,11 +1,67 @@
-If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() | % IsInRole Administrators )
-{
-    Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-    Add-Type -AssemblyName PresentationFramework
     
+    Class OS
+    {
+        [Object[]] $Environment
+        [Object[]] $Variable
+        [Object]   $PSVersionTable
+        [Object]   $PSVersion
+        [Object]   $Major
+        [Object]   $Type
+
+        [Object] GetItem([String]$Item)
+        {
+            $Return = @{ }
+
+            ForEach ( $X in ( Get-Item -Path $Item | % GetEnumerator ) )
+            { 
+                $Return.Add($X.Name,$X.Value)
+            }
+
+            Return $Return
+        }
+
+        [String] GetWinType()
+        {
+            Return @( Switch -Regex ( Invoke-Expression "[wmiclass]'\\.\ROOT\CIMV2:Win32_OperatingSystem' | % GetInstances | % Caption" )
+            {
+                "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
+            })
+        }
+
+        [String] GetOSType()
+        {
+            Return @( If ( $This.Major -gt 5 )
+            {
+                If ( Get-Item Variable:\IsLinux )
+                {
+                    "RHELCentOS"
+                }
+
+                Else
+                {
+                    $This.GetWinType()
+                }
+            }
+
+            Else
+            {
+                $This.GetWinType()
+            })
+        }
+
+        OS()
+        {
+            $This.Environment    = $This.GetItem("Env:\")
+            $This.Variable       = $This.GetItem("Variable:\")
+            $This.PSVersionTable = $This.Variable.PSVersionTable
+            $This.PSVersion      = $This.PSVersionTable.PSVersion
+            $This.Major          = $This.PSVersion.Major
+            $This.Type           = $This.GetOSType()
+        }
+    }
+
     Class Manifest
     {
-        [Object]      $Module
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
         [String]        $GUID = ( "67b283d9-72c6-413a-aa80-a24af5d4ea8f" )
         [String[]]      $Role = ( "{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " " )
@@ -28,9 +84,8 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
     Class Install
     {
+        [Object]                 $OS
         [Object]             $Module
-        Hidden [Object]         $Env
-        Hidden [Object]         $Var
 
         [String]               $Name = "FightingEntropy"
         [String]            $Version = "2020.12.0"
@@ -155,48 +210,24 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
                 New-Item -Path $This.Path -ItemType Directory -Verbose
             }
         }
-        
-        GetWinType()
+
+        Install([Object]$OS,[Object]$Manifest)
         {
-            $This.Type                       = Switch -Regex ( Invoke-Expression "[wmiclass]'\\.\ROOT\CIMV2:Win32_OperatingSystem' | % GetInstances | % Caption" )
+            $This.OS                 = $OS
+            $This.Module             = $Manifest
+
+            If ( $This.OS.Type -match "Win32" )
             {
-                "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
+                $This.Registry       = $This.Root("HKLM:\Software\Policies")
+                $This.Path           = $This.Root($Env:ProgramData)
             }
-
-            $This.Registry                   = $This.Root("HKLM:\SOFTWARE\Policies")
-            $This.Path                       = $This.Root($env:ProgramData)
-        }
-
-        GetOS()
-        {
-            If ( $This.Var.PSVersionTable.PSVersion.Major -gt 5 )
-            {
-                If ( $This.Var.IsLinux )
-                {
-                    $This.Type               = "RHELCentOS"
-                    $This.Registry           = $This.Root("/etc/SDP")
-                    $This.Path               = $This.Root("/etc/SDP")
-                }
-
-                Else
-                {
-                    $This.GetWinType()
-                }
-            }
-
+            
             Else
             {
-                $This.GetWinType()
+                $This.Registry       = $This.Root("/etc/SDP")
+                $This.Path           = $This.Root("/etc/SDP")
             }
-        }
-
-        Install()
-        {
-            $This.Module             = [Manifest]::New()
-            $This.Env                = $This.GetItem("Env:\")
-            $This.Var                = $This.GetItem("Variable:\")
-
-            $This.GetOS()
+            
             $This.BuildRegistry()
             $This.BuildPath()
 
@@ -279,5 +310,23 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         }
     }
 
-    $Module = [Install]::New()
+    $OS       = [OS]::New()
+    $Manifest = [Manifest]::New()
+
+    If ( $OS.Type -match "Win32" )
+    {
+        If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent() | % IsInRole Administrators )
+        {
+            Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+            Add-Type -AssemblyName PresentationFramework
+        }
+
+        Else
+        {
+            Throw "Must run as Administrator"
+        }
+    }
+    
+    $Module = [Install]::New($OS,$Manifest)
+
 }

@@ -3,6 +3,21 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
     Add-Type -AssemblyName PresentationFramework
     
+    Class File
+    {
+        [String] $URI
+        [String] $Outfile
+        [Object] $Object
+        
+        File([String]$URI,[String]$Outfile)
+        {
+            $This.URI = $URI
+            $This.Outfile = $Outfile
+            
+            
+        }
+    }
+    
     Class Manifest
     {
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
@@ -59,7 +74,14 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
         
         [Object] GetItem([String]$Object)
         {
-            Return ( Get-Item -Path $Object | % GetEnumerator | Sort-Object Name )
+            $Return = @{ }
+
+            Foreach ( $Item in ( Get-Item -Path $Object | % GetEnumerator ) ) 
+            { 
+                $Return.Add($Item.Name,$Item.Value) 
+            }
+            
+            Return $Return
         }
         
         BuildRegistry()
@@ -149,17 +171,18 @@ If ( [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::
 
         Install()
         {
-            If ( Get-Item Variable:\PSVersionTable | % Value | % PSVersion | ? Major -ge 6 )
+            $This.Module             = [Manifest]::New()
+            $This.Env                = $This.GetItem("Env:\")
+            $This.Var                = $This.GetItem("Variable:\")
+            
+            If ( $This.Var.PSVersionTable | % Value | ? Major -ge 6 )
             {
-                If ( Get-Item Variable:\IsLinux | % Value )
+                If ( $This.Var.IsLinux | % Value )
                 {
                     Throw "Linux install not yet supported"
                 }
             }
 
-            $This.Module             = [Manifest]::New()
-            $This.Env                = $This.GetItem("Env:\")
-            $This.Var                = $This.GetItem("Variable:\")
             $This.Type               = @("Client","Server")[( Get-Ciminstance -Class Win32_OperatingSystem | % Caption ) -match "Server" ]
             $This.Registry           = $This.Root("HKLM:\SOFTWARE\Policies")
             $This.BuildRegistry()

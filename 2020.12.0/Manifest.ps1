@@ -6,7 +6,7 @@ Class Manifest
     [String[]] $Role      = ( "{0}Client {0}Server UnixBSD RHEL/CentOS" -f "Win32_" -Split " " )
     [String[]] $Folders   = ( " Classes Control Functions Graphics Role" -Split " " )
     [String[]] $Classes   = (("Root Module QMark File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme " + 
-                              "Object Flag Banner UISwitch Toast XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
+                              "Object Flag Banner UISwitch XamlWindow XamlObject VendorList V4Network V6Network NetInterface " + 
                               "Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar Share Master " + 
                               "Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo Xaml XamlGlossar" + 
                               "yItem Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat FEPromo FEPromoDomain FEP" + 

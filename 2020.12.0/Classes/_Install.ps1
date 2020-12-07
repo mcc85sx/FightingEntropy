@@ -27,14 +27,14 @@ Class _Install
         $This.Load              += "using namespace Windows.UI.Notifications"
         $This.Load              += "Add-Type -AssemblyName PresentationFramework"
 
-        $This.Module.Classes     | % { 
+        $This.Manifest.Classes   | % { 
 
             $This.Load          += ""
             $This.Load          += "# Class/$_"
             $This.Load          += @( Get-Content "$($This.Path)\Classes\$_.ps1" )
         }
 
-        $This.Module.Functions   | % {
+        $This.Manifest.Functions | % {
 
             $This.Load          += ""
             $This.Load          += "# Function/$_"
@@ -43,19 +43,19 @@ Class _Install
 
         $This.Output             = $This.Load -join "`n"
 
-        Set-Content -Path $This.File -Value $This.Output
+        Set-Content -Path $This.Hive.Module -Value $This.Output -Force -Verbose
     }
 
     BuildManifest()
     {
         @{  GUID                 = "67b283d9-72c6-413a-aa80-a24af5d4ea8f"
-            Path                 = $This.Manifest
-            ModuleVersion        = $This.Version
+            Path                 = $This.Hive.Manifest
+            ModuleVersion        = $This.Hive.Version
             Copyright            = "(c) 2020 mcc85sx. All rights reserved."
             CompanyName          = "Secure Digits Plus LLC" 
             Author               = "mcc85sx / Michael C. Cook Sr."
             Description          = "Beginning the fight against Identity Theft, and Cybercriminal Activities"
-            RootModule           = $This.File
+            RootModule           = $This.Hive.Module
             
         }                        | % { New-ModuleManifest @_ }
     }
@@ -65,5 +65,8 @@ Class _Install
         $This.OS                 = [_OS]::New()
         $This.Manifest           = [_Manifest]::New()
         $This.Hive               = [_Hive]::New($This.OS.Type,$This.Version)
+        $This.Type               = $This.OS.Type
+        $This.BuildModule()
+        $This.BuildManifest()
     }
 }

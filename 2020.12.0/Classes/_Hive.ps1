@@ -3,7 +3,7 @@ Class _Hive
     [String]        $Type
     [String]     $Version
     Hidden [String] $Name = "{0}\Secure Digits Plus LLC\FightingEntropy\{1}"
-    Hidden [String] $File = "{0}\FightingEntropy.ps{0}1"
+    Hidden [String] $File = "{0}\FightingEntropy.ps{1}1"
     [String[]]  $PSModule
     [String]        $Root
     [Object]        $Path

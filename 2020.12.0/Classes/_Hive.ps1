@@ -1,4 +1,3 @@
-
 Class _Hive
 {
     [String]        $Type

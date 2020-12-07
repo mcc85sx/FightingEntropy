@@ -11,9 +11,6 @@ Class _Install
     [String]             $Status = "Initialized"
     [String]               $Type
 
-    [String]           $Manifest
-    [String]               $File
-
     [String[]]             $Load
     [String]             $Output
 

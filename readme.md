@@ -10,7 +10,7 @@
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
 
-    About "My Briefcase"... used to be a thing that everybody used in 95/98.
+    "My Briefcase" used to be a thing that everybody used in (Windows 95/98).
     It's not called 'My Briefcase' anymore, but whatever bro.
     It was called, "My Briefcase" because... badass detectives used this friggen thing to catalog 
     their adventures throughout the crime riddled badlands of suburban America... a long and tedious 
@@ -20,7 +20,7 @@ Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
     You would not believe some of the true entries that exist in each hair raising entry/hour of 
     their patrols and journeys...
 
-    I know what you're thinking... "Sounds like a pretty cool briefcase to have on hand..."
+    I know what you're thinking... "Sounds like a pretty cool *briefcase* to have on hand..."
 
     Yep.
     My Briefcase.
@@ -29,43 +29,57 @@ Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
 
     When you want some real top notch document storage...? 
 
-    You need the Windows 95/98 "My Briefcase", limited 25 year minted lunchbox that you can get by 
-    calling xxx-yyy-zzzz or going to www.website.org and then submit for whatever your chances to win...
+    You need the (Windows 95/98) "My Briefcase", limited-edition 25-year minted lunchbox,
+    one that you could get right now by calling xxx-yyy-zzzz, 
+    or, going to www.website.org, and then submit your details for your chance to win one...
 
-    You just- you put either your documents, OR your lunch in this thing.
+    It's just a thing that could become a daily companion.
+    You just- you put either your *documents*, OR your *lunch* in this thing.
     Sometimes even both.
  
-    You could go pro, and get yourself the backpack edition if you wanna do a little MORE damage.
-    The backpack makes the lunchbox look like a little happy meal toy... 
+    If that's not your thing, well... you could go pro. 
+    Get yourself the backpack edition. 
+    That oughtta appeal to those who wanna do a little MORE damage... 
+    ...since the backpack makes the lunchbox look like a little happy meal toy.
 
     But- if you *really* want to show those evil doers who the boss is...?
     ...and you want to be referred to as a top-notch, platinum-grade, crime fighter..?
-    Like the dude from Netflix Daredevil that got axed for no reason...?
-    You just, you don't take a bite out of crime like some little kids coloring book hero... (Scruff McGruff)
-    That's what you do when you're in elementary school, kids.
+    
+    Like, the dude from the Netflix Daredevil show that got axed for no reason...?
 
-    For the people who want to be seen as adults that can handle things like a boss...?
-    You need "My Briefcase"... Roaming RV Edition. Why not.
+    You don't just take a bite out of crime like some little kids coloring book hero...
+    That's what Scruff McGruf'll tell you to do when you're in elementary school, kids.
 
-    It's a camper...? Kitchen..? Bathroom..? Bedroom...?
+    When you need to be seen as an *adult* that can handle things like a *boss*...?
+    Then, you need "My Briefcase" (Roaming RV Edition). 
+    It's a camper, with a living room, a kitchen, bathroom, bedroom...?
     It's a mobile domicile that you could park wherever.
 
-    When you really want to kick the crap out of crime...?
+    When you really want to kick the crap out of crime...? 
     Then, you need one of these bad boys.
-    Comes with a lifetime supply of iced peas, just in case you need to ice down your swollen knuckles...
-    Because, driving around in a crime fighting RV...?
-    Your knuckles might get swollen from feeling a need to knock out bad guys left and right...
-    Which, you'll be tempted to do quite often in this thing.
 
-    It'll set you back a good couple hundred grand for the premium deluxe edition of the cleaner edition, 
-    "Crime Fighting Lab"... that's the official DMV Registration Code... they'll find a way to get it onto a 
-    license plate I'm sure... but whatever.
+    The (Roaming RV Edition) comes with a lifetime supply of iced peas.
+    Probably sounds like a dumb thing to get a lifetime supply of... 
+    But- driving around in a crime fighting RV...?
+    
+    You're gonna be tempted to knock out some bad guys left and right...
+    and those knuckles of yours are bound to get swollen quite often. 
+    That's what the lifetime supply of iced peas are for.
 
-    Think about how much crime you could stop with any of these things...
+    It'll set you back a good couple hundred grand for the "My Briefcase" (Roaming RV Edition) 
+    AKA "Crime Fighting Lab". <- That's the official DMV Registration Code for now... 
+    ...they'll find a way to get it onto a license plate I'm sure... but whatever.
+
+    Think about how much crime you could stop with this thing.
     Pretty sure Scruff McGruff will be proud of however much crime you take a bite out of.
+    Whether you get the RV, the backpack, or the lunchbox.
 
-    Cause, you don't just stop at taking a bite out of crime there, Scruff McGruff.
-    Nah. Sometimes you have to kick the crap out of it too. Show crime who the boss is.
+    But, for people who found their way to FightingEntropy...?
+    You don't just stop at taking a bite out of crime there, Scruff McGruff.
+    Nah, cause sometimes... you have to kick the crap out of it too. 
+    
+    Show crime who the boss is.
+    FightingEntropy
 
 # Project Information
 FightingEntropy is a PowerShell modification for: <br>

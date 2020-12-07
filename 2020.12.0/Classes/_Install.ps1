@@ -1,7 +1,7 @@
 Class _Install
 {
     [Object]                 $OS
-    [Object]             $Module
+    [Object]           $Manifest
     [Object]               $Hive
 
     [String]               $Name = "FightingEntropy"

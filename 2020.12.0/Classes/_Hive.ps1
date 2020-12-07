@@ -3,9 +3,12 @@ Class _Hive
     [String]        $Type
     [String]     $Version
     Hidden [String] $Name = "{0}\Secure Digits Plus LLC\FightingEntropy\{1}"
+    Hidden [String] $File = "{0}\FightingEntropy.ps{0}1"
     [String[]]  $PSModule
     [String]        $Root
     [Object]        $Path
+    [Object]    $Manifest
+    [Object]      $Module
 
     [String[]] PSModule_()
     {
@@ -81,5 +84,8 @@ Class _Hive
 
         $This.Check($This.Root)
         $This.Check($This.Path)
+
+        $This.Manifest = $This.File -f $This.Path,"d"
+        $This.Module   = $This.File -f $This.Path,"m"
     }
 }

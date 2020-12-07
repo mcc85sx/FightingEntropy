@@ -1,3 +1,4 @@
+
 Class _Hive
 {
     [String]        $Type
@@ -11,10 +12,10 @@ Class _Hive
     {
         Return @( Get-Item Env:\ | % GetEnumerator | ? Name -eq PSModulePath | % Value | % Split @{  
         
-            Win32_Client =                       ";" ; 
-            Win32_Server =                       ";" ; 
-            RHELCentOS   =                       ":" ; 
-            UnixBSD      =                       ":" ;
+            Win32_Client = ";"
+            Win32_Server = ";"
+            RHELCentOS   = ":" 
+            UnixBSD      = ":"
             
         }[$This.Type])
     }
@@ -23,10 +24,10 @@ Class _Hive
     {
         Return ($This.Name -f @{
         
-            Win32_Client = "HKLM:\Software\Policies" ; 
-            Win32_Server = "HKLM:\Software\Policies" ;
-            RHELCentOS   =            "/etc/Maestro" ; 
-            UnixBSD      =            "/etc/Maestro" ;
+            Win32_Client = "HKLM:\Software\Policies"
+            Win32_Server = "HKLM:\Software\Policies"
+            RHELCentOS   = "/etc/Maestro"
+            UnixBSD      = "/etc/Maestro"
             
         }[$This.Type],$This.Version)
     }
@@ -41,6 +42,22 @@ Class _Hive
             UnixBSD      = "/etc/FEUnix"
             
         }[$This.Type],$This.Version)
+    }
+
+    [Void] Check([String]$Path)
+    {
+        $Items = $Path.Split("\")
+        $Item  = $Items[0]
+
+        ForEach ( $I in 1..( $Items.Count - 1 ) )
+        {
+            $Item += ( "\{0}" -f $Items[$I] )
+
+            If ( ! ( Test-Path $Item ) )
+            {
+                New-Item $Item -ItemType Directory -Force -Verbose
+            }
+        }
     }
 
     _Hive([String]$Type,[String]$Version)
@@ -62,5 +79,8 @@ Class _Hive
             $This.Root  = $This.Root -Replace "/","\"
             $This.Path  = $This.Path -Replace "/","\"
         }
+
+        $This.Check($This.Root)
+        $This.Check($This.Path)
     }
 }

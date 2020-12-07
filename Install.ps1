@@ -1,4 +1,5 @@
-
+Function Install
+{
     Class FEModule
     {
         [String]             $Base  = ("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0")
@@ -17,4 +18,7 @@
 
     Invoke-Expression ([FEModule]::New().Output)
 
-    [_Install]::New()
+    [_Install]::New("2020.12.0")
+}
+
+Install

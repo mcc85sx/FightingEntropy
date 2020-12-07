@@ -63,7 +63,7 @@ Class _Install
     _Install([String]$Version)
     {
         $This.OS                 = [_OS]::New()
-        $This.Module             = [_Manifest]::New()
+        $This.Manifest           = [_Manifest]::New()
         $This.Hive               = [_Hive]::New($This.OS.Type,$This.Version)
     }
 }

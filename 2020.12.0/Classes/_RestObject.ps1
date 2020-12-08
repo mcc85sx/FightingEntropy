@@ -1,6 +1,7 @@
 Class _RestObject
 {
     [Object] $Object
+    [String] $Name
     [String] $URI
     [String] $Outfile
     
@@ -8,6 +9,9 @@ Class _RestObject
     {
         $This.URI     = $URI
         $This.Outfile = $Outfile
-        $This.Object  = Invoke-RestMethod -URI $URI -Outfile $Outfile -Verbose
+        Invoke-RestMethod -URI $URI -Outfile $Outfile -Verbose
+        
+        $This.Object  = (Get-Item $Outfile)
+        $This.Name    = $URI.Split("/")[-1] 
     }
 }

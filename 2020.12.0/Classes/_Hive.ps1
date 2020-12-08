@@ -64,11 +64,6 @@ Class _Hive
 
     _Hive([String]$Type,[String]$Version)
     {
-        If ( $Type -notin "Win32_Client","Win32_Server","RHELCentOS","UnixBSD" )
-        {
-            Throw "Invalid entry"
-        }
-
         $This.Type      = $Type
         $This.Version   = $Version
 

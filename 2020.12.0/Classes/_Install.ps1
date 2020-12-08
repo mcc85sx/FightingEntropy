@@ -114,32 +114,21 @@ Class _Install
             
         }                        | % { New-ModuleManifest @_ }
         
-        If ( $This.Type -match "Win32" )
+        Switch -Regex ($This.Type)
         {
-            ForEach ( $ModulePath in $This.Hive.PSModule )
-            {
-                If ( $ModulePath -match "Program Files" )
-                {
-                    Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
-                }
-            }
-        }
-        
-        If ( $This.Type -match "RHELCentOS" )
-        {
-            ForEach ( $ModulePath in $This.Hive.PSModule )
-            {
-                If ( $ModulePath -match "microsoft" )
-                {
-                    Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
-                }
-            }
+            "Win32" { $This.Scaffold("Program Files") "RHELCentOS" { $This.Scaffold("microsoft") }
         }
     }
     
-    Scaffold()
+    Scaffold([String]$String)
     {
-        
+        ForEach ( $ModulePath in $This.Hive.PSModule )
+        {
+            If ( $ModulePath -match $String )
+            {
+                Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
+            }
+        }
     }
 
     Prime()

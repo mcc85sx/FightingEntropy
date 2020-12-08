@@ -10,6 +10,12 @@ Class _Install
     [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
     [String]             $Status = "Initialized"
     [String]               $Type
+    [String]           $Resource
+
+    [Object[]]          $Classes
+    [Object[]]        $Functions
+    [Object[]]          $Control
+    [Object[]]         $Graphics
 
     [String[]]             $Load
     [String]             $Output
@@ -22,6 +28,61 @@ Class _Install
             If ( ! ( Test-Path $Item ) )
             {
                 New-Item $Item -ItemType Directory -Force -Verbose
+            }
+            
+            Switch ($Path)
+            {
+                Classes 
+                {
+                    ForEach ( $X in $This.Module.Classes )
+                    {
+                        $URI             = "$($This.Resource)/Classes/$X.ps1"
+                        $Outfile         = "$($This.Path)\Classes\$X.ps1"
+
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
+
+                        $This.Classes   += $Outfile
+                    }
+                }
+
+                Functions
+                {
+                    ForEach ( $X in $This.Module.Functions )
+                    {
+                        $URI             = "$($This.Resource)/Functions/$X.ps1"
+                        $Outfile         = "$($This.Path)\Functions\$X.ps1"
+
+                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
+
+                        $This.Functions += $OutFile
+                    }
+                }
+
+                Control
+                {
+                    ForEach ( $X in $This.Module.Control )
+                    {
+                        $URI             = "$($This.Resource)/Control/$X"
+                        $OutFile         = "$($This.Path)\Control\$X"
+
+                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
+
+                        $This.Control   += $OutFile
+                    }
+                }
+
+                Graphics
+                {
+                    ForEach ( $X in $This.Module.Graphics )
+                    {
+                        $URI             = "$($This.Resource)/Graphics/$X"
+                        $OutFile         = "$($This.Path)\Graphics\$X"
+
+                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
+
+                        $This.Graphics  += $OutFile
+                    }
+                }
             }
         }
     }

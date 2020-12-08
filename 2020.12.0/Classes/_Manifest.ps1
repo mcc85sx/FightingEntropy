@@ -10,7 +10,7 @@ Class _Manifest
                               "NetInterface Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar",
                               "Share Master Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo", 
                               "Xaml XamlGlossaryItem Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat FEPromo",
-                              "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " " ).Split(" ") | % { "_$_" })
+                              "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " ).Split(" ") | % { "_$_" })
     [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                               "ServerMod.xml" ) -Split " "
     [String[]] $Functions = (("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write-Banner", 

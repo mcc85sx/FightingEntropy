@@ -34,10 +34,10 @@ Class _Install
             {
                 Classes 
                 {
-                    ForEach ( $X in $This.Module.Classes )
+                    ForEach ( $X in $This.Manifest.Classes )
                     {
                         $URI             = "$($This.Resource)/Classes/$X.ps1"
-                        $Outfile         = "$($This.Path)\Classes\$X.ps1"
+                        $Outfile         = "$($This.Hive.Path)\Classes\$X.ps1"
 
                         Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
 
@@ -47,10 +47,10 @@ Class _Install
 
                 Functions
                 {
-                    ForEach ( $X in $This.Module.Functions )
+                    ForEach ( $X in $This.Manifest.Functions )
                     {
                         $URI             = "$($This.Resource)/Functions/$X.ps1"
-                        $Outfile         = "$($This.Path)\Functions\$X.ps1"
+                        $Outfile         = "$($This.Hive.Path)\Functions\$X.ps1"
 
                         Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
 
@@ -60,10 +60,10 @@ Class _Install
 
                 Control
                 {
-                    ForEach ( $X in $This.Module.Control )
+                    ForEach ( $X in $This.Manifest.Control )
                     {
                         $URI             = "$($This.Resource)/Control/$X"
-                        $OutFile         = "$($This.Path)\Control\$X"
+                        $OutFile         = "$($This.Hive.Path)\Control\$X"
 
                         Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
 
@@ -73,16 +73,18 @@ Class _Install
 
                 Graphics
                 {
-                    ForEach ( $X in $This.Module.Graphics )
+                    ForEach ( $X in $This.Manifest.Graphics )
                     {
                         $URI             = "$($This.Resource)/Graphics/$X"
-                        $OutFile         = "$($This.Path)\Graphics\$X"
+                        $OutFile         = "$($This.Hive.Path)\Graphics\$X"
 
                         Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
 
                         $This.Graphics  += $OutFile
                     }
                 }
+
+                Default {}
             }
         }
     }
@@ -133,14 +135,24 @@ Class _Install
         }                        | % { New-ModuleManifest @_ }
     }
 
+    Prime([String]$Version)
+    {
+        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
+        $This.Classes            = @( )
+        $This.Functions          = @( )
+        $This.Control            = @( )
+        $This.Graphics           = @( )
+    }
+
     _Install([String]$Version)
     {
         $This.OS                 = [_OS]::New()
         $This.Manifest           = [_Manifest]::New()
         $This.Hive               = [_Hive]::New($This.OS.Type,$This.Version)
         $This.Type               = $This.OS.Type
+        $This.Prime()
         $This.BuildTree()
         $This.BuildModule()
-        $This.BuildManifest()
+        $This.BuildModuleManifest()
     }
 }

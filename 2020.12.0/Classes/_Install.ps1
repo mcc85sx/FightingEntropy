@@ -136,12 +136,14 @@ Class _Install
         
         If ( $This.Type -match "Win32" )
         {
-            Copy-Item $This.Hive.Manifest ( $This.Hive.PSModule | ? { $_ -match "Program Files" }) -Verbose
+            $Destination = $This.Hive.PSModule | ? { $_ -match "Program Files" }
+            Copy-Item -Path $This.Hive.Manifest -Destination $Destination -Verbose
         }
         
         If ( $This.Type -match "RHELCentOS" )
         {
-            Copy-Item $This.Hive.Manifest ( $This.Hive.PSModule | ? { $_ -match "microsoft"     }) -Verbose
+            $Destination = $This.Hive.PSModule | ? { $_ -match "microsoft" }
+            Copy-Item -Path $This.Hive.Manifest -Destination $Destination -Verbose
         }
     }
 

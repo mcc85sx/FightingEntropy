@@ -39,7 +39,7 @@ Class _Services
 
     Hidden [Hashtable]  $Template
     Hidden [Object[]]  $WMIObject
-    [Object[]]          $Services
+    [Object[]]            $Output
 
     _Services()
     {
@@ -51,7 +51,7 @@ Class _Services
         }
 
         $This.WMIObject    = ([wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name)
-        $This.Services     = @( )
+        $This.Output     = @( )
 
         For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )
         {
@@ -69,7 +69,7 @@ Class _Services
                 $Item.Slot  = "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1"
             }
 
-            $This.Services += $Item
+            $This.Output   += $Item
         }
     }
 }

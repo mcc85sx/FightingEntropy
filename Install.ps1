@@ -1,7 +1,7 @@
 Class FEModule
 {
     [String]             $Base  = ("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0")
-    [String[]]        $Classes_ = ("OS Manifest Hive Install" -Split " " | % { "Classes/_$_.ps1" })
+    [String[]]        $Classes_ = ("OS Manifest RestObject Hive Install" -Split " " | % { "Classes/_$_.ps1" })
     Hidden [Object[]] $Classes 
     Hidden [String[]]    $Swap
     [String]           $Output

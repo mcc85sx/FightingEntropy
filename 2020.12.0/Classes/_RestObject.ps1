@@ -1,6 +1,7 @@
 Class _RestObject
 {
     [String]           $Name
+    [String]           $Type
     [Object]         $Object
     Hidden [String]     $URI
     Hidden [String] $Outfile
@@ -8,6 +9,7 @@ Class _RestObject
     _RestObject([String]$URI,[String]$Outfile)
     {
         $This.Name    = $URI.Split("/")[-1]
+        $This.Type    = $URI.Split("/")[-2]
         $This.URI     = $URI
         $This.Outfile = $Outfile.Replace("\","/")
 

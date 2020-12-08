@@ -36,12 +36,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Classes )
                     {
-                        $URI             = "$($This.Resource)/Classes/$X.ps1"
-                        $Outfile         = "$($This.Hive.Path)\Classes\$X.ps1"
-
-                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
-
-                        $This.Classes   += $Outfile
+                        $This.Classes   += ( Invoke-RestMethod -URI "$($This.Resource)/Classes/$X.ps1" -Verbose )
                     }
                 }
 
@@ -49,12 +44,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Functions )
                     {
-                        $URI             = "$($This.Resource)/Functions/$X.ps1"
-                        $Outfile         = "$($This.Hive.Path)\Functions\$X.ps1"
-
-                        Invoke-RestMethod -URI $URI -Outfile $OutFile -ContentType "text/plain" -Verbose
-
-                        $This.Functions += $OutFile
+                        $This.Functions += ( Invoke-RestMethod -URI "$($This.Resource)/Functions/$X.ps1" -Verbose )
                     }
                 }
 
@@ -62,12 +52,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Control )
                     {
-                        $URI             = "$($This.Resource)/Control/$X"
-                        $OutFile         = "$($This.Hive.Path)\Control\$X"
-                        
-                        Invoke-RestMethod -URI $URI -OutFile $Outfile -Verbose 
-                        
-                        $This.Control   += $OutFile
+                        $This.Control   += ( Invoke-RestMethod -URI "$($This.Resource)/Control/$X" -Verbose )
                     }
                 }
 
@@ -75,12 +60,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Graphics )
                     {
-                        $URI             = "$($This.Resource)/Graphics/$X"
-                        $OutFile         = "$($This.Hive.Path)\Graphics\$X"
-
-                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
-
-                        $This.Graphics  += $OutFile
+                        $This.Graphics  += ( Invoke-RestMethod -URI "$($This.Resource)/Graphics/$X" -Verbose )
                     }
                 }
 

@@ -17,8 +17,8 @@ Class _Install
     [Object[]]          $Control
     [Object[]]         $Graphics
 
-    [String[]]             $Load
-    [String]             $Output
+    Hidden [String[]]      $Load
+    Hidden [String]      $Output
 
     BuildTree()
     {
@@ -64,9 +64,9 @@ Class _Install
                     {
                         $URI             = "$($This.Resource)/Control/$X"
                         $OutFile         = "$($This.Hive.Path)\Control\$X"
-
-                        Invoke-RestMethod -URI $URI -OutFile $OutFile -Verbose
-
+                        
+                        Invoke-RestMethod -URI $URI -OutFile $Outfile -Verbose 
+                        
                         $This.Control   += $OutFile
                     }
                 }
@@ -142,6 +142,7 @@ Class _Install
         $This.Functions          = @( )
         $This.Control            = @( )
         $This.Graphics           = @( )
+        $This.Load               = @( )
     }
 
     _Install([String]$Version)

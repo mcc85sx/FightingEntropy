@@ -120,8 +120,7 @@ Class _Install
         
         Switch -Regex ($This.Type)
         {
-            "Win32"      { $This.Scaffold("Program Files") } 
-            "RHELCentOS" { $This.Scaffold("microsoft")     }
+            "Win32"      { $This.Scaffold("Program Files") } "RHELCentOS" { $This.Scaffold("microsoft") }
         }
     }
     
@@ -150,7 +149,6 @@ Class _Install
         $This.Graphics           = @( )
         $This.Load               = @( )
         
-        $This.Prime()
         $This.BuildTree()
         $This.BuildModule()
         $This.BuildManifest()

@@ -8,6 +8,6 @@ Class _RestObject
     {
         $This.URI     = $URI
         $This.Outfile = $Outfile
-        $This.Object  = Invoke-RestMethod -URI $URI -Outfile $Outfile -Verbose -Force
+        $This.Object  = Invoke-RestMethod -URI $URI -Outfile $Outfile -Verbose
     }
 }

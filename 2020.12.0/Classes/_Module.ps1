@@ -47,6 +47,6 @@ Class _Module
 
         $This.Host               = [_Host]::New()
         $This.Info               = [_Info]::New()
-        $This.Role               = [_Role]::New($This.Type)
+        #$This.Role               = [_Role]::New($This.Type)
     }
 }

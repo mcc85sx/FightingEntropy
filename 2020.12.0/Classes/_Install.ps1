@@ -153,6 +153,6 @@ Class _Install
         $This.Prime()
         $This.BuildTree()
         $This.BuildModule()
-        $This.BuildModuleManifest()
+        $This.BuildManifest()
     }
 }

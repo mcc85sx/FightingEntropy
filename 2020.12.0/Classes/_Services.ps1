@@ -39,7 +39,7 @@ Class _Services
 
     Hidden [Hashtable] $Template
     Hidden [Object[]]  $WMIObject
-    [_Service[]]        $Services
+    [Object[]]         $Services
 
     _Services()
     {

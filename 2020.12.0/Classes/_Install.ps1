@@ -14,6 +14,18 @@ Class _Install
     [String[]]             $Load
     [String]             $Output
 
+    BuildTree()
+    {
+        $This.Manifest.Folders | % { 
+        {
+            $Item = $This.Hive.Path,$Path -join "\"
+            If ( ! ( Test-Path $Item ) )
+            {
+                New-Item $Item -ItemType Directory -Force -Verbose
+            }
+        }
+    }
+    
     BuildModule()
     {
         $This.Load               = @( )
@@ -31,14 +43,14 @@ Class _Install
 
             $This.Load          += ""
             $This.Load          += "# Class/$_"
-            $This.Load          += @( Get-Content "$($This.Path)\Classes\$_.ps1" )
+            $This.Load          += @( Get-Content "$($This.Hive.Path)\Classes\$_.ps1" )
         }
 
         $This.Manifest.Functions | % {
 
             $This.Load          += ""
             $This.Load          += "# Function/$_"
-            $This.Load          += @( Get-Content "$($This.Path)\Functions\$_.ps1" )
+            $This.Load          += @( Get-Content "$($This.Hive.Path)\Functions\$_.ps1" )
         }
 
         $This.Output             = $This.Load -join "`n"
@@ -66,6 +78,7 @@ Class _Install
         $This.Manifest           = [_Manifest]::New()
         $This.Hive               = [_Hive]::New($This.OS.Type,$This.Version)
         $This.Type               = $This.OS.Type
+        $This.BuildTree()
         $This.BuildModule()
         $This.BuildManifest()
     }

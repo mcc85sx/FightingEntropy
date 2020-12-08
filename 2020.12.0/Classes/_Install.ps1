@@ -36,7 +36,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Classes )
                     {
-                        $This.Classes   += ([_RestObject]::New("$($This.Resource)/Classes/$X.ps1","$($This.Hive.Path)/Classes/$X.ps1"))
+                        $This.Classes   += ([_RestObject]::New("$($This.Resource)/Classes/$X","$($This.Hive.Path)/Classes/$X"))
                     }
                 }
 
@@ -44,7 +44,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Functions )
                     {
-                        $This.Functions += ([_RestObject]::New("$($This.Resource)/Functions/$X.ps1","$($This.Hive.Path)/Functions/$X.ps1"))
+                        $This.Functions += ([_RestObject]::New("$($This.Resource)/Functions/$X","$($This.Hive.Path)/Functions/$X"))
                     }
                 }
 

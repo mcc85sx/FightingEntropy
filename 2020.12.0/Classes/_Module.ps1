@@ -10,16 +10,16 @@ Class _Module
     [String]               $Date
     [String]             $Status
     [String]               $Type
-    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0"
-
-    [Object]               $Host
-    [Object]               $Info
-    [Object]               $Role
     
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0"
     [Object[]]          $Classes
     [Object[]]          $Control
     [Object[]]        $Functions
     [Object[]]         $Graphics
+    
+    [Object]               $Host
+    [Object]               $Info
+    [Object]               $Role
     
     _Module()
     {

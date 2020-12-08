@@ -161,7 +161,7 @@ Class _Install
     {
         $This.OS                 = [_OS]::New()
         $This.Manifest           = [_Manifest]::New()
-        $This.Hive               = [_Hive]::New($This.OS.Type,$This.Version)
+        $This.Hive               = [_Hive]::New($This.OS.Type,$Version)
         $This.Type               = $This.OS.Type
         $This.Prime()
         $This.BuildTree()

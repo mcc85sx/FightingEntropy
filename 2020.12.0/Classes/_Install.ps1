@@ -1,3 +1,18 @@
+IEX ( IRM https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1 )
+
+
+
+OS       : _OS
+Manifest : _Manifest
+Hive     : _Hive
+Name     : FightingEntropy
+Version  : 2020.12.0
+Provider : Secure Digits Plus LLC
+Date     : 2020_1207-190137
+Status   : Initialized
+Type     : Win32_Client
+Load     : {# FightingEntropy.psm1 [Module], using namespace System.Security.AccessControl, using namespace System.Security.Principal, using namespace System.Management.Automation...}
+
 Class _Install
 {
     [Object]                 $OS
@@ -16,7 +31,7 @@ Class _Install
 
     BuildTree()
     {
-        $This.Manifest.Folders | % { 
+        ForEach ( $Path in $This.Manifest.Folders )
         {
             $Item = $This.Hive.Path,$Path -join "\"
             If ( ! ( Test-Path $Item ) )

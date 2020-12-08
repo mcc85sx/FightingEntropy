@@ -41,9 +41,9 @@ Class _Module
         $This.Info               = [_Info]::New()
         $This.Role               = [_Role]::New()
 
-        $This.Classes            = $This.Manifest.Classes   | % { "{0}\Classes\$_.ps1"   -f $This.Hive.Path }
-        $This.Control            = $This.Manifest.Control   | % { "{0}\Control\$_"       -f $This.Hive.Path }
-        $This.Functions          = $This.Manifest.Functions | % { "{0}\Functions\$_.ps1" -f $This.Hive.Path } 
-        $This.Graphics           = $This.Manifest.Graphics  | % { "{0}\Graphics\$_"      -f $This.Hive.Path }
+        $This.Classes            = $This.Manifest.Classes   | % { "{0}\Classes\$_"   -f $This.Hive.Path }
+        $This.Control            = $This.Manifest.Control   | % { "{0}\Control\$_"   -f $This.Hive.Path }
+        $This.Functions          = $This.Manifest.Functions | % { "{0}\Functions\$_" -f $This.Hive.Path } 
+        $This.Graphics           = $This.Manifest.Graphics  | % { "{0}\Graphics\$_"  -f $This.Hive.Path }
     }
 }

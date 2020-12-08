@@ -85,14 +85,14 @@ Class _Install
 
             $This.Load          += ""
             $This.Load          += "# Class/$_"
-            $This.Load          += @( Get-Content "$($This.Hive.Path)\Classes\$_.ps1" )
+            $This.Load          += @( Get-Content "$($This.Hive.Path)\Classes\$_" )
         }
 
         $This.Manifest.Functions | % {
 
             $This.Load          += ""
             $This.Load          += "# Function/$_"
-            $This.Load          += @( Get-Content "$($This.Hive.Path)\Functions\$_.ps1" )
+            $This.Load          += @( Get-Content "$($This.Hive.Path)\Functions\$_" )
         }
 
         $This.Output             = $This.Load -join "`n"

@@ -26,24 +26,27 @@ Class _Module
         $This.OS                 = (Get-FEOS)
         $This.Type               = $This.OS.Type
         $This.Manifest           = (Get-FEManifest)
-        $This.Hive               = (Get-FEHive($This.Type,$This.Version))
+        $This.Hive               = (Get-FEHive -Type $This.Type -Version $This.Version)
 
-        Get-ItemProperty -Path $This.Hive.Root | % { 
+        If ( $This.Type -match "Win32_" )
+        {
+            Get-ItemProperty -Path $This.Hive.Root | % { 
 
-            $This.Name           = $_.Name
-            $This.Version        = $_.Version
-            $This.Provider       = $_.Provider
-            $This.Date           = $_.Date
-            $This.Status         = $_.Status
+                $This.Name       = $_.Name
+                $This.Version    = $_.Version
+                $This.Provider   = $_.Provider
+                $This.Date       = $_.Date
+                $This.Status     = $_.Status
+            }
         }
-        
+
+        $This.Classes            = $This.Manifest.Classes   | % { Get-Item ( "{0}\Classes\$_"   -f $This.Hive.Path ) }
+        $This.Control            = $This.Manifest.Control   | % { Get-Item ( "{0}\Control\$_"   -f $This.Hive.Path ) }
+        $This.Functions          = $This.Manifest.Functions | % { Get-Item ( "{0}\Functions\$_" -f $This.Hive.Path ) } 
+        $This.Graphics           = $This.Manifest.Graphics  | % { Get-Item ( "{0}\Graphics\$_"  -f $This.Hive.Path ) }
+
         $This.Host               = [_Host]::New()
         $This.Info               = [_Info]::New()
         $This.Role               = [_Role]::New()
-
-        $This.Classes            = $This.Manifest.Classes   | % { "{0}\Classes\$_"   -f $This.Hive.Path }
-        $This.Control            = $This.Manifest.Control   | % { "{0}\Control\$_"   -f $This.Hive.Path }
-        $This.Functions          = $This.Manifest.Functions | % { "{0}\Functions\$_" -f $This.Hive.Path } 
-        $This.Graphics           = $This.Manifest.Graphics  | % { "{0}\Graphics\$_"  -f $This.Hive.Path }
     }
 }

@@ -13,8 +13,8 @@ Class _Module
     
     [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0"
     [Object[]]          $Classes
-    [Object[]]          $Control
     [Object[]]        $Functions
+    [Object[]]          $Control
     [Object[]]         $Graphics
     
     [Object]               $Host

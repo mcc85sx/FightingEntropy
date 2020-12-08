@@ -133,6 +133,16 @@ Class _Install
             RootModule           = $This.Hive.Module
             
         }                        | % { New-ModuleManifest @_ }
+        
+        If ( $This.Type -match "Win32" )
+        {
+            Copy-Item $This.Hive.Manifest ( $This.Hive.PSModule | ? { $_ -match "Program Files" }) -Verbose
+        }
+        
+        If ( $This.Type -match "RHELCentOS" )
+        {
+            Copy-Item $This.Hive.Manifest ( $This.Hive.PSModule | ? { $_ -match "microsoft"     }) -Verbose
+        }
     }
 
     Prime()

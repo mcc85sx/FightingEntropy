@@ -135,9 +135,9 @@ Class _Install
         }                        | % { New-ModuleManifest @_ }
     }
 
-    Prime([String]$Version)
+    Prime()
     {
-        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
+        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $This.Version
         $This.Classes            = @( )
         $This.Functions          = @( )
         $This.Control            = @( )

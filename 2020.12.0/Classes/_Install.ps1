@@ -9,9 +9,9 @@ Class _Install
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
     [String]             $Status = "Initialized"
-    [String]               $Type
+    [Object]               $Type
+    
     [String]           $Resource
-
     [Object[]]          $Classes
     [Object[]]        $Functions
     [Object[]]          $Control
@@ -96,7 +96,12 @@ Class _Install
         }
 
         $This.Output             = $This.Load -join "`n"
-
+        
+        $This.WriteModule()
+    }
+    
+    WriteModule()
+    {
         Set-Content -Path $This.Hive.Module -Value $This.Output -Force -Verbose
     }
    
@@ -130,22 +135,20 @@ Class _Install
         }
     }
 
-    Prime()
+    _Install([String]$Version)
     {
+        $This.OS                 = [_OS]::New()
+        $This.Type               = $This.OS.Type
+        $This.Manifest           = [_Manifest]::New()
+        $This.Hive               = [_Hive]::New($This.Type,$Version)
+
         $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $This.Version
         $This.Classes            = @( )
         $This.Functions          = @( )
         $This.Control            = @( )
         $This.Graphics           = @( )
         $This.Load               = @( )
-    }
-
-    _Install([String]$Version)
-    {
-        $This.OS                 = [_OS]::New()
-        $This.Manifest           = [_Manifest]::New()
-        $This.Hive               = [_Hive]::New($This.OS.Type,$Version)
-        $This.Type               = $This.OS.Type
+        
         $This.Prime()
         $This.BuildTree()
         $This.BuildModule()

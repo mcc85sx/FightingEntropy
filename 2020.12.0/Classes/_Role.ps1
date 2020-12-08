@@ -1,19 +1,12 @@
 Class _Role
 {
-    [UInt32] $Type
     [String] $Name
-    [Object] $Root
+    [Object] $Role
 
-    _Role([UInt32]$Slot)
+    _Role([String]$Name)
     {
-        If ( $Slot -notin 0..3 )
-        {
-            Throw "Invalid option"
-        }
-
-        $This.Type = ("{0}Client {0}Server UnixBSD RHELCentOS" -f "Win32_" -Split " ")[$Slot]
-       
-        $This.Role = Switch($Slot)
+        $This.Name = $Name
+        $This.Role = Switch($Name)
         {
             Win32_Client { [_Win32_Client]::New() } Win32_Server { [_Win32_Server]::New() } 
             UnixBSD      { [_UnixBSD]::New()      } RHELCentOS   { [_RHELCentOS]::New()   }

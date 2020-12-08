@@ -78,8 +78,8 @@ Class _Hive
 
         If ( $This.Type -eq "RHELCentOS" )
         {
-            $This.Root  = $This.Root -Replace "/","\"
-            $This.Path  = $This.Path -Replace "/","\"
+            $This.Root  = $This.Root -Replace "\","/"
+            $This.Path  = $This.Path -Replace "\","/"
         }
 
         $This.Check($This.Root)

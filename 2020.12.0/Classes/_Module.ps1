@@ -45,8 +45,6 @@ Class _Module
         $This.Functions          = $This.Manifest.Functions | % { Get-Item ( "{0}\Functions\$_" -f $This.Hive.Path ) } 
         $This.Graphics           = $This.Manifest.Graphics  | % { Get-Item ( "{0}\Graphics\$_"  -f $This.Hive.Path ) }
 
-        $This.Host               = [_Host]::New()
-        $This.Info               = [_Info]::New()
-        $This.Role               = [_Role]::New($This.Type)
+        $This.Role               = [_Role]::New($This.Type).Output
     }
 }

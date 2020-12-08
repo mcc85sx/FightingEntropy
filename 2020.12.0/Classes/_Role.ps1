@@ -1,7 +1,7 @@
 Class _Role
 {
     [String] $Name
-    [Object] $Role
+    [Object] $Output
 
     _Role([String]$Name)
     {

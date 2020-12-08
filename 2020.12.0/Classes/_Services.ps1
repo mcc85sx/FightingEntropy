@@ -37,9 +37,10 @@ Class _Services
                      ",0,0,0,0,0,0,0,0;1,0,1,0,1,0,1,0,1,0;2,2,2,2,1,1,1,1,2,2;0,0,3,0,3,0,3,0,3,0;3,3,3,3,2,2,2,2,3,3").Split(";"))
     }
 
-    Hidden [Hashtable] $Template
+    Hidden [String]       $Select = ("Name DelayedAutoStart StartMode State Status DisplayName PathName Description" -Split " ")
+    Hidden [Hashtable]  $Template
     Hidden [Object[]]  $WMIObject
-    [Object[]]         $Services
+    [Object[]]          $Services
 
     _Services()
     {
@@ -50,7 +51,7 @@ Class _Services
             $This.Template.Add($This.Config.Names[$I],$This.Config.Values[$This.Config.Masks[$I]])
         }
 
-        $This.WMIObject    = Get-WMIObject -Class Win32_Service | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name
+        $This.WMIObject    = [wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object $This.Select | Sort-Object Name
         $This.Services     = @( )
 
         For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )

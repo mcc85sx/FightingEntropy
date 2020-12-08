@@ -24,7 +24,7 @@ Class _Module
     _Module()
     {
         $This.OS                 = (Get-FEOS)
-        $This.Module             = (Get-FEManifest)
+        $This.Manifest           = (Get-FEManifest)
         $This.Hive               = (Get-FEHive($This.OS.Type,$This.Version))
 
         Get-ItemProperty -Path $This.Hive.Root | % { 

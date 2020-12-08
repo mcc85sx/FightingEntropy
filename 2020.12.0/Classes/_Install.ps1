@@ -36,7 +36,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Classes )
                     {
-                        $This.Classes   += ( Invoke-RestMethod -URI "$($This.Resource)/Classes/$X.ps1" -Verbose )
+                        $This.Classes   += ([_RestObject]::New("$($This.Resource)/Classes/$X.ps1","$($This.Hive.Path)/Classes/$X.ps1"))
                     }
                 }
 
@@ -44,7 +44,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Functions )
                     {
-                        $This.Functions += ( Invoke-RestMethod -URI "$($This.Resource)/Functions/$X.ps1" -Verbose )
+                        $This.Functions += ([_RestObject]::New("$($This.Resource)/Functions/$X.ps1","$($This.Hive.Path)/Functions/$X.ps1"))
                     }
                 }
 
@@ -52,7 +52,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Control )
                     {
-                        $This.Control   += ( Invoke-RestMethod -URI "$($This.Resource)/Control/$X" -Verbose )
+                        $This.Control   += ([_RestObject]::New("$($This.Resource)/Control/$X","$($This.Hive.Path)/Control/$X"))
                     }
                 }
 
@@ -60,7 +60,7 @@ Class _Install
                 {
                     ForEach ( $X in $This.Manifest.Graphics )
                     {
-                        $This.Graphics  += ( Invoke-RestMethod -URI "$($This.Resource)/Graphics/$X" -Verbose )
+                        $This.Graphics  += ([_RestObject]::New("$($This.Resource)/Graphics/$X","$($This.Hive.Path)/Graphics/$X"))
                     }
                 }
 
@@ -100,7 +100,7 @@ Class _Install
 
         Set-Content -Path $This.Hive.Module -Value $This.Output -Force -Verbose
     }
-
+   
     BuildManifest()
     {
         @{  GUID                 = "67b283d9-72c6-413a-aa80-a24af5d4ea8f"
@@ -116,15 +116,30 @@ Class _Install
         
         If ( $This.Type -match "Win32" )
         {
-            $Destination = $This.Hive.PSModule | ? { $_ -match "Program Files" }
-            Copy-Item -Path $This.Hive.Manifest -Destination $Destination -Verbose
+            ForEach ( $ModulePath in $This.Hive.PSModule )
+            {
+                If ( $ModulePath -match "Program Files" )
+                {
+                    Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
+                }
+            }
         }
         
         If ( $This.Type -match "RHELCentOS" )
         {
-            $Destination = $This.Hive.PSModule | ? { $_ -match "microsoft" }
-            Copy-Item -Path $This.Hive.Manifest -Destination $Destination -Verbose
+            ForEach ( $ModulePath in $This.Hive.PSModule )
+            {
+                If ( $ModulePath -match "microsoft" )
+                {
+                    Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
+                }
+            }
         }
+    }
+    
+    Scaffold()
+    {
+        
     }
 
     Prime()

@@ -17,16 +17,16 @@ Class _Win32_Client
     
     GetServices()
     {
-        [_Services]::New().Output
+        $This.Services  = [_Services]::New().Output
     }
     
     GetProcesses()
     {
-        (Get-Process)
+        $This.Processes = (Get-Process)
     }
     
     GetNetwork()
     {
-        [_Network]::New().Interface
+        $This.Network   = [_Network]::New()
     }
 }

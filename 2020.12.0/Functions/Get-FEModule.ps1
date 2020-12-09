@@ -5,17 +5,20 @@ Function Get-FEModule
     Param(                
         [Parameter( ParameterSetName        = "Default"     )][Switch]          $All ,
         [Parameter( ParameterSetName        = "Classes"     )][Switch]      $Classes , 
-        [Parameter( ParameterSetName        = "Control"     )][Switch]      $Control , 
         [Parameter( ParameterSetName        = "Functions"   )][Switch]    $Functions , 
+        [Parameter( ParameterSetName        = "Control"     )][Switch]      $Control , 
         [Parameter( ParameterSetName        = "Graphics"    )][Switch]     $Graphics , 
-        [Parameter( ParameterSetName        = "Tools"       )][Switch]        $Tools )
-
-    Switch ($PSCmdlet.ParameterSetName) 
-    {  
-        Default      { [_Module]::New()              }
-        Classes      { [_Module]::New().Classes      }
-        Control      { [_Module]::New().Control      }
-        Functions    { [_Module]::New().Functions    }
-        Graphics     { [_Module]::New().Graphics     }
-    }
+        [Parameter( ParameterSetName        = "Role"        )][Switch]         $Role )
+        
+        $Mod       = [_Module]::New()
+        
+        Switch ($PSCmdLet.ParameterSetName)
+        {   
+            Default   {$Mod}
+            Classes   {$Mod.Classes}
+            Functions {$Mod.Functions}
+            Control   {$Mod.Control}
+            Graphics  {$Mod.Graphics}
+            Role      {$Mod.Role}
+        }
 }

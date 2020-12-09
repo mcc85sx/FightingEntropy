@@ -50,7 +50,7 @@ Class _Services
             $This.Template.Add($This.Config.Names[$I],$This.Config.Values[$This.Config.Masks[$I]])
         }
 
-        $This.WMIObject    = ([wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name)
+        $This.WMIObject    = Invoke-Expression '([wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name)'
         $This.Output     = @( )
 
         For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )

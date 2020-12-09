@@ -27,6 +27,6 @@ Class _Win32_Server
     
     GetNetwork()
     {
-        $This.Network   = [_Network]::New().Interface
+        $This.Network   = [_Network]::New()
     }
 }

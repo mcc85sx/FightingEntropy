@@ -11,7 +11,7 @@ Class _RestObject
         $This.Type    = $URI.Split("/")[-2]
         $This.Name    = $URI.Split("/")[-1]
         $This.URI     = $URI
-        $This.Outfile = $Outfile -Replace "\","/"
+        $This.Outfile = $Outfile.Replace("\","/")
 
         Invoke-RestMethod -URI $URI -Outfile $Outfile -Verbose
         

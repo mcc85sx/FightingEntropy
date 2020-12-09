@@ -1,10 +1,10 @@
 Class _Network
     {
-        Hidden [Object[]]  $Adapter
-        Hidden [Object]     $Vendor
-        Hidden [Object]    $NBTScan
-        Hidden [Object]    $ARPScan
-        [Object[]]       $Interface
+        [Object[]]  $Adapter
+        [Object]     $Vendor
+        [Object]    $NBTScan
+        [Object]    $ARPScan
+        [Object[]] $Interface
 
         _Network()
         {
@@ -28,6 +28,7 @@ Class _Network
                 $Item.Arp        = $This.ARPScan | ? IFIndex -eq $Item.Index
                 $Item.NBT        = $This.NBTScan | ? Name -eq $Item.Alias
                 $This.Interface += $Item
+                Write-Host ("[+] {0}" -f $Item.Alias)
             }
 
             $This.Interface      = $This.Interface | Sort-Object Alias

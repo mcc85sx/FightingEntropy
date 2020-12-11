@@ -101,7 +101,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             Certificate          = @"
 <Window xmlns                    = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
         xmlns:x                  = 'http://schemas.microsoft.com/winfx/2006/xaml'
-        Title                    = 'Secure Digits Plus LLC | Hybrid @ Certificate Info'
+        Title                    = '[FightingEntropy]://Certificate Info'
         Width                    = '350'
         Height                   = '200'
         Topmost                  = 'True' 
@@ -148,7 +148,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     <Window
                                                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                                                      Title = 'Secure Digits Plus LLC | Hybrid @ AD Login'
+                                                      Title = '[FightingEntropy]://AD Login'
                                                       Width = '480'
                                                      Height = '280'
                                                     Topmost = 'True' 
@@ -213,7 +213,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 <Window
                                                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                                                      Title = 'Secure Digits Plus LLC | Hybrid @ Account Designation'
+                                                      Title = '[FightingEntropy]://Account Designation'
                                                       Width = '480'
                                                      Height = '280'
                                                     Topmost = 'True' 
@@ -278,7 +278,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
            <Window
                                                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                                                      Title = 'Secure Digits Plus LLC | Hybrid @ Desired State Controller Promotion'
+                                                      Title = '[FightingEntropy]://Domain Controller Promotion'
                                                       Width = '800'
                                                      Height = '800'
                                                     Topmost = 'True' 
@@ -300,7 +300,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             </Menu>
             <GroupBox
                                                    Grid.Row = '1'
-                                                     Header = '[ Hybrid-DSC Domain Service Configuration ]'
+                                                     Header = '[FEDCPromo://Domain Service Configuration ]'
                                         HorizontalAlignment = 'Center'
                                           VerticalAlignment = 'Center'
                                                       Width = '760'
@@ -515,12 +515,57 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 "@
             FEDCFound            = @"
+                <Window
+                                                      xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+                                                    xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
+                                                      Title = '[FightingEntropy]://Domain Controller Found'
+                                                      Width = '350'
+                                                     Height = '200'
+                                        HorizontalAlignment = 'Center'
+                                                    Topmost = 'True' 
+                                                       Icon = '$Icon'
+                                      WindowStartupLocation = 'CenterScreen' >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height = '3*' />
+                        <RowDefinition Height = '*' />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row = '0' >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width = '*' />
+                            <ColumnDefinition Width = '2*' />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height = '*' />
+                            <RowDefinition Height = '*' />
+                            <RowDefinition Height = '*' />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column = '0' Grid.Row = '0' Margin = '10' VerticalAlignment = 'Center' HorizontalAlignment = 'Right' >
+                            Controller Name:</TextBlock>
+                        <Label  = 'DC' Grid.Column = '1' Grid.Row = '0' VerticalAlignment = 'Center' Height = '24' Margin = '10' />
+                        <TextBlock Grid.Column = '0' Grid.Row = '1' Margin = '10' VerticalAlignment = 'Center' HorizontalAlignment = 'Right' >
+                            DNS Name:</TextBlock>
+                        <Label  = 'Domain' Grid.Column = '1' Grid.Row = '1' VerticalAlignment = 'Center' Height = '24' Margin = '10' />
+                        <TextBlock Grid.Column = '0' Grid.Row = '2' Margin = '10' VerticalAlignment = 'Center' HorizontalAlignment = 'Right' >
+                            NetBIOS Name:</TextBlock>
+                        <Label  = 'NetBIOS' Grid.Column = '1' Grid.Row = '2' VerticalAlignment = 'Center' Height = '24' Margin = '10' />
+                    </Grid>
+                    <Grid Grid.Row = '1' >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width = '*' />
+                            <ColumnDefinition Width = '*' />
+                        </Grid.ColumnDefinitions>
+                        <Button  = 'Ok' Content = 'Ok' Grid.Column = '0' Grid.Row = '1' Margin = '10' />
+                        <Button  = 'Cancel' Content = 'Cancel' Grid.Column = '1' Grid.Row = '1' Margin = '10' />
+                    </Grid>
+                </Grid>
+            </Window>
 "@
             FERoot               = @"
         <Window
                                                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                                                      Title = 'Secure Digits Plus LLC | Hybrid @ DSC Root Installation'
+                                                      Title = '[FightingEntropy]://Root Installation'
                                                       Width = '640'
                                                      Height = '450'
                                                     Topmost = 'True' 
@@ -562,7 +607,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 <Window
                       xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                     xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                      Title = 'Secure Digits Plus LLC | FightingEntropy @ New Deployment Share'
+                      Title = '[FightingEntropy]://New Deployment Share'
                       Width = '640'
                      Height = '960'
                     Topmost = 'True' 
@@ -825,7 +870,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             FEService = @"
         <Window         xmlns = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                       xmlns:x = 'http://schemas.microsoft.com/winfx/2006/xaml'
-                        Title = '[FightingEntropy] @ ViperBomb Services'
+                        Title = '[FightingEntropy]://ViperBomb Services'
                        Height = '800'
                         Width = '800'
                       Topmost = 'True'

@@ -550,15 +550,5 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         }
     }
 
-    $Xaml   = [_XamlObject]::New($Type).Output
-    $Window = [_XamlWindow]::New($Xaml).Invoke()
-
-    # Certificate
-    # ADLogin
-    # NewAccount
-    # FEDCPromo
-    # FEDCFound
-    # FERoot
-    # FEShare
-    # FEService
+    [_XamlWindow]::New([_XamlObject]::New($Type).Output).Invoke()
 }

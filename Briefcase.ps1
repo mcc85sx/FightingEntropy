@@ -13,8 +13,7 @@ Write-Theme @("`"My Briefcase`" used to be a thing that everybody used in (Windo
 "`"My Briefcase`"",
 "They call it a bunch of other things now, but it used to be, `"My Briefcase`"...",
 "and it would even help Scruff McGruff take a mean bite out of crime.")
-
-Start-Sleep -Seconds 20
+Start-Sleep -Seconds 25
 
 Write-Theme @("When you want some real top notch document storage...?"," ",
 "You need the (Windows 95/98) `"My Briefcase`", limited-edition 25-year minted lunchbox.",
@@ -27,8 +26,7 @@ Write-Theme @("When you want some real top notch document storage...?"," ",
 "Get yourself the backpack edition."," ",
 "That oughtta appeal to those who wanna do a little MORE top-notch damage...",
 "...since the backpack makes the lunchbox look like a little happy meal toy.")
-
-Start-Sleep -Seconds 20
+Start-Sleep -Seconds 25
 
 Write-Theme @("But- if you *really* want to show those evil doers who the boss is...?",
 "...and you want to be referred to as a top-notch, platinum-grade, crime fighter..?"," ",
@@ -41,8 +39,7 @@ Write-Theme @("But- if you *really* want to show those evil doers who the boss i
 "It's a mobile domicile that you could park wherever."," ",
 "When you really want to kick the crap out of crime...?",
 "Then, you need one of these bad boys.")
-
-Start-Sleep -Seconds 20
+Start-Sleep -Seconds 25
 
 Write-Theme @("The (Roaming RV Edition) comes with a lifetime supply of iced peas.",
 "Probably sounds like a dumb thing to get a lifetime supply of...",
@@ -56,14 +53,15 @@ Write-Theme @("The (Roaming RV Edition) comes with a lifetime supply of iced pea
 "Think about how much crime you could stop with this thing."," "
 "Pretty sure Scruff McGruff will be proud of however much crime you take a bite out of.",
 "Whether you get the RV, the backpack, or the lunchbox.")
-
 Start-Sleep -Seconds 15
 
 Write-Theme @("But, for people who found their way to FightingEntropy...?",
 "You don't just stop at taking a bite out of crime there, Scruff McGruff."," ",
 "Nah, cause sometimes...? You have to kick the crap out of it too."," ",
 "Show crime who the boss is.")
-
 Start-Sleep -Seconds 5
 
-Write-Banner
+Write-Flag
+
+Start-Sleep -Seconds 5
+Write-Theme "Loaded [:] FightingEntropy"

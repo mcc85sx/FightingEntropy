@@ -91,7 +91,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             $This.Xaml               = $Xaml
             $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
             $This.Node               = New-Object System.XML.XmlNodeReader([XML]$This.Xaml)
-            $This.Host               = [System.Windows.Markup.XAMLReader]::Load($This.Node)
+            $This.Host               = Invoke-Expression ( "[System.Windows.Markup.XAMLReader]::Load({0})" -f $This.Node )
     
             ForEach ( $I in 0..( $This.Names.Count - 1 ) )
             {

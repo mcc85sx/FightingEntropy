@@ -10,10 +10,12 @@ Class _Manifest
                               "NetInterface Network Info Service Services ViperBomb Brand Branding Certificate Company Key RootVar",
                               "Share Master Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo", 
                               "Xaml XamlGlossaryItem Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat FEPromo",
-                              "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " ).Split(" ") | % { "_$_.ps1" })
+                              "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " 
+                              ).Split(" ") | % { "_$_.ps1" })
     [String[]] $Functions = (("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write-Banner", 
                               "Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotification New-FECompany", 
-                              "Get-ServerDependency Get-FEServices Get-FEHost Get-FEOS Get-FEManifest Get-FEHive" -join " " ).Split(" ") | % { "$_.ps1" })
+                              "Get-ServerDependency Get-FEServices Get-FEHost Get-FEOS Get-FEManifest Get-FEHive Get-XamlWindow" -join " " 
+                              ).Split(" ") | % { "$_.ps1" })
     [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                               "ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")

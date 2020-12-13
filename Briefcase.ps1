@@ -53,7 +53,7 @@ Write-Theme @("The (Roaming RV Edition) comes with a lifetime supply of iced pea
 "Think about how much crime you could stop with this thing."," "
 "Pretty sure Scruff McGruff will be proud of however much crime you take a bite out of.",
 "Whether you get the RV, the backpack, or the lunchbox.")
-Start-Sleep -Seconds 15
+Start-Sleep -Seconds 25
 
 Write-Theme @("But, for people who found their way to FightingEntropy...?",
 "You don't just stop at taking a bite out of crime there, Scruff McGruff."," ",

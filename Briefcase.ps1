@@ -26,7 +26,7 @@ Write-Theme @("When you want some real top notch document storage...?"," ",
 "If that's not your thing, well... you could go pro.",
 "Get yourself the backpack edition.",
 "That oughtta appeal to those who wanna do a little MORE damage...",
-"...since the backpack makes the lunchbox look like a little happy meal toy."
+"...since the backpack makes the lunchbox look like a little happy meal toy.")
 
 Start-Sleep -Seconds 30
 
@@ -39,9 +39,8 @@ Write-Theme @("But- if you *really* want to show those evil doers who the boss i
 "Then, you need "My Briefcase" (Roaming RV Edition).",
 "It's a camper, with a living room, a kitchen, bathroom, bedroom...?",
 "It's a mobile domicile that you could park wherever."," ",
-
 "When you really want to kick the crap out of crime...?",
-"Then, you need one of these bad boys."
+"Then, you need one of these bad boys.")
 
 Start-Sleep -Seconds 30
 

@@ -5,7 +5,8 @@ Function Get-FEService
         [Int32]               $Index
         [String]               $Name 
         [Bool]                $Scope
-        [Int32[]]              $Slot
+        Hidden [Int32[]]    $Profile
+        [Int32]                $Slot
         [Int32]    $DelayedAutoStart 
         [String]          $StartMode 
         [String]              $State 
@@ -92,17 +93,30 @@ Function Get-FEService
 
                 If ( ! $This.Template[$Item.Name] )
                 {
-                    $Item.Scope = 0
-                    $Item.Slot  = -1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+                    $Item.Scope   = 0
+                    $Item.Profile = @(-1)*10
                 }
 
                 Else
                 {
-                    $Item.Scope = 1
-                    $Item.Slot  = $This.Template[$Item.Name] -Split ","
+                    $Item.Scope   = 1
+                    $Item.Profile = @( $This.Template[$Item.Name] -Split "," )
                 }
 
                 $This.Output   += $Item
+            }
+        }
+
+        [Void] SetProfile([Int32]$Slot)
+        {
+            If ( $Slot -notin 0..9 )
+            {
+                Throw "Invalid selection"
+            }
+
+            ForEach ( $I in 0..( $This.Output.Count - 1 ) )
+            {
+                $This.Output[$I].Slot = $This.Output[$I].Profile[$Slot]
             }
         }
     }

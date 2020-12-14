@@ -27,6 +27,16 @@ Function Get-FEService
             $This.PathName           = $WMI.PathName
             $This.Description        = $WMI.Description
         }
+
+        [Void] SetProfile([Int32]$Slot)
+        {
+            If ( $Slot -notin 0..9 )
+            {
+                Throw "Invalid selection"
+            }
+    
+            $This.Slot = $This.Profile[$Slot]
+        }
     }
 
     Class _Services
@@ -94,29 +104,16 @@ Function Get-FEService
                 If ( ! $This.Template[$Item.Name] )
                 {
                     $Item.Scope   = 0
-                    $Item.Profile = @(-1)*10
+                    $Item.Profile = -1,-1,-1,-1,-1,-1,-1,-1,-1,-1
                 }
 
                 Else
                 {
                     $Item.Scope   = 1
-                    $Item.Profile = @( $This.Template[$Item.Name] -Split "," )
+                    $Item.Profile = $This.Template[$Item.Name] -Split ","
                 }
 
                 $This.Output   += $Item
-            }
-        }
-
-        [Void] SetProfile([Int32]$Slot)
-        {
-            If ( $Slot -notin 0..9 )
-            {
-                Throw "Invalid selection"
-            }
-
-            ForEach ( $I in 0..( $This.Output.Count - 1 ) )
-            {
-                $This.Output[$I].Slot = $This.Output[$I].Profile[$Slot]
             }
         }
     }

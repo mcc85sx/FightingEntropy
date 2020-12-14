@@ -8,7 +8,7 @@ Class _Manifest
     [String[]]   $Classes = (("Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme", 
                               "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network",  
                               "NetInterface Network Info ViperBomb Brand Branding Certificate Company Key RootVar",
-                              "Share Master Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo", 
+                              "Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo", 
                               "Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat FEPromo",
                               "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " 
                               ).Split(" ") | % { "_$_.ps1" })

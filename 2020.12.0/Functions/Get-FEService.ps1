@@ -28,7 +28,7 @@ Function Get-FEService
             $This.Description        = $WMI.Description
         }
 
-        [Void] SetProfile([Int32]$Slot)
+        SetProfile([Int32]$Slot)
         {
             If ( $Slot -notin 0..9 )
             {
@@ -114,6 +114,14 @@ Function Get-FEService
                 }
 
                 $This.Output   += $Item
+            }
+        }
+
+        SetProfile([Int32]$Slot)
+        {
+            ForEach ( $I in 0..( $This.Output.Count - 1 ) )
+            {
+                $This.Output.SetProfile($Slot)
             }
         }
     }

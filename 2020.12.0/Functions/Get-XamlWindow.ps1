@@ -5,7 +5,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService")]
     [String]$Type,
     [Parameter()]
-    [Switch]$Debug)
+    [Switch]$Return)
     
     # // Load the Assemblies (TODO: Get Unix to load these)
     Add-Type -AssemblyName PresentationFramework
@@ -554,7 +554,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 
     $Xaml   = [_XamlObject]::New($Type).Output
 
-    If ( $Debug )
+    If ( $Return )
     {
         $Xaml
     }

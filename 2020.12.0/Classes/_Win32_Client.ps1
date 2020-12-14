@@ -17,7 +17,7 @@ Class _Win32_Client
     
     GetServices()
     {
-        $This.Services  = [_Services]::New().Output
+        $This.Services  = (Get-FEService)
     }
     
     GetProcesses()

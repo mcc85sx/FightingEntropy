@@ -121,10 +121,10 @@ Function Get-FEService
         {
             ForEach ( $I in 0..( $This.Output.Count - 1 ) )
             {
-                $This.Output.SetProfile($Slot)
+                $This.Output[$I].Slot = $This.Output[$I].Profile[$Slot]
             }
         }
     }
 
-    [_Services]::New().Output
+    [_Services]::New()
 }

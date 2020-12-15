@@ -90,7 +90,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 Throw "Invalid XAML Input"
             }
 
-            Add-Type -AssemblyName PresentationFramework
+            Invoke-Expression "Using Namespace System.Windows.Markup"
 
             $This.Xaml               = $Xaml
             $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique

@@ -93,7 +93,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             $This.Xaml               = $Xaml
             $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
             $This.Node               = New-Object System.XML.XmlNodeReader([XML]$This.Xaml)
-            $This.Host               = Invoke-Expression ( "[System.Windows.Markup.XAMLReader]::Load({0})" -f $This.Node )
+            $This.Host               = [System.Windows.Markup.XAMLReader]::Load($This.Node)
     
             ForEach ( $I in 0..( $This.Names.Count - 1 ) )
             {
@@ -337,119 +337,119 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'G`></TabItem></$TC`><$G` $G`.Row="2"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU` $G`.Colum'+
             'n="0" Name="Start" $CO`="Start" $W`="100" $H`="24"/><$BU` $G`.Column="1" Name="Cancel" $CO`="Cancel" $W`="1'+
             '00" $H`="24"/></$G`></$G`></$WI`>')
-            FEService            = (  '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x'+
-            '="http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://ViperBomb Services" $H`="800" $'+
-            'W`="800" Topmost="True" $BO`Brush="Black" Icon="{0}" ResizeMode="NoResize" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$WI`.$R'+
-            'ES`><$ST` $TT`="$LA`"><$SE` $PR`="$Hx`" $VA`="Center"/><$SE` $PR`="$Vx`" $VA`="Center"/><$SE` $PR`="$PA`"'+
-            ' $VA`="5"/></$ST`><$ST` $XK`="Separator$ST`1" $TT`="{x:Type Separator}"><$SE` $PR`="SnapsToDevicePixels" '+
-            '$VA`="True"/><$SE` $PR`="$MA`" $VA`="0,0,0,0"/><$SE` $PR`="Template"><$SE`.$VA`><$CT` $TT`="{x:Type Separ'+
-            'ator}"><$BO` $H`="24" SnapsToDevicePixels="True" $BG`="#FF4D4D4D" $BO`Brush="Azure" $BO`Thickness="1,1,1,'+
-            '1" CornerRadius="5,5,5,5"/></$CT`></$SE`.$VA`></$SE`></$ST`><$ST` $TT`="{x:Type ToolTip}"><$SE` $PR`="$BG'+
-            '`" $VA`="Black"/><$SE` $PR`="Foreground" $VA`="LightGreen"/></$ST`></$WI`.$RES`><$WI`.$EF`><DropShadow$EF'+
-            '`/></$WI`.$EF`><$G`><$G`.$RD`s><$RD` $H`="20"/><$RD` $H`="*"/><$RD` $H`="60"/></$G`.$RD`s><$MN` $G`.Row="'+
-            '0" IsMain$MN`="True"><$MN`Item $HD`="Configuration"><$MN`Item Name="Profile_0" $HD`="0 - $WI`s 10 Home / D'+
-            'efault Max"/><$MN`Item Name="Profile_1" $HD`="1 - $WI`s 10 Home / Default Min"/><$MN`Item Name="Profile_2" '+
-            '$HD`="2 - $WI`s 10 Pro / Default Max"/><$MN`Item Name="Profile_3" $HD`="3 - $WI`s 10 Pro / Default Min"/><'+
-            '$MN`Item Name="Profile_4" $HD`="4 - Desktop / Default Max"/><$MN`Item Name="Profile_5" $HD`="5 - Desktop / '+
-            'Default Min"/><$MN`Item Name="Profile_6" $HD`="6 - Desktop / Default Max"/><$MN`Item Name="Profile_7" $HD`='+
-            '"7 - Desktop / Default Min"/><$MN`Item Name="Profile_8" $HD`="8 - Laptop / Default Max"/><$MN`Item Name="Pr'+
-            'ofile_9" $HD`="9 - Laptop / Default Min"/></$MN`Item><$MN`Item $HD`="Info"><$MN`Item Name="URL" $HD`="$RES'+
-            '`"/><$MN`Item Name="About" $HD`="About"/><$MN`Item Name="Copyright" $HD`="Copyright"/><$MN`Item Name="MadBom'+
-            'b" $HD`="MadBomb122"/><$MN`Item Name="BlackViper" $HD`="BlackViper"/><$MN`Item Name="Site" $HD`="Company We'+
-            'bsite"/><$MN`Item Name="Help" $HD`="Help"/></$MN`Item></$MN`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/></'+
-            '$G`.$CD`s><$TC` $BO`Brush="Gainsboro" $G`.Row="1" Name="$TC`"><$TC`.$RES`><$ST` $TT`="TabItem"><$SE` $PR`='+
-            '"Template"><$SE`.$VA`><$CT` $TT`="TabItem"><$BO` Name="$BO`" $BO`Thickness="1,1,1,0" $BO`Brush="Gainsboro"'+
-            ' CornerRadius="4,4,0,0" $MA`="2,0"><$CO`Presenter x:Name="$CO`Site" $Vx`="Center" $Hx`="Center" $CO`Source'+
-            '="$HD`" $MA`="10,2"/></$BO`><$CT`.$TR`s><$TR` $PR`="IsSelected" $VA`="True"><$SE` TargetName="$BO`" $PR`="'+
-            '$BG`" $VA`="LightSkyBlue"/></$TR`><$TR` $PR`="IsSelected" $VA`="False"><$SE` TargetName="$BO`" $PR`="$BG`"'+
-            ' $VA`="GhostWhite"/></$TR`></$CT`.$TR`s></$CT`></$SE`.$VA`></$SE`></$ST`></$TC`.$RES`><TabItem $HD`="Serv'+
-            'ice Dialog"><$G`><$G`.$RD`s><$RD` $H`="60"/><$RD` $H`="32"/><$RD` $H`="*"/></$G`.$RD`s><$G` $G`.Row="0"><'+
-            '$G`.$CD`s><$CD` $W`="0.45*"/><$CD` $W`="0.15*"/><$CD` $W`="0.25*"/><$CD` $W`="0.15*"/></$G`.$CD`s><$GB` $'+
-            'G`.Column="0" $HD`="Operating System" $MA`="5"><$LA` Name="Caption"/></$GB`><$GB` $G`.Column="1" $HD`="Rel'+
-            'ease ID" $MA`="5"><$LA` Name="ReleaseID"/></$GB`><$GB` $G`.Column="2" $HD`="Version" $MA`="5"><$LA` Name="V'+
-            'ersion"/></$GB`><$GB` $G`.Column="3" $HD`="Chassis" $MA`="5"><$LA` Name="Chassis"/></$GB`></$G`><$G` $G`.R'+
-            'ow="1"><$G`.$CD`s><$CD` $W`="0.66*"/><$CD` $W`="0.33*"/><$CD` $W`="1*"/></$G`.$CD`s><$TB` $G`.Column="0" '+
-            '$MA`="5" Name="Search" $TW`="Wrap"></$TB`><$CB` $G`.Column="1" $MA`="5" Name="Select" $Vx`="Center"><$CB`It'+
-            'em $CO`="Checked"/><$CB`Item $CO`="Display Name" IsSelected="True"/><$CB`Item $CO`="Name"/><$CB`Item $CO`="'+
-            'Current Setting"/></$CB`><$TBL` $G`.Column="2" $MA`="5" TextAlignment="Center">Service State: <Run $BG`="'+
-            '#66FF66" Text="Compliant"/> / <Run $BG`="#FFFF66" Text="Unspecified"/> / <Run $BG`="#FF6666" Text="Non Co'+
-            'mpliant"/></$TBL`></$G`><Data$G` $G`.Row="2" $G`.Column="0" Name="Data$G`" FrozenColumnCount="2" AutoGener'+
-            'ateColumns="False" AlternationCount="2" $HD`sVisibility="Column" CanUserResizeRows="False" CanUserAddRows'+
-            '="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended"><Data$G`.Row$ST`><$ST` $TT`'+
-            '="{x:Type Data$G`Row}"><$ST`.$TR`s><$TR` $PR`="AlternationIndex" $VA`="0"><$SE` $PR`="$BG`" $VA`="White"/'+
-            '></$TR`><$TR` $PR`="AlternationIndex" $VA`="1"><$SE` $PR`="$BG`" $VA`="#FFD8D8D8"/></$TR`><$TR` $PR`="IsM'+
-            'ouseOver" $VA`="True"><$SE` $PR`="ToolTip"><$SE`.$VA`><$TBL` Text="{Binding Description}" $TW`="Wrap" $W`'+
-            '="400" $BG`="#FFFFFFBF" Foreground="Black"/></$SE`.$VA`></$SE`><$SE` $PR`="ToolTipService.ShowDuration" $'+
-            'VA`="360000000"/></$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition Binding="{Binding Scope}" $VA'+
-            '`="True"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$TR`.Conditions><$SE` $PR`="$BG'+
-            '`" $VA`="#F08080"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition Binding="{Binding '+
-            'Scope}" $VA`="False"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$TR`.Conditions><$S'+
-            'E` $PR`="$BG`" $VA`="#FFFFFF64"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition Bind'+
-            'ing="{Binding Scope}" $VA`="True"/><Condition Binding="{Binding Matches}" $VA`="True"/></MultiData$TR`.Co'+
-            'nditions><$SE` $PR`="$BG`" $VA`="LightGreen"/></MultiData$TR`></$ST`.$TR`s></$ST`></Data$G`.Row$ST`><Data'+
-            '$G`.Columns><Data$G`TextColumn $HD`="Index" $W`="50" Binding="{Binding Index}" CanUserSort="True" IsReadO'+
-            'nly="True"/><Data$G`TextColumn $HD`="Name" $W`="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly'+
-            '="True"/><Data$G`TextColumn $HD`="Scoped" $W`="75" Binding="{Binding Scope}" CanUserSort="True" IsReadOnl'+
-            'y="True"/><Data$G`TextColumn $HD`="Profile" $W`="100" Binding="{Binding Slot}" CanUserSort="True" IsReadO'+
-            'nly="True"/><Data$G`TextColumn $HD`="Status" $W`="75" Binding="{Binding Status}" CanUserSort="True" IsRea'+
-            'dOnly="True"/><Data$G`TextColumn $HD`="StartType" $W`="75" Binding="{Binding StartMode}" CanUserSort="Tru'+
-            'e" IsReadOnly="True"/><Data$G`TextColumn $HD`="DisplayName" $W`="150" Binding="{Binding DisplayName}" CanUs'+
-            'erSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="PathName" $W`="150" Binding="{Binding PathName}" '+
-            'CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Description" $W`="150" Binding="{Binding D'+
-            'escription}" CanUserSort="True" IsReadOnly="True"/></Data$G`.Columns></Data$G`></$G`></TabItem><TabItem $'+
-            'HD`="Preferences"><$G`><$G`.$RD`s><$RD` $H`="1.25*"/><$RD` $H`="*"/></$G`.$RD`s><$G` $G`.Row="0"><$G`.$CD'+
-            '`s><$CD` $W`="*"/><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$G` $G`.Column="2"><$G`.$RD`s><$RD` $H`="*"/'+
-            '><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Bypass / Checks [ Risky Options ]" $MA`="5"><$G`><$G`'+
-            '.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="1" $MA`="5" Name="ByBuild"'+
-            ' $CO`="Skip Build/Version Check" $Hx`="Center" $Vx`="Center"/><$CB` $G`.Row="0" $Vx`="Center" $H`="24" Nam'+
-            'e="ByEdition"><$CB`Item $CO`="Override Edition Check" IsSelected="True"/><$CB`Item $CO`="$WI`s 10 Home"/>'+
-            '<$CB`Item $CO`="$WI`s 10 Pro"/></$CB`><$CHK` $G`.Row="2" $MA`="5" Name="ByLaptop" $CO`="Enable Laptop Twea'+
-            'ks" $Hx`="Center" $Vx`="Center"/></$G`></$GB`><$GB` $G`.Row="1" $HD`="Display" $MA`="5"><$G` $Hx`="Center'+
-            '" $Vx`="Center" ><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.$RD`s><$CHK` $G`.Row="0'+
-            '" $MA`="5" Name="DispActive" $CO`="Show Active Services" /><$CHK` $G`.Row="1" $MA`="5" Name="DispInactive" '+
-            '$CO`="Show Inactive Services" /><$CHK` $G`.Row="2" $MA`="5" Name="DispSkipped" $CO`="Show Skipped Services'+
-            '" /></$G`></$GB`></$G`><$G` $G`.Column="0"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="2*"/></$G`.$RD`s><$GB` $G'+
-            '`.Row="0" $HD`="Service Configuration" $MA`="5"><$CB` $G`.Row="1" Name="ServiceProfile" $H`="24"><$CB`Item'+
-            ' $CO`="Black Viper (Sparks v1.0)" IsSelected="True"/><$CB`Item $CO`="DevOPS (MC/SDP v1.0)" IsEnabled="Fal'+
-            'se"/></$CB`></$GB`><$GB` $G`.Row="1" $HD`="Miscellaneous" $MA`="5"><$G` $Hx`="Center" $Vx`="Center"><$G`.'+
-            '$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.$RD`s><$CHK` $G`.Row="0" $MA`'+
-            '="5" Name="MiscSimulate" $CO`="Simulate Changes [ Dry Run ]" /><$CHK` $G`.Row="1" $MA`="5" Name="MiscXbox" '+
-            '$CO`="Skip All Xbox Services" /><$CHK` $G`.Row="2" $MA`="5" Name="MiscChange" $CO`="Allow Change of Servic'+
-            'e State" /><$CHK` $G`.Row="3" $MA`="5" Name="MiscStopDisabled" $CO`="Stop Disabled Services" /></$G`></$GB'+
-            '`></$G`><$G` $G`.Column="1"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="2*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`='+
-            '"User Interface" $MA`="5"><$CB` $G`.Row="1" Name="ScriptProfile" $H`="24"><$CB`Item $CO`="DevOPS (MC/SDP v'+
-            '1.0)" IsSelected="True"/><$CB`Item $CO`="MadBomb (MadBomb122 v1.0)" IsEnabled="False"/></$CB`></$GB`><$GB'+
-            '` $G`.Row="1" $HD`="Development" $MA`="5"><$G` $Hx`="Center" $Vx`="Center" ><$G`.$RD`s><$RD` $H`="30"/><$'+
-            'RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.$RD`s><$CHK` $G`.Row="0" $MA`="5" Name="DevErrors" $CO'+
-            '`="Diagnostic Output [ On Error ]" /><$CHK` $G`.Row="1" $MA`="5" Name="DevLog" $CO`="Enable Development Lo'+
-            'gging" /><$CHK` $G`.Row="2" $MA`="5" Name="DevConsole" $CO`="Enable Console" /><$CHK` $G`.Row="3" $MA`="5"'+
-            ' Name="DevReport" $CO`="Enable Diagnostic" /></$G`></$GB`></$G`></$G`><$G` $G`.Row="1"><$G`.$RD`s><$RD` $H'+
-            '`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Logging: Create logs for all changes made via t'+
-            'his utility" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/><$CD` $W`="6*"/></$G`.$CD`s><$G`.$RD'+
-            '`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.Column="0" $MA`="5" Name="LogSvcSwitch'+
-            '" $CO`="Services" FlowDirection="RightToLeft" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0" $G`.Column="'+
-            '1" $MA`="5" Name="LogSvcBrowse" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="LogSvcFile" '+
-            'IsEnabled="False" $Hx`="Stretch" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Name="LogScrSw'+
-            'itch" $CO`="Script" FlowDirection="RightToLeft" $Vx`="Center" $Hx`="Center" /><$BU` $G`.Row="1" $G`.Colum'+
-            'n="1" $MA`="5" Name="LogScrBrowse" $CO`="Browse"/><$TB` $G`.Row="1" $G`.Column="2" $MA`="5" Name="LogScrFil'+
-            'e" IsEnabled="False" $Hx`="Stretch" $Vx`="Center" /></$G`></$GB`><$GB` $G`.Row="1" $HD`="Backup: Save you'+
-            'r current Service Configuration" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/><$CD` $W`="6*"/>'+
-            '</$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.Column="0" $MA`="'+
-            '5" Name="RegSwitch" $CO`="reg.*" FlowDirection="RightToLeft" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0'+
-            '" $G`.Column="1" $MA`="5" Name="RegBrowse" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="R'+
-            'egFile" IsEnabled="False" $Hx`="Stretch" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Name="'+
-            'CsvSwitch" $CO`="csv.*" FlowDirection="RightToLeft" $Hx`="Center" $Vx`="Center" /><$BU` $G`.Row="1" $G`.C'+
-            'olumn="1" $MA`="5" Name="CsvBrowse" $CO`="Browse"/><$TB` $G`.Row="1" $G`.Column="2" $MA`="5" Name="CsvFile"'+
-            ' IsEnabled="False" $Vx`="Center" /></$G`></$GB`></$G`></$G`></TabItem><TabItem $HD`="Console"><$G` $BG`="'+
-            '#FFE5E5E5"><ScrollViewer VerticalScrollBarVisibility="Visible"><$TBL` Name="ConsoleOutput" TextTrimming="C'+
-            'haracterEllipsis" $BG`="White" FontFamily="Lucida Console"/></ScrollViewer></$G`></TabItem><TabItem $HD`='+
-            '"Diagnostics"><$G` $BG`="#FFE5E5E5"><ScrollViewer VerticalScrollBarVisibility="Visible"><$TBL` Name="Diagn'+
-            'osticOutput" TextTrimming="CharacterEllipsis" $BG`="White" FontFamily="Lucida Console"/></ScrollViewer></'+
-            '$G`></TabItem></$TC`></$G`><$G` $G`.Row="2"><$G`.$CD`s><$CD` $W`="2*"/><$CD` $W`="*"/><$CD` $W`="*"/><$CD'+
-            '` $W`="2*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD`="Service Configuration" $MA`="5"><$LA` Name="Service$LA`'+
-            '"/></$GB`><$BU` $G`.Column="1" Name="Start" $CO`="Start" FontWeight="Bold" $MA`="10"/><$BU` $G`.Column="2"'+
-            ' Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$GB` $G`.Column="3" $HD`="Module Version" $MA`='+
-            '"5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
+            FEService            = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
+            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://ViperBomb Services" $H`="800" $W'+
+            '`="800" Topmost="True" $BO`Brush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020'+
+            '.12.0\Graphics\icon.ico" ResizeMode="NoResize" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$WI`.$RE'+
+            'S`><$ST` $TT`="$LA`"><$SE` $PR`="$Hx`" $VA`="Center"/><$SE` $PR`="$Vx`" $VA`="Center"/><$SE` $PR`="$PA`" '+
+            '$VA`="5"/></$ST`><$ST` $XK`="Separator$ST`1" $TT`="{x:Type Separator}"><$SE` $PR`="SnapsToDevicePixels" $'+
+            'VA`="True"/><$SE` $PR`="$MA`" $VA`="0,0,0,0"/><$SE` $PR`="Template"><$SE`.$VA`><$CT` $TT`="{x:Type Separa'+
+            'tor}"><$BO` $H`="24" SnapsToDevicePixels="True" $BG`="#FF4D4D4D" $BO`Brush="Azure" $BO`Thickness="1,1,1,1'+
+            '" CornerRadius="5,5,5,5"/></$CT`></$SE`.$VA`></$SE`></$ST`><$ST` $TT`="{x:Type ToolTip}"><$SE` $PR`="$BG`'+
+            '" $VA`="Black"/><$SE` $PR`="Foreground" $VA`="LightGreen"/></$ST`></$WI`.$RES`><$WI`.$EF`><DropShadow$EF`'+
+            '/></$WI`.$EF`><$G`><$G`.$RD`s><$RD` $H`="20"/><$RD` $H`="*"/><$RD` $H`="60"/></$G`.$RD`s><$MN` $G`.Row="0'+
+            '" IsMain$MN`="True"><$MN`Item $HD`="Configuration"><$MN`Item Name="Profile_0" $HD`="0 - $WI`s 10 Home / D'+
+            'efault Max"/><$MN`Item Name="Profile_1" $HD`="1 - $WI`s 10 Home / Default Min"/><$MN`Item Name="Profile_2'+
+            '" $HD`="2 - $WI`s 10 Pro / Default Max"/><$MN`Item Name="Profile_3" $HD`="3 - $WI`s 10 Pro / Default Min"'+
+            '/><$MN`Item Name="Profile_4" $HD`="4 - Desktop / Default Max"/><$MN`Item Name="Profile_5" $HD`="5 - Deskt'+
+            'op / Default Min"/><$MN`Item Name="Profile_6" $HD`="6 - Desktop / Default Max"/><$MN`Item Name="Profile_7'+
+            '" $HD`="7 - Desktop / Default Min"/><$MN`Item Name="Profile_8" $HD`="8 - Laptop / Default Max"/><$MN`Item'+
+            ' Name="Profile_9" $HD`="9 - Laptop / Default Min"/></$MN`Item><$MN`Item $HD`="Info"><$MN`Item Name="URL" '+
+            '$HD`="$RES`"/><$MN`Item Name="About" $HD`="About"/><$MN`Item Name="Copyright" $HD`="Copyright"/><$MN`Item'+
+            ' Name="MadBomb" $HD`="MadBomb122"/><$MN`Item Name="BlackViper" $HD`="BlackViper"/><$MN`Item Name="Site" $'+
+            'HD`="Company Website"/><$MN`Item Name="Help" $HD`="Help"/></$MN`Item></$MN`><$G` $G`.Row="1"><$G`.$CD`s><'+
+            '$CD` $W`="*"/></$G`.$CD`s><$TC` $BO`Brush="Gainsboro" $G`.Row="1" Name="$TC`"><$TC`.$RES`><$ST` $TT`="Tab'+
+            'Item"><$SE` $PR`="Template"><$SE`.$VA`><$CT` $TT`="TabItem"><$BO` Name="$BO`" $BO`Thickness="1,1,1,0" $BO'+
+            '`Brush="Gainsboro" CornerRadius="4,4,0,0" $MA`="2,0"><$CO`Presenter x:Name="$CO`Site" $Vx`="Center" $Hx`='+
+            '"Center" $CO`Source="$HD`" $MA`="10,2"/></$BO`><$CT`.$TR`s><$TR` $PR`="IsSelected" $VA`="True"><$SE` $TN`'+
+            '="$BO`" $PR`="$BG`" $VA`="LightSkyBlue"/></$TR`><$TR` $PR`="IsSelected" $VA`="False"><$SE` $TN`="$BO`" $P'+
+            'R`="$BG`" $VA`="GhostWhite"/></$TR`></$CT`.$TR`s></$CT`></$SE`.$VA`></$SE`></$ST`></$TC`.$RES`><TabItem $'+
+            'HD`="Service Dialog"><$G`><$G`.$RD`s><$RD` $H`="60"/><$RD` $H`="32"/><$RD` $H`="*"/></$G`.$RD`s><$G` $G`.'+
+            'Row="0"><$G`.$CD`s><$CD` $W`="0.45*"/><$CD` $W`="0.15*"/><$CD` $W`="0.25*"/><$CD` $W`="0.15*"/></$G`.$CD`'+
+            's><$GB` $G`.Column="0" $HD`="Operating System" $MA`="5"><$LA` Name="Caption"/></$GB`><$GB` $G`.Column="1"'+
+            ' $HD`="Release ID" $MA`="5"><$LA` Name="ReleaseID"/></$GB`><$GB` $G`.Column="2" $HD`="Version" $MA`="5"><'+
+            '$LA` Name="Version"/></$GB`><$GB` $G`.Column="3" $HD`="Chassis" $MA`="5"><$LA` Name="Chassis"/></$GB`></$'+
+            'G`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="0.66*"/><$CD` $W`="0.33*"/><$CD` $W`="1*"/></$G`.$CD`s><$TB` $G'+
+            '`.Column="0" $MA`="5" Name="Search" $TW`="Wrap"></$TB`><$CB` $G`.Column="1" $MA`="5" Name="Select" $Vx`="'+
+            'Center"><$CB`Item $CO`="Checked"/><$CB`Item $CO`="Display Name" IsSelected="True"/><$CB`Item $CO`="Name"/'+
+            '><$CB`Item $CO`="Current Setting"/></$CB`><$TBL` $G`.Column="2" $MA`="5" TextAlignment="Center">Service S'+
+            'tate: <Run $BG`="#66FF66" Text="Compliant"/> / <Run $BG`="#FFFF66" Text="Unspecified"/> / <Run $BG`="#FF6'+
+            '666" Text="Non Compliant"/></$TBL`></$G`><Data$G` $G`.Row="2" $G`.Column="0" Name="Data$G`" FrozenColumnC'+
+            'ount="2" AutoGenerateColumns="False" AlternationCount="2" $HD`sVisibility="Column" CanUserResizeRows="Fal'+
+            'se" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended"><Data$G`.'+
+            'Row$ST`><$ST` $TT`="{x:Type Data$G`Row}"><$ST`.$TR`s><$TR` $PR`="AlternationIndex" $VA`="0"><$SE` $PR`="$'+
+            'BG`" $VA`="White"/></$TR`><$TR` $PR`="AlternationIndex" $VA`="1"><$SE` $PR`="$BG`" $VA`="#FFD8D8D8"/></$T'+
+            'R`><$TR` $PR`="IsMouseOver" $VA`="True"><$SE` $PR`="ToolTip"><$SE`.$VA`><$TBL` Text="{Binding Description'+
+            '}" $TW`="Wrap" $W`="400" $BG`="#000000" Foreground="#00FF00"/></$SE`.$VA`></$SE`><$SE` $PR`="ToolTipServi'+
+            'ce.ShowDuration" $VA`="360000000"/></$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition Binding="{B'+
+            'inding Scope}" $VA`="True"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$TR`.Conditio'+
+            'ns><$SE` $PR`="$BG`" $VA`="#F08080"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition '+
+            'Binding="{Binding Scope}" $VA`="False"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$'+
+            'TR`.Conditions><$SE` $PR`="$BG`" $VA`="#FFFFFF64"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditio'+
+            'ns><Condition Binding="{Binding Scope}" $VA`="True"/><Condition Binding="{Binding Matches}" $VA`="True"/>'+
+            '</MultiData$TR`.Conditions><$SE` $PR`="$BG`" $VA`="LightGreen"/></MultiData$TR`></$ST`.$TR`s></$ST`></Dat'+
+            'a$G`.Row$ST`><Data$G`.Columns><Data$G`TextColumn $HD`="Index" $W`="50" Binding="{Binding Index}" CanUserS'+
+            'ort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Name" $W`="150" Binding="{Binding Name}" CanUserSo'+
+            'rt="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Scoped" $W`="75" Binding="{Binding Scope}" CanUserS'+
+            'ort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Profile" $W`="100" Binding="{Binding Slot}" CanUse'+
+            'rSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Status" $W`="75" Binding="{Binding Status}" CanU'+
+            'serSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="StartType" $W`="75" Binding="{Binding StartMod'+
+            'e}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="DisplayName" $W`="150" Binding="{Bindi'+
+            'ng DisplayName}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="PathName" $W`="150" Bindi'+
+            'ng="{Binding PathName}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Description" $W`="'+
+            '150" Binding="{Binding Description}" CanUserSort="True" IsReadOnly="True"/></Data$G`.Columns></Data$G`></'+
+            '$G`></TabItem><TabItem $HD`="Preferences"><$G`><$G`.$RD`s><$RD` $H`="1.25*"/><$RD` $H`="*"/></$G`.$RD`s><'+
+            '$G` $G`.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$G` $G`.Column="2"><'+
+            '$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Bypass / Checks [Risky Option'+
+            's]" $MA`="5"><$G`><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="1" '+
+            '$MA`="5" Name="ByBuild" $CO`="Skip Build/Version Check" $Hx`="Center" $Vx`="Center"/><$CB` $G`.Row="0" $V'+
+            'x`="Center" $H`="24" Name="ByEdition"><$CB`Item $CO`="Override Edition Check" IsSelected="True"/><$CB`Ite'+
+            'm $CO`="$WI`s 10 Home"/><$CB`Item $CO`="$WI`s 10 Pro"/></$CB`><$CHK` $G`.Row="2" $MA`="5" Name="ByLaptop"'+
+            ' $CO`="Enable Laptop Tweaks" $Hx`="Center" $Vx`="Center"/></$G`></$GB`><$GB` $G`.Row="1" $HD`="Display" $'+
+            'MA`="5"><$G` $Hx`="Center" $Vx`="Center" ><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G'+
+            '`.$RD`s><$CHK` $G`.Row="0" $MA`="5" Name="DispActive" $CO`="Show Active Services" /><$CHK` $G`.Row="1" $M'+
+            'A`="5" Name="DispInactive" $CO`="Show Inactive Services" /><$CHK` $G`.Row="2" $MA`="5" Name="DispSkipped"'+
+            ' $CO`="Show Skipped Services" /></$G`></$GB`></$G`><$G` $G`.Column="0"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H'+
+            '`="2*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Service Configuration" $MA`="5"><$CB` $G`.Row="1" Name="Servi'+
+            'ceProfile" $H`="24"><$CB`Item $CO`="Black Viper (Sparks v1.0)" IsSelected="True"/><$CB`Item $CO`="DevOPS '+
+            '(MC/SDP v1.0)" IsEnabled="False"/></$CB`></$GB`><$GB` $G`.Row="1" $HD`="Miscellaneous" $MA`="5"><$G` $Hx`'+
+            '="Center" $Vx`="Center"><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.'+
+            '$RD`s><$CHK` $G`.Row="0" $MA`="5" Name="MiscSimulate" $CO`="Simulate Changes [Dry Run]" /><$CHK` $G`.Row='+
+            '"1" $MA`="5" Name="MiscXbox" $CO`="Skip All Xbox Services" /><$CHK` $G`.Row="2" $MA`="5" Name="MiscChange'+
+            '" $CO`="Allow Change of Service State" /><$CHK` $G`.Row="3" $MA`="5" Name="MiscStopDisabled" $CO`="Stop D'+
+            'isabled Services" /></$G`></$GB`></$G`><$G` $G`.Column="1"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="2*"/></$G'+
+            '`.$RD`s><$GB` $G`.Row="0" $HD`="User Interface" $MA`="5"><$CB` $G`.Row="1" Name="ScriptProfile" $H`="24">'+
+            '<$CB`Item $CO`="DevOPS (MC/SDP v1.0)" IsSelected="True"/><$CB`Item $CO`="MadBomb (MadBomb122 v1.0)" IsEna'+
+            'bled="False"/></$CB`></$GB`><$GB` $G`.Row="1" $HD`="Development" $MA`="5"><$G` $Hx`="Center" $Vx`="Center'+
+            '" ><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.$RD`s><$CHK` $G`.Row='+
+            '"0" $MA`="5" Name="DevErrors" $CO`="Diagnostic Output [ On Error ]" /><$CHK` $G`.Row="1" $MA`="5" Name="D'+
+            'evLog" $CO`="Enable Development Logging" /><$CHK` $G`.Row="2" $MA`="5" Name="DevConsole" $CO`="Enable Con'+
+            'sole" /><$CHK` $G`.Row="3" $MA`="5" Name="DevReport" $CO`="Enable Diagnostic" /></$G`></$GB`></$G`></$G`>'+
+            '<$G` $G`.Row="1"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Logging: Cr'+
+            'eate logs for all changes made via this utility" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/>'+
+            '<$CD` $W`="6*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.C'+
+            'olumn="0" $MA`="5" Name="LogSvcSwitch" $CO`="Services" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0" $G`'+
+            '.Column="1" $MA`="5" Name="LogSvcBrowse" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="L'+
+            'ogSvcFile" IsEnabled="False" $Hx`="Stretch" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Na'+
+            'me="LogScrSwitch" $CO`="Script" $Vx`="Center" $Hx`="Center" /><$BU` $G`.Row="1" $G`.Column="1" $MA`="5" N'+
+            'ame="LogScrBrowse" $CO`="Browse"/><$TB` $G`.Row="1" $G`.Column="2" $MA`="5" Name="LogScrFile" IsEnabled="'+
+            'False" $Hx`="Stretch" $Vx`="Center" /></$G`></$GB`><$GB` $G`.Row="1" $HD`="Backup: Save your current Serv'+
+            'ice Configuration" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/><$CD` $W`="6*"/></$G`.$CD`s><$'+
+            'G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.Column="0" $MA`="5" Name="RegSw'+
+            'itch" $CO`="reg.*" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0" $G`.Column="1" $MA`="5" Name="RegBrowse'+
+            '" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="RegFile" IsEnabled="False" $Hx`="Stretch'+
+            '" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Name="CsvSwitch" $CO`="csv.*" $Hx`="Center" '+
+            '$Vx`="Center" /><$BU` $G`.Row="1" $G`.Column="1" $MA`="5" Name="CsvBrowse" $CO`="Browse"/><$TB` $G`.Row="'+
+            '1" $G`.Column="2" $MA`="5" Name="CsvFile" IsEnabled="False" $Vx`="Center" /></$G`></$GB`></$G`></$G`></Ta'+
+            'bItem><TabItem $HD`="Console"><$G` $BG`="#FFE5E5E5"><ScrollViewer VerticalScrollBarVisibility="Visible"><'+
+            '$TBL` Name="ConsoleOutput" TextTrimming="CharacterEllipsis" $BG`="White" FontFamily="Lucida Console"/></S'+
+            'crollViewer></$G`></TabItem><TabItem $HD`="Diagnostics"><$G` $BG`="#FFE5E5E5"><ScrollViewer VerticalScrol'+
+            'lBarVisibility="Visible"><$TBL` Name="DiagnosticOutput" TextTrimming="CharacterEllipsis" $BG`="White" Fon'+
+            'tFamily="Lucida Console"/></ScrollViewer></$G`></TabItem></$TC`></$G`><$G` $G`.Row="2"><$G`.$CD`s><$CD` $'+
+            'W`="2*"/><$CD` $W`="*"/><$CD` $W`="*"/><$CD` $W`="2*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD`="Service Con'+
+            'figuration" $MA`="5"><$LA` Name="Service$LA`"/></$GB`><$BU` $G`.Column="1" Name="Start" $CO`="Start" Font'+
+            'Weight="Bold" $MA`="10"/><$BU` $G`.Column="2" Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$'+
+            'GB` $G`.Column="3" $HD`="Module Version" $MA`="5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
         }
 
         Hidden [Object]     $Slot
@@ -515,7 +515,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             {
                 Default 
                 {
-                    $This.Slot = $This.Slot -f $This.GFX.Icon
+                    $This.Slot = $This.Slot.Replace("{0}",$This.GFX.Icon)
                 }
                 
                 FEDCPromo

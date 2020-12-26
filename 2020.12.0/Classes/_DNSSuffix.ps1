@@ -1,4 +1,3 @@
-
 Class _DNSSuffix
 {
     [String] $Path         = "HKLM:\System\CurrentControlSet\Services\TCPIP\Parameters"
@@ -21,7 +20,12 @@ Class _DNSSuffix
 
     SetDomain([String]$Domain)
     {
-        $This.Domain = $Domain
+        $This.Domain           = $Domain
+    }
+
+    SetComputerName([String]$ComputerName)
+    {
+        $This.ComputerName     = $ComputerName
     }
 
     SetSync()

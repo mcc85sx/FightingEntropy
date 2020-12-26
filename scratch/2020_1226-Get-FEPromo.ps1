@@ -1,4 +1,125 @@
-        Class _NbtObj
+Class _NbtHost
+{
+    Hidden [String]    $Line
+    [String]           $Name
+    [String]             $ID
+    [String]           $Type
+    [String]        $Service
+
+    [String] X ([Int32]$Start,[Int32]$End)
+    {
+        Return @( $This.Line.Substring($Start,$End).TrimEnd(" ") )
+    }
+
+    _NbtHost([String]$Line)
+    {
+        $This.Line    = $Line
+        $This.Name    = $This.X(0,19).TrimStart(" ")
+        $This.ID      = $This.X(20,2)
+        $This.Type    = $This.X(25,12)
+    }
+}
+
+Class _NbtStat
+{
+    Hidden [Object]   $Object
+    [String]            $Name
+    [String]       $IPAddress
+    [Object[]]         $Hosts
+        
+    _NbtStat([Object[]]$Object)
+    {
+        $This.Object     = $Object
+        $This.Name       = $Object[0].Split(":")[0]
+        $This.IPAddress  = $Object[1].Split("[")[1].Split("]")[0]
+        $This.Hosts      = $Object | ? { $_ -match "Registered" } | % { [_NBTHost]::New($_) }
+    }
+}
+
+Class _NbtScan
+{
+    Hidden [Object]    $NBTStat = (nbtstat -N)
+    Hidden [Object[]]  $Adapter = (Get-NetAdapter)
+    Hidden [String[]]  $Service = (("00/{0}/Workstation {4};01/{0}/Messenger {6};01/{1}/Master Browser;03/{0}/Messenger {6};" + 
+    "06/{0}/RAS Server {6};1F/{0}/NetDDE {6};20/{0}/File Server {6};21/{0}/RAS Client {6};22/{0}/{2} Interchange(MSMail C" + 
+    "onnector);23/{0}/{2} Exchange Store;24/{0}/{2} Directory;30/{0}/{4} Server;31/{0}/{4} Client;43/{0}/{3} Control;44/{" + 
+    "0}/SMS Administrators Remote Control Tool {6};45/{0}/{3} Chat;46/{0}/{3} Transfer;4C/{0}/DEC TCPIP SVC on Windows NT" +
+    ";42/{0}/mccaffee anti-virus;52/{0}/DEC TCPIP SVC on Windows NT;87/{0}/{2} MTA;6A/{0}/{2} IMC;BE/{0}/{5} Agent;BF/{0}" + 
+    "/{5} Application;03/{0}/Messenger {6};00/{1}/{7} Name;1B/{0}/{7} Master Browser;1C/{1}/{7} Controller;1D/{0}/Master " + 
+    "Browser;1E/{1}/Browser {6} Elections;2B/{0}/Lotus Notes Server;2F/{1}/Lotus Notes ;33/{1}/Lotus Notes ;20/{1}/DCA Ir" + 
+    "maLan Gateway Server;01/{1}/MS NetBIOS Browse Service") -f "UNIQUE","GROUP","Microsoft Exchange","SMS Clients Remote",
+    "Modem Sharing","Network Monitor","Service","Domain").Split(";")
+    Hidden [Hashtable] $Process 
+    [Object[]]          $Output
+
+    [String] SetService ([Object]$Hosts)
+    {
+        Return @( $This.Service | ? { $_ -match "$($Hosts.ID)/$($Hosts.Type)" } | % { $_.Split("/")[-1] } )
+    }
+
+    _NbtScan()
+    {
+        ForEach ( $I in 0..( $This.Service.Count - 1 ) )
+        { 
+            $This.Service[$I]  = $This.Service[$I]
+        }
+
+        $This.Output           = @( )
+        $This.Process          = @{ }
+        $X                     = -1
+
+        ForEach ( $I in 1..( $This.NBTStat.Count - 1 ) )
+        {
+            $Item              = $This.NBTStat[$I].Split(":")[0]
+        
+            If ( $Item -in $This.Adapter.Name )
+            {
+                $X ++
+                $This.Process.Add($X,@( ))
+            }
+
+            If ( $Item.Length -gt 0 ) 
+            { 
+                $This.Process[$X] += $This.NBTStat[$I]
+            }
+        }
+
+        Switch ($This.Process.Count)
+        {
+            1 
+            {
+                $Item = [_NBTStat]::New($This.Process[0])
+
+                ForEach ( $I in 0..( $Item.Hosts.Count - 1 ) )
+                {
+                    $Item.Hosts[$I].Service = $This.SetService($Item.Hosts[$I])
+                }
+
+                $This.Output += $Item
+            }
+
+            Default 
+            { 
+                ForEach ( $X in 0..( $This.Process.Count - 1 ) )
+                {
+                    $Item = [_NBTStat]::New($This.Process[$X])
+
+                    ForEach ( $I in 0..( $Item.Hosts.Count - 1 ) )
+                    {
+                        $Item.Hosts[$I].Service = $This.SetService($Item.Hosts[$I])
+                    }
+
+                    $This.Output += $Item
+                }
+            }
+        }
+
+        $This.Output = $This.Output | Sort-Object Name
+    }
+}
+
+
+Class _NbtObj
         {
             [String]      $ID
             [String]    $Type
@@ -183,6 +304,13 @@
 
         Class _FEPromo
         {
+            [Object]                       $Window
+            [Object]                           $IO
+            [Object]                         $Host
+            [Object]                       $Output
+            [Object]                     $Features
+            [Object]                      $Network
+
             [String]                             $Command
             [Int32]                                 $Mode
             [String]                                $Slot
@@ -213,8 +341,50 @@
 
             SetMode([Int32]$Mode)
             {
-                $This.DomainType                   = @("-","TreeDomain","ChildDomain","-")[$Mode]
+                $This.Mode                              = $Mode
+                $This.Command                           = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
+                $This.Slot                              = ("Forest Tree Child Clone" -Split " ")[$Mode]
 
+                $This.IO.Forest.IsChecked               = $False
+                $This.IO.Tree.IsChecked                 = $False
+                $This.IO.Child.IsChecked                = $False
+                $This.IO.Clone.IsChecked                = $False
+
+                $This.IO.$($This.Slot).IsChecked        = $True
+
+                $Tray                                   = @("Visible","Collapsed")[@{0=0,0,1;1=1,0,1;2=1,1,0;3=1,1,0}[$Mode]]
+                $This.IO.ForestModeBox.Visibility       = $Tray[0]
+                $This.IO.DomainModeBox.Visibility       = $Tray[1]
+                $This.IO.ParentDomainNameBox.Visibility = $Tray[2]
+                $This.IO.ParentDomainName.Text          = "<Domain Name>"
+
+                $This.DomainType                        = @("-","TreeDomain","ChildDomain","-")[$Mode]
+                
+                $Tray                                   = Switch ($Mode)
+                {
+                    0 { $This.IO.ForestMode.SelectedIndex,$This.IO.DomainMode.SelectedIndex,"-" }
+                    1 { $This.IO.ForestMode.SelectedIndex,"-","-" }
+                    2 { "-","-","<Domain Name>" }
+                    3 { "-","-","<Domain Name>" }
+                
+                }
+                
+                $This.ForestMode                        = $Tray[0]
+                $This.DomainMode                        = $Tray[1]
+                $This.ParentDomainName                  = $Tray[2]
+
+                # Roles
+                $This.InstallDNS                        = [_FEPromoRoles]::New("InstallDNS",              (1,1,1,1)[$Mode], (1,1,1,1)[$Mode])
+                $This.CreateDNSDelegation               = [_FEPromoRoles]::New("CreateDNSDelegation",     (1,1,1,1)[$Mode], (0,0,1,0)[$Mode])
+                $This.NoGlobalCatalog                   = [_FEPromoRoles]::New("NoGlobalCatalog",         (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
+                $This.CriticalReplicationOnly           = [_FEPromoRoles]::New("CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
+
+                "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly" -Split " " | % { 
+
+                    $This.Set_FEPromo_Roles($This.IO.$($_))
+                }
+
+                # Names
                 $This.Credential                   = [_FEPromoDomain]::New(             "Credential", (0,1,1,1)[$Mode])
                 $This.DomainName                   = [_FEPromoDomain]::New(             "DomainName", (1,0,0,1)[$Mode])
                 $This.DomainNetBIOSName            = [_FEPromoDomain]::New(      "DomainNetBIOSName", (1,0,0,0)[$Mode])
@@ -222,85 +392,93 @@
                 $This.NewDomainNetBIOSName         = [_FEPromoDomain]::New(   "NewDomainNetBIOSName", (0,1,1,0)[$Mode])
                 $This.ReplicationSourceDC          = [_FEPromoDomain]::New(    "ReplicationSourceDC", (0,0,0,1)[$Mode])
                 $This.SiteName                     = [_FEPromoDomain]::New(               "SiteName", (0,1,1,1)[$Mode])
-                $This.InstallDNS                   = [_FEPromoRoles]::New(              "InstallDNS", (1,1,1,1)[$Mode], (1,1,1,1)[$Mode])
-                $This.CreateDNSDelegation          = [_FEPromoRoles]::New(     "CreateDNSDelegation", (1,1,1,1)[$Mode], (0,0,1,0)[$Mode])
-                $This.NoGlobalCatalog              = [_FEPromoRoles]::New(         "NoGlobalCatalog", (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
-                $This.CriticalReplicationOnly      = [_FEPromoRoles]::New( "CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
+
+                "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName" -Split " " | % {
+                    
+                    $This.Set_FEPromo_Text($This.IO.$($_))
+                }
+
+                $This.Set_Default_NTDS_SYSVOL_Paths()
             }
 
-            _FEPromo([Int32]$Mode)
+            Set_FEPromo_Roles([Object]$Obj)
             {
-                $This.Command                = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
-                $This.Slot                   = Switch ([Int32]$Mode) { 0 { "Forest" } 1 { "Tree" } 2 { "Child" } 3 { "Clone" } }
+                $This.IO.$($Obj.Name).IsEnabled  = $Obj.IsEnabled
+                $This.IO.$($Obj.Name).IsChecked  = $Obj.IsChecked
+            }
+
+            Set_FEPromo_Text([Object]$Obj)
+            {
+                $This.IO."$( $Obj.Name    )".IsEnabled  = $Obj.IsEnabled
+                $This.IO."$( $Obj.Name )Box".Visibility = @("Collapsed","Visible")[$Obj.IsEnabled]
+                $This.IO."$( $Obj.Name    )".Text       = ""
+            }
+
+            Set_Default_NTDS_SYSVOL_Paths()
+            {
+                Get-Item Env:\SystemRoot         | % Value | % { 
+
+                    $This.DatabasePath           = "$_\NTDS"
+                    $This.LogPath                = "$_\NTDS"
+                    $This.SysvolPath             = "$_\SYSVOL"
+                }
+            }
+
+            _FEPromo([Object]$Window,[Int32]$Mode)
+            {
+                $This.Window                    = $Window
+                $This.IO                        = $Window.Host
+                $This.Host                      = Get-FEModule | % Role | % Host
+                $This.Host._Network()
+                $This.Network                   = $This.Host.Network
+                $This.Features                  = [_ServerFeatures]::New().Features
                 $This.SetMode($Mode)
             }
         }
-        
-        $NBT                               = [_NbtRef]::New()
 
-        Write-Theme "Searching [:] For Valid Domain Controllers"
-        
-        $Module                            = Get-FEModule
-        $Module.Role.Host                  | % { 
+        Write-Theme "Loading Network [:] Domain Controller Initialization"
 
-            $_._Network()
-            $Network                       = $_.Network
-            $Adapter                       = $Network.Adapter
-            $Vendor                        = $Network.Vendor
-            $Interface                     = $Network.Interface
-        }
+        $UI                                     = [_FEPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
 
-        $Return                            = $Interface | ? { $_.IPV4.Gateway }
-        $Server                            = [_ServerFeatures]::New().Features
-        $Window                            = Get-XamlWindow -Type FEDCPromo
-        $IO                                = $Window.Host
+        $UI.IO.Forest.Add_Click{ $UI.SetMode(0) }
+        $UI.IO.Tree.Add_Click{   $UI.SetMode(1) }
+        $UI.IO.Child.Add_Click{  $UI.SetMode(2) }
+        $UI.IO.Clone.Add_Click{  $UI.SetMode(3) }
+        $UI.IO.Cancel.Add_Click{ $UI.IO.DialogResult = $False }
 
-        $IO.Forest.Add_Click(
-        {
-            $IO.Forest.IsChecked           = $True
-            $IO.Tree.IsChecked             = $False
-            $IO.Child.IsChecked            = $False
-            $IO.Clone.IsChecked            = $False
-            $CTRL                          = [_FEPromo]::New(0)
-        })
+        #$UI.Window.Invoke()
 
-        $IO.Tree.Add_Click(
-        {
-            $IO.Forest.IsChecked           = $False
-            $IO.Tree.IsChecked             = $True
-            $IO.Child.IsChecked            = $False
-            $IO.Clone.IsChecked            = $False
-            $CTRL                          = [_FEPromo]::New(1)
-        })
+        # Forest
+        # Tree
+        # Child
+        # Clone                            
 
-        $IO.Child.Add_Click(
-        {
-            $IO.Forest.IsChecked           = $False
-            $IO.Tree.IsChecked             = $False
-            $IO.Child.IsChecked            = $True
-            $IO.Clone.IsChecked            = $False
-            $CTRL                          = [_FEPromo]::New(2)
-        })
-
-        $IO.Clone.Add_Click(
-        {
-            $IO.Forest.IsChecked           = $False
-            $IO.Tree.IsChecked             = $False
-            $IO.Child.IsChecked            = $False
-            $IO.Clone.IsChecked            = $True
-            $CTRL                          = [_FEPromo]::New(3)
-        })
-
-        $IO.Cancel.Add_Click(
-        {
-            $IO.DialogResult               = $False
-        })
-
-        [_ServerFeatures]::New().Features  | % {
-            
-            $IO.$($_.Name).IsChecked       =  $_.Installed 
-            $IO.$($_.Name).IsEnabled       = !$_.Installed
-                
-        }
-
-        $Window.Invoke()
+        # DatabasePathBox               : System.Windows.Controls.GroupBox Header:DatabasePath Content:
+        # DatabasePath                  : System.Windows.Controls.TextBox
+        # SysvolPathBox                 : System.Windows.Controls.GroupBox Header:SysvolPath Content:
+        # SysvolPath                    : System.Windows.Controls.TextBox
+        # LogPathBox                    : System.Windows.Controls.GroupBox Header:LogPath Content:
+        # LogPath                       : System.Windows.Controls.TextBox
+        # CredentialBox                 : System.Windows.Controls.GroupBox Header:Credential Content:
+        # CredentialButton              : System.Windows.Controls.Button: Credential
+        # Credential                    : System.Windows.Controls.TextBox
+        # DomainBox                     : 
+        # Domain                        : 
+        # DomainNetBIOSBox              : 
+        # DomainNetBIOS                 : 
+        # NewDomainBox                  : 
+        # NewDomain                     : 
+        # NewDomainNetBIOSBox           : 
+        # NewDomainNetBIOS              : 
+        # SiteBox                       : 
+        # Site                          : 
+        # ReplicationSourceDCBox        : System.Windows.Controls.GroupBox Header:ReplicationSourceDC Content:
+        # ReplicationSourceDC           : System.Windows.Controls.TextBox
+        # InstallDNS                    : System.Windows.Controls.CheckBox Content: IsChecked:False
+        # CreateDNSDelegation           : System.Windows.Controls.CheckBox Content: IsChecked:False
+        # NoGlobalCatalog               : System.Windows.Controls.CheckBox Content: IsChecked:False
+        # CriticalReplicationOnly       : System.Windows.Controls.CheckBox Content: IsChecked:False
+        # SafeModeAdministratorPassword : System.Windows.Controls.PasswordBox
+        # Confirm                       : System.Windows.Controls.PasswordBox
+        # Start                         : System.Windows.Controls.Button: Start
+        # Cancel                        : System.Windows.Controls.Button: Cancel

@@ -2,6 +2,7 @@ Class _Network
     {
         [Object[]]  $Adapter
         [Object]     $Vendor
+        [Object]    $NBTStat
         [Object]    $NBTScan
         [Object]    $ARPScan
         [Object[]] $Interface

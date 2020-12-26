@@ -93,7 +93,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
 
             $This.Xaml               = $Xaml
-            $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(Name|=|'|`"|\s)","" } | Select-Object -Unique
+            $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { $_ -Replace "(\s+)(Name|=|'|`"|\s)","" } | Select-Object -Unique
             $This.Node               = New-Object System.XML.XmlNodeReader([XML]$This.Xaml)
             $This.Host               = [System.Windows.Markup.XAMLReader]::Load($This.Node)
     

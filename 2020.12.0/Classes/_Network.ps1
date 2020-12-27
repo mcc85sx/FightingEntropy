@@ -1,8 +1,8 @@
-Class _Network
+    Class _Network
     {
         [Object[]]  $Adapter
         [Object]     $Vendor
-        [Object]    $NBTStat
+        [Object[]]      $NBT
         [Object]    $NBTScan
         [Object]    $ARPScan
         [Object[]] $Interface
@@ -16,6 +16,7 @@ Class _Network
             $This.Vendor         = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/scratch/VendorList.txt")
             
             Write-Host "Scanning NBT Table"
+            $This.NBT            = [_NBTScan]::Service
             $This.NBTScan        = [_NBTScan]::New().Output
             
             Write-Host "Scanning ARP Table"

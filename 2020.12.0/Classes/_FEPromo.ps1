@@ -120,7 +120,7 @@ Class _FEPromo
                 ForEach ( $Feature in $This.Features ) 
                 {
                     $This.IO.$($Feature.Name).IsEnabled       = !$Feature.Installed
-                    $This.IO.$($Feature.Name).IsChecked       =  $Feature.Installed
+                    $This.IO.$($Feature.Name).IsChecked       = "True"
                 }
 
                 $This.DatabasePath                      = "$Env:SystemRoot\NTDS"

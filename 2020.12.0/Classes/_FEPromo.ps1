@@ -116,7 +116,7 @@ Class _FEPromo
                 $This.Host                              = Get-FEModule | % Role | % Host
                 $This.Host._Network()
                 $This.Network                           = $This.Host.Network
-                $This.Build_Host_Table()
+                
                 $This.Features                          = [_ServerFeatures]::New().Output
                 
                 ForEach ( $Feature in $This.Features ) 

@@ -5,6 +5,7 @@ Class _FEPromo
             [Object]                                $Host
             [Object]                            $Features
             [Object]                             $Network
+            [Object]                           $HostRange
 
             [String]                             $Command
             [Int32]                                 $Mode
@@ -49,7 +50,7 @@ Class _FEPromo
 
                 $This.IO.$($This.Slot).IsChecked        = $True
 
-                $Tray                                   = @("Visible","Collapsed")[@{0=0,0,1;1=1,0,1;2=1,1,0;3=1,1,0}[$Mode]]
+                $Tray                                   = @("Visible","Collapsed")[@((0,0,1),(1,0,1),(1,1,0),(1,1,0))[$Mode]]
                 $This.IO.ForestModeBox.Visibility       = $Tray[0]
                 $This.IO.DomainModeBox.Visibility       = $Tray[1]
                 $This.IO.ParentDomainNameBox.Visibility = $Tray[2]
@@ -70,10 +71,10 @@ Class _FEPromo
                 $This.ParentDomainName                  = $Tray[2]
 
                 # Roles
-                $This.InstallDNS                        = [_FEPromoRoles]::New("InstallDNS",              (1,1,1,1)[$Mode], (1,1,1,1)[$Mode])
-                $This.CreateDNSDelegation               = [_FEPromoRoles]::New("CreateDNSDelegation",     (1,1,1,1)[$Mode], (0,0,1,0)[$Mode])
-                $This.NoGlobalCatalog                   = [_FEPromoRoles]::New("NoGlobalCatalog",         (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
-                $This.CriticalReplicationOnly           = [_FEPromoRoles]::New("CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
+                $This.InstallDNS                        = [_FEPromoRoles]::New(              "InstallDNS", (1,1,1,1)[$Mode], (1,1,1,1)[$Mode])
+                $This.CreateDNSDelegation               = [_FEPromoRoles]::New(     "CreateDNSDelegation", (1,1,1,1)[$Mode], (0,0,1,0)[$Mode])
+                $This.NoGlobalCatalog                   = [_FEPromoRoles]::New(         "NoGlobalCatalog", (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
+                $This.CriticalReplicationOnly           = [_FEPromoRoles]::New( "CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
 
                 ForEach ( $Item in "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly".Split(" ") )
                 {
@@ -81,13 +82,13 @@ Class _FEPromo
                 }
 
                 # Names
-                $This.Credential                   = [_FEPromoDomain]::New(             "Credential", (0,1,1,1)[$Mode])
-                $This.DomainName                   = [_FEPromoDomain]::New(             "DomainName", (1,0,0,1)[$Mode])
-                $This.DomainNetBIOSName            = [_FEPromoDomain]::New(      "DomainNetBIOSName", (1,0,0,0)[$Mode])
-                $This.NewDomainName                = [_FEPromoDomain]::New(          "NewDomainName", (0,1,1,0)[$Mode])
-                $This.NewDomainNetBIOSName         = [_FEPromoDomain]::New(   "NewDomainNetBIOSName", (0,1,1,0)[$Mode])
-                $This.ReplicationSourceDC          = [_FEPromoDomain]::New(    "ReplicationSourceDC", (0,0,0,1)[$Mode])
-                $This.SiteName                     = [_FEPromoDomain]::New(               "SiteName", (0,1,1,1)[$Mode])
+                $This.Credential                        = [_FEPromoDomain]::New(             "Credential", (0,1,1,1)[$Mode])
+                $This.DomainName                        = [_FEPromoDomain]::New(             "DomainName", (1,0,0,1)[$Mode])
+                $This.DomainNetBIOSName                 = [_FEPromoDomain]::New(      "DomainNetBIOSName", (1,0,0,0)[$Mode])
+                $This.NewDomainName                     = [_FEPromoDomain]::New(          "NewDomainName", (0,1,1,0)[$Mode])
+                $This.NewDomainNetBIOSName              = [_FEPromoDomain]::New(   "NewDomainNetBIOSName", (0,1,1,0)[$Mode])
+                $This.ReplicationSourceDC               = [_FEPromoDomain]::New(    "ReplicationSourceDC", (0,0,0,1)[$Mode])
+                $This.SiteName                          = [_FEPromoDomain]::New(               "SiteName", (0,1,1,1)[$Mode])
 
                 ForEach ( $Item in "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName".Split(" ") )
                 {    
@@ -115,12 +116,13 @@ Class _FEPromo
                 $This.Host                              = Get-FEModule | % Role | % Host
                 $This.Host._Network()
                 $This.Network                           = $This.Host.Network
+                $This.Build_Host_Table()
                 $This.Features                          = [_ServerFeatures]::New().Output
                 
                 ForEach ( $Feature in $This.Features ) 
                 {
-                    $This.IO.$($Feature.Name).IsEnabled       = !$Feature.Installed
-                    $This.IO.$($Feature.Name).IsChecked       = "True"
+                    $This.IO.$($Feature.Name).IsEnabled = !$Feature.Installed
+                    $This.IO.$($Feature.Name).IsChecked = "True"
                 }
 
                 $This.DatabasePath                      = "$Env:SystemRoot\NTDS"

@@ -10,6 +10,7 @@ Class _V4Network
         [String[]]             $Subnet
         [String]            $Broadcast
         [String]            $HostRange
+        [String]                $Range
 
         [String] GetNetmask([Int32]$CIDR)
         {
@@ -31,6 +32,42 @@ Class _V4Network
             }) -join "."
         }
 
+        GetRange()
+        {
+            $Item = ( $This.Network.Interface.IPV4 | ? Gateway | % HostRange ).Split("/")
+
+            If ( $Item )
+            {
+                $Table      = @{ }
+                $Process    = @{ }
+
+                0..3        | % { $Table.Add( $_, ( Invoke-Expression $Range.Split("/")[$_] ) ) }
+
+                $Total      = Invoke-Expression ( ( 0..3 | % { $Table[$_].Count } ) -join "*" )
+                $Ct         = 0 
+                ForEach ( $0 in $Table[0] )
+                {
+                    ForEach ( $1 in $Table[1] )
+                    {
+                        ForEach ( $2 in $Table[2] ) 
+                        {
+                            ForEach ( $3 in $Table[3] )
+                            {
+                                $Process.Add($Ct++,"$0.$1.$2.$3")
+                            }
+                        }
+                    }
+                }
+
+                $This.Range = ( $Process | % GetEnumerator | Sort-Object Name | % Value ) -join "`n"
+            }
+
+            Else
+            {
+                $This.Range = ""
+            }
+        }
+
         IPCheck()
         {
             $Item = [IPAddress]$This.IPAddress | % GetAddressBytes
@@ -46,11 +83,11 @@ Class _V4Network
             }
         }
 
-        GetRange()
+        GetHostRange()
         {
             $Item           = [IPAddress]$This.IPAddress | % GetAddressBytes 
             $Mask           = [IPAddress]$This.Netmask   | % GetAddressBytes 
-            $This.Hostrange = @( ForEach ( $I in 0..3 )
+            $This.HostRange = @( ForEach ( $I in 0..3 )
             {
                 $Step = 256 - $Mask[$I]
                 
@@ -102,6 +139,7 @@ Class _V4Network
             $This.Gateway   = $This.Route | ? NextHop -ne 0.0.0.0 | % NextHop
             $This.Subnet    = $This.Route | ? DestinationPrefix -notin 255.255.255.255/32,224.0.0.0/4,0.0.0.0/0 | % DestinationPrefix | Sort-Object
             $This.Broadcast = ( $This.Subnet | % { ( $_ -Split "/" )[0] } )[-1]
+            $This.GetHostRange()
             $This.GetRange()
         }
     }

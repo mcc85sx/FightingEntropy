@@ -7,6 +7,10 @@ Class _ServerFeatures
 
     _ServerFeatures()
     { 
-        $This.Features       =  (Get-WindowsFeature | ? Name -in ([_ServerFeature]::Names) | Select Name, DisplayName, Installed)
+        $This.Features       =  @( )
+        Get-WindowsFeature   | ? Name -in ([_ServerFeatures]::Names) | % { 
+        
+            $This.Features += [_ServerFeature]::New($_.Name, $_.DisplayName, $_.Installed)
+        }    
     }
 }

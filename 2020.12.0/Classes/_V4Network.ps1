@@ -34,10 +34,12 @@ Class _V4Network
 
         GetRange()
         {
-            $Item = ( $This.Network.Interface.IPV4 | ? Gateway | % HostRange ).Split("/")
+            $Item           = $This.Network.Interface.IPV4 | ? Gateway | % HostRange
 
             If ( $Item )
             {
+                $Item       = $Item -Split "/"
+
                 $Table      = @{ }
                 $Process    = @{ }
 

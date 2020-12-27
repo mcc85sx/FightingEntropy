@@ -452,7 +452,7 @@ Class _NbtObj
         $UI.IO.Clone.Add_Click{  $UI.SetMode(3) }
         $UI.IO.Cancel.Add_Click{ $UI.IO.DialogResult = $False }
 
-        #$UI.Window.Invoke()
+        $UI.Window.Invoke()
 
         # Forest
         # Tree

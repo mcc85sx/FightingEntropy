@@ -33,4 +33,9 @@ Class _PingSweep
             $This.Output    += [_PingObject]::New($X,$IP,$This.Process[$X])
         }
     }
+    
+    [Object[]] _Filter()
+    {
+        $This.Output | ? Status -eq +
+    }
 }

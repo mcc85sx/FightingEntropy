@@ -308,7 +308,6 @@ Class _NbtObj
             [Object]                           $IO
             [Object]                         $Host
             [Object]                       $Output
-            [Object]                     $Features
             [Object]                      $Network
 
             [String]                             $Command
@@ -366,7 +365,6 @@ Class _NbtObj
                     1 { $This.IO.ForestMode.SelectedIndex,"-","-" }
                     2 { "-","-","<Domain Name>" }
                     3 { "-","-","<Domain Name>" }
-                
                 }
                 
                 $This.ForestMode                        = $Tray[0]
@@ -379,9 +377,9 @@ Class _NbtObj
                 $This.NoGlobalCatalog                   = [_FEPromoRoles]::New("NoGlobalCatalog",         (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
                 $This.CriticalReplicationOnly           = [_FEPromoRoles]::New("CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
 
-                "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly" -Split " " | % { 
-
-                    $This.Set_FEPromo_Roles($This.IO.$($_))
+                ForEach ( $Item in "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly".Split(" ") )
+                {
+                    $This.Set_FEPromo_Roles($This.$($Item))
                 }
 
                 # Names
@@ -393,9 +391,9 @@ Class _NbtObj
                 $This.ReplicationSourceDC          = [_FEPromoDomain]::New(    "ReplicationSourceDC", (0,0,0,1)[$Mode])
                 $This.SiteName                     = [_FEPromoDomain]::New(               "SiteName", (0,1,1,1)[$Mode])
 
-                "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName" -Split " " | % {
-                    
-                    $This.Set_FEPromo_Text($This.IO.$($_))
+                ForEach ( $Item in "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName".Split(" ") )
+                {    
+                    $This.Set_FEPromo_Text($This.$($Item))
                 }
 
                 $This.Set_Default_NTDS_SYSVOL_Paths()
@@ -403,8 +401,8 @@ Class _NbtObj
 
             Set_FEPromo_Roles([Object]$Obj)
             {
-                $This.IO.$($Obj.Name).IsEnabled  = $Obj.IsEnabled
-                $This.IO.$($Obj.Name).IsChecked  = $Obj.IsChecked
+                $This.IO.$( $Obj.Name ).IsEnabled       = $Obj.IsEnabled
+                $This.IO.$( $Obj.Name ).IsChecked       = $Obj.IsChecked
             }
 
             Set_FEPromo_Text([Object]$Obj)
@@ -416,29 +414,37 @@ Class _NbtObj
 
             Set_Default_NTDS_SYSVOL_Paths()
             {
-                Get-Item Env:\SystemRoot         | % Value | % { 
+                $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
+                $This.IO.DatabasePath.Text              = $This.DatabasePath
 
-                    $This.DatabasePath           = "$_\NTDS"
-                    $This.LogPath                = "$_\NTDS"
-                    $This.SysvolPath             = "$_\SYSVOL"
-                }
+                $This.LogPath                           = "$Env:SystemRoot\NTDS"
+                $This.IO.LogPath.Text                   = $This.LogPath 
+
+                $This.SysvolPath                        = "$Env:SystemRoot\NTDS"
+                $This.IO.SysvolPath.Text                = $This.SysvolPath 
             }
 
             _FEPromo([Object]$Window,[Int32]$Mode)
             {
-                $This.Window                    = $Window
-                $This.IO                        = $Window.Host
-                $This.Host                      = Get-FEModule | % Role | % Host
+                $This.Window                            = $Window
+                $This.IO                                = $Window.Host
+                $This.Host                              = Get-FEModule | % Role | % Host
                 $This.Host._Network()
-                $This.Network                   = $This.Host.Network
-                $This.Features                  = [_ServerFeatures]::New().Features
+                $This.Network                           = $This.Host.Network
+
+                ForEach ( $F in [_ServerFeatures]::New().Features )
+                {
+                    $This.IO.$($F.Name).IsEnabled       = !$F.Installed
+                    $This.IO.$($F.Name).IsChecked       =  $F.Installed
+                }
+
                 $This.SetMode($Mode)
             }
         }
 
         Write-Theme "Loading Network [:] Domain Controller Initialization"
 
-        $UI                                     = [_FEPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
+        $UI                                             = [_FEPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
 
         $UI.IO.Forest.Add_Click{ $UI.SetMode(0) }
         $UI.IO.Tree.Add_Click{   $UI.SetMode(1) }

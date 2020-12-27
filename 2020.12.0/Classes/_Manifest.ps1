@@ -6,7 +6,7 @@ Class _Manifest
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
     [String[]]   $Classes = (("Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme", 
-                              "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network",  
+                              "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network DNSSuffix DomainName",  
                               "NetInterface Network Info ViperBomb Brand Branding Certificate Company Key RootVar",
                               "Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo", 
                               "Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat NbtObj NbtRef FEPromo",
@@ -14,7 +14,7 @@ Class _Manifest
                               ).Split(" ") | % { "_$_.ps1" })
     [String[]] $Functions = (("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write-Banner", 
                               "Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotification New-FECompany", 
-                              "Get-ServerDependency Get-FEService Get-FEHost Get-FEOS Get-FEManifest Get-FEHive Get-XamlWindow" -join " " 
+                              "Get-ServerDependency Get-FEService Get-FEHost Get-FEOS Get-FEManifest Get-FEHive Get-XamlWindow Get-FEDCPromo" -join " " 
                               ).Split(" ") | % { "$_.ps1" })
     [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                               "ServerMod.xml" ) -Split " "

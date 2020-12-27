@@ -5,7 +5,7 @@ Class _FEPromo
             [Object]                                $Host
             [Object]                            $Features
             [Object]                             $Network
-            [Object]                           $HostRange
+            [Object]                               $Range
 
             [String]                             $Command
             [Int32]                                 $Mode
@@ -116,7 +116,9 @@ Class _FEPromo
                 $This.Host                              = Get-FEModule | % Role | % Host
                 $This.Host._Network()
                 $This.Network                           = $This.Host.Network
-                
+                $HostRange                              = $This.Host.Network.Interface.IPV4 | ? Gateway | % Range
+
+                $This.Range                             = [_PingSweep]::New($HostRange -Split "`n")
                 $This.Features                          = [_ServerFeatures]::New().Output
                 
                 ForEach ( $Feature in $This.Features ) 

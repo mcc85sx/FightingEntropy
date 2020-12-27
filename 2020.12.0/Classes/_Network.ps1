@@ -1,10 +1,10 @@
     Class _Network
     {
-        [Object[]]  $Adapter
-        [Object]     $Vendor
-        [Object[]]      $NBT
-        [Object]    $NBTScan
-        [Object]    $ARPScan
+        [Object[]]   $Adapter
+        [Object]      $Vendor
+        [Object[]]       $NBT
+        [Object]     $NBTScan
+        [Object]     $ARPScan
         [Object[]] $Interface
 
         _Network()

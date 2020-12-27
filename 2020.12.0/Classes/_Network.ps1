@@ -16,7 +16,7 @@
             $This.Vendor         = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/scratch/VendorList.txt")
             
             Write-Host "Scanning NBT Table"
-            $This.NBT            = [_NBTScan]::Service
+            $This.NBT            = [_NBTRef]::New().Output
             $This.NBTScan        = [_NBTScan]::New().Output
             
             Write-Host "Scanning ARP Table"

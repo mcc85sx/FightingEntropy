@@ -34,7 +34,7 @@ Class _V4Network
 
         GetRange()
         {
-            $Item           = $This.Network.Interface.IPV4 | ? Gateway | % HostRange
+            $Item           = $This.Gateway | % HostRange
 
             If ( $Item )
             {
@@ -43,7 +43,7 @@ Class _V4Network
                 $Table      = @{ }
                 $Process    = @{ }
 
-                0..3        | % { $Table.Add( $_, ( Invoke-Expression $Range.Split("/")[$_] ) ) }
+                0..3        | % { $Table.Add( $_, ( Invoke-Expression $This.HostRange.Split("/")[$_] ) ) }
 
                 $Total      = Invoke-Expression ( ( 0..3 | % { $Table[$_].Count } ) -join "*" )
                 $Ct         = 0 
@@ -66,7 +66,7 @@ Class _V4Network
 
             Else
             {
-                $This.Range = ""
+                $This.Range = "-"
             }
         }
 
@@ -132,7 +132,6 @@ Class _V4Network
 
         $This.IPAddress = $Address.IPAddress
         $This.IPCheck()
-
         $This.Class     = @('N/A';@('A')*126;'Local';@('B')*64;@('C')*32;@('MC')*16;@('R')*15;'BC')[[Int32]$This.IPAddress.Split(".")[0]]
         $This.Prefix    = $Address.PrefixLength
         $This.Netmask   = $This.GetNetMask($This.Prefix)

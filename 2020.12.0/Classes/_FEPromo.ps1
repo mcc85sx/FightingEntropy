@@ -3,7 +3,7 @@ Class _FEPromo
             [Object]                              $Window
             [Object]                                  $IO
             [Object]                                $Host
-            [Object]                            $Services
+            [Object]                            $Features
             [Object]                             $Network
 
             [String]                             $Command

@@ -3,6 +3,7 @@ Class _FEPromo
             [Object]                              $Window
             [Object]                                  $IO
             [Object]                                $Host
+            [Object]                            $Services
             [Object]                             $Network
 
             [String]                             $Command
@@ -114,11 +115,12 @@ Class _FEPromo
                 $This.Host                              = Get-FEModule | % Role | % Host
                 $This.Host._Network()
                 $This.Network                           = $This.Host.Network
-
-                [_ServerFeatures]::New().Features       | % {
-
-                    $This.IO.$($_.Name).IsEnabled       = !$_.Installed
-                    $This.IO.$($_.Name).IsChecked       =  $_.Installed
+                $This.Features                          = [_ServerFeatures]::New().Output
+                
+                ForEach ( $Feature in $This.Features ) 
+                {
+                    $This.IO.$($Feature.Name).IsEnabled       = !$Feature.Installed
+                    $This.IO.$($Feature.Name).IsChecked       =  $Feature.Installed
                 }
 
                 $This.DatabasePath                      = "$Env:SystemRoot\NTDS"

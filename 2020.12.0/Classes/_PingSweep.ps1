@@ -36,6 +36,6 @@ Class _PingSweep
     
     [Object[]] _Filter()
     {
-        $This.Output | ? Status -eq +
+        Return @( $This.Output | ? Status -eq + )
     }
 }

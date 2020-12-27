@@ -6,6 +6,7 @@ Class _FEPromo
             [Object]                            $Features
             [Object]                             $Network
             [Object]                               $Range
+            [Object]                             $HostMap
 
             [String]                             $Command
             [Int32]                                 $Mode
@@ -119,6 +120,13 @@ Class _FEPromo
                 $HostRange                              = $This.Host.Network.Interface.IPV4 | ? Gateway | % Range
 
                 $This.Range                             = [_PingSweep]::New($HostRange -Split "`n")
+                $This.HostMap                           = $This.Range._Filter()
+
+                ForEach ( $I in $This.HostMap )
+                {
+                    $I.NetBIOS                          = nbtstat -a $I.Address | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
+                }
+
                 $This.Features                          = [_ServerFeatures]::New().Output
                 
                 ForEach ( $Feature in $This.Features ) 

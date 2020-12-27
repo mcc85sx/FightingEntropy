@@ -11,11 +11,12 @@ Class _NbtHost
         Return @( $This.Line.Substring($Start,$End).TrimEnd(" ") )
     }
 
-    _NbtHost([String]$Line)
+    _NbtHost([Object]$NBT,[String]$Line)
     {
         $This.Line    = $Line
         $This.Name    = $This.X(0,19).TrimStart(" ")
         $This.ID      = $This.X(20,2)
         $This.Type    = $This.X(25,12)
+        $This.Service = $NBT | ? ID -match $This.ID | ? Type -Match $This.Type | % Service
     }
 }

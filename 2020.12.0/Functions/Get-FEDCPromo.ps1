@@ -19,13 +19,13 @@ Function Get-FEDCPromo
 
         $Popup.Host.Cancel.Add_Click(
         {
-            $Popup.Host.DialogResult       = [Void]$False
+            $Popup.Host.DialogResult       = $False
         })
 
         $Popup.Host.Ok.Add_Click(
         {
             $UI.Connection.Return          = $UI.Connection.Output[$Popup.Host.DataGrid.SelectedIndex]
-            $Popup.Host.DialogResult       = [Void]$True
+            $Popup.Host.DialogResult       = $True
         })
 
         $Popup.Invoke()

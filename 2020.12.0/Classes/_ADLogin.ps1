@@ -12,6 +12,7 @@ Class _ADLogin
 
     [String]                                  $DC
     [String]                           $Directory
+    Hidden [Object]                         $Test
     [Object]                            $Searcher
     [Object]                              $Return
 
@@ -51,24 +52,27 @@ Class _ADLogin
         Else
         {
             $This.Credential               = [System.Management.Automation.PSCredential]::New($Username,$This.IO.Confirm.SecurePassword)
+            $This.Test                     = Try 
+            { 
+                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            }
+
+            Catch
+            {
+                $Null
+            }
         }
     }
 
     Init()
     {
-        If ( ! $This.Credential )
+        If ( $This.Test )
         {
-            Throw "No Credential"
+            $This.Searcher                 = [System.DirectoryServices.DirectorySearcher]::New()
+            $This.Searcher.SearchRoot      = $This.Test
+            $This.Searcher.PageSize        = 1000
+            $This.Searcher.PropertiesToLoad.Clear()
+            $This.Return                   = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
         }
-
-        $This.Searcher     = [System.DirectoryServices.DirectorySearcher]::New()
-        $This.Searcher     | % {
-                    
-            $_.SearchRoot  = [System.DirectoryServices.DirectoryEntry ]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
-            $_.PageSize    = 1000
-            $_.PropertiesToLoad.Clear()
-        }
-
-        $This.Return       = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
     }
 }

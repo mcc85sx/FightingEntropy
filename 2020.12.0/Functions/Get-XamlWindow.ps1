@@ -133,21 +133,49 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'lignment="Right">Domain:</$TBL`><$TB` Name="Domain" $G`.Row="1" $G`.Column="1" $H`="24" $MA`="5"/></$G`><$'+
             'G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU` Name="Ok" $CO`="Ok" $G`.Column="'+
             '0" $MA`="10"/><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $MA`="10"/></$G`></$G`></$GB`></$WI`>')
-            ADLogin              = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://AD Login" $W`="480" $H`="280" To'+
-            'pmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$GB` $HD`="Enter Directory Services Admin Account" $W`="45'+
-            '0" $H`="240" $MA`="5" $Vx`="Center"><$G`><$G`.$RD`s><$RD` $H`="2*"/><$RD` $H`="1.25*"/></$G`.$RD`s><$G` $'+
-            'G`.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="3*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/'+
-            '><$RD` $H`="*"/></$G`.$RD`s><$TBL` $G`.Column="0" $G`.Row="0" $MA`="10" TextAlignment="Right"> UserName:</'+
-            '$TBL`><$TB` Name="UserName" $G`.Column="1" $G`.Row="0" $H`="24" $MA`="5"></$TB`><$TBL` $G`.Column="0" $G`.R'+
-            'ow="1" $MA`="10" TextAlignment="Right"> $PW`:</$TBL`><$PW`Box Name="$PW`" $G`.Column="1" $G`.Row="1" $H`="'+
-            '24" $MA`="5" $PW`Char="*"></$PW`Box><$TBL` $G`.Column="0" $G`.Row="2" $MA`="10" TextAlignment="Right"> Co'+
-            'nfirm:</$TBL`><$PW`Box Name="Confirm" $G`.Column="1" $G`.Row="2" $H`="24" $MA`="5" $PW`Char="*"></$PW`Box>'+
-            '</$G`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$R'+
-            'D` $H`="*"/></$G`.$RD`s><Radio$BU` Name="Switch" $G`.Row="0" $G`.Column="0" $CO`="Change" $Vx`="Center" $H'+
-            'x`="Center"/><$TB` Name="Port" $G`.Row="0" $G`.Column="1" $Vx`="Center" $Hx`="Center" $W`="120" IsEnabled='+
-            '"False">389</$TB`><$BU` Name="Ok" $CO`="Ok" $G`.Column="0" $G`.Row="1" $MA`="5"></$BU`><$BU` Name="Cancel" '+
-            '$CO`="Cancel" $G`.Column="1" $G`.Row="1" $MA`="5"></$BU`></$G`></$G`></$GB`></$WI`>' )
+            ADLogin              = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="230" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <GroupBox Header="Enter AD Domain Administrator Account Credentials" Width="380" Height="200" Margin="5" VerticalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.5*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="User Name">
+                <TextBox Name="UserName" Margin="5"/>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Header="Password / Confirm">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
+                    <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
+                </Grid>
+            </GroupBox>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton Name="Switch" Grid.Column="0" Content="Change Login Port" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBox Name="Port" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" IsEnabled="False">389</TextBox>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
+                <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
+            </Grid>
+        </Grid>
+    </GroupBox>
+</Window>
+'@
             NewAccount           = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
             '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Account Designation" $W`="480" $H'+
             '`="280" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$GB` $HD`="Enter UserName and $PW`" $W`="450" $H`'+
@@ -257,18 +285,43 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'PW`Box Name="Confirm" $H`="20" $MA`="5" $PW`Char="*"/></$GB`><$BU` Name="Start" $G`.Row="1" $G`.Column="0" '+
             '$CO`="Start" $MA`="5" $W`="100" $H`="20"/><$BU` Name="Cancel" $G`.Row="1" $G`.Column="1" $CO`="Cancel" $MA'+
             '`="5" $W`="100" $H`="20"/></$G`></$GB`></$G`></$G`></$G`></$GB`></$G`></$WI`>')
-            FEDCFound            = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Domain Controller Found" $W`="35'+
-            '0" $H`="200" $Hx`="Center" Topmost="True" Icon="{0}" $WI`StartupLocation="CenterScreen"><$G`><$G`.$RD`s><$RD` $H`="3*"/><$RD` $H`="*'+
-            '"/></$G`.$RD`s><$G` $G`.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="2*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H'+
-            '`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$TBL` $G`.Column="0" $G`.Row="0" $MA`="10" $Vx`="Center'+
-            '" $Hx`="Right"> Controller Name:</$TBL`><$LA` Name="DC" $G`.Column="1" $G`.Row="0" $Vx`="Center" $H`="24" $MA`='+
-            '"10"/><$TBL` $G`.Column="0" $G`.Row="1" $MA`="10" $Vx`="Center" $Hx`="Right"> DNS Name:</$TBL`><$LA` Name="Doma'+
-            'in" $G`.Column="1" $G`.Row="1" $Vx`="Center" $H`="24" $MA`="10"/><$TBL` $G`.Column="0" $G`.Row="2" $MA`="'+
-            '10" $Vx`="Center" $Hx`="Right"> NetBIOS Name:</$TBL`><$LA` Name="NetBIOS" $G`.Column="1" $G`.Row="2" $Vx`="Cent'+
-            'er" $H`="24" $MA`="10"/></$G`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU`'+
-            ' Name="Ok" $CO`="Ok" $G`.Column="0" $G`.Row="1" $MA`="10"/><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $G`.Row'+
-            '="1" $MA`="10"/></$G`></$G`></$WI`>')
+            FEDCFound            = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 
+        Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Row="0" Grid.Column="0"
+                  Name="DataGrid" 
+                  FrozenColumnCount="2" 
+                  AutoGenerateColumns="False" 
+                  AlternationCount="2" 
+                  HeadersVisibility="Column" 
+                  CanUserResizeRows="False" 
+                  CanUserAddRows="False" 
+                  IsTabStop="True" 
+                  IsTextSearchEnabled="True" 
+                  SelectionMode="Extended">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Address"  Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Hostname" Width="240" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="NetBIOS"  Width="100" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="10"/>
+            <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="10"/>
+        </Grid>
+    </Grid>
+</Window>
+'@
             FERoot               = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
             '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Root Installation" $W`="640" $H`'+
             '="450" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$G`><$G`.$BG`><ImageBrush Stretch="UniformToFill"'+
@@ -453,7 +506,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'Weight="Bold" $MA`="10"/><$BU` $G`.Column="2" Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$'+
             'GB` $G`.Column="3" $HD`="Module Version" $MA`="5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
 
-            Test = (@"
+            Test = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 
         Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
@@ -489,7 +542,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         </Grid>
     </Grid>
 </Window>
-"@)
+'@
         }
 
         Hidden [Object]     $Slot

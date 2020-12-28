@@ -83,7 +83,7 @@ Class _FEPromo
             $This.Set_FEPromo_Roles($This.$($Item))
         }
 
-        # Names
+        # Domain/Text
         $This.Credential                        = [_FEPromoDomain]::New(             "Credential", (0,1,1,1)[$Mode])
         $This.DomainName                        = [_FEPromoDomain]::New(             "DomainName", (1,0,0,1)[$Mode])
         $This.DomainNetBIOSName                 = [_FEPromoDomain]::New(      "DomainNetBIOSName", (1,0,0,0)[$Mode])
@@ -95,6 +95,12 @@ Class _FEPromo
         ForEach ( $Item in "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName".Split(" ") )
         {    
             $This.Set_FEPromo_Text($This.$($Item))
+        }
+
+        If ( !!$This.Connection.Credential )
+        {
+            $This.IO.Credential.Text            = $This.Connection.Credential.Username
+            $This.IO.Credential.IsEnabled       = $False
         }
     }
 
@@ -118,7 +124,8 @@ Class _FEPromo
             Primary        = $This.HostMap | ? { $_.NBT.ID -match "1b" }
             Secondary      = $This.HostMap | ? { $_.NBT.ID -match "1c" }
             Output         = @( )
-            Return         = @( )
+            Target         = @( )
+            Credential     = $Null
         }
 
         $This.Connection   | % { 
@@ -150,10 +157,10 @@ Class _FEPromo
         $This.Range                             = [_PingSweep]::New($HostRange -Split "`n")
         $This.HostMap                           = $This.Range._Filter() 
         
-        ForEach ( $I in $This.Hostmap ) 
+        ForEach ( $IHost in $This.Hostmap ) 
         { 
-            Write-Host "[+] $($I.HostName)/$($I.IPAddress)"
-            $I.NBT                          = nbtstat -a $I.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
+            Write-Host "[+] $($IHost.HostName)/$($IHost.IPAddress)"
+            $IHost.NBT                          = nbtstat -a $IHost.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
         }
 
         $This.Get_FEPromo_Domain_Controllers()

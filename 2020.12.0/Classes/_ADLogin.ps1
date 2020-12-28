@@ -61,18 +61,20 @@ Class _ADLogin
             {
                 $Null
             }
+            
+            If ( $This.Test )
+            {
+                $This.Init()
+            }
         }
     }
 
     Init()
     {
-        If ( $This.Test )
-        {
-            $This.Searcher                 = [System.DirectoryServices.DirectorySearcher]::New()
-            $This.Searcher.SearchRoot      = $This.Test
-            $This.Searcher.PageSize        = 1000
-            $This.Searcher.PropertiesToLoad.Clear()
-            $This.Return                   = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
-        }
+        $This.Searcher                 = [System.DirectoryServices.DirectorySearcher]::New()
+        $This.Searcher.SearchRoot      = $This.Test
+        $This.Searcher.PageSize        = 1000
+        $This.Searcher.PropertiesToLoad.Clear()
+        $This.Return                   = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
     }
 }

@@ -145,6 +145,21 @@ Class _FEPromo
         }
     }
 
+    ValidateHostname()
+    {   
+        If ( $This.IO.Forest.IsChecked -or $This.IO.Child.IsChecked )
+        {
+            [_Domainname]::New("Domain",$This.IO.ParentDomainName.Text)
+            [_DomainName]::New("NetBIOS",$This.IO.DomainNetBIOSName.Text)
+        }
+
+        If ( $This.IO.Clone.IsChecked )
+        {
+            [_DomainName]::New("Domain",$This.IO.DomainName.Text)
+            [_DomainName]::New("Domain",$This.IO.ReplicationSourceDC.Text)
+        }
+    }
+
     _FEPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window

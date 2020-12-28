@@ -1,3 +1,4 @@
+
 Class _ADLogin
 {
     [Object]                              $Window
@@ -69,6 +70,6 @@ Class _ADLogin
             $_.PropertiesToLoad.Clear()
         }
 
-        $This.Return       = $This.Searcher.FindAll()
+        $This.Return       = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
     }
 }

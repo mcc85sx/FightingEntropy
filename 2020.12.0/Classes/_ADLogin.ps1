@@ -1,4 +1,3 @@
-
 Class _ADLogin
 {
     [Object]                              $Window
@@ -28,12 +27,44 @@ Class _ADLogin
         $This.Directory    = "LDAP://$($This.DC)/CN=Partitions,CN=Configuration,DC=$($This.DNSName.Replace($This.DC + '.','').Split('.') -join ',DC=')"
     }
 
-    Init([Object]$Credential)
+    TestCredential()
     {
+        $Username      = $This.IO.Username.Text
+        $Password      = $This.IO.Password.Password
+        $Confirm       = $This.IO.Confirm.Password
+
+        If (!$Username)
+        {
+            [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
+        }
+
+        ElseIf (!$Password)
+        {
+            [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
+        }
+
+        ElseIf (!$Password -match $Confirm)
+        {
+            [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
+        }
+
+        Else
+        {
+            $This.Credential               = [System.Management.Automation.PSCredential]::New($Username,$This.IO.Confirm.SecurePassword)
+        }
+    }
+
+    Init()
+    {
+        If ( ! $This.Credential )
+        {
+            Throw "No Credential"
+        }
+
         $This.Searcher     = [System.DirectoryServices.DirectorySearcher]::New()
         $This.Searcher     | % {
                     
-            $_.SearchRoot  = [ DirectoryEntry ]::New( $AD , $DCCred.Username , $DCCred.GetNetworkCredential().Password )
+            $_.SearchRoot  = [System.DirectoryServices.DirectoryEntry ]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
             $_.PageSize    = 1000
             $_.PropertiesToLoad.Clear()
         }

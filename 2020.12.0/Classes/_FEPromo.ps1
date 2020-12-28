@@ -133,7 +133,7 @@ Class _FEPromo
             }
 
             $_.Output      = $_.Primary, $_.Secondary | Select -Unique
-            $_.Output      = $_.Output | Select-Object Address, Hostname, NetBIOS
+            $_.Output      = $_.Output | Select-Object IPAddress, Hostname, NetBIOS
         }
     }
 
@@ -151,8 +151,8 @@ Class _FEPromo
         
         ForEach ( $I in $This.Hostmap ) 
         { 
-            Write-Host "[+] $($I.HostName)/$($I.Address)"
-            $I.NBT                          = nbtstat -a $I.Address | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
+            Write-Host "[+] $($I.HostName)/$($I.IPAddress)"
+            $I.NBT                          = nbtstat -a $I.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
         }
 
         $This.Get_FEPromo_Domain_Controllers()

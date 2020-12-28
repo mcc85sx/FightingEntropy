@@ -4,11 +4,11 @@ Function Get-FEDCPromo
 
     $UI = [_FEPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
 
-    $UI.IO.    Forest.Add_Click({ $UI.SetMode(0)})
-    $UI.IO.      Tree.Add_Click({ $UI.SetMode(1)})
-    $UI.IO.     Child.Add_Click({ $UI.SetMode(2)})
-    $UI.IO.     Clone.Add_Click({ $UI.SetMode(3)})
-    $UI.IO.    Cancel.Add_Click({ $UI.IO.DialogResult = $False })
+    $UI.IO.Forest.Add_Click({ $UI.SetMode(0)})
+    $UI.IO.Tree.Add_Click({ $UI.SetMode(1)})
+    $UI.IO.Child.Add_Click({ $UI.SetMode(2)})
+    $UI.IO.Clone.Add_Click({ $UI.SetMode(3)})
+    $UI.IO.Cancel.Add_Click({ $UI.IO.DialogResult = $False })
 
     $UI.IO.CredentialButton.Add_Click({
 

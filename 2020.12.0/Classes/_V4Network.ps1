@@ -1,127 +1,124 @@
 Class _V4Network
 {
-        [String]            $IPAddress
-        [String]                $Class
-        [Int32]                $Prefix
-        [String]              $Netmask
-        Hidden [Object]         $Route
-        [String]              $Network
-        [String]              $Gateway
-        [String[]]             $Subnet
-        [String]            $Broadcast
-        [String]            $HostRange
-        [String]                $Range
+    [String]            $IPAddress
+    [String]                $Class
+    [Int32]                $Prefix
+    [String]              $Netmask
+    Hidden [Object]         $Route
+    [String]              $Network
+    [String]              $Gateway
+    [String[]]             $Subnet
+    [String]            $Broadcast
+    [String]            $HostRange
+    [String]                $Range
 
-        [String] GetNetmask([Int32]$CIDR)
+    [String] GetNetmask([Int32]$CIDR)
+    {
+        $Switch         = 0
+
+        Return @( ForEach ( $I in 0..3 )
         {
-            $Switch         = 0
-
-            Return @( ForEach ( $I in 0..3 )
+            If ( $CIDR -in @{ 0 = 1..7; 1 = 8..15; 2 = 16..23; 3 = 24..30 }[$I] )
             {
-                If ( $CIDR -in @{ 0 = 1..7; 1 = 8..15; 2 = 16..23; 3 = 24..30 }[$I] )
-                {
-                    $Switch = 1
-                    @(0,128,192,224,240,248,252,254,255)[$CIDR % 8]
-                }
-
-                Else
-                {
-                    @(255,0)[$Switch]
-                }
-
-            }) -join "."
-        }
-
-        GetRange()
-        {
-            $Item           = $This.Gateway | % HostRange
-
-            If ( $Item )
-            {
-                $Item       = $Item -Split "/"
-
-                $Table      = @{ }
-                $Process    = @{ }
-
-                0..3        | % { $Table.Add( $_, ( Invoke-Expression $This.HostRange.Split("/")[$_] ) ) }
-
-                $Total      = Invoke-Expression ( ( 0..3 | % { $Table[$_].Count } ) -join "*" )
-                $Ct         = 0 
-                ForEach ( $0 in $Table[0] )
-                {
-                    ForEach ( $1 in $Table[1] )
-                    {
-                        ForEach ( $2 in $Table[2] ) 
-                        {
-                            ForEach ( $3 in $Table[3] )
-                            {
-                                $Process.Add($Ct++,"$0.$1.$2.$3")
-                            }
-                        }
-                    }
-                }
-
-                $This.Range = ( $Process | % GetEnumerator | Sort-Object Name | % Value ) -join "`n"
+                $Switch = 1
+                @(0,128,192,224,240,248,252,254,255)[$CIDR % 8]
             }
 
             Else
             {
-                $This.Range = "-"
+                @(255,0)[$Switch]
             }
-        }
+        }) -join "."
+    }
 
-        IPCheck()
+    GetRange()
+    {
+        If ( $This.Gateway )
         {
-            $Item = [IPAddress]$This.IPAddress | % GetAddressBytes
-            
-            If ( $Item[0] -in @(0,127;224..255) )
-            {
-                Throw "Invalid Address Detected"
-            }
+            $Item       = $This.HostRange -Split "/"
 
-            If ( ( $Item[0..1] -join '.' ) -eq "169.254" )
-            {
-                Throw "Automatic Private IP Address Detected"
-            }
-        }
+            $Table      = @{ }
+            $Process    = @{ }
 
-        GetHostRange()
-        {
-            $Item           = [IPAddress]$This.IPAddress | % GetAddressBytes 
-            $Mask           = [IPAddress]$This.Netmask   | % GetAddressBytes 
-            $This.HostRange = @( ForEach ( $I in 0..3 )
+            0..3        | % { $Table.Add( $_, ( Invoke-Expression $This.HostRange.Split("/")[$_] ) ) }
+
+            $Total      = Invoke-Expression ( ( 0..3 | % { $Table[$_].Count } ) -join "*" )
+            $Ct         = 0 
+            ForEach ( $0 in $Table[0] )
             {
-                $Step = 256 - $Mask[$I]
-                
-                Switch ( $Step )
+                ForEach ( $1 in $Table[1] )
                 {
-                    1 
-                    { 
-                        $Item[$I] 
-                    } 
-                    
-                    256 
-                    { 
-                        "0..255" 
-                    } 
-                    
-                    Default 
+                    ForEach ( $2 in $Table[2] ) 
                     {
-                        $Slot = 256 / $Step
-
-                        ForEach ( $X in 0..( ( 256 / $Slot ) - 1 ) )
+                        ForEach ( $3 in $Table[3] )
                         {
-                            $IRange = ( $X * $Slot ) | % { $_..( $_ + $Slot - 1 ) }
-
-                            If ( $Item[$I] -in $IRange )
-                            {
-                                "{0}..{1}" -f $IRange[0,-1]
-                            }
+                            $Process.Add($Ct++,"$0.$1.$2.$3")
                         }
                     }
                 }
-            }) -join '/'
+            }
+
+            $This.Range = ( $Process | % GetEnumerator | Sort-Object Name | % Value ) -join "`n"
         }
+
+        Else
+        {
+            $This.Range = "-"
+        }
+    }
+
+    IPCheck()
+    {
+        $Item = [IPAddress]$This.IPAddress | % GetAddressBytes
+            
+        If ( $Item[0] -in @(0,127;224..255) )
+        {
+            Throw "Invalid Address Detected"
+        }
+
+        If ( ( $Item[0..1] -join '.' ) -eq "169.254" )
+        {
+            Throw "Automatic Private IP Address Detected"
+        }
+    }
+
+    GetHostRange()
+    {
+        $Item           = [IPAddress]$This.IPAddress | % GetAddressBytes 
+        $Mask           = [IPAddress]$This.Netmask   | % GetAddressBytes 
+        $This.HostRange = @( ForEach ( $I in 0..3 )
+        {
+            $Step = 256 - $Mask[$I]
+                
+            Switch ( $Step )
+            {
+                1 
+                { 
+                    $Item[$I] 
+                } 
+                    
+                256 
+                { 
+                    "0..255" 
+                } 
+                    
+                Default 
+                {
+                    $Slot = 256 / $Step
+
+                    ForEach ( $X in 0..( ( 256 / $Slot ) - 1 ) )
+                    {
+                        $IRange = ( $X * $Slot ) | % { $_..( $_ + $Slot - 1 ) }
+
+                        If ( $Item[$I] -in $IRange )
+                        {
+                            "{0}..{1}" -f $IRange[0,-1]
+                        }
+                    }
+                }
+            }
+        }) -join '/'
+    }
 
     _V4Network([Object]$Address)
     {

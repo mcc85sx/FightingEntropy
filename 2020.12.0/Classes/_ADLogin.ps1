@@ -1,4 +1,3 @@
-
 Class _ADLogin
 {
     [Object]                              $Window

@@ -12,23 +12,31 @@ Function Get-FEDCPromo
 
     $UI.IO.Credential.Add_Click{
 
-        $Popup                             = Get-XAMLWindow -Type Test
+        $Popup                             = Get-XAMLWindow -Type FEDCFound
         $Popup.Host.DataGrid.ItemsSource   = $UI.Connection.Output
         $Popup.Host.DataGrid.SelectedIndex = 0
-        $Popup.Host.DataGrid.Focus()
+        [Void]$Popup.Host.DataGrid.Focus()
 
         $Popup.Host.Cancel.Add_Click(
         {
+            Write-Host "Canceled"
             $Popup.Host.DialogResult       = $False
         })
 
         $Popup.Host.Ok.Add_Click(
         {
-            $UI.Connection.Return          = $UI.Connection.Output[$Popup.Host.DataGrid.SelectedIndex]
+            $UI.Connection.Target          = $UI.Connection.Output[$Popup.Host.DataGrid.SelectedIndex]
             $Popup.Host.DialogResult       = $True
         })
 
         $Popup.Invoke()
+
+        If ( ! $UI.Connection.Return )
+        {
+            Throw "Unsuccessful"
+        }
+
+        $Popup                             = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
         
     }
      

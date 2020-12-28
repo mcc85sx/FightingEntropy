@@ -87,9 +87,19 @@ Class _ADLogin
         $This.Return                       = $This.Searcher.FindAll()
     }
 
-    Search([String]$Field)
+    [Object] Search([String]$Field)
     {
         $Field = $Field.ToLower()
-        ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? $Field }
+        Return @( ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? $Field } )
+    }
+
+    [String] GetSiteName()
+    {
+        Return @( $This.Search("fsmoroleowner").fsmoroleowner.Split(",")[3].Split("=")[1] )
+    }
+
+    [String] GetNetBIOSName()
+    {
+        Return @( $This.Search("netbiosname").netbiosname )
     }
 }

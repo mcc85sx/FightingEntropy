@@ -9,7 +9,7 @@ Class _Manifest
                               "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network DNSSuffix DomainName ADLogin",  
                               "NetInterface Network Info ViperBomb Brand Branding Certificate Company Key RootVar PingSweep PingObject",
                               "Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo UISwitch", 
-                              "Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat NbtObj NbtRef FEPromo",
+                              "Image Images Updates ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj FEPromo",
                               "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " 
                               ).Split(" ") | % { "_$_.ps1" })
     [String[]] $Functions = (("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write-Banner", 

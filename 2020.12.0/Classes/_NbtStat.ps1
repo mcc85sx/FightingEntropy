@@ -10,6 +10,6 @@ Class _NbtStat
         $This.Object     = $Object
         $This.Name       = $Object[0].Split(":")[0]
         $This.IPAddress  = $Object[1].Split("[")[1].Split("]")[0]
-        $This.Hosts      = $Object | ? { $_ -match "Registered" } | % { [_NBTHost]::New($_) }
+        $This.Hosts      = $Object | ? { $_ -match "Registered" } | % { [_NBTHost]::New([_NBTRef]::New().Output,$_) }
     }
 }

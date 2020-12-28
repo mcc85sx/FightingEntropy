@@ -43,7 +43,7 @@ Class _FEPromo
     {
         $This.Mode                              = $Mode
         $This.Command                           = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
-        $This.Slot                              = ("Forest Tree Child Clone" -Split " ")[$Mode]
+        $This.Slot                              = ("Forest","Tree","Child","Clone")[$Mode]
 
         $This.IO.Forest.IsChecked               = $False
         $This.IO.Tree.IsChecked                 = $False
@@ -52,20 +52,20 @@ Class _FEPromo
 
         $This.IO.$($This.Slot).IsChecked        = $True
 
-        $Tray                                   = @("Visible","Collapsed")[@((0,0,1),(1,0,1),(1,1,0),(1,1,0))[$Mode]]
+        $Tray                                   = @("Visible","Collapsed")[@((0,0,1),(1,0,1),(1,1,0),(1,1,1))[$Mode]]
         $This.IO.ForestModeBox.Visibility       = $Tray[0]
         $This.IO.DomainModeBox.Visibility       = $Tray[1]
         $This.IO.ParentDomainNameBox.Visibility = $Tray[2]
         $This.IO.ParentDomainName.Text          = "<Domain Name>"
 
-        $This.DomainType                        = @("-","TreeDomain","ChildDomain","-")[$Mode]
+        $This.DomainType                        = @($Null,"TreeDomain","ChildDomain",$Null)[$Mode]
                 
         $Tray                                   = Switch ($Mode)
         {
-            0 { $This.IO.ForestMode.SelectedIndex,$This.IO.DomainMode.SelectedIndex,"-" }
-            1 { $This.IO.ForestMode.SelectedIndex,"-","-" }
-            2 { "-","-","<Domain Name>" }
-            3 { "-","-","<Domain Name>" }
+            0 { $This.IO.ForestMode.SelectedIndex,$This.IO.DomainMode.SelectedIndex,$Null }
+            1 { $This.IO.ForestMode.SelectedIndex,$Null,$Null }
+            2 { $Null,$Null,"<Domain Name>" }
+            3 { $Null,$Null,$Null }
         }
                 
         $This.ForestMode                        = $Tray[0]
@@ -101,6 +101,7 @@ Class _FEPromo
         {
             $This.IO.Credential.Text            = $This.Connection.Credential.Username
             $This.IO.Credential.IsEnabled       = $False
+            $This.IO
         }
     }
 

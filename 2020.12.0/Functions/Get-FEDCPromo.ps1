@@ -46,26 +46,8 @@ Function Get-FEDCPromo
 
         $Popup.IO.Ok.Add_Click(
         {
-            If ( ! $Popup.IO.Username.Text )
-            {
-                [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
-            }
-
-            ElseIf ( ! $Popup.IO.Password.Password )
-            {
-                [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
-            }
-
-            ElseIf ( $Popup.IO.Password.Password -notmatch $Popup.IO.Confirm.Password )
-            {
-                [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
-            }
-
-            Else
-            {
-                $Popup.Credential               = [System.Management.Automation.PSCredential]::New($Popup.IO.Username.Text,$Popup.IO.Confirm.SecurePassword)
-                $Popup.Window.Host.DialogResult = $True
-            }
+            $Popup.TestCredential()
+            $Popup.Window.Host.DialogResult = $True
         })
 
         $Popup.Window.Invoke()

@@ -5,14 +5,15 @@ Class _PingObject
     [String]         $Status
     [String]        $Address
     [String]       $Hostname
-    [Object]        $NetBIOS
+    [Object]            $NBT
+    [String]        $NetBIOS
 
     _PingObject([UInt32]$Index,[String]$Address,[Object]$Reply)
     {
-        $This.Index          = $Index
-        $This.Address        = $Address
         $This.Reply          = $Reply.Result
+        $This.Index          = $Index
         $This.Status         = @("-","+")[[Int32]($Reply.Result.Status -match "Success")]
+        $This.Address        = $Address
         $This.HostName       = Switch ( $This.Status )
         {
             "+"

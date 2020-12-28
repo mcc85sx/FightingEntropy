@@ -32,38 +32,72 @@ Function Get-FEDCPromo
 
         $Popup.Invoke()
 
-        If ( !$UI.Connection.Target )
+        If ( $UI.Connection.Target )
         {
-            Throw "Unsuccessful"
-        }
+            $Popup                             = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
 
-        $Popup                             = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
+            $Popup.IO.Cancel.Add_Click(
+            {
+                $UI.IO.Credential.Text          = ""
+                $Popup.Window.Host.DialogResult = $False
+            })
 
-        $Popup.IO.Cancel.Add_Click(
-        {
-            $UI.IO.Credential.Text          = ""
-            $Popup.Window.Host.DialogResult = $False
-        })
-
-        $Popup.IO.Ok.Add_Click(
-        {
-            $Popup.TestCredential()
-            $UI.Credential                  = $Popup.Credential
-            $UI.IO.Credential               | % { 
+            $Popup.IO.Ok.Add_Click(
+            {
+                $Popup.TestCredential()
+                $UI.Credential                  = $Popup.Credential
+                $UI.IO.Credential               | % { 
                 
-                $_.Text                     = $Popup.Credential.UserName
-                $_.IsEnabled                = $False
-            }
+                    $_.Text                     = $Popup.Credential.UserName
+                    $_.IsEnabled                = $False
+                }
 
-            $Popup.Window.Host.DialogResult = $True
-        })
+                #Switch ($UI.Mode)
+                #{
+                #    2
+                #    {
+                #        $UI.IO.ParentDomainName.Text  = $Popup.Search("dnsroot")[0]
+                #    }
 
-        $Popup.Window.Invoke()
+                #    3
+                #    {
+                #        $UI.IO.DomainName.Text        = $Popup.Search("dnsroot")[0]
+                #        $UI.IO.ReplicationSourceDC    = $UI.Connection.Target
+                #    }
+                #}
+
+                $Popup.Window.Host.DialogResult = $True
+            })
+
+            $Popup.Window.Invoke()
+        }
     })
      
     # SafeModeAdministratorPassword : System.Windows.Controls.PasswordBox
     # Confirm                       : System.Windows.Controls.PasswordBox
     # Start                         : System.Windows.Controls.Button: Start
+
+    $UI.IO.Start.Add_Click(
+    {
+        $Password = $UI.IO.SafeModeAdministratorPassword
+        $Confirm  = $UI.IO.Confirm
+
+        If (!$Password.Password)
+        {
+            [System.Windows.MessageBox]::Show("Invalid password")
+        }
+
+        ElseIf ($Password.Password -notmatch $Confirm.Password)
+        {
+            [System.Windows.Messagebox]::Show("Password does not match")
+        }
+
+        Else
+        {
+            $UI.SafeModeAdministratorPassword = $Password.SecurePassword
+            $UI.IO.DialogResult               = $True
+        }
+    })
 
     $UI.Window.Invoke()
 }

@@ -5,6 +5,7 @@ Class _ADLogin
 
     [String]                           $IPAddress
     [String]                             $DNSName
+    [String]                              $Domain
     [String]                             $NetBIOS
 
     [Object]                          $Credential
@@ -25,7 +26,8 @@ Class _ADLogin
         $This.NetBIOS      = $Target.NetBIOS
         $This.Port         = 389
         $This.DC           = $This.DNSName.Split(".")[0]
-        $This.Directory    = "LDAP://$($This.DC)/CN=Partitions,CN=Configuration,DC=$($This.DNSName.Replace($This.DC + '.','').Split('.') -join ',DC=')"
+        $This.Domain       = $This.DNSName.Replace($This.DC + '.','')
+        $This.Directory    = "LDAP://$( $This.DC )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split('.') -join ',DC=')"
     }
 
     TestCredential()
@@ -61,20 +63,33 @@ Class _ADLogin
             {
                 $Null
             }
-            
+
             If ( $This.Test )
             {
-                $This.Init()
+                $This.Initialize()
+            }
+
+            Else
+            {
+                [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
+                $This.Credential           = $Null
+                $This.Test                 = $Null
             }
         }
     }
 
-    Init()
+    Initialize()
     {
-        $This.Searcher                 = [System.DirectoryServices.DirectorySearcher]::New()
-        $This.Searcher.SearchRoot      = $This.Test
-        $This.Searcher.PageSize        = 1000
+        $This.Searcher                     = [System.DirectoryServices.DirectorySearcher]::New()
+        $This.Searcher.SearchRoot          = $This.Test
+        $This.Searcher.PageSize            = 1000
         $This.Searcher.PropertiesToLoad.Clear()
-        $This.Return                   = ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? netbiosname }
+        $This.Return                       = $This.Searcher.FindAll()
+    }
+
+    Search([String]$Field)
+    {
+        $Field = $Field.ToLower()
+        ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? $Field }
     }
 }

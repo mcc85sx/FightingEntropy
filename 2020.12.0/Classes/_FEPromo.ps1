@@ -3,10 +3,11 @@ Class _FEPromo
     [Object]                              $Window
     [Object]                                  $IO
     [Object]                                $Host
-    [Object]                            $Features
     [Object]                             $Network
     [Object]                               $Range
     [Object]                             $HostMap
+    [Object]                          $Connection
+    [Object]                            $Features
 
     [String]                             $Command
     [Int32]                                 $Mode
@@ -110,6 +111,32 @@ Class _FEPromo
         $This.IO."$( $Obj.Name    )".Text       = ""
     }
 
+    Get_FEPromo_Domain_Controllers()
+    {
+        $This.Connection   = @{ 
+
+            Primary        = $This.HostMap | ? { $_.NBT.ID -match "1b" }
+            Secondary      = $This.HostMap | ? { $_.NBT.ID -match "1c" }
+            Output         = @( )
+        }
+
+        $This.Connection   | % { 
+
+            $_.Primary     | % { 
+
+                $_.NetBIOS = $_.NBT | ? ID -eq 1b | % Name
+            }
+
+            $_.Secondary   | % { 
+                
+                $_.NetBIOS = $_.NBT | ? ID -eq 1c | % Name 
+            }
+
+            $_.Output      = $_.Primary, $_.Secondary | Select -Unique
+            $_.Output      = $_.Output | Select-Object Address, Hostname, NetBIOS
+        }
+    }
+
     _FEPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window
@@ -120,13 +147,15 @@ Class _FEPromo
         $HostRange                              = $This.Host.Network.Interface.IPV4 | ? Gateway | % Range
 
         $This.Range                             = [_PingSweep]::New($HostRange -Split "`n")
-        $This.HostMap                           = $This.Range._Filter()
-
-        ForEach ( $I in $This.HostMap )
-        {
+        $This.HostMap                           = $This.Range._Filter() 
+        
+        ForEach ( $I in $This.Hostmap ) 
+        { 
             Write-Host "[+] $($I.HostName)/$($I.Address)"
-            $I.NetBIOS                          = nbtstat -a $I.Address | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
+            $I.NBT                          = nbtstat -a $I.Address | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
         }
+
+        $This.Get_FEPromo_Domain_Controllers()
 
         $This.Features                          = [_ServerFeatures]::New().Output
                 
@@ -142,7 +171,7 @@ Class _FEPromo
         $This.LogPath                           = "$Env:SystemRoot\NTDS"
         $This.IO.LogPath.Text                   = $This.LogPath 
 
-        $This.SysvolPath                        = "$Env:SystemRoot\NTDS"
+        $This.SysvolPath                        = "$Env:SystemRoot\SYSVOL"
         $This.IO.SysvolPath.Text                = $This.SysvolPath
 
         $This.SetMode($Mode)

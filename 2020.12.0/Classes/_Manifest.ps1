@@ -6,7 +6,7 @@ Class _Manifest
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
     [String[]]   $Classes = (("Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme", 
-                              "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network DNSSuffix DomainName",  
+                              "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network DNSSuffix DomainName ADLogin",  
                               "NetInterface Network Info ViperBomb Brand Branding Certificate Company Key RootVar PingSweep PingObject",
                               "Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo UISwitch", 
                               "Image Images Updates ArpHost ArpScan ArpStat NbtHost NbtScan NbtStat NbtObj NbtRef FEPromo",

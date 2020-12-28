@@ -474,8 +474,8 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                   IsTextSearchEnabled="True" 
                   SelectionMode="Extended">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Address"  Width="150" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Hostname" Width="250" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Address"  Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Hostname" Width="240" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
                 <DataGridTextColumn Header="NetBIOS"  Width="100" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>

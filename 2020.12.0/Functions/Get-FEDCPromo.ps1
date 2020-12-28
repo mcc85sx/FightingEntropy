@@ -12,6 +12,7 @@ Function Get-FEDCPromo
 
     $UI.IO.Credential.Add_Click{
 
+        $UI.Connection.Target              = $Null
         $Popup                             = Get-XAMLWindow -Type FEDCFound
         $Popup.Host.DataGrid.ItemsSource   = $UI.Connection.Output
         $Popup.Host.DataGrid.SelectedIndex = 0
@@ -31,13 +32,43 @@ Function Get-FEDCPromo
 
         $Popup.Invoke()
 
-        If ( ! $UI.Connection.Return )
+        If ( !$UI.Connection.Target )
         {
             Throw "Unsuccessful"
         }
 
         $Popup                             = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
-        
+
+        $Popup.IO.Cancel.Add_Click(
+        {
+            $Popup.Window.Host.DialogResult = $False
+        })
+
+        $Popup.IO.Ok.Add_Click(
+        {
+            If ( ! $Popup.IO.Username.Text )
+            {
+                [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
+            }
+
+            ElseIf ( ! $Popup.IO.Password.Password )
+            {
+                [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
+            }
+
+            ElseIf ( $Popup.IO.Password.Password -notmatch $Popup.IO.Confirm.Password )
+            {
+                [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
+            }
+
+            Else
+            {
+                $Popup.Credential               = [System.Management.Automation.PSCredential]::New($Popup.IO.Username.Text,$Popup.IO.Confirm.SecurePassword)
+                $Popup.Window.Host.DialogResult = $True
+            }
+        })
+
+        $Popup.Window.Invoke()
     }
      
     # SafeModeAdministratorPassword : System.Windows.Controls.PasswordBox

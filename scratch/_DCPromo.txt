@@ -3,10 +3,13 @@ $Install_ADDSForest           = @{
 	ForestMode                = "WinThreshold" 
 	DomainMode                = "WinThreshold"
 	# DomainType
+	# ParentDomainName
 	
 	DomainName                = "securedigitsplus1.com"
 	DomainNetbiosName         = "SECUREDIGITSPLU"
 	# SiteName
+	# NewDomainName
+	# NewDomainNetbiosName
 	
 	InstallDns                = $true
 	CreateDnsDelegation       = $false
@@ -20,43 +23,18 @@ $Install_ADDSForest           = @{
 	# Credential
 }
 
-$Install_ADDSDomainController = @{
-	
-	# ForestMode
-	# DomainMode
-	# DomainType
-	
-	DomainName                = "securedigitsplus.com" 
-	# DomainNetBIOSName
-	SiteName                  = "Default-First-Site-Name"
-	# NewDomainName
-	# NewDomainNetbiosName
-	# ParentDomainName
-	
-	InstallDns                = $true 
-	CreateDnsDelegation       = $false
-	CriticalReplicationOnly   = $false 
-	NoGlobalCatalog           = $false
-
-	DatabasePath              = "C:\Windows\NTDS"
-	LogPath                   = "C:\Windows\NTDS"
-	SysvolPath                = "C:\Windows\SYSVOL"
-	
-	Credential                = (Get-Credential)
-}
-
 $Install_ADDSDomain_Tree      = @{ 
 
 	# ForestMode
 	DomainMode                = "WinThreshold"
 	DomainType                = "TreeDomain"
+	ParentDomainName          = "securedigitsplus.com"
 
 	# DomainName 
 	# DomainNetBIOSName
 	SiteName                  = "Default-First-Site-Name"
 	NewDomainName             = "newdomainname.com"
 	NewDomainNetbiosName      = "NEWDOMAINNAME"
-	ParentDomainName          = "securedigitsplus.com"
 	
 	InstallDns                = $true
 	CreateDnsDelegation       = $false
@@ -75,19 +53,44 @@ $Install_ADDSDomain_Child     = @{
 	# ForestMode
 	DomainMode                = "WinThreshold"
 	DomainType                = "ChildDomain"
+	ParentDomainName          = "securedigitsplus.com"
 
 	# DomainName
 	# DomainNetBIOSName
 	SiteName                  = "Default-First-Site-Name"
 	NewDomainName             = "child"
 	NewDomainNetbiosName      = "CHILD"
-	ParentDomainName          = "securedigitsplus.com"
 	
 	InstallDns                = $true
 	CreateDnsDelegation       = $true
 	# CriticalReplicationOnly
 	NoGlobalCatalog           = $false
 	
+	DatabasePath              = "C:\Windows\NTDS"
+	LogPath                   = "C:\Windows\NTDS"
+	SysvolPath                = "C:\Windows\SYSVOL"
+	
+	Credential                = (Get-Credential)
+}
+
+$Install_ADDSDomainController = @{
+	
+	# ForestMode
+	# DomainMode
+	# DomainType
+	# ParentDomainName
+	
+	DomainName                = "securedigitsplus.com" 
+	# DomainNetBIOSName
+	SiteName                  = "Default-First-Site-Name"
+	# NewDomainName
+	# NewDomainNetbiosName
+	
+	InstallDns                = $true 
+	CreateDnsDelegation       = $false
+	CriticalReplicationOnly   = $false 
+	NoGlobalCatalog           = $false
+
 	DatabasePath              = "C:\Windows\NTDS"
 	LogPath                   = "C:\Windows\NTDS"
 	SysvolPath                = "C:\Windows\SYSVOL"

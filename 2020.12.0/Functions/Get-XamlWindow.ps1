@@ -2,7 +2,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 {
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
-    [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService")]
+    [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","Test")]
     [String]$Type,
     [Parameter()]
     [Switch]$Return)
@@ -118,7 +118,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     
     Class _XamlObject
     {
-        [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService" -Split " ")
+        [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService Test" -Split " ")
         [Object]       $Glossary = [_XamlGlossary]::New().Glossary
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics")
         [Object]           $Xaml = @{ 
@@ -452,6 +452,44 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'figuration" $MA`="5"><$LA` Name="Service$LA`"/></$GB`><$BU` $G`.Column="1" Name="Start" $CO`="Start" Font'+
             'Weight="Bold" $MA`="10"/><$BU` $G`.Column="2" Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$'+
             'GB` $G`.Column="3" $HD`="Module Version" $MA`="5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
+
+            Test = (@"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 
+        Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Row="0" Grid.Column="0"
+                  Name="DataGrid" 
+                  FrozenColumnCount="2" 
+                  AutoGenerateColumns="False" 
+                  AlternationCount="2" 
+                  HeadersVisibility="Column" 
+                  CanUserResizeRows="False" 
+                  CanUserAddRows="False" 
+                  IsTabStop="True" 
+                  IsTextSearchEnabled="True" 
+                  SelectionMode="Extended">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Address"  Width="150" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Hostname" Width="250" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
+                <DataGridTextColumn Header="NetBIOS"  Width="100" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="10"/>
+            <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="10"/>
+        </Grid>
+    </Grid>
+</Window>
+"@)
         }
 
         Hidden [Object]     $Slot

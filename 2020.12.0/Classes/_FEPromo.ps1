@@ -118,6 +118,7 @@ Class _FEPromo
             Primary        = $This.HostMap | ? { $_.NBT.ID -match "1b" }
             Secondary      = $This.HostMap | ? { $_.NBT.ID -match "1c" }
             Output         = @( )
+            Return         = @( )
         }
 
         $This.Connection   | % { 

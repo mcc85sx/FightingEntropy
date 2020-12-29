@@ -6,29 +6,21 @@ Class _Manifest
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
 
-        # $Classes = 
-        # Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme Object Flag OS Hive 
-        # Manifest Banner VendorList NbtRef NbtHost NbtScan NbtStat NbtObj DNSSuffix DomainName ADLogin ADConnection NetInterface 
-        # Network Info ViperBomb Brand Branding Certificate Company Key RootVar PingSweep PingObject Share Source Target 
-        # ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo UISwitch Image Images Updates ArpHost ArpScan 
-        # ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj FEDCPromo Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject
+    # //          Classes
+    # \\          -------
+    # //    Module (Core)      Manifest Hive Root Module OS Info Service RestObject
+    # \\      Write-Theme      Block Faces Track Theme Object Flag Banner
+    # // Network(ARP/NBT)      VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj
+    # \\    Network(Main)      Network NetInterface PingSweep PingObject Host FirewallRule
+    # //           System      Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding
+    # \\         Active D.     DNSSuffix DomainName ADLogin ADConnection FEDCPromo
+    # //           Server      Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS
+    # \\          Imaging      Image Images Updates
+    # //             Role      Role Win32_Client Win32_Server UnixBSD RHELCentOS
 
-        # //   --------------
-        # \\          Classes
-        # //   --------------
-        # \\    Module (Core)   Manifest Hive Root Module OS Info RestObject
-        # //      Write-Theme   Block Faces Track Theme Object Flag Banner
-        # \\ Network(ARP/NBT)   VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network
-        # //    Network(Main)   Network NetInterface PingSweep PingObject Host FirewallRule
-        # \\           System   Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding
-        # //         Active D.  DNSSuffix DomainName ADLogin ADConnection FEDCPromo
-        # \\           Server   Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS
-        # //          Imaging   Image Images Updates
-        # \\             Role   Role Win32_Client Win32_Server UnixBSD RHELCentOS
-
-    [String[]]   $Classes = (("Manifest Hive Root Module OS Info RestObject",
+    [String[]]   $Classes = (("Manifest Hive Root Module OS Info Service RestObject",
                               "Block Faces Track Theme Object Flag Banner",
-                              "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network",
+                              "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj",
                               "Network NetInterface PingSweep PingObject Host FirewallRule",
                               "Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding",
                               "DNSSuffix DomainName ADLogin ADConnection FEDCPromo",
@@ -56,3 +48,6 @@ Class _Manifest
         Return @( [Regex]::Matches((Invoke-RestMethod "$URL/$Type"),$Filter).Value | Select -Unique | ? { $_ -notin $This.$Type } )
     }
 }
+
+$URL = "https://github.com/mcc85sx/FightingEntropy/tree/master/2020.12.0"
+$UI  = [_Manifest]::New()

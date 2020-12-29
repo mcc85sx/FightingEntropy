@@ -12,21 +12,16 @@ Class _FEPromo
     [Int32]                                 $Mode
     [Object]                             $Profile
     [String]                             $Command
-    [String]                          $DomainType
     [String]                          $ForestMode
     [String]                          $DomainMode
-    [String]                    $ParentDomainName
+    [String]                          $DomainType
 
     [Object]                          $InstallDNS
     [Object]                 $CreateDNSDelegation
     [Object]                     $NoGlobalCatalog
     [Object]             $CriticalReplicationOnly
 
-    [Object]                        $DatabasePath
-    [Object]                             $LogPath
-    [Object]                          $SysvolPath
-    
-    [Object]                          $Credential
+    [Object]                    $ParentDomainName
     [Object]                          $DomainName
     [Object]                   $DomainNetBIOSName
     [Object]                       $NewDomainName
@@ -34,7 +29,12 @@ Class _FEPromo
     [Object]                 $ReplicationSourceDC
     [Object]                            $SiteName
 
+    [Object]                        $DatabasePath
+    [Object]                             $LogPath
+    [Object]                          $SysvolPath
+
     [SecureString] $SafeModeAdministratorPassword
+    [Object]                          $Credential
 
     [Object]                              $Output
 
@@ -132,7 +132,7 @@ Class _FEPromo
     _FEPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window
-        $This.IO                                = $Window.Host
+        $This.IO                                = $Window.IO
         $This.Host                              = Get-FEModule | % Role | % Host
         $This.Host._Network()
         $This.Network                           = $This.Host.Network

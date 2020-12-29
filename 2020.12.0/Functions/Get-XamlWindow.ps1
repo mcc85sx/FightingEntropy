@@ -84,9 +84,9 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         [Object]                 $IO
         [Object]             $Output
 
-        [String[]] FindNames([String]$Xaml)
+        [String[]] FindNames()
         {
-            Return @( [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $Xaml | % Value | % { 
+            Return @( [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $This.Xaml | % Value | % { 
             
                 ($_-Replace "(\s+)(Name|=|'|`"|\s)","").Split('"')[1] 
                 
@@ -104,7 +104,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 
             $This.Xaml               = $Xaml
             $This.XML                = [XML]$Xaml
-            $This.Names              = $This.FindNames($This.Xaml)
+            $This.Names              = $This.FindNames()
             $This.Node               = [System.XML.XmlNodeReader]::New($This.XML)
             $This.IO                 = [System.Windows.Markup.XAMLReader]::Load($This.Node)
     
@@ -131,7 +131,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     Class _XamlObject
     {
         [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService Test" -Split " ")
-        [Object]       $Glossary = [_XamlGlossary]::New().Glossary
+        [Object]       $Glossary = [_XamlGlossary]::New().Output
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics")
         [Object]           $Xaml = @{ 
 

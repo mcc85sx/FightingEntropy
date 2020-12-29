@@ -203,99 +203,185 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             '="120" IsEnabled="False" Visibility="Collapsed"> 389</$TB`><$BU` Name="Ok" $CO`="Ok" $G`.Column="0" $G`.Ro'+
             'w="1" $MA`="5"></$BU`><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $G`.Row="1" $MA`="5"></$BU`></$G`><'+
             '/$G`></$GB`></$WI`>')
-            FEDCPromo            = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Domain Controller Promotion" $W`'+
-            '="800" $H`="800" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$G`><$G`.$RD`s><$RD` $H`="20"/><$RD` $H'+
-            '`="*"/></$G`.$RD`s><$MN` $G`.Row="0" $H`="20"><$MN`Item $HD`="New"><$MN`Item Name="Forest" $HD`="Install-A'+
-            'DDSForest" IsCheckable="True"/><$MN`Item Name="Tree" $HD`="Install-ADDSDomain Tree" IsCheckable="True"/><$'+
-            'MN`Item Name="Child" $HD`="Install-ADDSDomain Child" IsCheckable="True"/><$MN`Item Name="Clone" $HD`="Insta'+
-            'll-ADDSDomainController" IsCheckable="True"/></$MN`Item></$MN`><$GB` $G`.Row="1" $HD`="[FEDCPromo://Domai'+
-            'n Service Configuration ]" $Hx`="Center" $Vx`="Center" $W`="760" $H`="740"><$G`><$G` $G`.Row="1" $MA`="10'+
-            '"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="10*"/></$G`.$RD`s><$G` $G`.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD`'+
-            ' $W`="*"/></$G`.$CD`s><$GB` Name="ForestModeBox" $HD`="ForestMode" $G`.Column="0" $MA`="5" Visibility="Col'+
-            'lapsed"><$CB` Name="ForestMode" $H`="24" SelectedIndex="0"><$CB`Item $CO`="$WI`s Server 2000 ( Default )" '+
-            'IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2003" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2'+
-            '008" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2008 R2" IsSelected="False"/><$CB`Item $CO`="$WI`s '+
-            'Server 2012" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2012 R2" IsSelected="False"/><$CB`Item $CO`'+
-            '="$WI`s Server 2016" IsSelected="True"/><$CB`Item $CO`="$WI`s Server 2019" IsSelected="False"/></$CB`></$'+
-            'GB`><$GB` Name="DomainModeBox" $HD`="DomainMode" $G`.Column="1" $MA`="5" Visibility="Collapsed"><$CB` Name='+
-            '"DomainMode" $H`="24" SelectedIndex="0"><$CB`Item $CO`="$WI`s Server 2000 ( Default )" IsSelected="False"'+
-            '/><$CB`Item $CO`="$WI`s Server 2003" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2008" IsSelected="F'+
-            'alse"/><$CB`Item $CO`="$WI`s Server 2008 R2" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 2012" IsSel'+
-            'ected="False"/><$CB`Item $CO`="$WI`s Server 2012 R2" IsSelected="False"/><$CB`Item $CO`="$WI`s Server 201'+
-            '6" IsSelected="True"/><$CB`Item $CO`="$WI`s Server 2019" IsSelected="False"/></$CB`></$GB`><$GB` Name="Par'+
-            'entDomainNameBox" $HD`="Parent Domain Name" $G`.Column="0" $MA`="5" Visibility="Collapsed"><$TB` Name="Paren'+
-            'tDomainName" Text="&lt;Domain Name&gt;" $H`="20" $MA`="5"/></$GB`></$G`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $'+
-            'W`="*"/><$CD` $W`="2.5*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="3.5*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $HD`='+
-            '"Service Options" $G`.Row="0" $G`.Column="0" $MA`="5"><$G` $G`.Row="0" $G`.Column="0"><$G`.$CD`s><$CD` $W'+
-            '`="5*"/><$CD` $W`="*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/'+
-            '><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/'+
-            '><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$'+
-            'TBL` $G`.Column="0" $G`.Row="0" $MA`="5" TextAlignment="Right">AD-Domain-Services:</$TBL`><$CHK` $G`.Colu'+
-            'mn="1" $G`.Row="0" $MA`="5" Name="AD_Domain_Services" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Colum'+
-            'n="0" $G`.Row="1" $MA`="5" TextAlignment="Right">DHCP:</$TBL`><$CHK` $G`.Column="1" $G`.Row="1" $MA`="5" '+
-            'Name="DHCP" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="2" $MA`="5" TextAlignment="'+
-            'Right">DNS:</$TBL`><$CHK` $G`.Column="1" $G`.Row="2" $MA`="5" Name="DNS" IsEnabled="True" IsChecked="False'+
-            '"/><$TBL` $G`.Column="0" $G`.Row="3" $MA`="5" TextAlignment="Right">GPMC:</$TBL`><$CHK` $G`.Column="1" $G'+
-            '`.Row="3" $MA`="5" Name="GPMC" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="4" $MA`='+
-            '"5" TextAlignment="Right">RSAT:</$TBL`><$CHK` $G`.Column="1" $G`.Row="4" $MA`="5" Name="RSAT" IsEnabled="T'+
-            'rue" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="5" $MA`="5" TextAlignment="Right">:RSAT-AdminCente'+
-            'r</$TBL`><$CHK` $G`.Column="1" $G`.Row="5" $MA`="5" Name="RSAT_AD_AdminCenter" IsEnabled="True" IsChecked='+
-            '"False"/><$TBL` $G`.Column="0" $G`.Row="6" $MA`="5" TextAlignment="Right">RSAT-AD-PowerShell:</$TBL`><$CH'+
-            'K` $G`.Column="1" $G`.Row="6" $MA`="5" Name="RSAT_AD_PowerShell" IsEnabled="True" IsChecked="False"/><$TBL'+
-            '` $G`.Column="0" $G`.Row="7" $MA`="5" TextAlignment="Right">RSAT-AD-Tools:</$TBL`><$CHK` $G`.Column="1" $'+
-            'G`.Row="7" $MA`="5" Name="RSAT_AD_Tools" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row'+
-            '="8" $MA`="5" TextAlignment="Right">RSAT-ADDS:</$TBL`><$CHK` $G`.Column="1" $G`.Row="8" $MA`="5" Name="RSA'+
-            'T_ADDS" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="9" $MA`="5" TextAlignment="Rig'+
-            'ht">RSAT-ADDS-Tools:</$TBL`><$CHK` $G`.Column="1" $G`.Row="9" $MA`="5" Name="RSAT_ADDS_Tools" IsEnabled="T'+
-            'rue" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="10" $MA`="5" TextAlignment="Right">RSAT-DHCP:</$TB'+
-            'L`><$CHK` $G`.Column="1" $G`.Row="10" $MA`="5" Name="RSAT_DHCP" IsEnabled="True" IsChecked="False"/><$TBL`'+
-            ' $G`.Column="0" $G`.Row="11" $MA`="5" TextAlignment="Right">RSAT-DNS-Server:</$TBL`><$CHK` $G`.Column="1"'+
-            ' $G`.Row="11" $MA`="5" Name="RSAT_DNS_Server" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G'+
-            '`.Row="12" $MA`="5" TextAlignment="Right">RSAT-Role-Tools:</$TBL`><$CHK` $G`.Column="1" $G`.Row="12" $MA`'+
-            '="5" Name="RSAT_Role_Tools" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="13" $MA`="5'+
-            '" TextAlignment="Right">WDS:</$TBL`><$CHK` $G`.Column="1" $G`.Row="13" $MA`="5" Name="WDS" IsEnabled="True'+
-            '" IsChecked="False"/><$TBL` $G`.Column="0" $G`.Row="14" $MA`="5" TextAlignment="Right">WDS-AdminPack:</$T'+
-            'BL`><$CHK` $G`.Column="1" $G`.Row="14" $MA`="5" Name="WDS_AdminPack" IsEnabled="True" IsChecked="False"/><'+
-            '$TBL` $G`.Column="0" $G`.Row="15" $MA`="5" TextAlignment="Right">WDS-Deployment:</$TBL`><$CHK` $G`.Column'+
-            '="1" $G`.Row="15" $MA`="5" Name="WDS_Deployment" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Column="0"'+
-            ' $G`.Row="16" $MA`="5" TextAlignment="Right">WDS-Transport:</$TBL`><$CHK` $G`.Column="1" $G`.Row="16" $MA'+
-            '`="5" Name="WDS_Transport" IsEnabled="True" IsChecked="False"/></$G`></$GB`><$G` $G`.Row="0" $G`.Column="1'+
-            '" $MA`="10 , 0 , 10 , 0"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`'+
-            '="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Ro'+
-            'w="0" $HD`="DatabasePath" Name="DatabasePathBox" Visibility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" '+
-            '$MA`="10,0,10,0" Name="DatabasePath"/></$GB`><$GB` $G`.Row="1" $HD`="SysvolPath" Name="SysvolPathBox" Visib'+
-            'ility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10,0,10,0" Name="SysvolPath"/></$GB`><$GB` $G`.R'+
-            'ow="2" $HD`="LogPath" Name="LogPathBox" Visibility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10 '+
-            ', 0 , 10 , 0" Name="LogPath"/></$GB`><$GB` $G`.Row="3" $HD`="Credential" Name="CredentialBox" Visibility="V'+
-            'isible" $BO`Brush="{x:Null}"><$G`><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="3*"/></$G`.$CD`s><$BU` $CO`="Crede'+
-            'ntial" Name="Credential$BU`" $G`.Column="0"/><$TB` $H`="20" $MA`="10 , 0 , 10 , 0" Name="Credential" $G`.Co'+
-            'lumn="1"/></$G`></$GB`><$GB` $G`.Row="4" $HD`="DomainName" Name="DomainNameBox" Visibility="Visible" $BO`Bru'+
-            'sh="{x:Null}"><$TB` $H`="20" $MA`="10 , 0 , 10 ,0" Name="DomainName"/></$GB`><$GB` $G`.Row="5" $HD`="Domain'+
-            'NetBIOSName" Name="DomainNetBIOSNameBox" Visibility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10 ,'+
-            ' 0 , 10 , 0" Name="DomainNetBIOSName"/></$GB`><$GB` $G`.Row="6" $HD`="NewDomainName" Name="NewDomainNameBox" V'+
-            'isibility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10 , 0 , 10 , 0" Name="NewDomainName"/></$GB`'+
-            '><$GB` $G`.Row="7" $HD`="NewDomainNetBIOSName" Name="NewDomainNetBIOSNameBox" Visibility="Visible" $BO`Brush'+
-            '="{x:Null}"><$TB` $H`="20" $MA`="10 , 0 , 10 , 0" Name="NewDomainNetBIOSName"/></$GB`><$GB` $G`.Row="8" $HD'+
-            '`="SiteName" Name="SiteNameBox" Visibility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10 , 0 , 10 ,'+
-            ' 0" Name="SiteName"/></$GB`><$GB` $G`.Row="9" $HD`="ReplicationSourceDC" Name="ReplicationSourceDCBox" Visib'+
-            'ility="Visible" $BO`Brush="{x:Null}"><$TB` $H`="20" $MA`="10 , 0 , 10 , 0" Name="ReplicationSourceDC"/></$'+
-            'GB`></$G`><$GB` $G`.Row="1" $HD`="Roles" $MA`="5"><$G`><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`'+
-            '="*"/><$RD` $H`="*"/></$G`.$RD`s><$G`.$CD`s><$CD` $W`="5*"/><$CD` $W`="*"/></$G`.$CD`s><$TBL` $G`.Row="0"'+
-            ' TextAlignment="Right" $MA`="5" IsEnabled="True">Install DNS:</$TBL`><$CHK` Name="InstallDNS" $G`.Row="0" '+
-            '$G`.Column="1" $MA`="5" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Row="1" TextAlignment="Right" $MA`'+
-            '="5" IsEnabled="True">Create DNS Delegation:</$TBL`><$CHK` Name="CreateDNSDelegation" $G`.Row="1" $G`.Colu'+
-            'mn="1" $MA`="5" IsEnabled="True" IsChecked="False"/><$TBL` $G`.Row="2" TextAlignment="Right" $MA`="5" IsE'+
-            'nabled="True">No Global Catalog:</$TBL`><$CHK` Name="NoGlobalCatalog" $G`.Row="2" $G`.Column="1" $MA`="5" '+
-            'IsEnabled="True" IsChecked="False"/><$TBL` $G`.Row="3" TextAlignment="Right" $MA`="5" IsEnabled="True">Cr'+
-            'itical Replication Only:</$TBL`><$CHK` Name="CriticalReplicationOnly" $G`.Row="3" $G`.Column="1" $MA`="5" '+
-            'IsEnabled="True" IsChecked="False"/></$G`></$GB`><$GB` $G`.Row="1" $G`.Column="1" $HD`="Initialization" $'+
-            'MA`="5"><$G`><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"'+
-            '/></$G`.$CD`s><$GB` $G`.Row="0" $G`.Column="0" $HD`="SafeModeAdministrator$PW`"><$PW`Box Name="SafeModeAdm'+
-            'inistrator$PW`" $H`="20" $MA`="5" $PW`Char="*"/></$GB`><$GB` $G`.Row="0" $G`.Column="1" $HD`="Confirm"><$'+
-            'PW`Box Name="Confirm" $H`="20" $MA`="5" $PW`Char="*"/></$GB`><$BU` Name="Start" $G`.Row="1" $G`.Column="0" '+
-            '$CO`="Start" $MA`="5" $W`="100" $H`="20"/><$BU` Name="Cancel" $G`.Row="1" $G`.Column="1" $CO`="Cancel" $MA'+
-            '`="5" $W`="100" $H`="20"/></$G`></$GB`></$G`></$G`></$G`></$GB`></$G`></$WI`>')
+            FEDCPromo            = @"
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="20">
+            <MenuItem Header="Command">
+                <MenuItem Name="Forest" Header="Install-ADDSForest" IsCheckable="True"/>
+                <MenuItem Name="Tree"   Header="Install-ADDSDomain(Tree)" IsCheckable="True"/>
+                <MenuItem Name="Child"  Header="Install-ADDSDomain(Child)" IsCheckable="True"/>
+                <MenuItem Name="Clone"  Header="Install-ADDSDomainController" IsCheckable="True"/>
+            </MenuItem>
+        </Menu>
+        <GroupBox Grid.Row="1" Header="[FEDCPromo://Domain Service Configuration]" HorizontalAlignment="Center" VerticalAlignment="Center" Width="760" Height="740">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Name="_ForestMode" Header="[Forest Mode]" Grid.Column="0" Margin="5">
+                        <ComboBox Name="ForestMode" Height="24" SelectedIndex="0">
+                            <ComboBoxItem Content="Windows Server 2000 (Default)"/>
+                            <ComboBoxItem Content="Windows Server 2003"/>
+                            <ComboBoxItem Content="Windows Server 2008"/>
+                            <ComboBoxItem Content="Windows Server 2008 R2"/>
+                            <ComboBoxItem Content="Windows Server 2012"/>
+                            <ComboBoxItem Content="Windows Server 2012 R2"/>
+                            <ComboBoxItem Content="Windows Server 2016"/>
+                            <ComboBoxItem Content="Windows Server 2019"/>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Header="[Domain Mode]" Name="_DomainMode" Grid.Column="1" Margin="5">
+                        <ComboBox Name="DomainMode" Height="24" SelectedIndex="0">
+                            <ComboBoxItem Content="Windows Server 2000 (Default)"/>
+                            <ComboBoxItem Content="Windows Server 2003"/>
+                            <ComboBoxItem Content="Windows Server 2008"/>
+                            <ComboBoxItem Content="Windows Server 2008 R2"/>
+                            <ComboBoxItem Content="Windows Server 2012"/>
+                            <ComboBoxItem Content="Windows Server 2012 R2"/>
+                            <ComboBoxItem Content="Windows Server 2016"/>
+                            <ComboBoxItem Content="Windows Server 2019"/>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Header="[Parent Domain Name]" Name="_ParentDomainName" Grid.Column="0" Margin="5">
+                        <TextBox Name="ParentDomainName" Text="&lt;Domain Name&gt;" Height="20" Margin="5"/>
+                    </GroupBox>
+                    <GroupBox Header="[Replication Source DC]" Name="_ReplicationSourceDC"  Grid.Column="1" Margin="5">
+                        <TextBox Name="ReplicationSourceDC" Text="&lt;Any&gt;" Height="20" Margin="5"/>
+                    </GroupBox>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2.5*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="[Required Features]" Grid.Row="0" Margin="5">
+                            <DataGrid Grid.Row="0" Grid.Column="0" Margin="5" Name="DataGrid" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Single">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn     Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="Installed" Width="60">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Installed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Roles]" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="5" Text="Install DNS"/>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" Text="Create DNS Delegation"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Text="No Global Catalog"/>
+                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" Text="Critical Replication Only"/>
+                                <CheckBox Grid.Column="0" Grid.Row="0" Margin="5" Name="InstallDNS"/>
+                                <CheckBox Grid.Column="0" Grid.Row="1" Margin="5" Name="CreateDNSDelegation"/>
+                                <CheckBox Grid.Column="0" Grid.Row="2" Margin="5" Name="NoGlobalCatalog"/>
+                                <CheckBox Grid.Column="0" Grid.Row="3" Margin="5" Name="CriticalReplicationOnly"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Database Path]" Name="_DatabasePath">
+                            <TextBox Height="20" Margin="5" Name="DatabasePath"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Sysvol Path]" Name="_SysvolPath">
+                            <TextBox Height="20" Margin="5" Name="SysvolPath"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[Log Path]" Name="_LogPath">
+                            <TextBox Height="20" Margin="5" Name="LogPath"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="3" Header="[Credential]" Name="_Credential">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Credential" Name="CredentialButton" Grid.Column="0"/>
+                                <TextBox Height="20" Margin="5" Name="Credential" Grid.Column="1"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" Header="[Domain Name]" Name="_DomainName">
+                            <TextBox Height="20" Margin="5" Name="DomainName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="5" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
+                            <TextBox Height="20" Margin="5" Name="DomainNetBIOSName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="6" Header="[New Domain Name]" Name="_NewDomainNameBox">
+                            <TextBox Height="20" Margin="5" Name="NewDomainName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="7" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSNameBox">
+                            <TextBox Height="20" Margin="5" Name="NewDomainNetBIOSName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="8" Header="[Site Name]" Name="_SiteName">
+                            <TextBox Height="20" Margin="5" Name="SiteName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="9" Header="[Directory Services Recovery Mode Administrator (Password/Confirm)]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <PasswordBox Grid.Column="0" Name="SafeModeAdministratorPassword" Margin="5,0,5,0" Height="20" PasswordChar="*"/>
+                                <PasswordBox Grid.Column="1" Name="Confirm" Height="20" Margin ="5,0,5,0" PasswordChar="*"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="10" Header="[Initialize]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Name="Start" Grid.Column="0" Content="Start" Margin="5" Width="100" Height="20"/>
+                                <Button Name="Cancel" Grid.Column="1" Content="Cancel" Margin="5" Width="100" Height="20"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
+@'
             FEDCFound            = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 

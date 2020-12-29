@@ -62,26 +62,36 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         ' H Hx HCx LA MA MN MNI PA PW PWB PWC PR RB RES RD SI SE ST TC TN TT TBL TB TW TI TR VA Vx VCx W' + 
         ' WI XK') -Split " " | % { "`${0}" -f $_ } )  
 
-        [Object] $Glossary
+        [Object] $Output
 
         _XamlGlossary()
         {
-            $This.Glossary      = @( ) 
+            $This.Output      = @( ) 
         
             ForEach ( $I in 0..($This.Names.Count - 1))
             {
-                $This.Glossary += [_XamlGlossaryEntry]::New($I,$This.Labels[$I],$This.Names[$I])
+                $This.Output += [_XamlGlossaryEntry]::New($I,$This.Labels[$I],$This.Names[$I])
             }
         }
     }
 
     Class _XamlWindow 
     {
-        Hidden [String]        $Xaml
-        [String[]]            $Names 
+        Hidden [Object]        $XAML
+        Hidden [Object]         $XML
+        [String[]]            $Names
         [Object]               $Node
-        [Object]               $Host
+        [Object]                 $IO
         [Object]             $Output
+
+        [String[]] FindNames([String]$Xaml)
+        {
+            Return @( [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $Xaml | % Value | % { 
+            
+                ($_-Replace "(\s+)(Name|=|'|`"|\s)","").Split('"')[1] 
+                
+            } | Select-Object -Unique ) 
+        }
 
         _XamlWindow([String]$XAML)
         {           
@@ -93,13 +103,15 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
 
             $This.Xaml               = $Xaml
-            $This.Names              = ([Regex]"((Name)\s*=\s*('|`")\w+('|`"))").Matches($This.Xaml).Value | % { ($_ -Replace "(\s+)(Name|=|'|`"|\s)","").Split('"')[1] } | Select-Object -Unique 
-            $This.Node               = New-Object System.XML.XmlNodeReader([XML]$This.Xaml)
-            $This.Host               = [System.Windows.Markup.XAMLReader]::Load($This.Node)
+            $This.XML                = [XML]$Xaml
+            $This.Names              = $This.FindNames($This.Xaml)
+            $This.Node               = [System.XML.XmlNodeReader]::New($This.XML)
+            $This.IO                 = [System.Windows.Markup.XAMLReader]::Load($This.Node)
     
             ForEach ( $I in 0..( $This.Names.Count - 1 ) )
             {
-                $This.Host           | Add-Member -MemberType NoteProperty -Name $This.Names[$I] -Value $This.Host.FindName($This.Names[$I]) -Force 
+                $Name                = $This.Names[$I]
+                $This.IO             | Add-Member -MemberType NoteProperty -Name $Name -Value $This.IO.FindName($Name) -Force 
             }
         }
 
@@ -107,7 +119,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         {
             $This.Output             = @( )
 
-            $This.Host.Dispatcher.InvokeAsync(
+            $This.IO.Dispatcher.InvokeAsync(
             {
                 $This.Output         = $This.Host.ShowDialog()
                 Set-Variable -Name Output -Value $This.Output -Scope Global

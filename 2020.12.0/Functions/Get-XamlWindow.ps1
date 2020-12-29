@@ -346,10 +346,10 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                         <GroupBox Grid.Row="5" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
                             <TextBox Height="20" Margin="5" Name="DomainNetBIOSName"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="6" Header="[New Domain Name]" Name="_NewDomainNameBox">
+                        <GroupBox Grid.Row="6" Header="[New Domain Name]" Name="_NewDomainName">
                             <TextBox Height="20" Margin="5" Name="NewDomainName"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="7" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSNameBox">
+                        <GroupBox Grid.Row="7" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSName">
                             <TextBox Height="20" Margin="5" Name="NewDomainNetBIOSName"/>
                         </GroupBox>
                         <GroupBox Grid.Row="8" Header="[Site Name]" Name="_SiteName">

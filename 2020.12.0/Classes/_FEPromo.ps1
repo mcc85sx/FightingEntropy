@@ -9,9 +9,9 @@ Class _FEPromo
     [Object]                          $Connection
     [Object]                            $Features
 
-    [String]                             $Command
     [Int32]                                 $Mode
-    [String]                                $Slot
+    [Object]                             $Profile
+    [String]                             $Command
     [String]                          $DomainType
     [String]                          $ForestMode
     [String]                          $DomainMode
@@ -35,30 +35,29 @@ Class _FEPromo
     [Object]                            $SiteName
 
     [SecureString] $SafeModeAdministratorPassword
-    [String]                             $Profile
 
     [Object]                              $Output
 
     SetMode([Int32]$Mode)
     {
-        $This.Mode                              = $Mode
-        $This.Command                           = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
-        $This.Slot                              = ("Forest","Tree","Child","Clone")[$Mode]
+        $This.Mode                               = $Mode
+        $This.Profile                            = [_FEDCPromoProfile]::New($Mode)
+        $This.Command                            = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
 
-        $This.IO.Forest.IsChecked               = $False
-        $This.IO.Tree.IsChecked                 = $False
-        $This.IO.Child.IsChecked                = $False
-        $This.IO.Clone.IsChecked                = $False
+        $This.IO.Forest.IsChecked                = $False
+        $This.IO.Tree.IsChecked                  = $False
+        $This.IO.Child.IsChecked                 = $False
+        $This.IO.Clone.IsChecked                 = $False
 
-        $This.IO.$($This.Slot).IsChecked        = $True
+        $This.IO.$($This.Profile.Slot).IsChecked = $True
 
-        $Tray                                   = @("Visible","Collapsed")[@((0,0,1),(1,0,1),(1,1,0),(1,1,1))[$Mode]]
-        $This.IO.ForestModeBox.Visibility       = $Tray[0]
-        $This.IO.DomainModeBox.Visibility       = $Tray[1]
-        $This.IO.ParentDomainNameBox.Visibility = $Tray[2]
-        $This.IO.ParentDomainName.Text          = "<Domain Name>"
+        $Tray                                    = @("Visible","Collapsed")[@((0,0,1),(1,0,0),(1,1,0),(1,1,1))[$Mode]]
+        $This.IO.ForestModeBox.Visibility        = $Tray[0]
+        $This.IO.DomainModeBox.Visibility        = $Tray[1]
+        $This.IO.ParentDomainNameBox.Visibility  = $Tray[2]
+        $This.IO.ParentDomainName.Text           = "<Domain Name>"
 
-        $This.DomainType                        = @($Null,"TreeDomain","ChildDomain",$Null)[$Mode]
+        $This.DomainType                         = @($Null,"TreeDomain","ChildDomain",$Null)[$Mode]
                 
         $Tray                                   = Switch ($Mode)
         {
@@ -138,6 +137,11 @@ Class _FEPromo
         }
     }
 
+    HostRange()
+    {
+        $This.Range = [_PingSweep]::New(($This.Host.Network.Interface.IPV4 | ? Gateway | % Range | Select -Unique | % Split `n))
+    }
+
     _FEPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window
@@ -145,10 +149,8 @@ Class _FEPromo
         $This.Host                              = Get-FEModule | % Role | % Host
         $This.Host._Network()
         $This.Network                           = $This.Host.Network
-        $HostRange                              = $This.Host.Network.Interface.IPV4 | ? Gateway | % Range
-
-        $This.Range                             = [_PingSweep]::New($HostRange -Split "`n")
-        $This.HostMap                           = $This.Range._Filter() 
+        $This.HostRange()
+        $This.HostMap                           = $This.Range._Filter()
         
         ForEach ( $IHost in $This.Hostmap ) 
         { 

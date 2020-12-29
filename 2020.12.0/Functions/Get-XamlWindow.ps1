@@ -122,7 +122,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             $This.IO.Dispatcher.InvokeAsync(
             {
                 $This.Output         = $This.Host.ShowDialog()
-                Set-Variable -Name Output -Value $This.Output -Scope Global
 
             }).Wait()
         }

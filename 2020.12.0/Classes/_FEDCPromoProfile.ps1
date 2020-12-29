@@ -1,6 +1,5 @@
 Class _FEDCPromoProfile
 {
-    [Object]                $UI
     [UInt32]              $Mode
     Hidden [Hashtable]    $Tags = @{ 
 

@@ -14,14 +14,13 @@ Class _FEDCPromoProfile
     [Object]              $Text
     [Object]              $Role
 
-    _FEDCPromoProfile([Object]$UI,[UInt32]$Mode)
+    _FEDCPromoProfile([UInt32]$Mode)
     {
         If ( $Mode -notin 0..3 )
         {
             Throw "Invalid Entry"
         }
 
-        $This.UI    = $UI
         $This.Mode  = $Mode
         $This.Slot  = $This.Tags.Slot[$Mode]
         $This.Type  = $This.Tags.Type | % { $This.GetFEDCPromoType($Mode,$_) }

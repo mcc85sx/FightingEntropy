@@ -203,7 +203,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             '="120" IsEnabled="False" Visibility="Collapsed"> 389</$TB`><$BU` Name="Ok" $CO`="Ok" $G`.Column="0" $G`.Ro'+
             'w="1" $MA`="5"></$BU`><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $G`.Row="1" $MA`="5"></$BU`></$G`><'+
             '/$G`></$GB`></$WI`>')
-            FEDCPromo            = @"
+            FEDCPromo            = @'
             <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -381,7 +381,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         </GroupBox>
     </Grid>
 </Window>
-@'
+'@
             FEDCFound            = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 

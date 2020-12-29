@@ -48,6 +48,3 @@ Class _Manifest
         Return @( [Regex]::Matches((Invoke-RestMethod "$URL/$Type"),$Filter).Value | Select -Unique | ? { $_ -notin $This.$Type } )
     }
 }
-
-$URL = "https://github.com/mcc85sx/FightingEntropy/tree/master/2020.12.0"
-$UI  = [_Manifest]::New()

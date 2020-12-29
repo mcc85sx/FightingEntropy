@@ -21,16 +21,16 @@ Class _FEDCPromoProfile
             Throw "Invalid Entry"
         }
 
-        $This.Mode  = $Mode
-        $This.Slot  = $This.Tags.Slot[$Mode]
-        $This.Type  = $This.Tags.Type | % { $This.GetFEDCPromoType($Mode,$_) }
-        $This.Text  = $This.Tags.Text | % { $This.GetFEDCPromoText($Mode,$_) }
-        $This.Role  = $This.Tags.Role | % { $This.GetFEDCPromoRole($Mode,$_) }
+        $This.Mode              = $Mode
+        $This.Slot              = $This.Tags.Slot[$Mode]
+        $This.Type              = $This.Tags.Type | % { $This.GetFEDCPromoType($Mode,$_) }
+        $This.Text              = $This.Tags.Text | % { $This.GetFEDCPromoText($Mode,$_) }
+        $This.Role              = $This.Tags.Role | % { $This.GetFEDCPromoRole($Mode,$_) }
     }
 
     [Object] GetFEDCPromoType([UInt32]$Mode,[String]$Type)
     {
-        $Item = Switch($Type)
+        $Item                   = Switch($Type)
         {
             ForestMode            {1,0,0,0}
             DomainMode            {1,1,1,0}
@@ -42,14 +42,14 @@ Class _FEDCPromoProfile
 
     [Object] GetFEDCPromoText([UInt32]$Mode,[String]$Type)
     {
-        $Item = Switch($Type)
+        $Item                   = Switch($Type)
         {
             ParentDomainName      {0,1,1,0}
-	    DomainName            {1,0,0,1}
-	    DomainNetbiosName     {1,0,0,0}
-	    SiteName              {0,1,1,1}
-	    NewDomainName         {0,1,1,0}
-	    NewDomainNetbiosName  {0,1,1,0}
+	        DomainName            {1,0,0,1}
+	        DomainNetbiosName     {1,0,0,0}
+	        SiteName              {0,1,1,1}
+	        NewDomainName         {0,1,1,0}
+	        NewDomainNetbiosName  {0,1,1,0}
         }
 
         Return @([_FEDCPromoText]::New($Type,$Item[$Mode]))
@@ -57,7 +57,7 @@ Class _FEDCPromoProfile
 
     [Object] GetFEDCPromoRole([UInt32]$Mode,[String]$Type)
     {
-        $Item = Switch($Type)
+        $Item                   = Switch($Type)
         {
             InstallDNS              {(1,1,1,1),(1,1,1,1)}
             CreateDNSDelegation     {(1,1,1,1),(0,0,1,0)}

@@ -80,7 +80,7 @@ Class _FEPromo
 
         ForEach ( $Item in "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly".Split(" ") )
         {
-            $This.Set_FEPromo_Roles($This.$($Item))
+            $This.Set_FEPromoRoles($This.$($Item))
         }
 
         # Domain/Text
@@ -94,7 +94,7 @@ Class _FEPromo
 
         ForEach ( $Item in "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName".Split(" ") )
         {    
-            $This.Set_FEPromo_Text($This.$($Item))
+            $This.Set_FEPromoDomain($This.$($Item))
         }
 
         If ( !!$This.Connection.Credential )
@@ -105,45 +105,22 @@ Class _FEPromo
         }
     }
 
-    Set_FEPromo_Roles([Object]$Obj)
+    Set_FEPromoRoles([Object]$Obj)
     {
         $This.IO.$( $Obj.Name ).IsEnabled       = $Obj.IsEnabled
         $This.IO.$( $Obj.Name ).IsChecked       = $Obj.IsChecked
     }
 
-    Set_FEPromo_Text([Object]$Obj)
+    Set_FEPromoDomain([Object]$Obj)
     {
         $This.IO."$( $Obj.Name    )".IsEnabled  = $Obj.IsEnabled
         $This.IO."$( $Obj.Name )Box".Visibility = @("Collapsed","Visible")[$Obj.IsEnabled]
         $This.IO."$( $Obj.Name    )".Text       = ""
     }
 
-    Get_FEPromo_Domain_Controllers()
+    Get_ADConnection()
     {
-        $This.Connection   = @{ 
-
-            Primary        = $This.HostMap | ? { $_.NBT.ID -match "1b" }
-            Secondary      = $This.HostMap | ? { $_.NBT.ID -match "1c" }
-            Output         = @( )
-            Target         = @( )
-            Credential     = $Null
-        }
-
-        $This.Connection   | % { 
-
-            $_.Primary     | % { 
-
-                $_.NetBIOS = $_.NBT | ? ID -eq 1b | % Name
-            }
-
-            $_.Secondary   | % { 
-                
-                $_.NetBIOS = $_.NBT | ? ID -eq 1c | % Name 
-            }
-
-            $_.Output      = $_.Primary, $_.Secondary | Select -Unique
-            $_.Output      = $_.Output | Select-Object IPAddress, Hostname, NetBIOS
-        }
+        $This.Connection                        = [_ADConnection]::New($This.HostMap)
     }
 
     ValidateHostname()
@@ -179,7 +156,7 @@ Class _FEPromo
             $IHost.NBT                          = nbtstat -a $IHost.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
         }
 
-        $This.Get_FEPromo_Domain_Controllers()
+        $This.Get_ADConnection()
 
         $This.Features                          = [_ServerFeatures]::New().Output
                 

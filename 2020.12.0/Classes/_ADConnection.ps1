@@ -9,23 +9,23 @@ Class _ADConnection
 
     _ADConnection([Object]$Hostmap)
     {
-        $This.Primary      = $HostMap | ? { $_.NBT.ID -match "1b" }
-        $This.Secondary    = $HostMap | ? { $_.NBT.ID -match "1c" }
-        $This.Output       = @( )
-        $This.Target       = @( )
-        $This.Credential   = $Null
+        $This.Primary               = $HostMap | ? { $_.NBT.ID -match "1b" }
+        $This.Secondary             = $HostMap | ? { $_.NBT.ID -match "1c" }
+        $This.Output                = @( )
+        $This.Target                = @( )
+        $This.Credential            = $Null
 
-        $This.Primary      | % { 
-        
-            $_.NetBIOS     = $_.NBT | ? ID -eq 1b | % Name
+        If ( $This.Primary )
+        {
+            $This.Primary.NetBIOS   = $This.Primary.NBT   | ? ID -eq 1b | % Name
         }
 
-        $This.Secondary    | % { 
-                
-            $_.NetBIOS     = $_.NBT | ? ID -eq 1c | % Name 
+        If ( $This.Secondary )
+        {
+            $This.Secondary.NetBIOS = $This.Secondary.NBT | ? ID -eq 1c | % Name 
         }
 
-        $This.Output       = $This.Primary, $This.Secondary | Select -Unique
-        $This.Output       = $This.Output | Select-Object IPAddress, Hostname, NetBIOS
+        $This.Output                = $This.Primary, $This.Secondary | Select -Unique
+        $This.Output                = $This.Output | Select-Object IPAddress, Hostname, NetBIOS
     }
 }

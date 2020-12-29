@@ -47,11 +47,11 @@ Class _FEDCPromoProfile
         $Item = Switch($Type)
         {
             ParentDomainName      {0,1,1,0}
-	        DomainName            {1,0,0,1}
-	        DomainNetbiosName     {1,0,0,0}
-	        SiteName              {0,1,1,1}
-	        NewDomainName         {0,1,1,0}
-	        NewDomainNetbiosName  {0,1,1,0}
+	    DomainName            {1,0,0,1}
+	    DomainNetbiosName     {1,0,0,0}
+	    SiteName              {0,1,1,1}
+	    NewDomainName         {0,1,1,0}
+	    NewDomainNetbiosName  {0,1,1,0}
         }
 
         Return @([_FEDCPromoText]::New($Type,$Item[$Mode]))

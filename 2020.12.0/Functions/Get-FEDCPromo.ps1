@@ -3,7 +3,7 @@ Function Get-FEDCPromo
     Write-Theme "Loading Network [:] Domain Controller Initialization"
 
     $Time = [System.Diagnostics.Stopwatch]::StartNew()
-    $UI   = [_FEPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
+    $UI   = [_FEDCPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
     $Time.Stop()
 
     Write-Theme @("Scan [:] Complete";("-"*17 -join '');@{ 
@@ -14,58 +14,58 @@ Function Get-FEDCPromo
         "On Domain"       = ($UI.HostMap | ? NBT -ne $Null).Count
     })
 
-    $UI.IO.Forest.Add_Click({ $UI.SetMode(0)})
-    $UI.IO.Tree.Add_Click({ $UI.SetMode(1)})
-    $UI.IO.Child.Add_Click({ $UI.SetMode(2)})
-    $UI.IO.Clone.Add_Click({ $UI.SetMode(3)})
-    $UI.IO.Cancel.Add_Click({ $UI.IO.DialogResult = $False })
+    $UI.IO.Forest.Add_Click({$UI.SetMode(0)})
+    $UI.IO.Tree.Add_Click({$UI.SetMode(1)})
+    $UI.IO.Child.Add_Click({$UI.SetMode(2)})
+    $UI.IO.Clone.Add_Click({$UI.SetMode(3)})
+    $UI.IO.Cancel.Add_Click({$UI.IO.DialogResult = $False})
 
     $UI.IO.CredentialButton.Add_Click({
 
-        $UI.Connection.Target              = $Null
-        $Popup                             = Get-XAMLWindow -Type FEDCFound
-        $Popup.Host.DataGrid.ItemsSource   = $UI.Connection.Output
-        $Popup.Host.DataGrid.SelectedIndex = 0
-        [Void]$Popup.Host.DataGrid.Focus()
+        $UI.Connection.Target           = $Null
+        $DC                             = Get-XAMLWindow -Type FEDCFound
+        $DC.IO.DataGrid.ItemsSource     = $UI.Connection.Output
+        $DC.IO.DataGrid.SelectedIndex   = 0
+        [Void]$DC.Host.DataGrid.Focus()
 
-        $Popup.Host.Cancel.Add_Click(
+        $DC.IO.Cancel.Add_Click(
         {
             Write-Host "Canceled"
-            $Popup.Host.DialogResult       = $False
+            $DC.IO.DialogResult         = $False
         })
 
-        $Popup.Host.Ok.Add_Click(
+        $DC.IO.Ok.Add_Click(
         {
-            $UI.Connection.Target          = $UI.Connection.Output[$Popup.Host.DataGrid.SelectedIndex]
-            $Popup.Host.DialogResult       = $True
+            $UI.Connection.Target       = $UI.Connection.Output[$DC.IO.DataGrid.SelectedIndex]
+            $DC.IO.DialogResult         = $True
         })
 
-        $Popup.Invoke()
+        $DC.Invoke()
 
         If ( $UI.Connection.Target )
         {
-            $Popup                         = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
+            $DC                         = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
 
-            $Popup.IO.Cancel.Add_Click(
+            $DC.IO.Cancel.Add_Click(
             {
-                $UI.IO.Credential.Text                  = ""
-                $Popup.Window.Host.DialogResult         = $False
+                $UI.IO.Credential.Text  = ""
+                $DC.IO.DialogResult     = $False
             })
 
-            $Popup.IO.Ok.Add_Click(
+            $DC.IO.Ok.Add_Click(
             {
-                $Popup.TestCredential()
+                $DC.TestCredential()
                 
-                If (!$Popup.Return)
+                If (!$DC.Return)
                 {
                     [System.Windows.MessageBox]::Show("Exception","Could not connect")
                 }
 
-                $UI.Connection.Return                   = $Popup
-                $UI.Connection.Credential               = $Popup.Credential
+                $UI.Connection.Return                   = $DC
+                $UI.Connection.Credential               = $DC.Credential
                 $UI.IO.Credential                       | % { 
                 
-                    $_.Text                             = $Popup.Credential.UserName
+                    $_.Text                             = $DC.Credential.UserName
                     $_.IsEnabled                        = $False
                 }
 
@@ -73,29 +73,29 @@ Function Get-FEDCPromo
                 {
                     1
                     {
-                        $UI.IO.ParentDomainName.Text    = $Popup.Domain
-                        $UI.IO.Sitename.Text            = $Popup.GetSiteName()
+                        $UI.IO.ParentDomainName.Text    = $DC.Domain
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
                     }
 
                     2
                     {
-                        $UI.IO.ParentDomainName.Text    = $Popup.Domain
-                        $UI.IO.Sitename.Text            = $Popup.GetSiteName() 
+                        $UI.IO.ParentDomainName.Text    = $DC.Domain
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
                     }
 
                     3
                     {
                         $UI.IO.ParentDomainName.Text    = ""
-                        $UI.IO.Sitename.Text            = $Popup.GetSiteName() 
-                        $UI.IO.DomainName.Text          = $Popup.Domain
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                        $UI.IO.DomainName.Text          = $DC.Domain
                         $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
                     }
                 }
 
-                $Popup.Window.Host.DialogResult = $True
+                $DC.IO.DialogResult = $True
             })
 
-            $Popup.Window.Invoke()
+            $DC.Invoke()
         }
     })
 
@@ -122,30 +122,5 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
-   
-   # Test Output
-   # Switch($UI.Mode)
-   # {
-   #     0
-   #     {
-   #         
-   #     }   
-   #
-   #     1
-   #     {
-   #         
-   #     }
-   #     
-   #     2
-   #     {
-   #         
-   #     }
-   # 
-   #     3
-   #     {
-   #         
-   #     }
-   # }
-   
-   $UI
+    $UI
 }

@@ -5,20 +5,54 @@ Class _Manifest
     [String]        $GUID = ( "67b283d9-72c6-413a-aa80-a24af5d4ea8f" )
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
-    [String[]]   $Classes = (("Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme", 
-                              "Object Flag OS Hive Manifest Banner VendorList V4Network V6Network DNSSuffix DomainName ADLogin ADConnection",  
-                              "NetInterface Network Info ViperBomb Brand Branding Certificate Company Key RootVar PingSweep PingObject",
-                              "Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo UISwitch FEDCPromoProfile", 
-                              "Image Images Updates ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj FEPromo",
-                              "FEPromoDomain FEPromoRoles Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject" -join " " 
-                              ).Split(" ") | % { "_$_.ps1" })
-    [String[]] $Functions = (("Get-Certificate Get-FEModule Get-ViperBomb Remove-FEShare Write-Theme Write-Flag Write-Banner", 
-                              "Install-IISServer Add-ACL New-ACLObject Configure-IISServer Show-ToastNotification New-FECompany", 
-                              "Get-ServerDependency Get-FEService Get-FEHost Get-FEOS Get-FEManifest Get-FEHive Get-XamlWindow Get-FEDCPromo" -join " " 
-                              ).Split(" ") | % { "$_.ps1" })
+
+        # $Classes = 
+        # Root Module File FirewallRule Drive Cache Icons Shortcut Drives Host Block Faces Track Theme Object Flag OS Hive 
+        # Manifest Banner VendorList NbtRef NbtHost NbtScan NbtStat NbtObj DNSSuffix DomainName ADLogin ADConnection NetInterface 
+        # Network Info ViperBomb Brand Branding Certificate Company Key RootVar PingSweep PingObject Share Source Target 
+        # ServerDependency ServerFeature ServerFeatures IISFeatures IIS DCPromo UISwitch Image Images Updates ArpHost ArpScan 
+        # ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj FEDCPromo Role Win32_Client Win32_Server UnixBSD RHELCentOS RestObject
+
+        # //   --------------
+        # \\          Classes
+        # //   --------------
+        # \\    Module (Core)   Manifest Hive Root Module OS Info Service RestObject
+        # //      Write-Theme   Block Faces Track Theme Object Flag Banner
+        # \\ Network(ARP/NBT)   VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj
+        # //    Network(Main)   Network NetInterface PingSweep PingObject Host FirewallRule
+        # \\           System   Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding
+        # //         Active D.  DNSSuffix DomainName ADLogin ADConnection FEDCPromo
+        # \\           Server   Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS
+        # //          Imaging   Image Images Updates
+        # \\             Role   Role Win32_Client Win32_Server UnixBSD RHELCentOS
+
+    [String[]]   $Classes = (("Manifest Hive Root Module OS Info Service RestObject",
+                              "Block Faces Track Theme Object Flag Banner",
+                              "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj",
+                              "Network NetInterface PingSweep PingObject Host FirewallRule",
+                              "Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding",
+                              "DNSSuffix DomainName ADLogin ADConnection FEDCPromo",
+                              "Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS",
+                              "Image Images Updates",
+                              "Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " ").Split(" ") | % { "_$_.ps1" })
+
+    [String[]] $Functions = (("Get-FEModule Get-FEOS Get-FEManifest Get-FEHive Get-FEHost Get-FEService Get-XamlWindow",
+                              "Write-Theme Write-Flag Write-Banner Show-ToastNotification Get-Certificate Get-ViperBomb",
+                              "Get-FEDCPromoProfile Get-FEDCPromo Remove-FEShare Add-ACL New-ACLObject Install-IISServer",
+                              "Configure-IISServer New-FECompany Get-ServerDependency" -join " ").Split(" ") | % { "$_.ps1" })
+
     [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                               "ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
 
-    _Manifest(){}
+    _Manifest()
+    {
+    
+    }
+
+    [String[]] CheckLib([String]$URL,[String]$Type)
+    {
+        $Filter = "{0}(\w+)(.ps1)" -f @{ Classes = "(_*)"; Functions = "(\w+\-)" }[$Type]
+        Return @( [Regex]::Matches((Invoke-RestMethod "$URL/$Type"),$Filter).Value | Select -Unique | ? { $_ -notin $This.$Type } )
+    }
 }

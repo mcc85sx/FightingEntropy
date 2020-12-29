@@ -34,37 +34,52 @@ Function Get-FEDCPromo
 
         If ( $UI.Connection.Target )
         {
-            $Popup                             = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
+            $Popup                         = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
 
             $Popup.IO.Cancel.Add_Click(
             {
-                $UI.IO.Credential.Text          = ""
-                $Popup.Window.Host.DialogResult = $False
+                $UI.IO.Credential.Text                  = ""
+                $Popup.Window.Host.DialogResult         = $False
             })
 
             $Popup.IO.Ok.Add_Click(
             {
                 $Popup.TestCredential()
-                $UI.Credential                  = $Popup.Credential
-                $UI.IO.Credential               | % { 
                 
-                    $_.Text                     = $Popup.Credential.UserName
-                    $_.IsEnabled                = $False
+                If (!$Popup.Return)
+                {
+                    [System.Windows.MessageBox]::Show("Exception","Could not connect")
                 }
 
-                #Switch ($UI.Mode)
-                #{
-                #    2
-                #    {
-                #        $UI.IO.ParentDomainName.Text  = $Popup.Search("dnsroot")[0]
-                #    }
+                $UI.Credential                          = $Popup.Credential
+                $UI.IO.Credential                       | % { 
+                
+                    $_.Text                             = $Popup.Credential.UserName
+                    $_.IsEnabled                        = $False
+                }
 
-                #    3
-                #    {
-                #        $UI.IO.DomainName.Text        = $Popup.Search("dnsroot")[0]
-                #        $UI.IO.ReplicationSourceDC    = $UI.Connection.Target
-                #    }
-                #}
+                Switch ($UI.Mode)
+                {
+                    1
+                    {
+                        $UI.IO.ParentDomainName.Text    = $Popup.Domain
+                        $UI.IO.Sitename.Text            = $Popup.GetSiteName()
+                    }
+
+                    2
+                    {
+                        $UI.IO.ParentDomainName.Text    = $Popup.Domain
+                        $UI.IO.Sitename.Text            = $Popup.GetSiteName() 
+                    }
+
+                    3
+                    {
+                        $UI.IO.ParentDomainName.Text    = ""
+                        $UI.IO.Sitename.Text            = $Popup.GetSiteName() 
+                        $UI.IO.DomainName.Text          = $Popup.Domain
+                        $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
+                    }
+                }
 
                 $Popup.Window.Host.DialogResult = $True
             })
@@ -72,15 +87,11 @@ Function Get-FEDCPromo
             $Popup.Window.Invoke()
         }
     })
-     
-    # SafeModeAdministratorPassword : System.Windows.Controls.PasswordBox
-    # Confirm                       : System.Windows.Controls.PasswordBox
-    # Start                         : System.Windows.Controls.Button: Start
 
     $UI.IO.Start.Add_Click(
     {
-        $Password = $UI.IO.SafeModeAdministratorPassword
-        $Confirm  = $UI.IO.Confirm
+        $Password                             = $UI.IO.SafeModeAdministratorPassword
+        $Confirm                              = $UI.IO.Confirm
 
         If (!$Password.Password)
         {

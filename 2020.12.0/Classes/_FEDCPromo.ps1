@@ -1,4 +1,4 @@
-Class _FEPromo
+Class _FEDCPromo
 {
     [Object]                              $Window
     [Object]                                  $IO
@@ -9,12 +9,12 @@ Class _FEPromo
     [Object]                          $Connection
     [Object]                            $Features
 
+    [String]                             $Command
     [Int32]                                 $Mode
     [Object]                             $Profile
-    [String]                             $Command
-    [String]                          $ForestMode
-    [String]                          $DomainMode
-    [String]                          $DomainType
+    [Object]                          $ForestMode
+    [Object]                          $DomainMode
+    [Object]                          $DomainType
 
     [Object]                          $InstallDNS
     [Object]                 $CreateDNSDelegation
@@ -40,9 +40,9 @@ Class _FEPromo
 
     SetMode([Int32]$Mode)
     {
-        $This.Mode                               = $Mode
-        $This.Profile                            = [_FEDCPromoProfile]::New($Mode)
         $This.Command                            = ("{0}Forest {0}{1} {0}{1} {0}{1}Controller" -f "Install-ADDS","Domain").Split(" ")[$Mode]
+        $This.Mode                               = $Mode
+        $This.Profile                            = (Get-FEDCPromoProfile -Mode $Mode)
 
         $This.IO.Forest.IsChecked                = $False
         $This.IO.Tree.IsChecked                  = $False
@@ -51,72 +51,73 @@ Class _FEPromo
 
         $This.IO.$($This.Profile.Slot).IsChecked = $True
 
-        $Tray                                    = @("Visible","Collapsed")[@((0,0,1),(1,0,0),(1,1,0),(1,1,1))[$Mode]]
-        $This.IO.ForestModeBox.Visibility        = $Tray[0]
-        $This.IO.DomainModeBox.Visibility        = $Tray[1]
-        $This.IO.ParentDomainNameBox.Visibility  = $Tray[2]
+        ForEach ( $Item in $This.Profile.Type )
+        {
+            $This.IO."$($Item.Name)Box".Visibility  = @("Visible","Collapsed")[$Item.IsEnabled]
+            
+            If (!$Item.IsEnabled)
+            {
+                $Item.Value = ""
+            }
+
+            Else
+            {
+                $Item.Value = Switch($Item.Name)
+                {
+                    ForestMode { $This.IO.ForestMode.SelectedIndex }
+                    DomainMode { $This.IO.DomainMode.SelectedIndex }
+                    DomainType { $This.Profile.Slot + "Domain"     }
+                }
+            }
+        }
+
         $This.IO.ParentDomainName.Text           = "<Domain Name>"
-
-        $This.DomainType                         = @($Null,"TreeDomain","ChildDomain",$Null)[$Mode]
-                
-        $Tray                                   = Switch ($Mode)
-        {
-            0 { $This.IO.ForestMode.SelectedIndex,$This.IO.DomainMode.SelectedIndex,$Null }
-            1 { $This.IO.ForestMode.SelectedIndex,$Null,$Null }
-            2 { $Null,$Null,"<Domain Name>" }
-            3 { $Null,$Null,$Null }
-        }
-                
-        $This.ForestMode                        = $Tray[0]
-        $This.DomainMode                        = $Tray[1]
-        $This.ParentDomainName                  = $Tray[2]
-
-        # Roles
-        $This.InstallDNS                        = [_FEPromoRoles]::New(              "InstallDNS", (1,1,1,1)[$Mode], (1,1,1,1)[$Mode])
-        $This.CreateDNSDelegation               = [_FEPromoRoles]::New(     "CreateDNSDelegation", (1,1,1,1)[$Mode], (0,0,1,0)[$Mode])
-        $This.NoGlobalCatalog                   = [_FEPromoRoles]::New(         "NoGlobalCatalog", (0,1,1,1)[$Mode], (0,0,0,0)[$Mode])
-        $This.CriticalReplicationOnly           = [_FEPromoRoles]::New( "CriticalReplicationOnly", (0,0,0,1)[$Mode], (0,0,0,0)[$Mode])
-
-        ForEach ( $Item in "InstallDNS CreateDNSDelegation NoGlobalCatalog CriticalReplicationOnly".Split(" ") )
-        {
-            $This.Set_FEPromoRoles($This.$($Item))
-        }
+        $This.IO.ReplicationSourceDC.Text        = ""
 
         # Domain/Text
-        $This.Credential                        = [_FEPromoDomain]::New(             "Credential", (0,1,1,1)[$Mode])
-        $This.DomainName                        = [_FEPromoDomain]::New(             "DomainName", (1,0,0,1)[$Mode])
-        $This.DomainNetBIOSName                 = [_FEPromoDomain]::New(      "DomainNetBIOSName", (1,0,0,0)[$Mode])
-        $This.NewDomainName                     = [_FEPromoDomain]::New(          "NewDomainName", (0,1,1,0)[$Mode])
-        $This.NewDomainNetBIOSName              = [_FEPromoDomain]::New(   "NewDomainNetBIOSName", (0,1,1,0)[$Mode])
-        $This.ReplicationSourceDC               = [_FEPromoDomain]::New(    "ReplicationSourceDC", (0,0,0,1)[$Mode])
-        $This.SiteName                          = [_FEPromoDomain]::New(               "SiteName", (0,1,1,1)[$Mode])
+        $This.Credential                          = $This.Profile.Text.Credential
+        $This.DomainName                          = $This.Profile.Text.DomainName
+        $This.DomainNetBIOSName                   = $This.Profile.Text.DomainNetBIOSName
+        $This.NewDomainName                       = $This.Profile.Text.NewDomainName
+        $This.NewDomainNetBIOSName                = $This.Profile.Text.NewDomainNetBIOSName
+        $This.SiteName                            = $This.Profile.Text.Sitename
 
-        ForEach ( $Item in "Credential DomainName DomainNetBIOSName NewDomainName NewDomainNetBIOSName ReplicationSourceDC SiteName".Split(" ") )
+        ForEach ( $Item in $This.Profile.Text )
+        {
+            $This.SetFEDCPromoText($Item)
+        }
+
+        # Roles
+        $This.InstallDNS                          = $This.Profile.Role.InstallDNS
+        $This.CreateDNSDelegation                 = $This.Profile.Role.CreateDNSDelegation
+        $This.NoGlobalCatalog                     = $This.Profile.Role.NoGlobalCatalog
+        $This.CriticalReplicationOnly             = $This.Profile.Role.CriticalReplicationOnly
+
+        ForEach ( $Item in $This.Profile.Role )
         {    
-            $This.Set_FEPromoDomain($This.$($Item))
+            $This.SetFEDCPromoRole($Item)
         }
 
         If ( !!$This.Connection.Credential )
         {
             $This.IO.Credential.Text            = $This.Connection.Credential.Username
             $This.IO.Credential.IsEnabled       = $False
-            $This.IO
         }
 
         $This.Output                            = @( )
     }
 
-    Set_FEPromoRoles([Object]$Obj)
+    [Void] SetFEDCPromoRole([Object]$Obj)
     {
-        $This.IO.$( $Obj.Name ).IsEnabled       = $Obj.IsEnabled
-        $This.IO.$( $Obj.Name ).IsChecked       = $Obj.IsChecked
+        $This.IO.$($Obj.Name).IsEnabled         = $Obj.IsEnabled
+        $This.IO.$($Obj.Name).IsChecked         = $Obj.IsChecked
     }
 
-    Set_FEPromoDomain([Object]$Obj)
+    [Void] SetFEDCPromoText([Object]$Obj)
     {
-        $This.IO."$( $Obj.Name    )".IsEnabled  = $Obj.IsEnabled
-        $This.IO."$( $Obj.Name )Box".Visibility = @("Collapsed","Visible")[$Obj.IsEnabled]
-        $This.IO."$( $Obj.Name    )".Text       = ""
+        $This.IO."$($Obj.Name)".IsEnabled       = $Obj.IsEnabled
+        $This.IO."$($Obj.Name)Box".Visibility   = @("Collapsed","Visible")[$Obj.IsEnabled]
+        $This.IO."$($Obj.Name)".Text            = ""
     }
 
     Get_ADConnection()
@@ -129,7 +130,7 @@ Class _FEPromo
         $This.Range = [_PingSweep]::New(($This.Host.Network.Interface.IPV4 | ? Gateway | % Range | Select -Unique | % Split `n))
     }
 
-    _FEPromo([Object]$Window,[Int32]$Mode)
+    _FEDCPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window
         $This.IO                                = $Window.IO

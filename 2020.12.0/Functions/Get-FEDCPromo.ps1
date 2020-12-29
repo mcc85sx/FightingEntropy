@@ -51,7 +51,8 @@ Function Get-FEDCPromo
                     [System.Windows.MessageBox]::Show("Exception","Could not connect")
                 }
 
-                $UI.Credential                          = $Popup.Credential
+                $UI.Connection.Return                   = $Popup
+                $UI.Connection.Credential               = $Popup.Credential
                 $UI.IO.Credential                       | % { 
                 
                     $_.Text                             = $Popup.Credential.UserName
@@ -111,6 +112,30 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
-    
-    $UI
+   
+   # Test Output
+   # Switch($UI.Mode)
+   # {
+   #     0
+   #     {
+   #         
+   #     }   
+   #
+   #     1
+   #     {
+   #         
+   #     }
+   #     
+   #     2
+   #     {
+   #         
+   #     }
+   # 
+   #     3
+   #     {
+   #         
+   #     }
+   # }
+   
+   $UI
 }

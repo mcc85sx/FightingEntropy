@@ -198,6 +198,12 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             '/$G`></$GB`></$WI`>')
             FEDCPromo            = @'
             <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="LightGreen"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -286,7 +292,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     </Style>
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTemplateColumn Header="Installed" Width="60">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -309,14 +315,14 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="5*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="5" Text="Install DNS"/>
-                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" Text="Create DNS Delegation"/>
-                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Text="No Global Catalog"/>
-                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" Text="Critical Replication Only"/>
                                 <CheckBox Grid.Column="0" Grid.Row="0" Margin="5" Name="InstallDNS"/>
                                 <CheckBox Grid.Column="0" Grid.Row="1" Margin="5" Name="CreateDNSDelegation"/>
                                 <CheckBox Grid.Column="0" Grid.Row="2" Margin="5" Name="NoGlobalCatalog"/>
                                 <CheckBox Grid.Column="0" Grid.Row="3" Margin="5" Name="CriticalReplicationOnly"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="5" Text="Install DNS"/>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" Text="Create DNS Delegation"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Text="No Global Catalog"/>
+                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" Text="Critical Replication Only"/>
                             </Grid>
                         </GroupBox>
                     </Grid>
@@ -349,13 +355,13 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                         <GroupBox Grid.Row="4" Header="[Site Name]" Name="_SiteName">
                             <TextBox Height="20" Margin="5" Name="SiteName"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="5" Header="[Database Path]" Name="_DatabasePath">
+                        <GroupBox Grid.Row="5" Header="[Database Path]">
                             <TextBox Height="20" Margin="5" Name="DatabasePath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="6" Header="[Sysvol Path]" Name="_SysvolPath">
+                        <GroupBox Grid.Row="6" Header="[Sysvol Path]">
                             <TextBox Height="20" Margin="5" Name="SysvolPath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="7" Header="[Log Path]" Name="_LogPath">
+                        <GroupBox Grid.Row="7" Header="[Log Path]">
                             <TextBox Height="20" Margin="5" Name="LogPath"/>
                         </GroupBox>
                         <GroupBox Grid.Row="8" Header="[Credential]" Name="_Credential">

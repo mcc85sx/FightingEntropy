@@ -12,18 +12,19 @@ Class _ADConnection
     {
         $This.Primary               = $HostMap | ? { $_.NBT.ID -match "1b" }
         $This.Secondary             = $HostMap | ? { $_.NBT.ID -match "1c" }
-        $This.Output                = @( )
-        $This.Target                = @( )
+        $This.Swap                  = @( )
+        
+        $This.Target                = $Null
         $This.Credential            = $Null
 
         If ( $This.Primary )
         {
-            $This.Swap              = $This.Primary.NBT   | ? ID -eq 1b
+            $This.Swap              += $This.Primary.NBT   | ? ID -eq 1b
         }
 
         If ( $This.Secondary )
         {
-            $This.Swap              = $This.Secondary.NBT | ? ID -eq 1c
+            $This.Swap              += $This.Secondary.NBT | ? ID -eq 1c
         }
 
         $This.Return                = $This.Swap   | Select-Object -Unique

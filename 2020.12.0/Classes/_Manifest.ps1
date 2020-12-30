@@ -8,7 +8,7 @@ Class _Manifest
 
     # //          Classes
     # \\          -------
-    # //    Module (Core)      Manifest Hive Root Module OS Info Service RestObject
+    # //    Module (Core)      Manifest Hive Root Module OS Info RestObject
     # \\      Write-Theme      Block Faces Track Theme Object Flag Banner
     # // Network(ARP/NBT)      VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj
     # \\    Network(Main)      Network NetInterface PingSweep PingObject Host FirewallRule
@@ -18,7 +18,7 @@ Class _Manifest
     # \\          Imaging      Image Images Updates
     # //             Role      Role Win32_Client Win32_Server UnixBSD RHELCentOS
 
-    [String[]]   $Classes = (("Manifest Hive Root Module OS Info Service RestObject",
+    [String[]]   $Classes = (("Manifest Hive Root Module OS Info RestObject",
                               "Block Faces Track Theme Object Flag Banner",
                               "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj",
                               "Network NetInterface PingSweep PingObject Host FirewallRule",

@@ -1,5 +1,6 @@
 Class _PingObject
 {
+    Static Hidden [Object] $Ref = [_NBTRef]::New().Output
     Hidden [Object]   $Reply
     [UInt32]          $Index
     [String]         $Status
@@ -27,7 +28,12 @@ Class _PingObject
             }
         }
 
-        $This.NBT              = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New([_NBTRef]::New().Output,$_) }
-        $This.NetBIOS          = $This.NBT | ? { $_.ID -eq "1b" -or $_.ID -eq "1c" } | Select -Unique
+        If ( $This.Status -eq "+" )
+        {
+            Write-Host ( "[+] {0}/{1}" -f $This.IPAddress, $This.Hostname )
+
+            $This.NBT          = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New($This.Ref,$_) }
+            $This.NetBIOS      = $This.NBT | ? { $_.ID -match "1B" -or $_.ID -eq "1C" } | Select -Unique | % Name 
+        }
     }
 }

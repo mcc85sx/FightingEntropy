@@ -82,7 +82,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         [String[]]            $Names
         [Object]               $Node
         [Object]                 $IO
-        [Object]             $Output
 
         [String[]] FindNames()
         {
@@ -268,14 +267,14 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <DataGrid Grid.Row="0" Grid.Column="0" Margin="5" Name="DataGrid" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Single">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTemplateColumn Header="[+]" Width="60">
+                                    <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="Installed" Width="60">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding Installed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <CheckBox IsChecked="{Binding Installed}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
@@ -316,16 +315,31 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <GroupBox Grid.Row="0" Header="[Database Path]" Name="_DatabasePath">
+                        <GroupBox Grid.Row="0" Header="[Domain Name]" Name="_DomainName">
+                            <TextBox Height="20" Margin="5" Name="DomainName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
+                            <TextBox Height="20" Margin="5" Name="DomainNetBIOSName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[New Domain Name]" Name="_NewDomainName">
+                            <TextBox Height="20" Margin="5" Name="NewDomainName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="3" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSName">
+                            <TextBox Height="20" Margin="5" Name="NewDomainNetBIOSName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" Header="[Site Name]" Name="_SiteName">
+                            <TextBox Height="20" Margin="5" Name="SiteName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="5" Header="[Database Path]" Name="_DatabasePath">
                             <TextBox Height="20" Margin="5" Name="DatabasePath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Header="[Sysvol Path]" Name="_SysvolPath">
+                        <GroupBox Grid.Row="6" Header="[Sysvol Path]" Name="_SysvolPath">
                             <TextBox Height="20" Margin="5" Name="SysvolPath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="2" Header="[Log Path]" Name="_LogPath">
+                        <GroupBox Grid.Row="7" Header="[Log Path]" Name="_LogPath">
                             <TextBox Height="20" Margin="5" Name="LogPath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="3" Header="[Credential]" Name="_Credential">
+                        <GroupBox Grid.Row="8" Header="[Credential]" Name="_Credential">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -334,21 +348,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <Button Content="Credential" Name="CredentialButton" Grid.Column="0"/>
                                 <TextBox Height="20" Margin="5" Name="Credential" Grid.Column="1"/>
                             </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Row="4" Header="[Domain Name]" Name="_DomainName">
-                            <TextBox Height="20" Margin="5" Name="DomainName"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="5" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
-                            <TextBox Height="20" Margin="5" Name="DomainNetBIOSName"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="6" Header="[New Domain Name]" Name="_NewDomainName">
-                            <TextBox Height="20" Margin="5" Name="NewDomainName"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="7" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSName">
-                            <TextBox Height="20" Margin="5" Name="NewDomainNetBIOSName"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="8" Header="[Site Name]" Name="_SiteName">
-                            <TextBox Height="20" Margin="5" Name="SiteName"/>
                         </GroupBox>
                         <GroupBox Grid.Row="9" Header="[Directory Services Recovery Mode Administrator (Password/Confirm)]">
                             <Grid>

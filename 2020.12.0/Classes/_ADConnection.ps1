@@ -26,7 +26,7 @@ Class _ADConnection
             $This.Swap              = $This.Secondary.NBT | ? ID -eq 1c
         }
 
-        $This.Return                = $This.Primary, $This.Secondary | Select -Unique
+        $This.Return                = $This.Swap   | Select-Object -Unique
         $This.Output                = $This.Return | Select-Object IPAddress, Hostname, NetBIOS
     }
 }

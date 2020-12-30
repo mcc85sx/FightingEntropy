@@ -264,10 +264,29 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <GroupBox Header="[Required Features]" Grid.Row="0" Margin="5">
-                            <DataGrid Grid.Row="0" Grid.Column="0" Margin="5" Name="DataGrid" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Single">
+                            <DataGrid Grid.Row="0" Grid.Column="0" Margin="5" Name="DataGrid" AutoGenerateColumns="False" HeadersVisibility="Column" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Single">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Style.Triggers>
+                                            <Trigger Property="AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="White"/>
+                                            </Trigger>
+                                            <Trigger Property="AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="#FFD8D8D8"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="ToolTip">
+                                                    <Setter.Value>
+                                                        <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTemplateColumn Header="Installed" Width="60">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>

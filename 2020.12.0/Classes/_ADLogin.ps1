@@ -20,7 +20,7 @@ Class _ADLogin
     _ADLogin([Object]$Window,[Object]$Target)
     {
         $This.Window       = $Window
-        $This.IO           = $This.Window.Host
+        $This.IO           = $Window.IO
         $This.IPAddress    = $Target.IPAddress
         $This.DNSName      = $Target.Hostname
         $This.NetBIOS      = $Target.NetBIOS

@@ -32,48 +32,47 @@ Class _ADLogin
 
     TestCredential()
     {
-        $Username      = $This.IO.Username.Text
-        $Password      = $This.IO.Password.Password
-        $Confirm       = $This.IO.Confirm.Password
+        $Username      = $This.IO.Username
+        $Password      = $This.IO.Password
+        $Confirm       = $This.IO.Confirm
 
-        If (!$Username)
+        If (!$Username.Text)
         {
             [System.Windows.MessageBox]::Show("Invalid Username","Error")
         }
 
-        ElseIf (!$Password)
+        ElseIf (!$Password.Password)
         {
             [System.Windows.MessageBox]::Show("Invalid Password","Error")
         }
 
-        ElseIf (!$Password -match $Confirm)
+        ElseIf (!$Password.Password -notmatch $Confirm.Password)
         {
             [System.Windows.MessageBox]::Show("Passwords do not match","Error")
         }
 
         Else
         {
-            $This.Credential               = [System.Management.Automation.PSCredential]::New($Username,$This.IO.Confirm.SecurePassword)
-            $This.Test                     = Try 
-            { 
-                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            Try 
+            {
+                $This.Credential           = [System.Management.Automation.PSCredential]::New($Username.Text,$Confirm.SecurePassword)
+                $This.Test                 = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$Username.Text,$Password.Password)
+
+                If ( $? -eq $True )
+                {
+                    $This.Initialize()
+                }
             }
 
             Catch
             {
-                $Null
-            }
-
-            If ( $This.Test )
-            {
-                $This.Initialize()
-            }
-
-            Else
-            {
-                [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
                 $This.Credential           = $Null
                 $This.Test                 = $Null
+                $Username                  = $Null
+                $Password                  = $Null
+                $Confirm                   = $Null
+
+                [System.Windows.MessageBox]::Show("Invalid Account","Error")
             }
         }
     }

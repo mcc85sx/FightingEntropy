@@ -3,26 +3,26 @@ Function Get-FEDCPromoProfile
     [CmdLetbinding()]
     Param([Parameter(Mandatory)][UInt32]$Mode = 0)
 
-    Class _FEDCPromoType
+    Class _Type
     {
         [String]                  $Name
         [Bool]               $IsEnabled
         [Object]                 $Value
 
-        _FEDCPromoType([String]$Name,[Bool]$IsEnabled)
+        _Type([String]$Name,[Bool]$IsEnabled)
         {
             $This.Name      = $Name
             $This.IsEnabled = $IsEnabled
         }
     }
 
-    Class _FEDCPromoText
+    Class _Text
     {
         [String]                  $Name
         [Bool]               $IsEnabled
         [String]                  $Text
 
-        _FEDCPromoText([String]$Name,[Bool]$IsEnabled)
+        _Text([String]$Name,[Bool]$IsEnabled)
         {
             $This.Name      = $Name
             $This.IsEnabled = $IsEnabled
@@ -30,13 +30,13 @@ Function Get-FEDCPromoProfile
         }
     }
 
-    Class _FEDCPromoRole
+    Class _Role
     {
         [String] $Name
         [Bool]   $IsEnabled
         [Bool]   $IsChecked
 
-        _FEDCPromoRole([String]$Name,[Bool]$IsEnabled,[Bool]$IsChecked)
+        _Role([String]$Name,[Bool]$IsEnabled,[Bool]$IsChecked)
         {
             $This.Name      = $Name
             $This.IsEnabled = $IsEnabled
@@ -44,13 +44,13 @@ Function Get-FEDCPromoProfile
         }
     }
 
-    Class _FEDCPromoProfile
+    Class _Profile
     {
         [UInt32]              $Mode
         Hidden [Hashtable]    $Tags = @{ 
 
             Slot                    = "Forest Tree Child Clone" -Split " "
-            Type                    = "ForestMode DomainMode DomainType" -Split " "
+            Type                    = "ForestMode DomainMode DomainType ReplicationSourceDC ParentDomainName" -Split " "
             Text                    = "Parent{0} {0} Domain{1} SiteName New{0} NewDomain{1}" -f "DomainName","NetBIOSName" -Split " "
             Role                    = "InstallDns CreateDnsDelegation CriticalReplicationOnly NoGlobalCatalog" -Split " "
         }
@@ -60,7 +60,7 @@ Function Get-FEDCPromoProfile
         [Object]              $Text
         [Object]              $Role
 
-        _FEDCPromoProfile([UInt32]$Mode)
+        _Profile([UInt32]$Mode)
         {
             If ( $Mode -notin 0..3 )
             {
@@ -81,9 +81,11 @@ Function Get-FEDCPromoProfile
                 ForestMode            {1,0,0,0}
                 DomainMode            {1,1,1,0}
                 DomainType            {0,1,1,0}
+                ParentDomainName      {0,1,1,0}
+                ReplicationSourceDC   {0,0,0,1}
             }
 
-            Return @([_FEDCPromoType]::New($Type,$Item[$Mode]) )
+            Return @([_Type]::New($Type,$Item[$Mode]) )
         }
 
         [Object] GetFEDCPromoText([UInt32]$Mode,[String]$Type)
@@ -98,7 +100,7 @@ Function Get-FEDCPromoProfile
 	            NewDomainNetbiosName  {0,1,1,0}
             }
 
-            Return @([_FEDCPromoText]::New($Type,$Item[$Mode]))
+            Return @([_Text]::New($Type,$Item[$Mode]))
         }
 
         [Object] GetFEDCPromoRole([UInt32]$Mode,[String]$Type)
@@ -111,9 +113,9 @@ Function Get-FEDCPromoProfile
                 CriticalReplicationOnly {(0,0,0,1),(0,0,0,0)}
             }
 
-            Return @([_FEDCPromoRole]::New($Type,$Item[0][$Mode],$Item[1][$Mode]))
+            Return @([_Role]::New($Type,$Item[0][$Mode],$Item[1][$Mode]))
         }
     }
 
-    [_FEDCPromoProfile]::New($Mode)
+    [_Profile]::New($Mode)
 }

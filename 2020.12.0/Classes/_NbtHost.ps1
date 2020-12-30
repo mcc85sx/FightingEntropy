@@ -6,17 +6,12 @@ Class _NbtHost
     [String]           $Type
     [String]        $Service
 
-    [String] X ([Int32]$Start,[Int32]$End)
-    {
-        Return @( $This.Line.Substring($Start,$End).TrimEnd(" ") )
-    }
-
     _NbtHost([Object]$NBT,[String]$Line)
     {
         $This.Line    = $Line
-        $This.Name    = $This.X(0,19).TrimStart(" ")
-        $This.ID      = $This.X(20,2)
-        $This.Type    = $This.X(25,12)
-        $This.Service = $NBT | ? ID -match $This.ID | ? Type -Match $This.Type | % Service
+        $This.Name    = $Line.Substring(0,19).TrimStart(" ")
+        $This.ID      = $Line.Substring(20,2)
+        $This.Type    = $Line.Substring(25,12)
+        $This.Service = $NBT | ? { $_.ID -match $This.ID -and $_.Type -Match $This.Type } | % Service
     }
 }

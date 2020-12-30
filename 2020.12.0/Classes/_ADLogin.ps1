@@ -15,7 +15,7 @@ Class _ADLogin
     [String]                           $Directory
     Hidden [Object]                         $Test
     [Object]                            $Searcher
-    [Object]                              $Return
+    [Object]                              $Result
 
     _ADLogin([Object]$Window,[Object]$Target)
     {
@@ -38,17 +38,17 @@ Class _ADLogin
 
         If (!$Username)
         {
-            [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
+            [System.Windows.MessageBox]::Show("Invalid Username","Error")
         }
 
         ElseIf (!$Password)
         {
-            [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
+            [System.Windows.MessageBox]::Show("Invalid Password","Error")
         }
 
         ElseIf (!$Password -match $Confirm)
         {
-            [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
+            [System.Windows.MessageBox]::Show("Passwords do not match","Error")
         }
 
         Else
@@ -84,13 +84,12 @@ Class _ADLogin
         $This.Searcher.SearchRoot          = $This.Test
         $This.Searcher.PageSize            = 1000
         $This.Searcher.PropertiesToLoad.Clear()
-        $This.Return                       = $This.Searcher.FindAll()
+        $This.Result                       = $This.Searcher.FindAll()
     }
 
     [Object] Search([String]$Field)
     {
-        $Field = $Field.ToLower()
-        Return @( ForEach ( $Item in $This.Searcher.FindAll() ) { $Item.Properties | ? $Field } )
+        Return @( ForEach ( $Item in $This.Result ) { $Item.Properties | ? $Field.ToLower() } )
     }
 
     [String] GetSiteName()

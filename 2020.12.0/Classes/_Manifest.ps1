@@ -10,7 +10,7 @@ Class _Manifest
     # \\          -------
     # //    Module (Core)      Manifest Hive Root Module OS Info RestObject
     # \\      Write-Theme      Block Faces Track Theme Object Flag Banner
-    # // Network(ARP/NBT)      VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj
+    # // Network(ARP/NBT)      VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network
     # \\    Network(Main)      Network NetInterface PingSweep PingObject Host FirewallRule
     # //           System      Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding
     # \\         Active D.     DNSSuffix DomainName ADLogin ADConnection FEDCPromo
@@ -20,7 +20,7 @@ Class _Manifest
 
     [String[]]   $Classes = (("Manifest Hive Root Module OS Info RestObject",
                               "Block Faces Track Theme Object Flag Banner",
-                              "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj",
+                              "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network",
                               "Network NetInterface PingSweep PingObject Host FirewallRule",
                               "Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding",
                               "DNSSuffix DomainName ADLogin ADConnection FEDCPromo",

@@ -12,15 +12,14 @@ Class _FEDCPromo
     [String]                             $Command
     [Int32]                                 $Mode
     [Object]                             $Profile
+
     [Object]                          $ForestMode
     [Object]                          $DomainMode
     [Object]                          $DomainType
-
     [Object]                          $InstallDNS
     [Object]                 $CreateDNSDelegation
     [Object]                     $NoGlobalCatalog
     [Object]             $CriticalReplicationOnly
-
     [Object]                    $ParentDomainName
     [Object]                          $DomainName
     [Object]                   $DomainNetBIOSName
@@ -28,12 +27,10 @@ Class _FEDCPromo
     [Object]                $NewDomainNetBIOSName
     [Object]                 $ReplicationSourceDC
     [Object]                            $SiteName
-
     [Object]                        $DatabasePath
     [Object]                             $LogPath
     [Object]                          $SysvolPath
-
-    [SecureString] $SafeModeAdministratorPassword
+    [Object]       $SafeModeAdministratorPassword
     [Object]                          $Credential
 
     [Object]                              $Output
@@ -53,8 +50,11 @@ Class _FEDCPromo
 
         ForEach ( $Item in $This.Profile.Type )
         {
-            $This.IO."$($Item.Name)Box".Visibility  = @("Visible","Collapsed")[$Item.IsEnabled]
-            
+            If ( $Item.Name -ne "DomainType" )
+            {
+                $This.IO."_$($Item.Name)".Visibility = @("Collapsed","Visible")[$Item.IsEnabled]
+            }
+
             If (!$Item.IsEnabled)
             {
                 $Item.Value = ""
@@ -64,17 +64,17 @@ Class _FEDCPromo
             {
                 $Item.Value = Switch($Item.Name)
                 {
-                    ForestMode { $This.IO.ForestMode.SelectedIndex }
-                    DomainMode { $This.IO.DomainMode.SelectedIndex }
-                    DomainType { $This.Profile.Slot + "Domain"     }
+                    ForestMode          { $This.IO.ForestMode.SelectedIndex  }
+                    DomainMode          { $This.IO.DomainMode.SelectedIndex  }
+                    DomainType          {     $This.Profile.Slot + "Domain"  }
+                    ParentDomainName    {                         "<Domain>" }
+                    ReplicationSourceDC {                            "<Any>" }
                 }
             }
         }
 
-        $This.IO.ParentDomainName.Text           = "<Domain Name>"
-        $This.IO.ReplicationSourceDC.Text        = ""
-
         # Domain/Text
+        $This.ParentDomainName                    = $This.Profile.Text.ParentDomainName
         $This.Credential                          = $This.Profile.Text.Credential
         $This.DomainName                          = $This.Profile.Text.DomainName
         $This.DomainNetBIOSName                   = $This.Profile.Text.DomainNetBIOSName
@@ -82,21 +82,11 @@ Class _FEDCPromo
         $This.NewDomainNetBIOSName                = $This.Profile.Text.NewDomainNetBIOSName
         $This.SiteName                            = $This.Profile.Text.Sitename
 
-        ForEach ( $Item in $This.Profile.Text )
-        {
-            $This.SetFEDCPromoText($Item)
-        }
-
         # Roles
         $This.InstallDNS                          = $This.Profile.Role.InstallDNS
         $This.CreateDNSDelegation                 = $This.Profile.Role.CreateDNSDelegation
         $This.NoGlobalCatalog                     = $This.Profile.Role.NoGlobalCatalog
         $This.CriticalReplicationOnly             = $This.Profile.Role.CriticalReplicationOnly
-
-        ForEach ( $Item in $This.Profile.Role )
-        {    
-            $This.SetFEDCPromoRole($Item)
-        }
 
         If ( !!$This.Connection.Credential )
         {
@@ -116,8 +106,8 @@ Class _FEDCPromo
     [Void] SetFEDCPromoText([Object]$Obj)
     {
         $This.IO."$($Obj.Name)".IsEnabled       = $Obj.IsEnabled
-        $This.IO."$($Obj.Name)Box".Visibility   = @("Collapsed","Visible")[$Obj.IsEnabled]
-        $This.IO."$($Obj.Name)".Text            = ""
+        $This.IO."_$($Obj.Name)".Visibility     = @("Collapsed","Visible")[$Obj.IsEnabled]
+        $This.IO."$($Obj.Name)".Text            = $Obj.Text
     }
 
     Get_ADConnection()
@@ -140,21 +130,24 @@ Class _FEDCPromo
         $This.HostRange()
         $This.HostMap                           = $This.Range._Filter()
         
-        ForEach ( $IHost in $This.Hostmap ) 
-        { 
-            Write-Host "[+] $($IHost.HostName)/$($IHost.IPAddress)"
-            $IHost.NBT                          = nbtstat -a $IHost.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
-        }
+        If ( $This.Hostmap )
+        {
+            ForEach ( $IHost in $This.HostMap ) 
+            { 
+                Write-Host "[+] $($IHost.HostName)/$($IHost.IPAddress)"
+                $IHost.NBT                      = nbtstat -a $IHost.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
+            }
 
-        $This.Get_ADConnection()
+            $This.Get_ADConnection()
+        }
 
         $This.Features                          = [_ServerFeatures]::New().Output
                 
-        ForEach ( $Feature in $This.Features ) 
-        {
-            $This.IO.$($Feature.Name).IsEnabled = !$Feature.Installed
-            $This.IO.$($Feature.Name).IsChecked = "True"
-        }
+        #ForEach ( $Feature in $This.Features ) 
+        #{
+        #    $This.IO.$($Feature.Name).IsEnabled = !$Feature.Installed
+        #    $This.IO.$($Feature.Name).IsChecked = "True"
+        #}
 
         $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
         $This.IO.DatabasePath.Text              = $This.DatabasePath

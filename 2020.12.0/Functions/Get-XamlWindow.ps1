@@ -293,7 +293,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTemplateColumn Header="Installed" Width="60">
+                                    <DataGridTemplateColumn Header="Installed" Width="55">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding Installed}"/>

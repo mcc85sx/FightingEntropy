@@ -26,11 +26,10 @@ Function Get-FEDCPromo
         $DC                             = Get-XAMLWindow -Type FEDCFound
         $DC.IO.DataGrid.ItemsSource     = $UI.Connection.Output
         $DC.IO.DataGrid.SelectedIndex   = 0
-        [Void]$DC.Host.DataGrid.Focus()
+        [Void]$DC.IO.DataGrid.Focus()
 
         $DC.IO.Cancel.Add_Click(
         {
-            Write-Host "Canceled"
             $DC.IO.DialogResult         = $False
         })
 
@@ -40,7 +39,7 @@ Function Get-FEDCPromo
             $DC.IO.DialogResult         = $True
         })
 
-        $DC.Invoke()
+        $DC.IO.ShowDialog()
 
         If ( $UI.Connection.Target )
         {
@@ -95,7 +94,7 @@ Function Get-FEDCPromo
                 $DC.IO.DialogResult = $True
             })
 
-            $DC.Invoke()
+            $DC.IO.ShowDialog()
         }
     })
 
@@ -121,6 +120,6 @@ Function Get-FEDCPromo
         }
     })
 
-    $UI.Window.Invoke()
+    $UI.IO.Invoke()
     $UI
 }

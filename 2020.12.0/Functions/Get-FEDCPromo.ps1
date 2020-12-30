@@ -8,7 +8,7 @@ Function Get-FEDCPromo
 
     Write-Theme @("Scan [:] Complete";("-"*17 -join '');@{ 
     
-        "Time Elapsed"    = $Time.Elapsed 
+        "Time Elapsed"    = $Time.Elapsed
         "Detected Hosts"  = $UI.HostMap.Count
         "Not On Domain"   = ($UI.HostMap | ? NBT -eq $Null).Count
         "On Domain"       = ($UI.HostMap | ? NBT -ne $Null).Count
@@ -39,7 +39,7 @@ Function Get-FEDCPromo
             $DC.IO.DialogResult         = $True
         })
 
-        $DC.IO.ShowDialog()
+        $DC.Invoke()
 
         If ( $UI.Connection.Target )
         {
@@ -94,7 +94,7 @@ Function Get-FEDCPromo
                 $DC.IO.DialogResult = $True
             })
 
-            $DC.IO.ShowDialog()
+            $DC.Window.Invoke()
         }
     })
 
@@ -120,6 +120,5 @@ Function Get-FEDCPromo
         }
     })
 
-    $UI.IO.Invoke()
-    $UI
+    $UI.Window.Invoke()
 }

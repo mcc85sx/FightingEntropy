@@ -129,17 +129,6 @@ Class _FEDCPromo
         $This.Network                           = $This.Host.Network
         $This.HostRange()
         $This.HostMap                           = $This.Range._Filter()
-        
-        If ( $This.Hostmap )
-        {
-            ForEach ( $IHost in $This.HostMap ) 
-            { 
-                Write-Host "[+] $($IHost.HostName)/$($IHost.IPAddress)"
-                $IHost.NBT                      = nbtstat -a $IHost.IPAddress | ? { $_ -match "Registered" } | % { [_NbtHost]::New($This.Network.NBT,$_) }
-            }
-
-            $This.Get_ADConnection()
-        }
 
         $This.Features                          = [_ServerFeatures]::New().Output
                 

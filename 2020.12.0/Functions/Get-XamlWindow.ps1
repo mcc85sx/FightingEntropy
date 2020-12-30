@@ -117,13 +117,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 
         Invoke()
         {
-            $This.Output             = @( )
-
-            $This.IO.Dispatcher.InvokeAsync(
-            {
-                $This.Output         = $This.Host.ShowDialog()
-
-            }).Wait()
+            $This.IO.Dispatcher.InvokeAsync({ $This.IO.ShowDialog() }).Wait()
         }
     }
     
@@ -273,14 +267,15 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                         <GroupBox Header="[Required Features]" Grid.Row="0" Margin="5">
                             <DataGrid Grid.Row="0" Grid.Column="0" Margin="5" Name="DataGrid" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Single">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn     Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTemplateColumn Header="Installed" Width="60">
+                                    <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="[+]" Width="60">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding Installed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>

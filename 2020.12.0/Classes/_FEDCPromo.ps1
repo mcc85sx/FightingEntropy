@@ -70,42 +70,44 @@ Class _FEDCPromo
             }
 
             $This.IO.$($Type.Name).IsEnabled       = $Type.IsEnabled
-            $This.IO.$($Type.Name).$(@("Text","SelectedIndex")[$Type.Name -match "Mode"]) = $Type.Value
+            
+            @("Text","SelectedIndex")[$Type.Name -match "Mode"] | % { 
+            
+                $This.IO.$($Type.Name).$($_)       = $Type.Value
+            }
         }
 
         # Domain/Text
-
         ForEach ( $Text in $This.Profile.Text )
         {
-            $This.IO."$(  $Text.Name )".IsEnabled  = $Text.IsEnabled
+            $This.IO.$(   $Text.Name ).IsEnabled  = $Text.IsEnabled
             $This.IO."_$( $Text.Name )".Visibility = @("Collapsed","Visible")[$Text.IsEnabled]
-            $This.IO."$(  $Text.Name )".Text       = $Text.Text
+            $This.IO.$(   $Text.Name ).Text       = $Text.Text
         }
-        #$This.IO.DomainName                       = $This.Profile.Text.DomainName
-        #$This.IO.DomainNetBIOSName                = $This.Profile.Text.DomainNetBIOSName
-        #$This.IO.NewDomainName                    = $This.Profile.Text.NewDomainName
-        #$This.IO.NewDomainNetBIOSName             = $This.Profile.Text.NewDomainNetBIOSName
-        #$This.IO.SiteName                         = $This.Profile.Text.Sitename
 
         # Roles
-        $This.InstallDNS                           = $This.Profile.Role.InstallDNS
-        $This.CreateDNSDelegation                  = $This.Profile.Role.CreateDNSDelegation
-        $This.NoGlobalCatalog                      = $This.Profile.Role.NoGlobalCatalog
-        $This.CriticalReplicationOnly              = $This.Profile.Role.CriticalReplicationOnly
-
         ForEach ( $Role in $This.Profile.Role )
         {
             $This.IO.$( $Role.Name ).IsEnabled     = $Role.IsEnabled
             $This.IO.$( $Role.Name ).IsChecked     = $Role.IsChecked
         }
 
-        If ( !!$This.Connection.Credential )
+        # Credential
+        If ( $Mode -eq 0 )
         {
-            $This.IO.Credential.Text             = $This.Connection.Credential.Username
-            $This.IO.Credential.IsEnabled        = $False
+            $This.IO._Credential.Visibility        = "Collapsed"
+            $This.IO.Credential.Text               = ""
+            $This.IO.Credential.IsEnabled          = $False
         }
 
-        $This.Output                             = @( )
+        Else
+        {
+            $This.IO._Credential.Visibility        = "Visible"
+            $This.IO.Credential.Text               = $This.Connection.Credential | ? Username | % Username
+            $This.IO.Credential.IsEnabled          = $False
+        }
+
+        $This.Output                               = @( )
     }
 
     GetADConnection()
@@ -135,12 +137,8 @@ Class _FEDCPromo
         }
 
         $This.Features                          = [_ServerFeatures]::New().Output
-                
-        #ForEach ( $Feature in $This.Features ) 
-        #{
-        #    $This.IO.$($Feature.Name).IsEnabled = !$Feature.Installed
-        #    $This.IO.$($Feature.Name).IsChecked = "True"
-        #}
+
+        $This.IO.DataGrid.ItemsSource           = $This.Features
 
         $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
         $This.IO.DatabasePath.Text              = $This.DatabasePath

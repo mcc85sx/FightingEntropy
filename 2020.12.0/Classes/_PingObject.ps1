@@ -1,6 +1,6 @@
 Class _PingObject
 {
-    Static Hidden [Object] $Ref = [_NBTRef]::New().Output
+    Hidden [Object]     $Ref = [_NBTRef]::New().Output
     Hidden [Object]   $Reply
     [UInt32]          $Index
     [String]         $Status
@@ -11,11 +11,11 @@ Class _PingObject
 
     _PingObject([UInt32]$Index,[String]$Address,[Object]$Reply)
     {
-        $This.Reply            = $Reply.Result
-        $This.Index            = $Index
-        $This.Status           = @("-","+")[[Int32]($Reply.Result.Status -match "Success")]
-        $This.IPAddress        = $Address
-        $This.Hostname         = Switch ($This.Status)
+        $This.Reply          = $Reply.Result
+        $This.Index          = $Index
+        $This.Status         = @("-","+")[[Int32]($Reply.Result.Status -match "Success")]
+        $This.IPAddress      = $Address
+        $This.Hostname       = Switch ($This.Status)
         {
             "+"
             {
@@ -32,8 +32,8 @@ Class _PingObject
         {
             Write-Host ( "[+] {0}/{1}" -f $This.IPAddress, $This.Hostname )
 
-            $This.NBT          = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New($This.Ref,$_) }
-            $This.NetBIOS      = $This.NBT | ? { $_.ID -match "1B" -or $_.ID -eq "1C" } | Select -Unique | % Name 
+            $This.NBT        = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New($This.Ref,$_) }
+            $This.NetBIOS    = $This.NBT | ? { $_.ID -match "1B" -or $_.ID -eq "1C" } | Select -Unique | % Name 
         }
     }
 }

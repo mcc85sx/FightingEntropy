@@ -50,7 +50,7 @@ Function Get-FEDCPromoProfile
         Hidden [Hashtable]    $Tags = @{ 
 
             Slot                    = "Forest Tree Child Clone" -Split " "
-            Type                    = "ForestMode DomainMode DomainType ReplicationSourceDC ParentDomainName" -Split " "
+            Type                    = "ForestMode DomainMode ReplicationSourceDC ParentDomainName" -Split " "
             Text                    = "Parent{0} {0} Domain{1} SiteName New{0} NewDomain{1}" -f "DomainName","NetBIOSName" -Split " "
             Role                    = "InstallDns CreateDnsDelegation CriticalReplicationOnly NoGlobalCatalog" -Split " "
         }
@@ -80,7 +80,6 @@ Function Get-FEDCPromoProfile
             {
                 ForestMode            {1,0,0,0}
                 DomainMode            {1,1,1,0}
-                DomainType            {0,1,1,0}
                 ParentDomainName      {0,1,1,0}
                 ReplicationSourceDC   {0,0,0,1}
             }
@@ -94,10 +93,10 @@ Function Get-FEDCPromoProfile
             {
                 ParentDomainName      {0,1,1,0}
 	            DomainName            {1,0,0,1}
-	            DomainNetbiosName     {1,0,0,0}
+	            DomainNetBIOSName     {1,0,0,0}
 	            SiteName              {0,1,1,1}
 	            NewDomainName         {0,1,1,0}
-	            NewDomainNetbiosName  {0,1,1,0}
+	            NewDomainNetBIOSName  {0,1,1,0}
             }
 
             Return @([_Text]::New($Type,$Item[$Mode]))

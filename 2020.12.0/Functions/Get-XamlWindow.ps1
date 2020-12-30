@@ -138,7 +138,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU` Name="Ok" $CO`="Ok" $G`.Column="'+
             '0" $MA`="10"/><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $MA`="10"/></$G`></$G`></$GB`></$WI`>')
             ADLogin              = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="240" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="240" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <GroupBox Header="Enter AD Domain Administrator Account Credentials" Width="380" Height="200" Margin="5" VerticalAlignment="Center">
         <Grid>
             <Grid.RowDefinitions>
@@ -197,13 +197,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'w="1" $MA`="5"></$BU`><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $G`.Row="1" $MA`="5"></$BU`></$G`><'+
             '/$G`></$GB`></$WI`>')
             FEDCPromo            = @'
-            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Style TargetType="{x:Type ToolTip}">
-            <Setter Property="Background" Value="Black"/>
-            <Setter Property="Foreground" Value="LightGreen"/>
-        </Style>
-    </Window.Resources>
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -212,9 +206,9 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         <Menu Grid.Row="0" Height="20">
             <MenuItem Header="Command">
                 <MenuItem Name="Forest" Header="Install-ADDSForest" IsCheckable="True"/>
-                <MenuItem Name="Tree"   Header="Install-ADDSDomain(Tree)" IsCheckable="True"/>
-                <MenuItem Name="Child"  Header="Install-ADDSDomain(Child)" IsCheckable="True"/>
-                <MenuItem Name="Clone"  Header="Install-ADDSDomainController" IsCheckable="True"/>
+                <MenuItem Name="Tree" Header="Install-ADDSDomain(Tree)" IsCheckable="True"/>
+                <MenuItem Name="Child" Header="Install-ADDSDomain(Child)" IsCheckable="True"/>
+                <MenuItem Name="Clone" Header="Install-ADDSDomainController" IsCheckable="True"/>
             </MenuItem>
         </Menu>
         <GroupBox Grid.Row="1" Header="[FEDCPromo://Domain Service Configuration]" HorizontalAlignment="Center" VerticalAlignment="Center" Width="760" Height="740">
@@ -255,7 +249,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     <GroupBox Header="[Parent Domain Name]" Name="_ParentDomainName" Grid.Column="0" Margin="5">
                         <TextBox Name="ParentDomainName" Text="&lt;Domain Name&gt;" Height="20" Margin="5"/>
                     </GroupBox>
-                    <GroupBox Header="[Replication Source DC]" Name="_ReplicationSourceDC"  Grid.Column="1" Margin="5">
+                    <GroupBox Header="[Replication Source DC]" Name="_ReplicationSourceDC" Grid.Column="1" Margin="5">
                         <TextBox Name="ReplicationSourceDC" Text="&lt;Any&gt;" Height="20" Margin="5"/>
                     </GroupBox>
                 </Grid>
@@ -293,7 +287,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTemplateColumn Header="Installed" Width="55">
+                                    <DataGridTemplateColumn Header="Installed" Width="57">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding Installed}"/>
@@ -315,14 +309,14 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="5*"/>
                                 </Grid.ColumnDefinitions>
-                                <CheckBox Grid.Column="0" Grid.Row="0" Margin="5" Name="InstallDNS"/>
-                                <CheckBox Grid.Column="0" Grid.Row="1" Margin="5" Name="CreateDNSDelegation"/>
-                                <CheckBox Grid.Column="0" Grid.Row="2" Margin="5" Name="NoGlobalCatalog"/>
-                                <CheckBox Grid.Column="0" Grid.Row="3" Margin="5" Name="CriticalReplicationOnly"/>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="5" Text="Install DNS"/>
-                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" Text="Create DNS Delegation"/>
-                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" Text="No Global Catalog"/>
-                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" Text="Critical Replication Only"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="5" TextAlignment="Left" VerticalAlignment="Center" Text="Install DNS"/>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Margin="5" TextAlignment="Left" VerticalAlignment="Center" Text="Create DNS Delegation"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Margin="5" TextAlignment="Left" VerticalAlignment="Center" Text="No Global Catalog"/>
+                                <TextBlock Grid.Column="1" Grid.Row="3" Margin="5" TextAlignment="Left" VerticalAlignment="Center" Text="Critical Replication Only"/>
+                                <CheckBox Grid.Column="0" Grid.Row="0" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Center" Name="InstallDNS"/>
+                                <CheckBox Grid.Column="0" Grid.Row="1" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Center" Name="CreateDNSDelegation"/>
+                                <CheckBox Grid.Column="0" Grid.Row="2" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Center" Name="NoGlobalCatalog"/>
+                                <CheckBox Grid.Column="0" Grid.Row="3" Margin="5" HorizontalAlignment="Right" VerticalAlignment="Center" Name="CriticalReplicationOnly"/>
                             </Grid>
                         </GroupBox>
                     </Grid>
@@ -355,13 +349,13 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                         <GroupBox Grid.Row="4" Header="[Site Name]" Name="_SiteName">
                             <TextBox Height="20" Margin="5" Name="SiteName"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="5" Header="[Database Path]">
+                        <GroupBox Grid.Row="5" Header="[Database Path]" Name="_DatabasePath">
                             <TextBox Height="20" Margin="5" Name="DatabasePath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="6" Header="[Sysvol Path]">
+                        <GroupBox Grid.Row="6" Header="[Sysvol Path]" Name="_SysvolPath">
                             <TextBox Height="20" Margin="5" Name="SysvolPath"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="7" Header="[Log Path]">
+                        <GroupBox Grid.Row="7" Header="[Log Path]" Name="_LogPath">
                             <TextBox Height="20" Margin="5" Name="LogPath"/>
                         </GroupBox>
                         <GroupBox Grid.Row="8" Header="[Credential]" Name="_Credential">
@@ -381,7 +375,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <PasswordBox Grid.Column="0" Name="SafeModeAdministratorPassword" Margin="5,0,5,0" Height="20" PasswordChar="*"/>
-                                <PasswordBox Grid.Column="1" Name="Confirm" Height="20" Margin ="5,0,5,0" PasswordChar="*"/>
+                                <PasswordBox Grid.Column="1" Name="Confirm" Height="20" Margin="5,0,5,0" PasswordChar="*"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="10" Header="[Initialize]">
@@ -402,25 +396,13 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 '@
             FEDCFound            = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 
-        Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" Grid.Column="0"
-                  Name="DataGrid" 
-                  FrozenColumnCount="2" 
-                  AutoGenerateColumns="False" 
-                  AlternationCount="2" 
-                  HeadersVisibility="Column" 
-                  CanUserResizeRows="False" 
-                  CanUserAddRows="False" 
-                  IsTabStop="True" 
-                  IsTextSearchEnabled="True" 
-                  SelectionMode="Extended">
+        <DataGrid Grid.Row="0" Grid.Column="0" Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Address"  Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Hostname" Width="240" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
@@ -438,17 +420,92 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Grid>
 </Window>
 '@
-            FERoot               = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Root Installation" $W`="640" $H`'+
-            '="450" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$G`><$G`.$BG`><ImageBrush Stretch="UniformToFill"'+
-            ' ImageSource="{1}"/></$G`.$BG`><$G`.$RD`s><$RD` $H`="250"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="40"/><$R'+
-            'D` $H`="20"/></$G`.$RD`s><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="2*"/><$CD` $W`="2*"/><$CD` $W`="*"/></$G`.$'+
-            'CD`s><Image $G`.Row="0" $G`.ColumnSpan="4" $Hx`="Center" $W`="640" $H`="250" Source=""/><$TBL` $G`.Row="1'+
-            '" $G`.Column="1" $G`.ColumnSpan="2" $Hx`="Center" $PA`="5" Foreground="#00FF00" FontWeight="Bold" $Vx`="C'+
-            'enter"> Hybrid - Desired State Controller - Dependency Installation Path </$TBL`><$TB` $G`.Row="2" $G`.Co'+
-            'lumn="1" $G`.ColumnSpan="2" $H`="22" $TW`="Wrap" $MA`="10" Horizontal$CO`Alignment="Center" Name="Install"'+
-            '><$TB`.$EF`><DropShadow$EF`/></$TB`.$EF`></$TB`><$BU` $G`.Row="3" $G`.Column="1" Name="Start" $CO`="Start"'+
-            ' $MA`="10"/><$BU` $G`.Row="3" $G`.Column="2" Name="Cancel" $CO`="Cancel" $MA`="10"/></$G`></$WI`>')
+            FERoot               = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Root Installation" Width="640" Height="480" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="GroupBox" x:Key="xGroupBox">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Label" x:Key="xLabel">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="xButton">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" Background="#FF5F3F3F" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\banner.png"/>
+        <GroupBox Grid.Row="1" Style="{StaticResource xGroupBox}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="[Root Installation]" Style="{StaticResource xLabel}"></Label>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" VerticalAlignment="Center" Text="Enter a local filepath to install, store, and deploy [Apps/Features/Drivers/Packages/Updates/Images]" TextWrapping="Wrap" Foreground="Black"/>
+                    <TextBox Name="FilePath" Grid.Row="0" Grid.Column="1" Height="20" Background="White" Margin="10" TextAlignment="Left" Foreground="Black"></TextBox>
+                    <Button Name="Start"  Grid.Row="1" Grid.Column="0" Style="{StaticResource xButton}" Content="Start"></Button>
+                    <Button Name="Cancel" Grid.Row="1" Grid.Column="1" Style="{StaticResource xButton}" Content="Cancel"></Button>
+                </Grid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
+'@
             FEShare              = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
             '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://New Deployment Share" $W`="640" '+
             '$H`="960" Topmost="True" Icon="{0}" ResizeMode="NoResize" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$WI`.$RES`><$ST` $TT`="$'+
@@ -622,43 +679,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             'Weight="Bold" $MA`="10"/><$BU` $G`.Column="2" Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$'+
             'GB` $G`.Column="3" $HD`="Module Version" $MA`="5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
 
-            Test = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="200" HorizontalAlignment="Center" Topmost="True" 
-        Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" Grid.Column="0"
-                  Name="DataGrid" 
-                  FrozenColumnCount="2" 
-                  AutoGenerateColumns="False" 
-                  AlternationCount="2" 
-                  HeadersVisibility="Column" 
-                  CanUserResizeRows="False" 
-                  CanUserAddRows="False" 
-                  IsTabStop="True" 
-                  IsTextSearchEnabled="True" 
-                  SelectionMode="Extended">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Address"  Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Hostname" Width="240" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
-                <DataGridTextColumn Header="NetBIOS"  Width="100" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="10"/>
-            <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="10"/>
-        </Grid>
-    </Grid>
-</Window>
-'@
+            Test = ""
         }
 
         Hidden [Object]     $Slot

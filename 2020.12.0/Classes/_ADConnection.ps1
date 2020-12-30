@@ -6,6 +6,7 @@ Class _ADConnection
     [Object] $Target
     [Object] $Credential
     [Object] $Output
+    [Object] $Return
 
     _ADConnection([Object]$Hostmap)
     {

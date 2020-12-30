@@ -8,10 +8,10 @@ Class _NbtHost
 
     _NbtHost([Object]$NBT,[String]$Line)
     {
-        $This.Line    = $Line.Split(" ") | ? Length -gt 0
-        $This.Name    = $Line[0]
-        $This.ID      = $Line[1]
-        $This.Type    = $Line[2]
-        $This.Service = $NBT | ? { $_.ID -match $This.ID -and $_.Type -Match $This.Type } | % Service
+        $This.Line    = $Line -Split " " | ? Length -gt 0
+        $This.Name    = $This.Line[0]
+        $This.ID      = $This.Line[1]
+        $This.Type    = $This.Line[2]
+        $This.Service = $NBT | ? ID -match $This.ID | ? Type -Match $This.Type | % Service
     }
 }

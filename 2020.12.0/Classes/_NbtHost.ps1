@@ -1,6 +1,6 @@
 Class _NbtHost
 {
-    Hidden [String]    $Line
+    Hidden [String[]]  $Line
     [String]           $Name
     [String]             $ID
     [String]           $Type
@@ -8,7 +8,7 @@ Class _NbtHost
 
     _NbtHost([Object]$NBT,[String]$Line)
     {
-        $This.Line    = $Line -Split " " | ? Length -gt 0
+        $This.Line    = $Line.Split(" ") | ? Length -gt 0
         $This.Name    = $This.Line[0]
         $This.ID      = $This.Line[1]
         $This.Type    = $This.Line[2]

@@ -2,10 +2,11 @@ Class _ADConnection
 {
     [Object] $Primary
     [Object] $Secondary
+    [Object] $Swap
+    [Object] $Return
     [Object] $Target
     [Object] $Credential
     [Object] $Output
-    [Object] $Return
 
     _ADConnection([Object]$Hostmap)
     {
@@ -17,15 +18,15 @@ Class _ADConnection
 
         If ( $This.Primary )
         {
-            $This.Primary.NetBIOS   = $This.Primary.NBT   | ? ID -eq 1b | % Name
+            $This.Swap              = $This.Primary.NBT   | ? ID -eq 1b
         }
 
         If ( $This.Secondary )
         {
-            $This.Secondary.NetBIOS = $This.Secondary.NBT | ? ID -eq 1c | % Name 
+            $This.Swap              = $This.Secondary.NBT | ? ID -eq 1c
         }
 
-        $This.Output                = $This.Primary, $This.Secondary | Select -Unique
-        $This.Output                = $This.Output | Select-Object IPAddress, Hostname, NetBIOS
+        $This.Return                = $This.Primary, $This.Secondary | Select -Unique
+        $This.Output                = $This.Return | Select-Object IPAddress, Hostname, NetBIOS
     }
 }

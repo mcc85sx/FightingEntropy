@@ -26,15 +26,8 @@ Class _PingObject
                 "-"
             }
         }
-    }
 
-    GetNBT([Object]$xNBT)
-    {
-        $This.NBT              = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New($xNBT,$_) }
-    }
-
-    [String] GetNetBIOS()
-    {
-        Return @( $This.NBT | ? { $_.ID -eq "1b" -or $_.ID -eq "1c" | % Name | Select -Unique )
+        $This.NBT              = nbtstat -a $This.IPAddress | ? { $_ -match "Registered" } | % { [_NBTHost]::New([_NBTRef]::New().Output,$_) }
+        $This.NetBIOS          = $This.NBT | ? { $_.ID -eq "1b" -or $_.ID -eq "1c" } | Select -Unique
     }
 }

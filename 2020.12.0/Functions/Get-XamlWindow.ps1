@@ -127,16 +127,41 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics")
         [Object]           $Xaml = @{ 
 
-            Certificate          = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Certificate Info" $W`="350" $H`='+
-            '"200" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$GB` $HD`="Company Information / Certificate Gener'+
-            'ation" $W`="330" $H`="160" $Vx`="Top"><$G`><$G`.$RD`s><$RD` $H`="2*"/><$RD` $H`="*"/></$G`.$RD`s><$G` $G`'+ 
-            '.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="2.5*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/'+
-            '></$G`.$RD`s><$TBL` $G`.Row="0" $G`.Column="0" $MA`="10" TextAlignment="Right">Company:</$TBL`><$TB` Name='+
-            '"Company" $G`.Row="0" $G`.Column="1" $H`="24" $MA`="5"/><$TBL` $G`.Row="1" $G`.Column="0" $MA`="10" TextA'+ 
-            'lignment="Right">Domain:</$TBL`><$TB` Name="Domain" $G`.Row="1" $G`.Column="1" $H`="24" $MA`="5"/></$G`><$'+
-            'G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU` Name="Ok" $CO`="Ok" $G`.Column="'+
-            '0" $MA`="10"/><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $MA`="10"/></$G`></$G`></$GB`></$WI`>')
+            Certificate          = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Certificate Info" Width="350" Height="200" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <GroupBox Header="Company Information / Certificate Generation" Width="330" Height="160" VerticalAlignment="Top">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2.5*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="10" TextAlignment="Right">Company:</TextBlock>
+                <TextBox Name="Company" Grid.Row="0" Grid.Column="1" Height="24" Margin="5"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" TextAlignment="Right">Domain:</TextBlock>
+                <TextBox Name="Domain" Grid.Row="1" Grid.Column="1" Height="24" Margin="5"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="Ok" Content="Ok" Grid.Column="0" Margin="10"/>
+                <Button Name="Cancel" Content="Cancel" Grid.Column="1" Margin="10"/>
+            </Grid>
+        </Grid>
+    </GroupBox>
+</Window>
+'@
+
             ADLogin              = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="240" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <GroupBox Header="Enter AD Domain Administrator Account Credentials" Width="380" Height="200" Margin="5" VerticalAlignment="Center">
@@ -180,24 +205,58 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </GroupBox>
 </Window>
 '@
-            NewAccount           = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://Account Designation" $W`="480" $H'+
-            '`="280" Topmost="True" Icon="{0}" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$GB` $HD`="Enter UserName and $PW`" $W`="450" $H`'+
-            '="240" $MA`="5" $Vx`="Center"><$G`><$G`.$RD`s><$RD` $H`="2*"/><$RD` $H`="1.25*"/></$G`.$RD`s><$G` $G`.Row'+
-            '="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="3*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD`'+
-            ' $H`="*"/></$G`.$RD`s><$TBL` $G`.Column="0" $G`.Row="0" $MA`="10" TextAlignment="Right"> UserName:</$TBL`>'+
-            '<$TB` Name="UserName" $G`.Column="1" $G`.Row="0" $H`="24" $MA`="5"></$TB`><$TBL` $G`.Column="0" $G`.Row="1"'+
-            ' $MA`="10" TextAlignment="Right"> $PW`:</$TBL`><$PW`Box Name="$PW`" $G`.Column="1" $G`.Row="1" $H`="24" $M'+
-            'A`="5" $PW`Char="*"></$PW`Box><$TBL` $G`.Column="0" $G`.Row="2" $MA`="10" TextAlignment="Right"> Confirm:'+
-            '</$TBL`><$PW`Box Name="Confirm" $G`.Column="1" $G`.Row="2" $H`="24" $MA`="5" $PW`Char="*"></$PW`Box></$G`>'+
-            '<$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`'+
-            '="*"/></$G`.$RD`s><Radio$BU` Name="Switch" $G`.Row="0" $G`.Column="0" $CO`="Change" $Vx`="Center" $Hx`="Ce'+
-            'nter" Visibility="Collapsed"/><$TB` Name="Port" $G`.Row="0" $G`.Column="1" $Vx`="Center" $Hx`="Center" $W`'+
-            '="120" IsEnabled="False" Visibility="Collapsed"> 389</$TB`><$BU` Name="Ok" $CO`="Ok" $G`.Column="0" $G`.Ro'+
-            'w="1" $MA`="5"></$BU`><$BU` Name="Cancel" $CO`="Cancel" $G`.Column="1" $G`.Row="1" $MA`="5"></$BU`></$G`><'+
-            '/$G`></$GB`></$WI`>')
+            NewAccount           = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Account Designation" Width="480" Height="280" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <GroupBox Header="Enter UserName and Password" Width="450" Height="240" Margin="5" VerticalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1.25*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="10" TextAlignment="Right"> UserName:</TextBlock>
+                <TextBox Name="UserName" Grid.Column="1" Grid.Row="0" Height="24" Margin="5"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="10" TextAlignment="Right"> Password:</TextBlock>
+                <PasswordBox Name="Password" Grid.Column="1" Grid.Row="1" Height="24" Margin="5" PasswordChar="*"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="10" TextAlignment="Right"> Confirm:</TextBlock>
+                <PasswordBox Name="Confirm" Grid.Column="1" Grid.Row="2" Height="24" Margin="5" PasswordChar="*"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <RadioButton Name="Switch" Grid.Row="0" Grid.Column="0" Content="Change" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                <TextBox Name="Port" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" IsEnabled="False" Visibility="Collapsed">389</TextBox>
+                <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
+                <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
+            </Grid>
+        </Grid>
+    </GroupBox>
+</Window>
+'@
+
             FEDCPromo            = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="LightGreen"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -290,7 +349,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <DataGridTemplateColumn Header="Installed" Width="57">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox IsChecked="{Binding Installed}"/>
+                                                <CheckBox IsEnabled="{Binding Installed}" IsChecked="True"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -506,178 +565,589 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Grid>
 </Window>
 '@
-            FEShare              = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://New Deployment Share" $W`="640" '+
-            '$H`="960" Topmost="True" Icon="{0}" ResizeMode="NoResize" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$WI`.$RES`><$ST` $TT`="$'+
-            'LA`" $XK`="Head$LA`"><$SE` $PR`="$TBL`.TextAlignment" $VA`="Center"/><$SE` $PR`="FontWeight" $VA`="Heavy"'+
-            '/><$SE` $PR`="FontSize" $VA`="18"/><$SE` $PR`="$MA`" $VA`="5"/><$SE` $PR`="Foreground" $VA`="White"/><$SE'+
-            '` $PR`="Template"><$SE`.$VA`><$CT` $TT`="$LA`"><$BO` CornerRadius="2,2,2,2" $BG`="#FF0080FF" $BO`Brush="B'+
-            'lack" $BO`Thickness="3"><$CO`Presenter x:Name="$CO`Presenter" $CO`Template="{ TemplateBinding $CO`Template'+
-            ' }" $MA`="5"/></$BO`></$CT`></$SE`.$VA`></$SE`></$ST`><$ST` $TT`="Radio$BU`" $XK`="Rad$BU`"><$SE` $PR`="$'+
-            'Hx`" $VA`="Center"/><$SE` $PR`="$Vx`" $VA`="Center"/><$SE` $PR`="Foreground" $VA`="Black"/></$ST`><$ST` $'+
-            'TT`="$TB`" $XK`="TextBro"><$SE` $PR`="Vertical$CO`Alignment" $VA`="Center"/><$SE` $PR`="$MA`" $VA`="2"/><'+
-            '$SE` $PR`="$TW`" $VA`="Wrap"/><$SE` $PR`="$H`" $VA`="24"/></$ST`></$WI`.$RES`><$G`><$G`.$RD`s><$RD` $H`="'+
-            '250"/><$RD` $H`="*"/><$RD` $H`="40"/></$G`.$RD`s><$G`.$BG`><ImageBrush Stretch="UniformToFill" ImageSourc'+
-            'e="{1}"/></$G`.$BG`><Image $G`.Row="0" Source="{2}"/><$TC` $G`.Row="1" $BG`="{x:Null}" $BO`'+
-            'Brush="{x:Null}" Foreground="{x:Null}" $Hx`="Center"><TabItem $HD`="Stage Deployment Server" $BO`Brush="{'+
-            'x:Null}" $W`="280"><TabItem.$EF`><DropShadow$EF`/></TabItem.$EF`><$G`><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`'+
-            '="*"/></$G`.$RD`s><$GB` $G`.Row="0" $MA`="10" $PA`="5" Foreground="Black" $BG`="White"><$G` $G`.Row="0"><'+
-            '$G`.$RD`s><$RD` $H`="50"/><$RD` $H`="30"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$LA` '+
-            '$CO`="Deployment Share Settings" $ST`="{ StaticResource Head$LA` }" Foreground="White" $G`.Row="0"/><$G` '+
-            '$G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><Radio$BU` $G`.Column="0" $CO`="Standard'+
-            ' @ MDT Share" Name="Legacy" $ST`="{ StaticResource Rad$BU` }"/><Radio$BU` $G`.Column="1" $CO`="Enhanced @ '+
-            'PSD Share" Name="Remaster" $ST`="{ StaticResource Rad$BU` }"/></$G`><$GB` $G`.Row="2" $HD`="Directory Path'+
-            '"><$TB` $ST`="{ StaticResource TextBro }" Name="Directory"/></$GB`><$GB` $G`.Row="3" $HD`="Samba Share"><$'+
-            'TB` $ST`="{ StaticResource TextBro }" Name="Samba"/></$GB`><$G` $G`.Row="4"><$G`.$CD`s><$CD` $W`="*"/><$CD'+
-            '` $W`="2*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD`="PS Drive"><$TB` $ST`="{ StaticResource TextBro }" Name='+
-            '"DSDrive"/></$GB`><$GB` $G`.Column="1" $HD`="Description"><$TB` $ST`="{ StaticResource TextBro }" Name="De'+
-            'scription"/></$GB`></$G`></$G`></$GB`><$GB` $G`.Row="1" $MA`="10" $PA`="5" Foreground="Black" $BG`="White'+
-            '"><$G`><$G`.$RD`s><$RD` $H`="50"/><$RD` $H`="30"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`'+
-            's><$LA` $CO`="BITS / IIS Settings" $ST`="{ StaticResource Head$LA` }" Foreground="White" $G`.Row="0"/><$G'+
-            '` $G`.Row="1"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><Radio$BU` $G`.Column="0" Name="IIS_Ins'+
-            'tall" $CO`="Install BITS/IIS for MDT" $ST`="{ StaticResource Rad$BU` }"/><Radio$BU` $G`.Column="1" Name="I'+
-            'IS_Skip" $CO`="Do not install BITS/IIS for MDT" $ST`="{ StaticResource Rad$BU` }"/></$G`><$GB` $G`.Row="2'+
-            '" $HD`="Name"><$TB` $ST`="{ StaticResource TextBro }" Name="IIS_Name"/></$GB`><$GB` $G`.Row="3" $HD`="App Po'+
-            'ol"><$TB` $ST`="{ StaticResource TextBro }" Name="IIS_AppPool"/></$GB`><$GB` $G`.Row="4" $HD`="Virtual Hos'+
-            't"><$TB` $ST`="{ StaticResource TextBro }" Name="IIS_Proxy"/></$GB`></$G`></$GB`></$G`></TabItem><TabItem '+
-            '$HD`="Image Info" $Hx`="Center" $W`="280" $BO`Brush="{x:Null}"><TabItem.$EF`><DropShadow$EF`/></TabItem.$'+
-            'EF`><$G`><$G`.$RD`s><$RD` $H`="7*"/><$RD` $H`="5*"/></$G`.$RD`s><$GB` $G`.Row="0" $MA`="10" $PA`="5" Fore'+
-            'ground="Black" $BG`="White"><$G`><$G`.$RD`s><$RD` $H`="50"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/>'+
-            '<$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$LA` $G`.Row="0" $ST`="{ StaticResource Head$LA` }" $CO`="Imag'+
-            'e Branding Settings"/><$GB` $G`.Row="1" $HD`="Organization"><$TB` $ST`="{ StaticResource TextBro }" Name="'+
-            'Company"/></$GB`><$GB` $G`.Row="2" $HD`="Support Website"><$TB` $ST`="{ StaticResource TextBro }" Name="WW'+
-            'W"/></$GB`><$G` $G`.Row="3"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD'+
-            '`="Support Phone"><$TB` $ST`="{ StaticResource TextBro }" Name="Phone"/></$GB`><$GB` $G`.Column="1" $HD`="'+
-            'Support Hours"><$TB` $ST`="{ StaticResource TextBro }" Name="Hours"/></$GB`></$G`><$G` $G`.Row="4" $G`.Row'+
-            'Span="2"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="100"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/>'+
-            '</$G`.$RD`s><$GB` $HD`="Logo [120x120]" $G`.Row="0" $G`.Column="0"><$TB` $ST`="{ StaticResource TextBro }'+
-            '" $W`="400" $G`.Column="1" Name="Logo"/></$GB`><$BU` $MA`="5,15,5,5" $H`="20" $G`.Row="0" $G`.Column="1" $'+
-            'CO`="Logo" Name="LogoBrowse"/><$GB` $HD`="$BG`" $G`.Row="1" $G`.Column="0"><$TB` $ST`="{ StaticResource Te'+
-            'xtBro }" $W`="400" $G`.Column="1" Name="$BG`"/></$GB`><$BU` $MA`="5,15,5,5" $H`="20" $G`.Row="1" $G`.Colum'+
-            'n="1" $CO`="$BG`" Name="$BG`Browse"/></$G`></$G`></$GB`><$GB` $G`.Row="1" $MA`="10" $PA`="5" Foreground="B'+
-            'lack" $BG`="White"><$G`><$G`.$RD`s><$RD` $H`="50"/><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD'+
-            '`s><$LA` $G`.Row="0" $ST`="{ StaticResource Head$LA` }" $CO`="Domain / Network Credentials"/><$GB` $G`.Ro'+
-            'w="1" $HD`="Domain Name"><$TB` $ST`="{ StaticResource TextBro }" Name="Branch"/></$GB`><$GB` $G`.Row="2" $H'+
-            'D`="NetBIOS Domain"><$TB` $ST`="{ StaticResource TextBro }" Name="NetBIOS"/></$GB`><$G` $G`.Row="3"><$G`.$'+
-            'CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD`="Target/Local Administrator User'+
-            'Name"><$TB` $ST`="{ StaticResource TextBro }" Name="LMCred_User"/></$GB`><$GB` $G`.Column="1" $HD`="Target/'+
-            'Local Administrator $PW`"><$PW`Box $MA`="5" Name="LMCred_Pass" $PW`Char="*"/></$GB`></$G`></$G`></$GB`></$'+
-            'G`></TabItem></$TC`><$G` $G`.Row="2"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$BU` $G`.Colum'+
-            'n="0" Name="Start" $CO`="Start" $W`="100" $H`="24"/><$BU` $G`.Column="1" Name="Cancel" $CO`="Cancel" $W`="1'+
-            '00" $H`="24"/></$G`></$G`></$WI`>')
-            FEService            = ( '<$WI` xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x='+
-            '"http://schemas.microsoft.com/winfx/2006/xaml" $TI`="[FightingEntropy]://ViperBomb Services" $H`="800" $W'+
-            '`="800" Topmost="True" $BO`Brush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020'+
-            '.12.0\Graphics\icon.ico" ResizeMode="NoResize" $Hx`="Center" $WI`StartupLocation="CenterScreen"><$WI`.$RE'+
-            'S`><$ST` $TT`="$LA`"><$SE` $PR`="$Hx`" $VA`="Center"/><$SE` $PR`="$Vx`" $VA`="Center"/><$SE` $PR`="$PA`" '+
-            '$VA`="5"/></$ST`><$ST` $XK`="Separator$ST`1" $TT`="{x:Type Separator}"><$SE` $PR`="SnapsToDevicePixels" $'+
-            'VA`="True"/><$SE` $PR`="$MA`" $VA`="0,0,0,0"/><$SE` $PR`="Template"><$SE`.$VA`><$CT` $TT`="{x:Type Separa'+
-            'tor}"><$BO` $H`="24" SnapsToDevicePixels="True" $BG`="#FF4D4D4D" $BO`Brush="Azure" $BO`Thickness="1,1,1,1'+
-            '" CornerRadius="5,5,5,5"/></$CT`></$SE`.$VA`></$SE`></$ST`><$ST` $TT`="{x:Type ToolTip}"><$SE` $PR`="$BG`'+
-            '" $VA`="Black"/><$SE` $PR`="Foreground" $VA`="LightGreen"/></$ST`></$WI`.$RES`><$WI`.$EF`><DropShadow$EF`'+
-            '/></$WI`.$EF`><$G`><$G`.$RD`s><$RD` $H`="20"/><$RD` $H`="*"/><$RD` $H`="60"/></$G`.$RD`s><$MN` $G`.Row="0'+
-            '" IsMain$MN`="True"><$MN`Item $HD`="Configuration"><$MN`Item Name="Profile_0" $HD`="0 - $WI`s 10 Home / D'+
-            'efault Max"/><$MN`Item Name="Profile_1" $HD`="1 - $WI`s 10 Home / Default Min"/><$MN`Item Name="Profile_2'+
-            '" $HD`="2 - $WI`s 10 Pro / Default Max"/><$MN`Item Name="Profile_3" $HD`="3 - $WI`s 10 Pro / Default Min"'+
-            '/><$MN`Item Name="Profile_4" $HD`="4 - Desktop / Default Max"/><$MN`Item Name="Profile_5" $HD`="5 - Deskt'+
-            'op / Default Min"/><$MN`Item Name="Profile_6" $HD`="6 - Desktop / Default Max"/><$MN`Item Name="Profile_7'+
-            '" $HD`="7 - Desktop / Default Min"/><$MN`Item Name="Profile_8" $HD`="8 - Laptop / Default Max"/><$MN`Item'+
-            ' Name="Profile_9" $HD`="9 - Laptop / Default Min"/></$MN`Item><$MN`Item $HD`="Info"><$MN`Item Name="URL" '+
-            '$HD`="$RES`"/><$MN`Item Name="About" $HD`="About"/><$MN`Item Name="Copyright" $HD`="Copyright"/><$MN`Item'+
-            ' Name="MadBomb" $HD`="MadBomb122"/><$MN`Item Name="BlackViper" $HD`="BlackViper"/><$MN`Item Name="Site" $'+
-            'HD`="Company Website"/><$MN`Item Name="Help" $HD`="Help"/></$MN`Item></$MN`><$G` $G`.Row="1"><$G`.$CD`s><'+
-            '$CD` $W`="*"/></$G`.$CD`s><$TC` $BO`Brush="Gainsboro" $G`.Row="1" Name="$TC`"><$TC`.$RES`><$ST` $TT`="Tab'+
-            'Item"><$SE` $PR`="Template"><$SE`.$VA`><$CT` $TT`="TabItem"><$BO` Name="$BO`" $BO`Thickness="1,1,1,0" $BO'+
-            '`Brush="Gainsboro" CornerRadius="4,4,0,0" $MA`="2,0"><$CO`Presenter x:Name="$CO`Site" $Vx`="Center" $Hx`='+
-            '"Center" $CO`Source="$HD`" $MA`="10,2"/></$BO`><$CT`.$TR`s><$TR` $PR`="IsSelected" $VA`="True"><$SE` $TN`'+
-            '="$BO`" $PR`="$BG`" $VA`="LightSkyBlue"/></$TR`><$TR` $PR`="IsSelected" $VA`="False"><$SE` $TN`="$BO`" $P'+
-            'R`="$BG`" $VA`="GhostWhite"/></$TR`></$CT`.$TR`s></$CT`></$SE`.$VA`></$SE`></$ST`></$TC`.$RES`><TabItem $'+
-            'HD`="Service Dialog"><$G`><$G`.$RD`s><$RD` $H`="60"/><$RD` $H`="32"/><$RD` $H`="*"/></$G`.$RD`s><$G` $G`.'+
-            'Row="0"><$G`.$CD`s><$CD` $W`="0.45*"/><$CD` $W`="0.15*"/><$CD` $W`="0.25*"/><$CD` $W`="0.15*"/></$G`.$CD`'+
-            's><$GB` $G`.Column="0" $HD`="Operating System" $MA`="5"><$LA` Name="Caption"/></$GB`><$GB` $G`.Column="1"'+
-            ' $HD`="Release ID" $MA`="5"><$LA` Name="ReleaseID"/></$GB`><$GB` $G`.Column="2" $HD`="Version" $MA`="5"><'+
-            '$LA` Name="Version"/></$GB`><$GB` $G`.Column="3" $HD`="Chassis" $MA`="5"><$LA` Name="Chassis"/></$GB`></$'+
-            'G`><$G` $G`.Row="1"><$G`.$CD`s><$CD` $W`="0.66*"/><$CD` $W`="0.33*"/><$CD` $W`="1*"/></$G`.$CD`s><$TB` $G'+
-            '`.Column="0" $MA`="5" Name="Search" $TW`="Wrap"></$TB`><$CB` $G`.Column="1" $MA`="5" Name="Select" $Vx`="'+
-            'Center"><$CB`Item $CO`="Checked"/><$CB`Item $CO`="Display Name" IsSelected="True"/><$CB`Item $CO`="Name"/'+
-            '><$CB`Item $CO`="Current Setting"/></$CB`><$TBL` $G`.Column="2" $MA`="5" TextAlignment="Center">Service S'+
-            'tate: <Run $BG`="#66FF66" Text="Compliant"/> / <Run $BG`="#FFFF66" Text="Unspecified"/> / <Run $BG`="#FF6'+
-            '666" Text="Non Compliant"/></$TBL`></$G`><Data$G` $G`.Row="2" $G`.Column="0" Name="Data$G`" FrozenColumnC'+
-            'ount="2" AutoGenerateColumns="False" AlternationCount="2" $HD`sVisibility="Column" CanUserResizeRows="Fal'+
-            'se" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended"><Data$G`.'+
-            'Row$ST`><$ST` $TT`="{x:Type Data$G`Row}"><$ST`.$TR`s><$TR` $PR`="AlternationIndex" $VA`="0"><$SE` $PR`="$'+
-            'BG`" $VA`="White"/></$TR`><$TR` $PR`="AlternationIndex" $VA`="1"><$SE` $PR`="$BG`" $VA`="#FFD8D8D8"/></$T'+
-            'R`><$TR` $PR`="IsMouseOver" $VA`="True"><$SE` $PR`="ToolTip"><$SE`.$VA`><$TBL` Text="{Binding Description'+
-            '}" $TW`="Wrap" $W`="400" $BG`="#000000" Foreground="#00FF00"/></$SE`.$VA`></$SE`><$SE` $PR`="ToolTipServi'+
-            'ce.ShowDuration" $VA`="360000000"/></$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition Binding="{B'+
-            'inding Scope}" $VA`="True"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$TR`.Conditio'+
-            'ns><$SE` $PR`="$BG`" $VA`="#F08080"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditions><Condition '+
-            'Binding="{Binding Scope}" $VA`="False"/><Condition Binding="{Binding Matches}" $VA`="False"/></MultiData$'+
-            'TR`.Conditions><$SE` $PR`="$BG`" $VA`="#FFFFFF64"/></MultiData$TR`><MultiData$TR`><MultiData$TR`.Conditio'+
-            'ns><Condition Binding="{Binding Scope}" $VA`="True"/><Condition Binding="{Binding Matches}" $VA`="True"/>'+
-            '</MultiData$TR`.Conditions><$SE` $PR`="$BG`" $VA`="LightGreen"/></MultiData$TR`></$ST`.$TR`s></$ST`></Dat'+
-            'a$G`.Row$ST`><Data$G`.Columns><Data$G`TextColumn $HD`="Index" $W`="50" Binding="{Binding Index}" CanUserS'+
-            'ort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Name" $W`="150" Binding="{Binding Name}" CanUserSo'+
-            'rt="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Scoped" $W`="75" Binding="{Binding Scope}" CanUserS'+
-            'ort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Profile" $W`="100" Binding="{Binding Slot}" CanUse'+
-            'rSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Status" $W`="75" Binding="{Binding Status}" CanU'+
-            'serSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="StartType" $W`="75" Binding="{Binding StartMod'+
-            'e}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="DisplayName" $W`="150" Binding="{Bindi'+
-            'ng DisplayName}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="PathName" $W`="150" Bindi'+
-            'ng="{Binding PathName}" CanUserSort="True" IsReadOnly="True"/><Data$G`TextColumn $HD`="Description" $W`="'+
-            '150" Binding="{Binding Description}" CanUserSort="True" IsReadOnly="True"/></Data$G`.Columns></Data$G`></'+
-            '$G`></TabItem><TabItem $HD`="Preferences"><$G`><$G`.$RD`s><$RD` $H`="1.25*"/><$RD` $H`="*"/></$G`.$RD`s><'+
-            '$G` $G`.Row="0"><$G`.$CD`s><$CD` $W`="*"/><$CD` $W`="*"/><$CD` $W`="*"/></$G`.$CD`s><$G` $G`.Column="2"><'+
-            '$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Bypass / Checks [Risky Option'+
-            's]" $MA`="5"><$G`><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="1" '+
-            '$MA`="5" Name="ByBuild" $CO`="Skip Build/Version Check" $Hx`="Center" $Vx`="Center"/><$CB` $G`.Row="0" $V'+
-            'x`="Center" $H`="24" Name="ByEdition"><$CB`Item $CO`="Override Edition Check" IsSelected="True"/><$CB`Ite'+
-            'm $CO`="$WI`s 10 Home"/><$CB`Item $CO`="$WI`s 10 Pro"/></$CB`><$CHK` $G`.Row="2" $MA`="5" Name="ByLaptop"'+
-            ' $CO`="Enable Laptop Tweaks" $Hx`="Center" $Vx`="Center"/></$G`></$GB`><$GB` $G`.Row="1" $HD`="Display" $'+
-            'MA`="5"><$G` $Hx`="Center" $Vx`="Center" ><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G'+
-            '`.$RD`s><$CHK` $G`.Row="0" $MA`="5" Name="DispActive" $CO`="Show Active Services" /><$CHK` $G`.Row="1" $M'+
-            'A`="5" Name="DispInactive" $CO`="Show Inactive Services" /><$CHK` $G`.Row="2" $MA`="5" Name="DispSkipped"'+
-            ' $CO`="Show Skipped Services" /></$G`></$GB`></$G`><$G` $G`.Column="0"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H'+
-            '`="2*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Service Configuration" $MA`="5"><$CB` $G`.Row="1" Name="Servi'+
-            'ceProfile" $H`="24"><$CB`Item $CO`="Black Viper (Sparks v1.0)" IsSelected="True"/><$CB`Item $CO`="DevOPS '+
-            '(MC/SDP v1.0)" IsEnabled="False"/></$CB`></$GB`><$GB` $G`.Row="1" $HD`="Miscellaneous" $MA`="5"><$G` $Hx`'+
-            '="Center" $Vx`="Center"><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.'+
-            '$RD`s><$CHK` $G`.Row="0" $MA`="5" Name="MiscSimulate" $CO`="Simulate Changes [Dry Run]" /><$CHK` $G`.Row='+
-            '"1" $MA`="5" Name="MiscXbox" $CO`="Skip All Xbox Services" /><$CHK` $G`.Row="2" $MA`="5" Name="MiscChange'+
-            '" $CO`="Allow Change of Service State" /><$CHK` $G`.Row="3" $MA`="5" Name="MiscStopDisabled" $CO`="Stop D'+
-            'isabled Services" /></$G`></$GB`></$G`><$G` $G`.Column="1"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="2*"/></$G'+
-            '`.$RD`s><$GB` $G`.Row="0" $HD`="User Interface" $MA`="5"><$CB` $G`.Row="1" Name="ScriptProfile" $H`="24">'+
-            '<$CB`Item $CO`="DevOPS (MC/SDP v1.0)" IsSelected="True"/><$CB`Item $CO`="MadBomb (MadBomb122 v1.0)" IsEna'+
-            'bled="False"/></$CB`></$GB`><$GB` $G`.Row="1" $HD`="Development" $MA`="5"><$G` $Hx`="Center" $Vx`="Center'+
-            '" ><$G`.$RD`s><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/><$RD` $H`="30"/></$G`.$RD`s><$CHK` $G`.Row='+
-            '"0" $MA`="5" Name="DevErrors" $CO`="Diagnostic Output [ On Error ]" /><$CHK` $G`.Row="1" $MA`="5" Name="D'+
-            'evLog" $CO`="Enable Development Logging" /><$CHK` $G`.Row="2" $MA`="5" Name="DevConsole" $CO`="Enable Con'+
-            'sole" /><$CHK` $G`.Row="3" $MA`="5" Name="DevReport" $CO`="Enable Diagnostic" /></$G`></$GB`></$G`></$G`>'+
-            '<$G` $G`.Row="1"><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$GB` $G`.Row="0" $HD`="Logging: Cr'+
-            'eate logs for all changes made via this utility" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/>'+
-            '<$CD` $W`="6*"/></$G`.$CD`s><$G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.C'+
-            'olumn="0" $MA`="5" Name="LogSvcSwitch" $CO`="Services" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0" $G`'+
-            '.Column="1" $MA`="5" Name="LogSvcBrowse" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="L'+
-            'ogSvcFile" IsEnabled="False" $Hx`="Stretch" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Na'+
-            'me="LogScrSwitch" $CO`="Script" $Vx`="Center" $Hx`="Center" /><$BU` $G`.Row="1" $G`.Column="1" $MA`="5" N'+
-            'ame="LogScrBrowse" $CO`="Browse"/><$TB` $G`.Row="1" $G`.Column="2" $MA`="5" Name="LogScrFile" IsEnabled="'+
-            'False" $Hx`="Stretch" $Vx`="Center" /></$G`></$GB`><$GB` $G`.Row="1" $HD`="Backup: Save your current Serv'+
-            'ice Configuration" $MA`="5"><$G`><$G`.$CD`s><$CD` $W`="75"/><$CD` $W`="*"/><$CD` $W`="6*"/></$G`.$CD`s><$'+
-            'G`.$RD`s><$RD` $H`="*"/><$RD` $H`="*"/></$G`.$RD`s><$CHK` $G`.Row="0" $G`.Column="0" $MA`="5" Name="RegSw'+
-            'itch" $CO`="reg.*" $Hx`="Center" $Vx`="Center"/><$BU` $G`.Row="0" $G`.Column="1" $MA`="5" Name="RegBrowse'+
-            '" $CO`="Browse"/><$TB` $G`.Row="0" $G`.Column="2" $MA`="5" Name="RegFile" IsEnabled="False" $Hx`="Stretch'+
-            '" $Vx`="Center" /><$CHK` $G`.Row="1" $G`.Column="0" $MA`="5" Name="CsvSwitch" $CO`="csv.*" $Hx`="Center" '+
-            '$Vx`="Center" /><$BU` $G`.Row="1" $G`.Column="1" $MA`="5" Name="CsvBrowse" $CO`="Browse"/><$TB` $G`.Row="'+
-            '1" $G`.Column="2" $MA`="5" Name="CsvFile" IsEnabled="False" $Vx`="Center" /></$G`></$GB`></$G`></$G`></Ta'+
-            'bItem><TabItem $HD`="Console"><$G` $BG`="#FFE5E5E5"><ScrollViewer VerticalScrollBarVisibility="Visible"><'+
-            '$TBL` Name="ConsoleOutput" TextTrimming="CharacterEllipsis" $BG`="White" FontFamily="Lucida Console"/></S'+
-            'crollViewer></$G`></TabItem><TabItem $HD`="Diagnostics"><$G` $BG`="#FFE5E5E5"><ScrollViewer VerticalScrol'+
-            'lBarVisibility="Visible"><$TBL` Name="DiagnosticOutput" TextTrimming="CharacterEllipsis" $BG`="White" Fon'+
-            'tFamily="Lucida Console"/></ScrollViewer></$G`></TabItem></$TC`></$G`><$G` $G`.Row="2"><$G`.$CD`s><$CD` $'+
-            'W`="2*"/><$CD` $W`="*"/><$CD` $W`="*"/><$CD` $W`="2*"/></$G`.$CD`s><$GB` $G`.Column="0" $HD`="Service Con'+
-            'figuration" $MA`="5"><$LA` Name="Service$LA`"/></$GB`><$BU` $G`.Column="1" Name="Start" $CO`="Start" Font'+
-            'Weight="Bold" $MA`="10"/><$BU` $G`.Column="2" Name="Cancel" $CO`="Cancel" FontWeight="Bold" $MA`="10"/><$'+
-            'GB` $G`.Column="3" $HD`="Module Version" $MA`="5"><$LA` Name="Script$LA`" /></$GB`></$G`></$G`></$WI`>')
+            FEShare              = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="960" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="Label" x:Key="HeadLabel">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Heavy"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border CornerRadius="2,2,2,2" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{ TemplateBinding ContentTemplate }" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="RadioButton" x:Key="RadButton">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style TargetType="TextBox" x:Key="TextBro">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Height" Value="24"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
+        </Grid.Background>
+        <Image Grid.Row="0" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\banner.png"/>
+        <TabControl Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" HorizontalAlignment="Center">
+            <TabItem Header="Stage Deployment Server" BorderBrush="{x:Null}" Width="280">
+                <TabItem.Effect>
+                    <DropShadowEffect/>
+                </TabItem.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Deployment Share Settings" Style="{ StaticResource HeadLabel }" Foreground="White" Grid.Row="0"/>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Column="0" Content="Standard @ MDT Share" Name="Legacy" Style="{ StaticResource RadButton }"/>
+                                <RadioButton Grid.Column="1" Content="Enhanced @ PSD Share" Name="Remaster" Style="{ StaticResource RadButton }"/>
+                            </Grid>
+                            <GroupBox Grid.Row="2" Header="Directory Path">
+                                <TextBox Style="{ StaticResource TextBro }" Name="Directory"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="Samba Share">
+                                <TextBox Style="{ StaticResource TextBro }" Name="Samba"/>
+                            </GroupBox>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="PS Drive">
+                                    <TextBox Style="{ StaticResource TextBro }" Name="DSDrive"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Description">
+                                    <TextBox Style="{ StaticResource TextBro }" Name="Description"/>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Margin="10" Padding="5" Foreground="Black" Background="White">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="BITS / IIS Settings" Style="{ StaticResource HeadLabel }" Foreground="White" Grid.Row="0"/>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Column="0" Name="IIS_Install" Content="Install BITS/IIS for MDT" Style="{ StaticResource RadButton }"/>
+                                <RadioButton Grid.Column="1" Name="IIS_Skip" Content="Do not install BITS/IIS for MDT" Style="{ StaticResource RadButton }"/>
+                            </Grid>
+                            <GroupBox Grid.Row="2" Header="Name">
+                                <TextBox Style="{ StaticResource TextBro }" Name="IIS_Name"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="App Pool">
+                                <TextBox Style="{ StaticResource TextBro }" Name="IIS_AppPool"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="Virtual Host">
+                                <TextBox Style="{ StaticResource TextBro }" Name="IIS_Proxy"/>
+                            </GroupBox>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Image Info" HorizontalAlignment="Center" Width="280" BorderBrush="{x:Null}">
+                <TabItem.Effect>
+                    <DropShadowEffect/>
+                </TabItem.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="5*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Style="{ StaticResource HeadLabel }" Content="Image Branding Settings"/>
+                            <GroupBox Grid.Row="1" Header="Organization">
+                                <TextBox Style="{ StaticResource TextBro }" Name="Company"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="Support Website">
+                                <TextBox Style="{ StaticResource TextBro }" Name="WWW"/>
+                            </GroupBox>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Support Phone">
+                                    <TextBox Style="{ StaticResource TextBro }" Name="Phone"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Support Hours">
+                                    <TextBox Style="{ StaticResource TextBro }" Name="Hours"/>
+                                </GroupBox>
+                            </Grid>
+                            <Grid Grid.Row="4" Grid.RowSpan="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Header="Logo [120x120]" Grid.Row="0" Grid.Column="0">
+                                    <TextBox Style="{ StaticResource TextBro }" Width="400" Grid.Column="1" Name="Logo"/>
+                                </GroupBox>
+                                <Button Margin="5,15,5,5" Height="20" Grid.Row="0" Grid.Column="1" Content="Logo" Name="LogoBrowse"/>
+                                <GroupBox Header="Background" Grid.Row="1" Grid.Column="0">
+                                    <TextBox Style="{ StaticResource TextBro }" Width="400" Grid.Column="1" Name="Background"/>
+                                </GroupBox>
+                                <Button Margin="5,15,5,5" Height="20" Grid.Row="1" Grid.Column="1" Content="Background" Name="BackgroundBrowse"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Margin="10" Padding="5" Foreground="Black" Background="White">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Style="{ StaticResource HeadLabel }" Content="Domain / Network Credentials"/>
+                            <GroupBox Grid.Row="1" Header="Domain Name">
+                                <TextBox Style="{ StaticResource TextBro }" Name="Branch"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="NetBIOS Domain">
+                                <TextBox Style="{ StaticResource TextBro }" Name="NetBIOS"/>
+                            </GroupBox>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Target/Local Administrator UserName">
+                                    <TextBox Style="{ StaticResource TextBro }" Name="LMCred_User"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Target/Local Administrator Password">
+                                    <PasswordBox Margin="5" Name="LMCred_Pass" PasswordChar="*"/>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="Start" Content="Start" Width="100" Height="24"/>
+            <Button Grid.Column="1" Name="Cancel" Content="Cancel" Width="100" Height="24"/>
+        </Grid>
+    </Grid>
+</Window>
+'@
+            FEService            = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://ViperBomb Services" Height="800" Width="800" Topmost="True" BorderBrush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style x:Key="SeparatorStyle1" TargetType="{x:Type Separator}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Border Height="24" SnapsToDevicePixels="True" Background="#FF4D4D4D" BorderBrush="Azure" BorderThickness="1,1,1,1" CornerRadius="5,5,5,5"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="LightGreen"/>
+        </Style>
+    </Window.Resources>
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="Configuration">
+                <MenuItem Name="Profile_0" Header="0 - Windows 10 Home / Default Max"/>
+                <MenuItem Name="Profile_1" Header="1 - Windows 10 Home / Default Min"/>
+                <MenuItem Name="Profile_2" Header="2 - Windows 10 Pro / Default Max"/>
+                <MenuItem Name="Profile_3" Header="3 - Windows 10 Pro / Default Min"/>
+                <MenuItem Name="Profile_4" Header="4 - Desktop / Default Max"/>
+                <MenuItem Name="Profile_5" Header="5 - Desktop / Default Min"/>
+                <MenuItem Name="Profile_6" Header="6 - Desktop / Default Max"/>
+                <MenuItem Name="Profile_7" Header="7 - Desktop / Default Min"/>
+                <MenuItem Name="Profile_8" Header="8 - Laptop / Default Max"/>
+                <MenuItem Name="Profile_9" Header="9 - Laptop / Default Min"/>
+            </MenuItem>
+            <MenuItem Header="Info">
+                <MenuItem Name="URL" Header="Resources"/>
+                <MenuItem Name="About" Header="About"/>
+                <MenuItem Name="Copyright" Header="Copyright"/>
+                <MenuItem Name="MadBomb" Header="MadBomb122"/>
+                <MenuItem Name="BlackViper" Header="BlackViper"/>
+                <MenuItem Name="Site" Header="Company Website"/>
+                <MenuItem Name="Help" Header="Help"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl BorderBrush="Gainsboro" Grid.Row="1" Name="TabControl">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                        <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter TargetName="Border" Property="Background" Value="GhostWhite"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Service Dialog">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.45*"/>
+                                <ColumnDefinition Width="0.15*"/>
+                                <ColumnDefinition Width="0.25*"/>
+                                <ColumnDefinition Width="0.15*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="Operating System" Margin="5">
+                                <Label Name="Caption"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="Release ID" Margin="5">
+                                <Label Name="ReleaseID"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="2" Header="Version" Margin="5">
+                                <Label Name="Version"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="3" Header="Chassis" Margin="5">
+                                <Label Name="Chassis"/>
+                            </GroupBox>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.66*"/>
+                                <ColumnDefinition Width="0.33*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Margin="5" Name="Search" TextWrapping="Wrap">
+                            </TextBox>
+                            <ComboBox Grid.Column="1" Margin="5" Name="Select" VerticalAlignment="Center">
+                                <ComboBoxItem Content="Checked"/>
+                                <ComboBoxItem Content="Display Name" IsSelected="True"/>
+                                <ComboBoxItem Content="Name"/>
+                                <ComboBoxItem Content="Current Setting"/>
+                            </ComboBox>
+                            <TextBlock Grid.Column="2" Margin="5" TextAlignment="Center">Service State: <Run Background="#66FF66" Text="Compliant"/> / <Run Background="#FFFF66" Text="Unspecified"/> / <Run Background="#FF6666" Text="Non Compliant"/>
+                            </TextBlock>
+                        </Grid>
+                        <DataGrid Grid.Row="2" Grid.Column="0" Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="{x:Type DataGridRow}">
+                                    <Style.Triggers>
+                                        <Trigger Property="AlternationIndex" Value="0">
+                                            <Setter Property="Background" Value="White"/>
+                                        </Trigger>
+                                        <Trigger Property="AlternationIndex" Value="1">
+                                            <Setter Property="Background" Value="#FFD8D8D8"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>
+                                        </Trigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Scope}" Value="True"/>
+                                                <Condition Binding="{Binding Matches}" Value="False"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Background" Value="#F08080"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Scope}" Value="False"/>
+                                                <Condition Binding="{Binding Matches}" Value="False"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Background" Value="#FFFFFF64"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Scope}" Value="True"/>
+                                                <Condition Binding="{Binding Matches}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Index" Width="50" Binding="{Binding Index}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Scoped" Width="75" Binding="{Binding Scope}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Profile" Width="100" Binding="{Binding Slot}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="75" Binding="{Binding Status}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="StartType" Width="75" Binding="{Binding StartMode}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="PathName" Width="150" Binding="{Binding PathName}" CanUserSort="True" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Description" Width="150" Binding="{Binding Description}" CanUserSort="True" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Preferences">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.25*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="Bypass / Checks [Risky Options]" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="1" Margin="5" Name="ByBuild" Content="Skip Build/Version Check" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Row="0" VerticalAlignment="Center" Height="24" Name="ByEdition">
+                                            <ComboBoxItem Content="Override Edition Check" IsSelected="True"/>
+                                            <ComboBoxItem Content="Windows 10 Home"/>
+                                            <ComboBoxItem Content="Windows 10 Pro"/>
+                                        </ComboBox>
+                                        <CheckBox Grid.Row="2" Margin="5" Name="ByLaptop" Content="Enable Laptop Tweaks" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="Display" Margin="5">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0" Margin="5" Name="DispActive" Content="Show Active Services" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="DispInactive" Content="Show Inactive Services" />
+                                        <CheckBox Grid.Row="2" Margin="5" Name="DispSkipped" Content="Show Skipped Services" />
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="Service Configuration" Margin="5">
+                                    <ComboBox Grid.Row="1" Name="ServiceProfile" Height="24">
+                                        <ComboBoxItem Content="Black Viper (Sparks v1.0)" IsSelected="True"/>
+                                        <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsEnabled="False"/>
+                                    </ComboBox>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="Miscellaneous" Margin="5">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0" Margin="5" Name="MiscSimulate" Content="Simulate Changes [Dry Run]" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="MiscXbox" Content="Skip All Xbox Services" />
+                                        <CheckBox Grid.Row="2" Margin="5" Name="MiscChange" Content="Allow Change of Service State" />
+                                        <CheckBox Grid.Row="3" Margin="5" Name="MiscStopDisabled" Content="Stop Disabled Services" />
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="User Interface" Margin="5">
+                                    <ComboBox Grid.Row="1" Name="ScriptProfile" Height="24">
+                                        <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsSelected="True"/>
+                                        <ComboBoxItem Content="MadBomb (MadBomb122 v1.0)" IsEnabled="False"/>
+                                    </ComboBox>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="Development" Margin="5">
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0" Margin="5" Name="DevErrors" Content="Diagnostic Output [ On Error ]" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="DevLog" Content="Enable Development Logging" />
+                                        <CheckBox Grid.Row="2" Margin="5" Name="DevConsole" Content="Enable Console" />
+                                        <CheckBox Grid.Row="3" Margin="5" Name="DevReport" Content="Enable Diagnostic" />
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="Logging: Create logs for all changes made via this utility" Margin="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Grid.Row="0" Grid.Column="0" Margin="5" Name="LogSvcSwitch" Content="Services" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Button Grid.Row="0" Grid.Column="1" Margin="5" Name="LogSvcBrowse" Content="Browse"/>
+                                    <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="LogSvcFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                    <CheckBox Grid.Row="1" Grid.Column="0" Margin="5" Name="LogScrSwitch" Content="Script" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Name="LogScrBrowse" Content="Browse"/>
+                                    <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="LogScrFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="Backup: Save your current Service Configuration" Margin="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Grid.Row="0" Grid.Column="0" Margin="5" Name="RegSwitch" Content="reg.*" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Button Grid.Row="0" Grid.Column="1" Margin="5" Name="RegBrowse" Content="Browse"/>
+                                    <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="RegFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                    <CheckBox Grid.Row="1" Grid.Column="0" Margin="5" Name="CsvSwitch" Content="csv.*" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Name="CsvBrowse" Content="Browse"/>
+                                    <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="CsvFile" IsEnabled="False" VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Console">
+                    <Grid Background="#FFE5E5E5">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible">
+                            <TextBlock Name="ConsoleOutput" TextTrimming="CharacterEllipsis" Background="White" FontFamily="Lucida Console"/>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Diagnostics">
+                    <Grid Background="#FFE5E5E5">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible">
+                            <TextBlock Name="DiagnosticOutput" TextTrimming="CharacterEllipsis" Background="White" FontFamily="Lucida Console"/>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="Service Configuration" Margin="5">
+                <Label Name="ServiceLabel"/>
+            </GroupBox>
+            <Button Grid.Column="1" Name="Start" Content="Start" FontWeight="Bold" Margin="10"/>
+            <Button Grid.Column="2" Name="Cancel" Content="Cancel" FontWeight="Bold" Margin="10"/>
+            <GroupBox Grid.Column="3" Header="Module Version" Margin="5">
+                <Label Name="ScriptLabel" />
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>
+'@
 
             Test = ""
         }

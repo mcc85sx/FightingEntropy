@@ -1,6 +1,6 @@
 # Branding
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020.12.0/Graphics/OEMbg.jpg?raw=true)
-(3840x2160)[Original]
+(3840x2160)[Original] Albany, NY Corning Tower Observation Deck, before my son's birthday in 2017.
 
 # Install v2020.12.0 [BETA]
 

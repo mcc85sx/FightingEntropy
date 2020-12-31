@@ -7,6 +7,9 @@
     
     IEX ( IRM https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1 )
 
+# Preview 
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020_1230-(GUI%20Diagram).jpg?raw=true)
+
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>
 

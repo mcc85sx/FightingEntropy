@@ -1,0 +1,41 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="240" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <GroupBox Header="Enter AD Domain Administrator Account Credentials" Width="380" Height="200" Margin="5" VerticalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.5*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="User Name">
+                <TextBox Name="UserName" Margin="5"/>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Header="Password / Confirm">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
+                    <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
+                </Grid>
+            </GroupBox>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton Name="Switch" Grid.Column="0" Content="Change Login Port" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBox Name="Port" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" IsEnabled="False">389</TextBox>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="Ok" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
+                <Button Name="Cancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
+            </Grid>
+        </Grid>
+    </GroupBox>
+</Window>

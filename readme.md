@@ -1,3 +1,6 @@
+# Branding
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020.12.0/Graphics/OEMbg.jpg?raw=true)
+
 # Install v2020.12.0 [BETA]
 
     $Install = Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1

@@ -1,5 +1,8 @@
 Function Get-FEDCPromo
 {
+    [CmdLetBinding()]
+    Param([Parameter()][Switch]$Output)
+
     Write-Theme "Loading Network [:] Domain Controller Initialization"
 
     $Time = [System.Diagnostics.Stopwatch]::StartNew()
@@ -168,4 +171,9 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
+    
+    If ( $Output )
+    {
+        $UI
+    }
 }

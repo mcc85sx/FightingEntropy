@@ -16,10 +16,12 @@
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                        <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
                             <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
                         </Border>
                     </ControlTemplate>

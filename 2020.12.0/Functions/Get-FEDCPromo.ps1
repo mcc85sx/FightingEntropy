@@ -1,8 +1,5 @@
 Function Get-FEDCPromo
 {
-    [CmdLetBinding()]
-    Param([Parameter()][Switch]$Output)
-
     Write-Theme "Loading Network [:] Domain Controller Initialization"
 
     $Time = [System.Diagnostics.Stopwatch]::StartNew()
@@ -22,6 +19,20 @@ Function Get-FEDCPromo
     $UI.IO.Child.Add_Click({$UI.SetMode(2)})
     $UI.IO.Clone.Add_Click({$UI.SetMode(3)})
     $UI.IO.Cancel.Add_Click({$UI.IO.DialogResult = $False})
+
+    $Max = Switch -Regex ([WMIClass]"\\.\ROOT\CIMV2:Win32_OperatingSystem" | % GetInstances | % Caption)
+    {
+        "(2000)" { 0 }
+        "(2003)" { 1 }
+        "(2008)+(R2){0}" { 2 }
+        "(2008 R2){1}" { 3 }
+        "(2012)+(R2){0}" { 4 }
+        "(2012 R2){1}" { 5 }
+        "(2016|2019)" { 6 }
+    }
+
+    $UI.IO.ForestMode.SelectedIndex = $Max
+    $UI.IO.DomainMode.SelectedIndex = $Max
 
     $UI.IO.CredentialButton.Add_Click({
 
@@ -48,12 +59,6 @@ Function Get-FEDCPromo
         {
             $DC                         = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
 
-            $DC.IO.Switch.Add_Click(
-            { 
-                $DC.IO.Port.IsEnabled   = $True
-                $DC.IO.Port.Text        = $DC.Port
-            })
-
             $DC.IO.Cancel.Add_Click(
             {
                 $UI.IO.Credential.Text  = ""
@@ -62,89 +67,48 @@ Function Get-FEDCPromo
 
             $DC.IO.Ok.Add_Click(
             {
-                $DC.Port                = $DC.IO.Port.Text
+                $DC.TestCredential()
                 
-                If (!$DC.IO.Username.Text)
+                If (!$DC.Return)
                 {
-                    [System.Windows.MessageBox]::Show("Invalid Username","Error")
+                    [System.Windows.MessageBox]::Show("Exception","Could not connect")
                 }
 
-                ElseIf (!$DC.IO.Password.Password)
-                {
-                    [System.Windows.MessageBox]::Show("Invalid Password","Error")
-                }
-
-                ElseIf ($DC.IO.Password.SecurePassword -notmatch $DC.IO.Confirm.SecurePassword)
-                {
-                    [System.Windows.MessageBox]::Show("Passwords do not match","Error")
-                }
-
-                Else
-                {
-                    $DC.Credential = [System.Management.Automation.PSCredential]::New($DC.IO.Username.Text,$DC.IO.Password.SecurePassword)
+                $UI.Connection.Return                   = $DC
+                $UI.Connection.Credential               = $DC.Credential
+                $UI.IO.Credential                       | % { 
                 
-                    If (!$DC.Credential)
+                    $_.Text                             = $DC.Credential.UserName
+                    $_.IsEnabled                        = $False
+                }
+
+                Switch ($UI.Mode)
+                {
+                    1
                     {
-                        [System.Windows.MessageBox]::New("Invalid Credential","Error") 
+                        $UI.IO.ParentDomainName.Text    = $DC.Domain
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
                     }
 
-                    Else
+                    2
                     {
-                        $DC.Directory  = "LDAP://{0}:{1}/CN=Partitions,CN=Configuration,DC={2}" -f $DC.DC,$DC.IO.Port.Text,($DC.Domain.Split(".") -join ",DC=")
-                        $DC.Test       = [System.DirectoryServices.DirectoryEntry]::New($DC.Directory,$DC.Credential.UserName,$DC.Credential.GetNetworkCredential().Password)
-                        $DC.Initialize($DC.Test)
-                
-                        If (!$DC.Result)
-                        {
-                            [System.Windows.MessageBox]::Show("Authentication Failure","Error")
-                        }
+                        $UI.IO.ParentDomainName.Text    = $DC.Domain
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                    }
 
-                        Else
-                        {
-                            $UI.Connection.Return               = $DC | Select-Object IPAddress, DNSName, Domain, NetBIOS, Credential, DC
-                            $UI.Connection.Credential           = $DC.Credential
-                            $UI.IO.Credential                   | % { 
-                
-                                $_.Text                         = $DC.Credential.UserName
-                                $_.IsEnabled                    = $False
-                        }
-
-                        Switch ($UI.Mode)
-                        {
-                            Default {}
-
-                            1
-                            {
-                                $UI.IO.ParentDomainName.Text    = $DC.Domain
-                                $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                            }
-
-                            2
-                            {
-                                $UI.IO.ParentDomainName.Text    = $DC.Domain
-                                $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                            }
-
-                            3
-                            {
-                                $UI.IO.ParentDomainName.Text    = ""
-                                $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                                $UI.IO.DomainName.Text          = $DC.Domain
-                                $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
-                            }
-                        }
-                            $DC.IO.DialogResult = $True
-                        }
+                    3
+                    {
+                        $UI.IO.ParentDomainName.Text    = ""
+                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                        $UI.IO.DomainName.Text          = $DC.Domain
+                        $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
                     }
                 }
+
+                $DC.IO.DialogResult = $True
             })
 
             $DC.Window.Invoke()
-        }
-
-        Else
-        {
-            [System.Windows.MessageBox]::Show("Exception","No Domain Controllers")
         }
     })
 
@@ -171,9 +135,4 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
-    
-    If ( $Output )
-    {
-        $UI
-    }
 }

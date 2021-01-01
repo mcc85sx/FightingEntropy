@@ -1,4 +1,7 @@
-Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight
+# [Get-XamlWindow] // Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight
+# This is a function with wrapped chunks of XAML and classes
+
+Function Get-XamlWindow
 {
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
@@ -457,7 +460,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                                     <Setter Property="Background" Value="White"/>
                                                 </Trigger>
                                                 <Trigger Property="AlternationIndex" Value="1">
-                                                    <Setter Property="Background" Value="#FFD8D8D8"/>
+                                                    <Setter Property="Background" Value="SkyBlue"/>
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="ToolTip">
@@ -472,7 +475,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                        <DataGridTemplateColumn Header="Installed" Width="57">
+                                        <DataGridTemplateColumn Header="Install" Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <CheckBox IsEnabled="{Binding Installed}" IsChecked="True"/>
@@ -1395,7 +1398,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                 <GroupBox Grid.Row="0" Header="User Name">
                     <TextBox Name="UserName" Margin="5"/>
                 </GroupBox>
-                <GroupBox Grid.Row="1" Header="Password / Confirm">
+                <GroupBox Grid.Row="1" Header="[Password/Confirm]">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

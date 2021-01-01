@@ -146,6 +146,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
@@ -206,11 +207,13 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 '@
             Certificate          = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Certificate Info" Width="350" Height="240" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Certificate Info" Width="380" Height="260" Topmost="True" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GroupBox">
@@ -225,6 +228,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
@@ -269,7 +273,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 '@
             FEDCFound            = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="240" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="260" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="Margin" Value="10"/>
@@ -289,6 +293,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
@@ -307,7 +312,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
         </Grid.Background>
         <GroupBox Style="{StaticResource xGroupBox}">
-            <Grid>
+            <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="50"/>
@@ -315,8 +320,8 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 <DataGrid Grid.Row="0" Grid.Column="0" Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Address" Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Hostname" Width="240" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="NetBIOS" Width="100" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Hostname" Width="200" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="NetBIOS" Width="140" Binding="{Binding NetBIOS}" CanUserSort="True" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Grid Grid.Row="1">
@@ -354,6 +359,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Margin" Value="3"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -614,9 +620,9 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Padding" Value="10"/>
             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -701,6 +707,11 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="CheckBox" x:Key="xCheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
         <Style TargetType="Label" x:Key="xLabel">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
@@ -727,7 +738,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="5" Background="#FF5F3F3F" BorderBrush="Black" BorderThickness="3">
+                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
                             <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
                         </Border>
                     </ControlTemplate>
@@ -791,7 +802,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             </Setter>
                         </Style>
                     </TabControl.Resources>
-                    <TabItem Header="Service Dialog">
+                    <TabItem Header="Main">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
@@ -828,14 +839,13 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 </TextBox>
                                 <ComboBox Grid.Column="1" Margin="5" Name="Select" VerticalAlignment="Center">
                                     <ComboBoxItem Content="Checked"/>
-                                    <ComboBoxItem Content="Display Name" IsSelected="True"/>
+                                    <ComboBoxItem Content="DisplayName" IsSelected="True"/>
                                     <ComboBoxItem Content="Name"/>
-                                    <ComboBoxItem Content="Current Setting"/>
                                 </ComboBox>
                                 <TextBlock Grid.Column="2" Margin="5" TextAlignment="Center">Service State: <Run Background="#66FF66" Text="Compliant"/> / <Run Background="#FFFF66" Text="Unspecified"/> / <Run Background="#FF6666" Text="Non Compliant"/>
                                 </TextBlock>
                             </Grid>
-                            <DataGrid Grid.Row="2" Grid.Column="0" Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid Grid.Row="2" Grid.Column="0" Name="DataGrid" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="{x:Type DataGridRow}">
                                         <Style.Triggers>
@@ -843,7 +853,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                                 <Setter Property="Background" Value="White"/>
                                             </Trigger>
                                             <Trigger Property="AlternationIndex" Value="1">
-                                                <Setter Property="Background" Value="#FFD8D8D8"/>
+                                                <Setter Property="Background" Value="SkyBlue"/>
                                             </Trigger>
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="ToolTip">
@@ -881,7 +891,19 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <DataGridTextColumn Header="Index" Width="50" Binding="{Binding Index}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Scoped" Width="75" Binding="{Binding Scope}" CanUserSort="True" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Profile" Width="100" Binding="{Binding Slot}" CanUserSort="True" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="Profile" Width="100">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox SelectedIndex="{Binding Slot}">
+                                                    <ComboBoxItem Content="Skip"/>
+                                                    <ComboBoxItem Content="Disabled"/>
+                                                    <ComboBoxItem Content="Manual"/>
+                                                    <ComboBoxItem Content="Auto"/>
+                                                    <ComboBoxItem Content="Auto (Delayed)"/>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTextColumn Header="Status" Width="75" Binding="{Binding Status}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="StartType" Width="75" Binding="{Binding StartMode}" CanUserSort="True" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="DisplayName" Width="150" Binding="{Binding DisplayName}" CanUserSort="True" IsReadOnly="True"/>
@@ -893,161 +915,122 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     </TabItem>
                     <TabItem Header="Preferences">
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1.25*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
                             <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="2">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <GroupBox Grid.Row="0" Header="Bypass / Checks [Risky Options]" Margin="5">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="1" Margin="5" Name="ByBuild" Content="Skip Build/Version Check" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="0" VerticalAlignment="Center" Height="24" Name="ByEdition">
-                                                <ComboBoxItem Content="Override Edition Check" IsSelected="True"/>
-                                                <ComboBoxItem Content="Windows 10 Home"/>
-                                                <ComboBoxItem Content="Windows 10 Pro"/>
-                                            </ComboBox>
-                                            <CheckBox Grid.Row="2" Margin="5" Name="ByLaptop" Content="Enable Laptop Tweaks" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Grid>
-                                    </GroupBox>
-                                    <GroupBox Grid.Row="1" Header="Display" Margin="5">
-                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                            </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="0" Margin="5" Name="DispActive" Content="Show Active Services" />
-                                            <CheckBox Grid.Row="1" Margin="5" Name="DispInactive" Content="Show Inactive Services" />
-                                            <CheckBox Grid.Row="2" Margin="5" Name="DispSkipped" Content="Show Skipped Services" />
-                                        </Grid>
-                                    </GroupBox>
-                                </Grid>
-                                <Grid Grid.Column="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="2*"/>
-                                    </Grid.RowDefinitions>
-                                    <GroupBox Grid.Row="0" Header="Service Configuration" Margin="5">
-                                        <ComboBox Grid.Row="1" Name="ServiceProfile" Height="24">
-                                            <ComboBoxItem Content="Black Viper (Sparks v1.0)" IsSelected="True"/>
-                                            <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsEnabled="False"/>
-                                        </ComboBox>
-                                    </GroupBox>
-                                    <GroupBox Grid.Row="1" Header="Miscellaneous" Margin="5">
-                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                            </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="0" Margin="5" Name="MiscSimulate" Content="Simulate Changes [Dry Run]" />
-                                            <CheckBox Grid.Row="1" Margin="5" Name="MiscXbox" Content="Skip All Xbox Services" />
-                                            <CheckBox Grid.Row="2" Margin="5" Name="MiscChange" Content="Allow Change of Service State" />
-                                            <CheckBox Grid.Row="3" Margin="5" Name="MiscStopDisabled" Content="Stop Disabled Services" />
-                                        </Grid>
-                                    </GroupBox>
-                                </Grid>
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="2*"/>
-                                    </Grid.RowDefinitions>
-                                    <GroupBox Grid.Row="0" Header="User Interface" Margin="5">
-                                        <ComboBox Grid.Row="1" Name="ScriptProfile" Height="24">
-                                            <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsSelected="True"/>
-                                            <ComboBoxItem Content="MadBomb (MadBomb122 v1.0)" IsEnabled="False"/>
-                                        </ComboBox>
-                                    </GroupBox>
-                                    <GroupBox Grid.Row="1" Header="Development" Margin="5">
-                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                                <RowDefinition Height="30"/>
-                                            </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="0" Margin="5" Name="DevErrors" Content="Diagnostic Output [ On Error ]" />
-                                            <CheckBox Grid.Row="1" Margin="5" Name="DevLog" Content="Enable Development Logging" />
-                                            <CheckBox Grid.Row="2" Margin="5" Name="DevConsole" Content="Enable Console" />
-                                            <CheckBox Grid.Row="3" Margin="5" Name="DevReport" Content="Enable Diagnostic" />
-                                        </Grid>
-                                    </GroupBox>
-                                </Grid>
-                            </Grid>
-                            <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.75*"/>
+                                    <RowDefinition Height="0.75*"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="Logging: Create logs for all changes made via this utility" Margin="5">
+                                <GroupBox Grid.Row="0" Header="[Bypass]" Margin="5">
                                     <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="75"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="6*"/>
-                                        </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="5" Name="LogSvcSwitch" Content="Services" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Button Grid.Row="0" Grid.Column="1" Margin="5" Name="LogSvcBrowse" Content="Browse"/>
-                                        <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="LogSvcFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-                                        <CheckBox Grid.Row="1" Grid.Column="0" Margin="5" Name="LogScrSwitch" Content="Script" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                        <Button Grid.Row="1" Grid.Column="1" Margin="5" Name="LogScrBrowse" Content="Browse"/>
-                                        <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="LogScrFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="ByBuild" Content="Skip Build/Version Check" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Row="0" VerticalAlignment="Center" Height="24" Name="ByEdition">
+                                            <ComboBoxItem Content="Override Edition Check" IsSelected="True"/>
+                                            <ComboBoxItem Content="Windows 10 Home"/>
+                                            <ComboBoxItem Content="Windows 10 Pro"/>
+                                        </ComboBox>
+                                        <CheckBox Grid.Row="2" Margin="5" Name="ByLaptop" Content="Enable Laptop Tweaks" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                     </Grid>
                                 </GroupBox>
-                                <GroupBox Grid.Row="1" Header="Backup: Save your current Service Configuration" Margin="5">
+                                <GroupBox Grid.Row="1" Header="[Display]" Margin="5">
                                     <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="75"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="6*"/>
-                                        </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="5" Name="RegSwitch" Content="reg.*" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Button Grid.Row="0" Grid.Column="1" Margin="5" Name="RegBrowse" Content="Browse"/>
-                                        <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="RegFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-                                        <CheckBox Grid.Row="1" Grid.Column="0" Margin="5" Name="CsvSwitch" Content="csv.*" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        <Button Grid.Row="1" Grid.Column="1" Margin="5" Name="CsvBrowse" Content="Browse"/>
-                                        <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="CsvFile" IsEnabled="False" VerticalAlignment="Center" />
+                                        <CheckBox Grid.Row="0" Margin="5" Name="DispActive" Content="Show Active Services" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <CheckBox Grid.Row="1" Margin="5" Name="DispInactive" Content="Show Inactive Services" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <CheckBox Grid.Row="2" Margin="5" Name="DispSkipped" Content="Show Skipped Services" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[Miscellaneous]" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0" Margin="5" Name="MiscSimulate" Content="Simulate Changes [Dry Run]" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="MiscXbox" Content="Skip All Xbox Services" />
+                                        <CheckBox Grid.Row="2" Margin="5" Name="MiscChange" Content="Allow Change of Service State" />
+                                        <CheckBox Grid.Row="3" Margin="5" Name="MiscStopDisabled" Content="Stop Disabled Services" />
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[Development]" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0" Style="{StaticResource xCheckBox}" Name="DevErrors" Content="Diagnostic Output [ On Error ]" />
+                                        <CheckBox Grid.Row="1" Margin="5" Name="DevLog" Content="Enable Development Logging" />
+                                        <CheckBox Grid.Row="2" Margin="5" Name="DevConsole" Content="Enable Console" />
+                                        <CheckBox Grid.Row="3" Margin="5" Name="DevReport" Content="Enable Diagnostic" />
                                     </Grid>
                                 </GroupBox>
                             </Grid>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Console">
-                        <Grid Background="#FFE5E5E5">
-                            <ScrollViewer VerticalScrollBarVisibility="Visible">
-                                <TextBlock Name="ConsoleOutput" TextTrimming="CharacterEllipsis" Background="White" FontFamily="Lucida Console"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Diagnostics">
-                        <Grid Background="#FFE5E5E5">
-                            <ScrollViewer VerticalScrollBarVisibility="Visible">
-                                <TextBlock Name="DiagnosticOutput" TextTrimming="CharacterEllipsis" Background="White" FontFamily="Lucida Console"/>
-                            </ScrollViewer>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="3*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[Logging] - Create logs for all changes made via this utility" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Style="{StaticResource xCheckBox}" Grid.Row="0" Grid.Column="0" Name="LogSvcSwitch" Content="Services" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Style="{StaticResource xButton}" Grid.Row="0" Grid.Column="1" Margin="5" Name="LogSvcBrowse" Content="Browse"/>
+                                        <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="LogSvcFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                        <CheckBox Style="{StaticResource xCheckBox}" Grid.Row="1" Grid.Column="0" Margin="5" Name="LogScrSwitch" Content="Script" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        <Button Style="{StaticResource xButton}" Grid.Row="1" Grid.Column="1" Margin="5" Name="LogScrBrowse" Content="Browse"/>
+                                        <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="LogScrFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[Backup] - Save your current Service Configuration" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Style="{StaticResource xCheckBox}" Grid.Row="0" Grid.Column="0" Margin="5" Name="RegSwitch" Content="*.reg" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Style="{StaticResource xButton}" Grid.Row="0" Grid.Column="1" Margin="5" Name="RegBrowse" Content="Browse"/>
+                                        <TextBox Grid.Row="0" Grid.Column="2" Margin="5" Name="RegFile" IsEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                        <CheckBox Style="{StaticResource xCheckBox}" Grid.Row="1" Grid.Column="0" Margin="5" Name="CsvSwitch" Content="*.csv" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Button Style="{StaticResource xButton}" Grid.Row="1" Grid.Column="1" Margin="5" Name="CsvBrowse" Content="Browse"/>
+                                        <TextBox Grid.Row="1" Grid.Column="2" Margin="5" Name="CsvFile" IsEnabled="False" VerticalAlignment="Center" />
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[(Console/Diagnostics)]">
+                                    <TextBlock  Margin="5" TextAlignment="Left">Not yet implemented</TextBlock>
+                                </GroupBox>
+                            </Grid>
                         </Grid>
                     </TabItem>
                 </TabControl>
@@ -1062,12 +1045,17 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <GroupBox Grid.Column="0" Header="[Service Configuration]" Foreground="Black" Margin="5">
-                    <Label Name="ServiceLabel"/>
+                    <ComboBox Name="ServiceCfg" Margin="5" SelectedIndex="0" IsEnabled="False">
+                        <ComboBoxItem Content="Black Viper (Sparks v1.0)" IsSelected="True"/>
+                        <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsSelected="False"/>
+                    </ComboBox>
                 </GroupBox>
                 <Button Grid.Column="1" Style="{StaticResource xButton}" Name="Start" Content="Start"/>
                 <Button Grid.Column="2" Style="{StaticResource xButton}" Name="Cancel" Content="Cancel"/>
                 <GroupBox Grid.Column="3" Header="[Module Version]" Foreground="Black" Margin="5">
-                    <Label Name="ScriptLabel" />
+                    <ComboBox Name="ModuleCfg" Height="24" SelectedIndex="0" IsEnabled="False">
+                        <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsSelected="True"/>
+                    </ComboBox>
                 </GroupBox>
             </Grid>
         </GroupBox>
@@ -1379,6 +1367,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">

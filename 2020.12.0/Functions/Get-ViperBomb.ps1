@@ -91,25 +91,24 @@ Function Get-ViperBomb
 
     Class _ViperBomb
     {
-        [Object]        $Window
-        [Object]            $IO
-
-        [Object]           $Inf
-        [Object]           $Cfg
-        [Object]           $Svc
+        [Object]             $Window
+        [Object]                 $IO
+        [Object]               $Info
+        [Object]             $Config
+        [Object]            $Service
 
         _ViperBomb([Object]$Window)
         {
             $This.Window  = $Window
             $This.IO      = $Window.IO
-            $This.Inf     = [_Info]::New()
-            $This.Cfg     = [_ViperBombConfig]::New()
-            $This.Svc     = (Get-FEService | % Output)
+            $This.Info    = (Get-FEModule | % Role | % Info)
+            $This.Config  = [_ViperBombConfig]::New()
+            $This.Service = (Get-FEService | % Output)
         }
 
         [Void] SetProfile([UInt32]$Slot)
         {
-            ForEach ( $Service in $This.Svc )
+            ForEach ( $Service in $This.Service )
             {
                 $Service.SetProfile($Slot)
             }
@@ -117,17 +116,12 @@ Function Get-ViperBomb
 
         [Object[]] GetServices()
         {
-            Return @( $This.Svc )
-        }
-
-        [Object[]] FilterServices([String]$Type,[String]$Input)
-        {
-            Return @( $This.Svc | ? $Type -match $Input )
+            Return @( $This.Service )
         }
     }
 
     $UI                                  = [_ViperBomb]::New((Get-XamlWindow -Type FEService))
-    $UI.IO.DataGrid.ItemsSource          = $UI.Svc
+    $UI.IO.DataGrid.ItemsSource          = $UI.Service
 
     $UI.IO.Profile_0.Add_Click({ $UI.SetProfile(0) })
     $UI.IO.Profile_1.Add_Click({ $UI.SetProfile(1) })
@@ -140,29 +134,29 @@ Function Get-ViperBomb
     $UI.IO.Profile_8.Add_Click({ $UI.SetProfile(8) })
     $UI.IO.Profile_9.Add_Click({ $UI.SetProfile(9) })
 
-    $UI.IO.Title                         = ("{0} v{1}" -f $UI.Cfg.Name, $UI.Cfg.Version)
+    $UI.IO.Title                         = ("{0} v{1}" -f $UI.Config.Name, $UI.Config.Version)
 
-    $UI.IO.URL.Add_Click({        Start $UI.Cfg.URL        })
-    $UI.IO.MadBomb.Add_Click({    Start $UI.Cfg.MadBomb    })
-    $UI.IO.BlackViper.Add_Click({ Start $UI.Cfg.BlackViper })
-    $UI.IO.Site.Add_Click({       Start $UI.Cfg.Site       })
-    $UI.IO.About.Add_Click({      [System.Windows.MessageBox]::Show(($UI.Cfg.About     -join "`n"),    "About")})
-    $UI.IO.Copyright.Add_Click({  [System.Windows.MessageBox]::Show(($UI.Cfg.Copyright -join "`n"),"Copyright")})
-    $UI.IO.Help.Add_Click({       [System.Windows.MessageBox]::Show(($UI.Cfg.Help      -join "`n"),     "Help")})
+    $UI.IO.URL.Add_Click({        Start $UI.Config.URL        })
+    $UI.IO.MadBomb.Add_Click({    Start $UI.Config.MadBomb    })
+    $UI.IO.BlackViper.Add_Click({ Start $UI.Config.BlackViper })
+    $UI.IO.Site.Add_Click({       Start $UI.Config.Site       })
+    $UI.IO.About.Add_Click({      [System.Windows.MessageBox]::Show(($UI.Config.About     -join "`n"),    "About")})
+    $UI.IO.Copyright.Add_Click({  [System.Windows.MessageBox]::Show(($UI.Config.Copyright -join "`n"),"Copyright")})
+    $UI.IO.Help.Add_Click({       [System.Windows.MessageBox]::Show(($UI.Config.Help      -join "`n"),     "Help")})
 
-    ForEach ( $Item in "Caption","ReleaseID","Version","Chassis" )
-    { 
-        $UI.IO.$Item.Content                 = $UI.Inf.$Item
-    }
+    $UI.IO.Caption.Content               = $UI.Info.Caption
+    $UI.IO.ReleaseID.Content             = $UI.Info.ReleaseID
+    $UI.IO.Version.Content               = $UI.Info.Version
+    $UI.IO.Caption.Content               = $UI.Info.Caption
 
     ForEach ( $Item in ("DispActive DispInactive DispSkipped MiscSimulate MiscXbox MiscChange MiscStopDisabled " +
     "DevErrors DevLog DevConsole DevReport ByBuild").Split(" ") )
     { 
-        $UI.IO.$Item.IsChecked               = $UI.Cfg.$Item
+        $UI.IO.$Item.IsChecked               = $UI.Config.$Item
     } 
 
-    $UI.IO.ByEdition.SelectedItem            = $UI.Cfg.ByEdition
-    $UI.IO.ByLaptop.IsChecked                = $UI.Cfg.ByLaptop 
+    $UI.IO.ByEdition.SelectedItem            = $UI.Config.ByEdition
+    $UI.IO.ByLaptop.IsChecked                = $UI.Config.ByLaptop 
     $UI.IO.LogSvcSwitch.IsChecked            = 0
     $UI.IO.LogSvcBrowse.IsEnabled            = 0
 
@@ -187,10 +181,10 @@ Function Get-ViperBomb
     If ( $UI.IO.CsvSwitch.IsChecked    -eq 1 ) { $UI.IO.CsvBrowse.IsEnabled       = 1 }
     If ( $UI.IO.CsvSwitch.IsChecked    -eq 0 ) { $UI.IO.CsvBrowse.IsEnabled       = 0 }
         
-    $UI.IO.LogSvcFile.Text               = $UI.Cfg.LogSvcLabel
-    $UI.IO.LogScrFile.Text               = $UI.Cfg.LogScrLabel
-    $UI.IO.RegFile.Text                  = $UI.Cfg.RegLabel
-    $UI.IO.CsvFile.Text                  = $UI.Cfg.CsvLabel 
+    $UI.IO.LogSvcFile.Text               = $UI.Config.LogSvcLabel
+    $UI.IO.LogScrFile.Text               = $UI.Config.LogScrLabel
+    $UI.IO.RegFile.Text                  = $UI.Config.RegLabel
+    $UI.IO.CsvFile.Text                  = $UI.Config.CsvLabel 
         
     $UI.IO.LogSvcBrowse.IsEnabled        = 0
     $UI.IO.LogScrBrowse.IsEnabled        = 0
@@ -199,7 +193,8 @@ Function Get-ViperBomb
 
     $UI.IO.Search.Add_TextChanged{
     
-        $UI.IO.DataGrid.ItemsSource      = $UI.FilterServices($UI.IO.Select.SelectedItem.Content,$UI.IO.Search.Text) 
+        $UI.IO.DataGrid.Clear()
+        $UI.IO.DataGrid.ItemsSource      = $UI.FilterServices($UI.IO.Select.SelectedItem.Content,$UI.IO.Search.Text)    
     }
 
     $UI.IO.Start.Add_Click{        

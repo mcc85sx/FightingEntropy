@@ -18,6 +18,7 @@
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Margin" Value="3"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -115,7 +116,7 @@
                                                     <Setter Property="Background" Value="White"/>
                                                 </Trigger>
                                                 <Trigger Property="AlternationIndex" Value="1">
-                                                    <Setter Property="Background" Value="#FFD8D8D8"/>
+                                                    <Setter Property="Background" Value="SkyBlue"/>
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="ToolTip">
@@ -130,7 +131,7 @@
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" CanUserSort="True" IsReadOnly="True"/>
-                                        <DataGridTemplateColumn Header="Installed" Width="57">
+                                        <DataGridTemplateColumn Header="Install" Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <CheckBox IsEnabled="{Binding Installed}" IsChecked="True"/>

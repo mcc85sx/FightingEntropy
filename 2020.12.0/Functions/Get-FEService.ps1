@@ -5,7 +5,7 @@ Function Get-FEService
         [Int32]               $Index
         [String]               $Name 
         [Bool]                $Scope
-        Hidden [Int32[]]    $Profile
+        [Int32[]]           $Profile
         [Int32]                $Slot
         [Int32]    $DelayedAutoStart 
         [String]          $StartMode 
@@ -30,19 +30,19 @@ Function Get-FEService
 
         SetProfile([Int32]$Slot)
         {
-            If ( $Slot -notin 0..9 )
+            If ($Slot -notin 0..9)
             {
                 Throw "Invalid selection"
             }
     
-            $This.Slot = $This.Profile[$Slot]
+            $This.Slot               = $This.Profile[$Slot]
         }
     }
 
     Class _Services
     {
-        Hidden [String]       $QMark
-        Hidden [Hashtable]   $Config = @{
+        [String]       $QMark
+        [Hashtable]   $Config = @{
             
             Names   = (("AJRouter;ALG;AppHostSvc;AppIDSvc;Appinfo;AppMgmt;AppReadiness;AppVClient;aspnet_state;AssignedAccessManagerSvc;" + 
                         "AudioEndpointBuilder;AudioSrv;AxInstSV;BcastDVRUserService_{0};BDESVC;BFE;BITS;BluetoothUserService_{0};Browser;B" +
@@ -79,8 +79,8 @@ Function Get-FEService
                         ",0,0,0,0,0,0,0,0;1,0,1,0,1,0,1,0,1,0;2,2,2,2,1,1,1,1,2,2;0,0,3,0,3,0,3,0,3,0;3,3,3,3,2,2,2,2,3,3").Split(";"))
         }
 
-        Hidden [Hashtable]  $Template
-        Hidden [Object[]]  $WMIObject
+        [Hashtable]  $Template
+        [Object[]]  $WMIObject
         [Object[]]            $Output
 
         _Services()
@@ -94,17 +94,19 @@ Function Get-FEService
                 $This.Template.Add($This.Config.Names[$I],$This.Config.Values[$This.Config.Masks[$I]])
             }
 
-            $This.WMIObject    = Invoke-Expression '([wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object Name, DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name)'
+            $This.WMIObject    = [wmiclass]"\\.\ROOT\CIMV2:Win32_Service" | % GetInstances | Select-Object Name, 
+            DelayedAutoStart, StartMode, State, Status, DisplayName, PathName, Description | Sort-Object Name
+            
             $This.Output     = @( )
 
-            For ( $I = 0 ; $I -le $This.WMIObject.Count - 1 ; $I ++ )
+            ForEach ( $I in 0..( $This.WMIObject.Count - 1 ) )
             {
                 $Item           = [_Service]::New($I,$This.WMIObject[$I])
 
-                If ( ! $This.Template[$Item.Name] )
+                If (!$This.Template[$Item.Name])
                 {
                     $Item.Scope   = 0
-                    $Item.Profile = -1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+                    $Item.Profile = 0,0,0,0,0,0,0,0,0,0
                 }
 
                 Else

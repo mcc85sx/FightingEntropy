@@ -127,10 +127,10 @@ Function Get-MadBombProfile
 
     Class PhotoViewer 
     {
-      [UInt32] $PhotoViewerFileAssociation = 2
-      [UInt32]    $PhotoViewerOpenWithMenu = 2
+      	[UInt32] $PhotoViewerFileAssociation = 2
+      	[UInt32]    $PhotoViewerOpenWithMenu = 2
 
-          PhotoViewer(){}
+        PhotoViewer(){}
     }
 
     Class LockScreen
@@ -167,25 +167,25 @@ Function Get-MadBombProfile
 
         WindowsApps(){}
     }
-	
-	Class WindowsUpdate
-	{
-      [UInt32]          $CheckForWinUpdate = 1
-      [UInt32]              $WinUpdateType = 3
-      [UInt32]          $WinUpdateDownload = 1
-      [UInt32]                 $UpdateMSRT = 1
-      [UInt32]               $UpdateDriver = 1
-      [UInt32]            $RestartOnUpdate = 1
-      [UInt32]            $AppAutoDownload = 1
-      [UInt32]       $UpdateAvailablePopup = 1
 
-      WindowsUpdate(){}
-	}
+    Class WindowsUpdate
+    {
+        [UInt32]          $CheckForWinUpdate = 1
+        [UInt32]              $WinUpdateType = 3
+        [UInt32]          $WinUpdateDownload = 1
+        [UInt32]                 $UpdateMSRT = 1
+        [UInt32]               $UpdateDriver = 1
+        [UInt32]            $RestartOnUpdate = 1
+        [UInt32]            $AppAutoDownload = 1
+        [UInt32]       $UpdateAvailablePopup = 1
 
-    Class Control
+        WindowsUpdate(){}
+    }
+
+    Class MadBomb
     {
         [Object] $Privacy
-	      [Object] $Service
+	[Object] $Service
         [Object] $Context
         [Object] $Taskbar
         [Object] $Explorer
@@ -198,7 +198,7 @@ Function Get-MadBombProfile
         [Object] $WindowsApps
         [Object] $WindowsUpdate
 
-        Control()
+        MadBomb()
         {
             $This.Reset()
         }
@@ -221,5 +221,5 @@ Function Get-MadBombProfile
         }
     }
 
-    [Control]::New()
+    [Madbomb]::New()
 }

@@ -238,4 +238,7 @@ Function Get-MadBomb
     $UI = [MadBomb]::New((Get-XamlWindow -Type MBWin10))
     
     # Controls go here, everything pivots around the above variable.
+    
+    # Once the controls are linked, then use $UI.Window.Invoke()
+    $UI.Window.Invoke()
 }

@@ -1,8 +1,8 @@
-# [Get-XamlWindow] // Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight
-# This is a function with wrapped chunks of XAML and classes
-
-Function Get-XamlWindow
-{
+Function Get-XamlWindow 
+{   
+    # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight.
+    # This is a function with wrapped chunks of XAML and classes
+    
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
     [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","Test")]

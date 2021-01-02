@@ -1,8 +1,5 @@
-Function Get-XamlWindow 
-{   
-    # Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight.
-    # This is a function with wrapped chunks of XAML and classes
-    
+Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Jason Adkinson from Pluralsight
+{
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
     [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","Test")]
@@ -1421,7 +1418,789 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
     </Grid>
 </Window>
 '@
-            Test = ""
+            Test = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Win10_Script" Title="Windows 10 Settings/Tweaks Script By: Madbomb122 (v.$Script_Version -$Script_Date" Height="420" Width="700" BorderBrush="Black" Background="White">
+    <Window.Resources>
+        <Style x:Key="SeparatorStyle1" TargetType="{x:Type Separator}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Border Height="24" SnapsToDevicePixels="True" Background="#FF4D4D4D" BorderBrush="#FF4D4D4D" BorderThickness="0,0,0,1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="#FFFFFFBF"/>
+        </Style>
+        <Style TargetType="CheckBox" x:Key="xCheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="Button" x:Key="xButton">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="GroupBox" x:Key="xGroupBox">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="24"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" VerticalAlignment="Top">
+            <MenuItem Header="Help">
+                <MenuItem Name="FeedbackButton" Header="Feedback/Bug Report"/>
+                <MenuItem Name="FAQButton" Header="FAQ"/>
+                <MenuItem Name="AboutButton" Header="About"/>
+                <MenuItem Name="CopyrightButton" Header="Copyright"/>
+                <MenuItem Name="ContactButton" Header="Contact Me"/>
+            </MenuItem>
+            <MenuItem Name="DonateButton" Header="Donate to Me" Background="#FFFFAD2F" FontWeight="Bold"/>
+            <MenuItem Name="Madbomb122WSButton" Header="Madbomb122&apos;s GitHub" Background="#FFFFDF4F" FontWeight="Bold"/>
+        </Menu>
+        <TabControl Name="TabControl" Grid.Row="1" BorderBrush="Gainsboro" TabStripPlacement="Left">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4" Margin="2">
+                                    <ContentPresenter x:Name="ContentSite"  VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Preferences">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="160"/>
+                            <RowDefinition Height="90"/>
+                            <RowDefinition Height="90"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="Global" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <CheckBox Grid.Row="0" Name="CreateRestorePoint_CB" Content="Create Restore Point" Style="{StaticResource xCheckBox}"/>
+                                <CheckBox Grid.Row="1" Name="ShowSkipped_CB"   Content="Show Skipped Items" Style="{StaticResource xCheckBox}"/>
+                                <CheckBox Grid.Row="2" Name="Restart_CB"       Content="Restart When Done (Restart is Recommended)" Style="{StaticResource xCheckBox}"/>
+                                <CheckBox Grid.Row="3" Name="VersionCheck_CB"  Content="Check for Update (If found, will run with current settings)" Style="{StaticResource xCheckBox}"/>
+                                <CheckBox Grid.Row="4" Name="InternetCheck_CB" Content="Skip Internet Check" Style="{StaticResource xCheckBox}"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Backup" Margin="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Name="Save_Setting_Button" Content="Save Settings" Style="{StaticResource xButton}"/>
+                                <Button Grid.Column="1" Name="Load_Setting_Button" Content="Load Settings" Style="{StaticResource xButton}"/>
+                                <Button Grid.Column="2" Name="WinDefault_Button"   Content="Windows Default" Style="{StaticResource xButton}"/>
+                                <Button Grid.Column="3" Name="ResetDefault_Button" Content="Reset All Items" Style="{StaticResource xButton}"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="Script" Margin="5">
+                            <ComboBox Name="Script_Ver_Txt" Margin="5" Height="24" IsEnabled="False">
+                                <ComboBoxItem Content="Swap" IsSelected="True"/>
+                            </ComboBox>
+                        </GroupBox>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Name="Privacy" Header="Privacy">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Telemetry]">
+                                <ComboBox Name="_Telemetry"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Wi-Fi Sense]">
+                                <ComboBox Name="_WiFiSense"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[SmartScreen]">
+                                <ComboBox Name="_SmartScreen"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Location Tracking]">
+                                <ComboBox Name="_LocationTracking"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Feedback]">
+                                <ComboBox Name="_Feedback"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Advertising ID]">
+                                <ComboBox Name="_AdvertisingID"/>
+                            </GroupBox>
+                        </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Cortana]">
+                                <ComboBox Name="_Cortana"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Cortana Search]">
+                                <ComboBox Name="_CortanaSearch"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Error Reporting]">
+                                <ComboBox Name="_ErrorReporting"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Automatic Logging]">
+                                <ComboBox Name="_AutoLogging"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Diagnostics Tracking]">
+                                <ComboBox Name="_DiagnosticsTracking"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Windows App]">
+                                <ComboBox Name="_WindowsApp"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="6" Header="[Windows Store Auto Download]">
+                                <ComboBox Name="_WindowsAppAutoDL"/>
+                            </GroupBox>
+                        </Grid>
+                </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Services">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[UAC Level]">
+                                <ComboBox Name="_UAC"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Share Mapped Drives]">
+                                <ComboBox Name="_SMBDrives"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Administrative Shares]">
+                                <ComboBox Name="_AdminShares"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Firewall]">
+                                <ComboBox Name="_Firewall"/>
+                            </GroupBox>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Windows Defender]">
+                                <ComboBox Name="_WinDefender"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[HomeGroups]">
+                                <ComboBox Name="_HomeGroups"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Remote Assistance]">
+                                <ComboBox Name="_RemoteAssistance"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Remote Desktop w/ Network Authentication]">
+                                <ComboBox Name="_RemoteDesktop"/>
+                            </GroupBox>
+                    </Grid>
+                </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Name="Context_Tab" Header="Context/Start">
+                <GroupBox  Style="{StaticResource xGroupBox}">
+                <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Cast to Device]">
+                                <ComboBox Name="_CastToDevice"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Previous Versions]">
+                                <ComboBox Name="_PreviousVersions"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Include in Library]">
+                                <ComboBox Name="_IncludeinLibrary"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Pin to Start]">
+                                <ComboBox Name="_PinToStart"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Pin to Quick Access]">
+                                <ComboBox Name="_PinToQuickAccess"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Share w/...]">
+                                <ComboBox Name="_ShareWith"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="6" Header="[Send To...]">
+                                <ComboBox Name="_SendTo"/>
+                            </GroupBox>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Bing Search]">
+                                <ComboBox Name="_StartMenuWebSearch"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Start Suggestions]">
+                                <ComboBox Name="_StartSuggestions"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Most Used Apps]">
+                                <ComboBox Name="_MostUsedAppStartMenu"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Recent Items/Frequent Places]">
+                                <ComboBox Name="_RecentItemsFrequent"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Unpin All Items]">
+                                <ComboBox Name="_UnpinItems"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Name="TaskBar_Tab" Header="Taskbar">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Battery UI Bar]">
+                                <ComboBox Name="_BatteryUIBar"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Clock UI Bar]">
+                                <ComboBox Name="_ClockUIBar"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Volume Control Bar]">
+                                <ComboBox Name="_VolumeControlBar"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Taskbar Search Box]">
+                                <ComboBox Name="_TaskbarSearchBox"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Task View Button]">
+                                <ComboBox Name="_TaskViewButton"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Taskbar Icon Size]">
+                                <ComboBox Name="_TaskbarIconSize"/>
+                            </GroupBox>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Taskbar Item Grouping]">
+                                <ComboBox Name="_TaskbarGrouping"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Tray Icons]">
+                                <ComboBox Name="_TrayIcons"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Seconds In Clock]">
+                                <ComboBox Name="_SecondsInClock"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Last Active Click]">
+                                <ComboBox Name="_LastActiveClick"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Taskbar on Multi-Display]">
+                                <ComboBox Name="_TaskBarMultiDisplay"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Taskbar button on Multi-Display]">
+                                <ComboBox Name="_TaskbarButtonMultiDisplay"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Name="Explorer_Tab" Header="Explorer">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Quick Access/recent files]">
+                                <ComboBox Name="_RecentFileQuickAccess"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Quick Access/frequent folders]">
+                                <ComboBox Name="_FrequentFoldersQuickAccess"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Show window while dragging]">
+                                <ComboBox Name="_WinContentWhileDrag"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Search unknown file extensions]">
+                                <ComboBox Name="_StoreOpenWith"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Show long file path(s)]">
+                                <ComboBox Name="_LongFilePath"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Default Explorer View]">
+                                <ComboBox Name="_ExplorerOpenLoc"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="6" Header="[PowerShell -> Command-X]">
+                                <ComboBox Name="_WinXPowerShell" />
+                            </GroupBox>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[App hibernation file]">
+                                <ComboBox Name="_AppHibernationFile"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[Process ID on title bar]">
+                                <ComboBox Name="_PidTitleBar"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Accessibility key prompt]">
+                                <ComboBox Name="_AccessKeyPrompt"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[Window Timeline]">
+                                <ComboBox Name="_Timeline"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Aero Snap]">
+                                <ComboBox Name="_AeroSnap"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[Aero Shake]">
+                                <ComboBox Name="_AeroShake"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="6" Header="[Known Extentions]">
+                                <ComboBox Name="_KnownExtensions"/>
+                            </GroupBox>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[Hidden Files]">
+                                <ComboBox Name="_HiddenFiles"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[System Files]">
+                                <ComboBox Name="_SystemFiles"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[Auto-Play]">
+                                <ComboBox Name="_AutoPlay"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[AutoRun]">
+                                <ComboBox Name="_AutoRun"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="4" Header="[Task Manager Details]">
+                                <ComboBox Name="_TaskManager"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="5" Header="[F1 Help Key]">
+                                <ComboBox Name="_F1HelpKey"/>
+                            </GroupBox>
+                            <GroupBox Grid.Row="6" Header="[Reopen apps after reboot]">
+                                <ComboBox Name="_ReopenApps"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Desktop/PC">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Desktop" Margin="5">
+                        <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[This PC]">
+                                    <ComboBox Name="_ThisPC_Icon"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[Network]">
+                                    <ComboBox Name="_Network_Icon"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[Recycle Bin]">
+                                    <ComboBox Name="_RecycleBin_Icon"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[Documents]">
+                                    <ComboBox Name="_Documents_Icon"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[Control Panel]">
+                                    <ComboBox Name="_ControlPanel_Icon"/>
+                                </GroupBox>
+                            </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="This PC" Margin="5">
+                        <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[Desktop]">
+                                    <ComboBox Name="_Desktop_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[Documents]">
+                                    <ComboBox Name="_Documents_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[Downloads]">
+                                    <ComboBox Name="_Downloads_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[Music]">
+                                    <ComboBox Name="_Music_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[Pictures]">
+                                    <ComboBox Name="_Pictures_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="5" Header="[Videos]">
+                                    <ComboBox Name="_Videos_Folder"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="6" Header="[3D Objects]">
+                                    <ComboBox Name="_3DObjects_Folder"/>
+                                </GroupBox>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Miscellaneous">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="120"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="Photo Viewer" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Grid.Row="0" Header="[File Association]">
+                                            <ComboBox Name="_PhotoViewerFileAssociation"/>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="1" Header="[Add (Open with...)]">
+                                            <ComboBox Name="_PhotoViewerOpenWithMenu"/>
+                                        </GroupBox>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="Lockscreen" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Grid.Row="0" Header="[Lockscreen]">
+                                            <ComboBox Name="_LockScreen"/>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="1" Header="[Power Menu]">
+                                            <ComboBox Name="_PowerMenuLockScreen"/>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="2" Header="[Camera]">
+                                            <ComboBox Name="_CameraLockScreen"/>
+                                        </GroupBox>
+                                        <GroupBox Grid.Row="3" Header="[Account protection warning]">
+                                            <ComboBox Name="_AccountProtection"/>
+                                        </GroupBox>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                        <GroupBox Grid.Column="1" Header="Miscellaneous" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[Action Center]">
+                                    <ComboBox Name="_ActionCenter"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[Sticky Key Prompt]">
+                                    <ComboBox Name="_StickyKeyPrompt"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[NumLock on startup]">
+                                    <ComboBox Name="_NumLockStart"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[F8 Boot Menu]">
+                                    <ComboBox Name="_F8BootMenu"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[Remote UAC Local Account Token Filter]">
+                                    <ComboBox Name="_RemoteUACAccountToken"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="5" Header="[Hibernate Option]">
+                                    <ComboBox Name="_HibernatePower"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="6" Header="[Sleep Option]">
+                                    <ComboBox Name="_SleepPower"/>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Name="WinApp_Tab" Header="Windows Store">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                <DataGrid Name="dataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended" Margin="5">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{ x:Type DataGridRow }">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="#FFD8D8D8"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Display Name" Width="150" Binding="{Binding CName}" CanUserSort="True" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Option" Width="80" SortMemberPath="AppSelected" CanUserSort="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding AppOptions}" Text="{Binding Path=AppSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Appx Name" Width="180" Binding="{Binding AppxName}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Windows Update">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="Application/Feature" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[OneDrive]">
+                                    <ComboBox Name="_OneDrive"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[OneDrive Install]">
+                                    <ComboBox Name="_OneDriveInstall"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[Xbox DVR]">
+                                    <ComboBox Name="_XboxDVR"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[Media Player]">
+                                    <ComboBox Name="_MediaPlayer"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[Work Folders]">
+                                    <ComboBox Name="_WorkFolders"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="5" Header="[Fax and Scan]">
+                                    <ComboBox Name="_FaxAndScan"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="6" Header="[Windows Subsystem for Linux]">
+                                    <ComboBox Name="_LinuxSubsystem"/>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="Windows Update" Margin="5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Grid.Row="0" Header="[Check for Update]">
+                                    <ComboBox Name="_CheckForWinUpdate"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="1" Header="[Update Check Type]">
+                                    <ComboBox Name="_WinUpdateType"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Header="[Update P2P]">
+                                    <ComboBox Name="_WinUpdateDownload"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Header="[Update MSRT]">
+                                    <ComboBox Name="_UpdateMSRT"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[Update Driver]">
+                                    <ComboBox Name="_UpdateDriver"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="5" Header="[Restart on Update]">
+                                    <ComboBox Name="_RestartOnUpdate"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="6" Header="[Update Available Popup]">
+                                    <ComboBox Name="_UpdateAvailablePopup"/>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+        </TabControl>
+        <Button Name="RunScriptButton" Grid.Row="2" Content="Run Script" VerticalAlignment="Bottom" Height="20" FontWeight="Bold"/>
+    </Grid>
+</Window>
+'@
         }
 
         Hidden [Object]     $Slot

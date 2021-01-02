@@ -1,4 +1,4 @@
-Function Get-MadBombProfile
+Function Get-MadBomb
 {
     Class Privacy
     {
@@ -71,7 +71,7 @@ Function Get-MadBombProfile
         [UInt32]            $LastActiveClick = 2
         [UInt32]      $TaskBarOnMultiDisplay = 1
 
-          Taskbar(){}
+        Taskbar(){}
     }
 	
     Class Explorer
@@ -182,44 +182,60 @@ Function Get-MadBombProfile
         WindowsUpdate(){}
     }
 
-    Class MadBomb
+    Class Config
     {
-        [Object] $Privacy
-	[Object] $Service
-        [Object] $Context
-        [Object] $Taskbar
-        [Object] $Explorer
-        [Object] $StartMenu
-        [Object] $Paths
-        [Object] $Icons
-        [Object] $LockScreen
-        [Object] $Miscellaneous
-        [Object] $PhotoViewer
-        [Object] $WindowsApps
-        [Object] $WindowsUpdate
+        [Object]                    $Privacy
+	    [Object]                    $Service
+        [Object]                    $Context
+        [Object]                    $Taskbar
+        [Object]                   $Explorer
+        [Object]                  $StartMenu
+        [Object]                      $Paths
+        [Object]                      $Icons
+        [Object]                 $LockScreen
+        [Object]              $Miscellaneous
+        [Object]                $PhotoViewer
+        [Object]                $WindowsApps
+        [Object]              $WindowsUpdate
 
-        MadBomb()
+        Config()
         {
             $This.Reset()
         }
 
         Reset()
         {
-            $This.Privacy       = [Privacy]::New()
-            $This.Service       = [Service]::New()
-            $This.Context       = [Context]::New()
-            $This.Taskbar       = [Taskbar]::New()
-            $This.Explorer      = [Explorer]::New()
-            $This.StartMenu     = [StartMenu]::New()
-            $This.Paths         = [Paths]::New()
-            $This.Icons         = [Icons]::New()
-            $This.LockScreen    = [LockScreen]::New()
-            $This.Miscellaneous = [Miscellaneous]::New()
-            $This.PhotoViewer   = [PhotoViewer]::New()
-            $This.WindowsApps   = [WindowsApps]::New()
-            $This.WindowsUpdate = [WindowsUpdate]::New()
+            $This.Privacy                    = [Privacy]::New()
+            $This.Service                    = [Service]::New()
+            $This.Context                    = [Context]::New()
+            $This.Taskbar                    = [Taskbar]::New()
+            $This.Explorer                   = [Explorer]::New()
+            $This.StartMenu                  = [StartMenu]::New()
+            $This.Paths                      = [Paths]::New()
+            $This.Icons                      = [Icons]::New()
+            $This.LockScreen                 = [LockScreen]::New()
+            $This.Miscellaneous              = [Miscellaneous]::New()
+            $This.PhotoViewer                = [PhotoViewer]::New()
+            $This.WindowsApps                = [WindowsApps]::New()
+            $This.WindowsUpdate              = [WindowsUpdate]::New()
         }
     }
 
-    [Madbomb]::New()
+    Class Madbomb
+    {
+        [Object]                     $Window
+        [Object]                         $IO
+        [Object]                     $Config
+
+        MadBomb([Object]$Window)
+        {
+            $This.Window                     = $Window
+            $This.IO                         = $Window.IO
+            $This.Config                     = [Config]::New()
+        }
+    }
+
+    $UI = [MadBomb]::New((Get-XamlWindow -Type MBWin10))
+    
+    # Controls go here, everything pivots around the above variable.
 }

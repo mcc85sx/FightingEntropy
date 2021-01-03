@@ -2,7 +2,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 {
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
-    [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","Test")]
+    [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","MBWin10","Test")]
     [String]$Type,
     [Parameter()]
     [Switch]$Return)
@@ -122,7 +122,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     
     Class _XamlObject
     {
-        [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService Test" -Split " ")
+        [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService MBWin10 Test" -Split " ")
         [Object]       $Glossary = [_XamlGlossary]::New().Output
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics")
         [Object]           $Xaml = @{ 
@@ -1062,7 +1062,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Grid>
 </Window>
 '@
-
             FEShare              = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="960" Topmost="True" Icon="
 C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
@@ -1348,78 +1347,8 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
     </Grid>
 </Window>
 '@
-            NewAccount           = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Account" Width="400" Height="220" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Style TargetType="GroupBox" x:Key="xGroupBox">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="GroupBox">
-                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="Button" x:Key="xButton">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-    <Grid>
-        <Grid.Background>
-            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
-        </Grid.Background>
-        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="180" Margin="5" VerticalAlignment="Center">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="User Name">
-                    <TextBox Name="UserName" Margin="5"/>
-                </GroupBox>
-                <GroupBox Grid.Row="1" Header="[Password/Confirm]">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
-                        <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
-                    </Grid>
-                </GroupBox>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Name="Ok" Style="{StaticResource xButton}" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
-                    <Button Name="Cancel" Style="{StaticResource xButton}" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
-                </Grid>
-            </Grid>
-        </GroupBox>
-    </Grid>
-</Window>
-'@
-            Test = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Win10_Script" Title="Windows 10 Settings/Tweaks Script By: Madbomb122 (v.$Script_Version -$Script_Date" Height="420" Width="700" BorderBrush="Black" Background="White">
+            MBWin10 = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Windows 10 Settings/Tweaks Script By Madbomb122" Height="500" Width="700" BorderBrush="Black" Background="White">
     <Window.Resources>
         <Style x:Key="SeparatorStyle1" TargetType="{x:Type Separator}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -1470,9 +1399,6 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
             </Setter>
         </Style>
     </Window.Resources>
-    <Window.Effect>
-        <DropShadowEffect/>
-    </Window.Effect>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -1481,14 +1407,14 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" VerticalAlignment="Top">
             <MenuItem Header="Help">
-                <MenuItem Name="FeedbackButton" Header="Feedback/Bug Report"/>
-                <MenuItem Name="FAQButton" Header="FAQ"/>
-                <MenuItem Name="AboutButton" Header="About"/>
-                <MenuItem Name="CopyrightButton" Header="Copyright"/>
-                <MenuItem Name="ContactButton" Header="Contact Me"/>
+                <MenuItem Name="UI_Feedback"  Header="Feedback/Bug Report"/>
+                <MenuItem Name="UI_FAQ"       Header="FAQ"/>
+                <MenuItem Name="UI_About"     Header="About"/>
+                <MenuItem Name="UI_Copyright" Header="Copyright"/>
+                <MenuItem Name="UI_Contact"   Header="Contact Me"/>
             </MenuItem>
-            <MenuItem Name="DonateButton" Header="Donate to Me" Background="#FFFFAD2F" FontWeight="Bold"/>
-            <MenuItem Name="Madbomb122WSButton" Header="Madbomb122&apos;s GitHub" Background="#FFFFDF4F" FontWeight="Bold"/>
+            <MenuItem Name="UI_Donation"      Header="Donate to Me" Background="#FFFFAD2F" FontWeight="Bold"/>
+            <MenuItem Name="UI_Madbomb"       Header="Madbomb122&apos;s GitHub" Background="#FFFFDF4F" FontWeight="Bold"/>
         </Menu>
         <TabControl Name="TabControl" Grid.Row="1" BorderBrush="Gainsboro" TabStripPlacement="Left">
             <TabControl.Resources>
@@ -1529,11 +1455,11 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Grid.Row="0" Name="CreateRestorePoint_CB" Content="Create Restore Point" Style="{StaticResource xCheckBox}"/>
-                                <CheckBox Grid.Row="1" Name="ShowSkipped_CB"   Content="Show Skipped Items" Style="{StaticResource xCheckBox}"/>
-                                <CheckBox Grid.Row="2" Name="Restart_CB"       Content="Restart When Done (Restart is Recommended)" Style="{StaticResource xCheckBox}"/>
-                                <CheckBox Grid.Row="3" Name="VersionCheck_CB"  Content="Check for Update (If found, will run with current settings)" Style="{StaticResource xCheckBox}"/>
-                                <CheckBox Grid.Row="4" Name="InternetCheck_CB" Content="Skip Internet Check" Style="{StaticResource xCheckBox}"/>
+                                <CheckBox Grid.Row="0" Style="{StaticResource xCheckBox}" Name="UI_RestorePoint"  Content="Create Restore Point"/>
+                                <CheckBox Grid.Row="1" Style="{StaticResource xCheckBox}" Name="UI_ShowSkipped"   Content="Show Skipped Items"/>
+                                <CheckBox Grid.Row="2" Style="{StaticResource xCheckBox}" Name="UI_Restart"       Content="Restart When Done (Restart is Recommended)"/>
+                                <CheckBox Grid.Row="3" Style="{StaticResource xCheckBox}" Name="UI_VersionCheck"  Content="Check for Update (If found, will run with current settings)"/>
+                                <CheckBox Grid.Row="4" Style="{StaticResource xCheckBox}" Name="UI_InternetCheck" Content="Skip Internet Check"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Header="Backup" Margin="5">
@@ -1544,28 +1470,28 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Name="Save_Setting_Button" Content="Save Settings" Style="{StaticResource xButton}"/>
-                                <Button Grid.Column="1" Name="Load_Setting_Button" Content="Load Settings" Style="{StaticResource xButton}"/>
-                                <Button Grid.Column="2" Name="WinDefault_Button"   Content="Windows Default" Style="{StaticResource xButton}"/>
-                                <Button Grid.Column="3" Name="ResetDefault_Button" Content="Reset All Items" Style="{StaticResource xButton}"/>
+                                <Button Grid.Column="0" Style="{StaticResource xButton}" Name="UI_Save"         Content="Save Settings"/>
+                                <Button Grid.Column="1" Style="{StaticResource xButton}" Name="UI_Load"         Content="Load Settings"/>
+                                <Button Grid.Column="2" Style="{StaticResource xButton}" Name="UI_WinDefault"   Content="Windows Default"/>
+                                <Button Grid.Column="3" Style="{StaticResource xButton}" Name="UI_ResetDefault" Content="Reset All Items"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="2" Header="Script" Margin="5">
-                            <ComboBox Name="Script_Ver_Txt" Margin="5" Height="24" IsEnabled="False">
-                                <ComboBoxItem Content="Swap" IsSelected="True"/>
+                            <ComboBox Margin="5" Height="24" IsEnabled="False">
+                                <ComboBoxItem Content="Rewrite Module Version" IsSelected="True"/>
                             </ComboBox>
                         </GroupBox>
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Name="Privacy" Header="Privacy">
+            <TabItem Header="Privacy">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
@@ -1594,16 +1520,16 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                 <ComboBox Name="_AdvertisingID"/>
                             </GroupBox>
                         </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="[Cortana]">
                                 <ComboBox Name="_Cortana"/>
                             </GroupBox>
@@ -1626,26 +1552,26 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                 <ComboBox Name="_WindowsAppAutoDL"/>
                             </GroupBox>
                         </Grid>
-                </Grid>
+                    </Grid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Services">
                 <GroupBox Style="{StaticResource xGroupBox}">
                     <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="[UAC Level]">
                                 <ComboBox Name="_UAC"/>
                             </GroupBox>
@@ -1658,17 +1584,17 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                             <GroupBox Grid.Row="3" Header="[Firewall]">
                                 <ComboBox Name="_Firewall"/>
                             </GroupBox>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="[Windows Defender]">
                                 <ComboBox Name="_WinDefender"/>
                             </GroupBox>
@@ -1681,13 +1607,13 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                             <GroupBox Grid.Row="3" Header="[Remote Desktop w/ Network Authentication]">
                                 <ComboBox Name="_RemoteDesktop"/>
                             </GroupBox>
+                        </Grid>
                     </Grid>
-                </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Name="Context_Tab" Header="Context/Start">
+            <TabItem Header="Context/Start">
                 <GroupBox  Style="{StaticResource xGroupBox}">
-                <Grid>
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -1724,7 +1650,6 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                 <ComboBox Name="_SendTo"/>
                             </GroupBox>
                         </Grid>
-
                         <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -1754,7 +1679,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Name="TaskBar_Tab" Header="Taskbar">
+            <TabItem Header="Taskbar">
                 <GroupBox Style="{StaticResource xGroupBox}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -1822,7 +1747,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Name="Explorer_Tab" Header="Explorer">
+            <TabItem Header="Explorer">
                 <GroupBox Style="{StaticResource xGroupBox}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -1931,13 +1856,13 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
             </TabItem>
             <TabItem Header="Desktop/PC">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Desktop" Margin="5">
-                        <Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="Desktop" Margin="5">
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
@@ -1963,9 +1888,9 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                     <ComboBox Name="_ControlPanel_Icon"/>
                                 </GroupBox>
                             </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Column="1" Header="This PC" Margin="5">
-                        <Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="This PC" Margin="5">
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
@@ -1996,9 +1921,9 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                 <GroupBox Grid.Row="6" Header="[3D Objects]">
                                     <ComboBox Name="_3DObjects_Folder"/>
                                 </GroupBox>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Miscellaneous">
@@ -2089,11 +2014,11 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Name="WinApp_Tab" Header="Windows Store">
+            <TabItem Header="Windows Store">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                <DataGrid Name="dataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended" Margin="5">
+                <DataGrid Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended" Margin="5">
                     <DataGrid.RowStyle>
-                        <Style TargetType="{ x:Type DataGridRow }">
+                        <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="AlternationIndex" Value="0">
                                     <Setter Property="Background" Value="White"/>
@@ -2201,6 +2126,79 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
     </Grid>
 </Window>
 '@
+
+            NewAccount           = @'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Account" Width="400" Height="220" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="GroupBox" x:Key="xGroupBox">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="xButton">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
+        </Grid.Background>
+        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="180" Margin="5" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="User Name">
+                    <TextBox Name="UserName" Margin="5"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Password/Confirm]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
+                        <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
+                    </Grid>
+                </GroupBox>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="Ok" Style="{StaticResource xButton}" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
+                    <Button Name="Cancel" Style="{StaticResource xButton}" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
+                </Grid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
+'@
+            Test = ""
+
         }
 
         Hidden [Object]     $Slot
@@ -2315,3 +2313,6 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
         [_XamlWindow]::New($Xaml)
     }
 }
+
+# Test
+# Get-XamlWindow -Type MBWin10

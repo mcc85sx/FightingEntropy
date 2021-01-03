@@ -1872,20 +1872,20 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[This PC]">
-                                    <ComboBox Name="_ThisPC_Icon"/>
+                                <GroupBox Grid.Row="0" Header="[This PC/My Computer]">
+                                    <ComboBox Name="_MyComputer"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="1" Header="[Network]">
-                                    <ComboBox Name="_Network_Icon"/>
+                                    <ComboBox Name="_Network"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="2" Header="[Recycle Bin]">
-                                    <ComboBox Name="_RecycleBin_Icon"/>
+                                    <ComboBox Name="_RecycleBin"/>
                                 </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[Documents]">
-                                    <ComboBox Name="_Documents_Icon"/>
+                                <GroupBox Grid.Row="3" Header="[User Documents]">
+                                    <ComboBox Name="_UserDocuments"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="4" Header="[Control Panel]">
-                                    <ComboBox Name="_ControlPanel_Icon"/>
+                                    <ComboBox Name="_ControlPanel"/>
                                 </GroupBox>
                             </Grid>
                         </GroupBox>
@@ -1901,25 +1901,25 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ic
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <GroupBox Grid.Row="0" Header="[Desktop]">
-                                    <ComboBox Name="_Desktop_Folder"/>
+                                    <ComboBox Name="_Desktop"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="1" Header="[Documents]">
-                                    <ComboBox Name="_Documents_Folder"/>
+                                    <ComboBox Name="_Documents"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="2" Header="[Downloads]">
-                                    <ComboBox Name="_Downloads_Folder"/>
+                                    <ComboBox Name="_Downloads"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="3" Header="[Music]">
-                                    <ComboBox Name="_Music_Folder"/>
+                                    <ComboBox Name="_Music"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="4" Header="[Pictures]">
-                                    <ComboBox Name="_Pictures_Folder"/>
+                                    <ComboBox Name="_Pictures"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="5" Header="[Videos]">
-                                    <ComboBox Name="_Videos_Folder"/>
+                                    <ComboBox Name="_Videos"/>
                                 </GroupBox>
                                 <GroupBox Grid.Row="6" Header="[3D Objects]">
-                                    <ComboBox Name="_3DObjects_Folder"/>
+                                    <ComboBox Name="_3DObjects"/>
                                 </GroupBox>
                             </Grid>
                         </GroupBox>

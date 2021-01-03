@@ -1,6 +1,6 @@
 Class FEModule
 {
-    [String]             $Base  = ("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2020.12.0")
+    [String]             $Base  = ("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2021.1.0")
     [String[]]        $Classes_ = ("OS Manifest RestObject Hive Install" -Split " " | % { "Classes/_$_.ps1" })
     Hidden [Object[]] $Classes 
     Hidden [String[]]    $Swap
@@ -18,4 +18,4 @@ $Install = [FEModule]::New().Output
 
 Invoke-Expression $Install
 
-$Module = [_Install]::New("2020.12.0")
+$Module = [_Install]::New("2021.1.0")

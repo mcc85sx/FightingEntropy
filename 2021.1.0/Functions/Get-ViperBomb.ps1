@@ -118,6 +118,11 @@ Function Get-ViperBomb
         {
             Return @( $This.Service )
         }
+
+        [Object[]] FilterServices([Object]$Field,[Object]$String)
+        {
+            Return @( $This.Service | ? $Field -match $String )
+        }
     }
 
     $UI                                  = [_ViperBomb]::New((Get-XamlWindow -Type FEService))

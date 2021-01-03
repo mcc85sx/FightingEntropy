@@ -1,8 +1,8 @@
 Class _Manifest
 {
     [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
-    [String]     $Version = ( "2020.12.0" )
-    [String]        $GUID = ( "67b283d9-72c6-413a-aa80-a24af5d4ea8f" )
+    [String]     $Version = ( "2021.1.0" )
+    [String]        $GUID = ( "d2402c18-0529-4e55-919f-ac477c49d4fe" )
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
 
@@ -18,7 +18,7 @@ Class _Manifest
     # \\          Imaging      Image Images Updates
     # //             Role      Role Win32_Client Win32_Server UnixBSD RHELCentOS
 
-    [String[]]   $Classes = (("Manifest Hive Root Module OS Info RestObject",
+    [String[]]   $Classes = (("Manifest Hive Root Install Module OS Info RestObject",
                               "Block Faces Track Theme Object Flag Banner",
                               "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network",
                               "Network NetInterface PingSweep PingObject Host FirewallRule",

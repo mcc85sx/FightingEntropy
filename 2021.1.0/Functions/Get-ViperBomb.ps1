@@ -6,13 +6,15 @@ Function Get-ViperBomb
     Class _ViperBombConfig
     {
         [String]               $Name = "FightingEntropy/ViperBomb"
-        [String]            $Version = "2020.12.0"
+        [String]            $Version = "2021.1.0"
         [String]            $Release = "Development"
         [String]           $Provider = "Secure Digits Plus LLC"
         [String]                $URL = "https://github.com/mcc85sx/FightingEntropy"
         [String]            $MadBomb = "https://github.com/madbomb122/BlackViperScript"
         [String]         $BlackViper = "http://www.blackviper.com"
         [String]               $Site = "https://www.securedigitsplus.com"
+        
+                                     #  Original copyright
         Hidden [String[]] $Copyright = ("Copyright (c) 2019 Zero Rights Reserved;Services Configuration by Charles 'Black Viper' Sparks;;The MIT Licens" + 
                                         "e (MIT) + an added Condition;;Copyright (c) 2017-2019 Madbomb122;;[Black Viper Service Script];Permission is her" + 
                                         "eby granted, free of charge, to any person obtaining a ;copy of this software and associated documentation files" + 
@@ -28,6 +30,8 @@ Function Get-ViperBomb
                                         "ce may the author(s) be subjected to any liability;or damage resultant to its use.").Split(";")
         Hidden [String[]]     $About = ("This utility provides an interface to load and customize;service configuration profiles, such as:;;    Default" + 
                                         ": Black Viper (Sparks v1.0);    Custom: If in proper format;    Backup: Created via this utility").Split(";")
+                                        
+                                        # Not yet implemented
         Hidden [String[]]      $Help = (("[Basic];;_-atos___Accepts ToS;_-auto___Automates Process | Aborts upon user input/errors;;[Profile];;_-defaul" + 
                                         "t__Standard;_-safe___Sparks/Safe;_-tweaked__Sparks/Tweaked;_-lcsc File.csv  Loads Custom Service Configuration, " + 
                                         "File.csv = Name of your backup/custom file;;[Template];;_-all___ Every windows services will change;_-min___ Jus" + 
@@ -45,6 +49,7 @@ Function Get-ViperBomb
                                         "rmation, Stops -auto;_-diagf__   Forced diagnostic information, Script does nothing else;;[Help];;_-help___Shows" +
                                         " list of switches, then exits script.. alt -h;_-copy___Shows Copyright/License Information, then exits script" + 
                                         ";").Replace("_","    ")).Split(";")
+                                        
         Hidden [String[]]      $Type = "10H:D+ 10H:D- 10P:D+ 10P:D- DT:S+ DT:S- DT:T+ DT:T- LT:S+ LT:S-".Split(" ")
         Hidden [String[]]     $Title = (("{0} Home | {1};{0} Pro | {1};{2} | Safe;{2} | Tweaked;Laptop | Safe" -f "Windows 10","Default","Desktop" -Split ";") | % { "$_ Max" , "$_ Min" })
 
@@ -198,7 +203,6 @@ Function Get-ViperBomb
 
     $UI.IO.Search.Add_TextChanged{
     
-        $UI.IO.DataGrid.Clear()
         $UI.IO.DataGrid.ItemsSource      = $UI.FilterServices($UI.IO.Select.SelectedItem.Content,$UI.IO.Search.Text)    
     }
 

@@ -17,6 +17,6 @@ Class VSCode # To install VSCode on CentOS
     {
         sudo rpm --import $This.Key
         Set-Content -Path $This.Path -Value $This.GPG -Verbose -Force
-        sudo yum install code
+        sudo yum install code -y
     }
 }

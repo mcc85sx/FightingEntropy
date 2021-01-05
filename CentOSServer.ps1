@@ -1,8 +1,13 @@
-# yum update
-# nano /etc/sysconfig/selinux
-# sudo yum install wget tar net-tools -y
-# sudo yum install epel-release httpd httpd-tools -y
-# sudo chown apache:apache /var/www/html -R
+yum update
+nano /etc/sysconfig/selinux
+yum install epel-release -y
+
+# Network
+sudo yum install wget tar net-tools -y
+
+# Apache
+sudo yum install epel-release httpd httpd-tools -y
+sudo chown apache:apache /var/www/html -R
 
 Class Apache
 {
@@ -104,14 +109,28 @@ Class RoundCube
         
         "{0}/{1}" -f (pwd).Path, $This.Version | % { 
 
-            sudo tar xvzf "$($_)-complete.tar.gz"
+            "$($_)-complete.tar.gz" | % { 
+                Write-Host "Unzipping [:] $_"
+                sudo tar xvzf $_
+                Remove-Item $_ -Force
+            }
+            Write-Host "Moving [:] $_"
             sudo mv $_ /var/www/roundcube/
         }
 
+        Write-Host "Checking [:] Remi Release"
         sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+        
+        Write-Host "Resetting PHP Module"
         sudo dnf module reset php -y
+
+        Write-Host "Enabling PHP:Remi-7.4"
         sudo dnf module enable php:remi-7.4 -y
-        sudo dnf install php-ldap php-imagick php-common php-gd php-imap php-json php-curl php-zip php-xml php-mbstring php-bz2 php-intl php-gmp -y
+
+        Write-Host "Checking [:] Dependencies..."
+        sudo dnf install php-fpm php-ldap php-imagick php-common php-gd php-imap php-json php-curl php-zip php-xml php-mbstring php-bz2 php-intl php-gmp -y
+
+        Write-Host "Installation [:] Complete"
     }
 
     MySql()
@@ -125,12 +144,12 @@ Class RoundCube
 
     VirtualHost([String]$VirtualHostname)
     {
-        $This.Path   = "/etc/httpd/conf.d/{0}" -f $VirtualHostname
+        $This.Path   = "/etc/httpd/conf.d/{0}.conf" -f $VirtualHostname
         $This.Config = ("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
                         "CustomLog {3}/_access.log combined;;  <Directory />;    Options FollowSymLinks;    " +
                         "AllowOverride All;  </Directory>;;  <Directory {2}>;    Options FollowSymLinks Mult" + 
                         "iViews;    AllowOverride All;    Order allow,deny;    allow from all;  </Directory>" + 
-                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.DocumentRoot,$This.Logs -Split ";"
+                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.Path,$This.Logs -Split ";"
     }
 
     WriteVirtualHost()
@@ -140,3 +159,16 @@ Class RoundCube
 }
 
 $RoundCube = [RoundCube]::New()
+
+Function Initialize-Service
+{
+    [CmdLetBinding()]Param( 
+        [Parameter(Mandatory,Position=0)][String]$Name,
+        [ValidateSet("Launch","Status","Restart")]
+        [Parameter(Mandatory,Position=1)][String]$Mode)
+
+    ForEach ( $Item in @( Switch($Mode) { Launch {0,1,2} Status {0,1,4} Restart {3} }))
+    {
+        systemctl ("start,enable,reload,restart,status" -Split ",")[$Item] $Name
+    }
+}

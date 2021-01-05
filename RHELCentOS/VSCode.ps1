@@ -21,7 +21,7 @@ Class VSCode # To install VSCode on CentOS
         Write-Host "Setting [:] Visual Studio Code Repo"
         Set-Content -Path $This.Path -Value $This.GPG -Verbose -Force
         
-        Write-Host "Installing [:] Visual Studio Code
+        Write-Host "Installing [:] Visual Studio Code"
         sudo yum install code -y
     }
 }

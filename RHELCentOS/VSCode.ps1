@@ -15,8 +15,13 @@ Class VSCode # To install VSCode on CentOS
 
     Install()
     {
+        Write-Host "Importing [:] Microsoft GPG Key"
         sudo rpm --import $This.Key
+        
+        Write-Host "Setting [:] Visual Studio Code Repo"
         Set-Content -Path $This.Path -Value $This.GPG -Verbose -Force
+        
+        Write-Host "Installing [:] Visual Studio Code
         sudo yum install code -y
     }
 }

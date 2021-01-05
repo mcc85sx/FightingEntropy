@@ -10,16 +10,13 @@ Class VSCode # To install VSCode on CentOS
     {
         $This.Key  = "{0}/keys/microsoft.asc" -f $This.URL
         $This.Repo = "{0}/yumrepos/vscode" -f $This.URL
-        $This.GPG = ("[code];name=Visual Studio Code;baseurl={0};enabled=1;gpgcheck=1;gpgkey={1}" -f $This.Key, $This.Repo -Split ';')
+        $This.GPG = ("[code];name=Visual Studio Code;baseurl={0};enabled=1;gpgcheck=1;gpgkey={1}" -f  $This.Repo, $This.Key -Split ';')
     }
 
-    RPM()
+    Install()
     {
-        sudo rpm --import $this.Key
-    }
-
-    [Void] Output()
-    {
-        Set-Content -Path $This.Path -Value $This.GPG -Verbose
+        sudo rpm --import $This.Key
+        Set-Content -Path $This.Path -Value $This.GPG 
+        sudo yum install code 
     }
 }

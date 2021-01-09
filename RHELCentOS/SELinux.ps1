@@ -6,6 +6,7 @@ Class SELinux
 
     SELinux()
     {
+        Write-Host "Get-Content [:] $($This.Path)"
         $This.Content = Get-Content -Path $This.Path
         $This.Output  = ($This.Content -join "`n").Replace("SELINUX=enforcing","SELINUX=disabled")
     }

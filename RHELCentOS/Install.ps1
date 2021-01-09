@@ -25,6 +25,11 @@ Class Apache
 
     Apache()
     {
+        
+    }
+
+    Install()
+    {
         If (!(Test-Path $This.Path))
         {
             Write-Host "Checking/Installing [:] EPEL, Apache"

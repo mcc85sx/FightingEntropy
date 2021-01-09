@@ -231,6 +231,8 @@ Class RHELCentOS
     {
         $This.Hostname  = $Hostname
         $This.SELinux   = [SELinux]::New()
+        
+        Write-Host "Installing [:] epel, nano, realmd, tar, wget"
         sudo yum install epel-release nano realmd tar wget -y
         
         $This.Apache    = [Apache]::New()

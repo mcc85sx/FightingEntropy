@@ -97,7 +97,10 @@ Class PostFix
         $This.Hostname = (hostname)
         $This.Domain   = (realm discover | ? { $_ -match "domain" } | % Substring 15)
         $This.Network  = $Network
+    }
 
+    Install()
+    {
         If (!(Test-Path $This.Path))
         {
             Write-Host "Checking/Installing [:] Postfix"
@@ -105,6 +108,7 @@ Class PostFix
         }
 
         $This.Content    = Get-Content -Path $This.Path
+        Write-Host "Installed [:] Postfix"
     }
 
     Configure()
@@ -195,12 +199,17 @@ Class RoundCube
     VirtualHost([String]$VHost)
     {
         $This.VirtualHostName = $VHost
-        $This.Path   = "/etc/httpd/conf.d/{0}" -f $This.VirtualHostname
+        $This.Path   = "/etc/httpd/conf.d/{0}.conf" -f $This.VirtualHostname
         $This.Output = ("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
                         "CustomLog {3}/_access.log combined;;  <Directory />;    Options FollowSymLinks;    " +
                         "AllowOverride All;  </Directory>;;  <Directory {2}>;    Options FollowSymLinks Mult" + 
                         "iViews;    AllowOverride All;    Order allow,deny;    allow from all;  </Directory>" + 
                         ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.Root,$This.Logs -Split ";"
+    }
+
+    Service()
+    {
+        service mariadb start
     }
 
     Save()
@@ -215,12 +224,15 @@ Class RHELCentOS
     [Object] $SELinux
     [Object] $Apache
     [Object] $PostFix
+    [Object] $MySQL
     [Object] $RoundCube
 
     RHELCentOS([String]$Hostname)
     {
         $This.Hostname  = $Hostname
         $This.SELinux   = [SELinux]::New()
+        sudo yum install epel-release nano realmd tar wget -y
+        
         $This.Apache    = [Apache]::New()
         $This.PostFix   = [PostFix]::New("192.168.1.0/24")
         $This.RoundCube = [RoundCube]::New()

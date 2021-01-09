@@ -1,20 +1,19 @@
 Class RoundCube
 {
-    [UInt32]       $Port = 80
-    [String] $ServerName = (hostname)
-    [String]       $Root 
-    [String]        $Url
-    [String]    $Version
-    [String]       $Path = "/var/www/roundcube"
-    [String]       $Logs = "/etc/httpd/logs"
-    [String[]]    $Value
-    [String[]]   $Config
+    [String]      $ServerName = (hostname)
+    [UInt32]            $Port = 80
+    [String] $VirtualHostName
+    [String]         $Version 
+    [String]             $Url
+    [String]            $Path = "/var/www/roundcube"
+    [String]            $Logs = "/etc/httpd/logs"
+    [String[]]       $Content
+    [String[]]        $Output
 
     RoundCube()
     {
-        $This.ServerName = (hostname)
-        $This.Version    = "roundcubemail-1.4.10"
-        $This.Url        = "https://github.com/roundcube/roundcubemail/releases/download/1.4.10/$($This.Version)-complete.tar.gz"
+        $This.Version         = "roundcubemail-1.4.10"
+        $This.Url             = "https://github.com/roundcube/roundcubemail/releases/download/1.4.10/$($This.Version)-complete.tar.gz"
     }
 
     Install()
@@ -45,31 +44,21 @@ Class RoundCube
 
         Write-Host "Checking/Installing [:] PHP Dependencies"
         sudo dnf install php-ldap php-imagick php-common php-gd php-imap php-json php-curl php-zip php-xml php-mbstring php-bz2 php-intl php-gmp -y
-
-        Write-Host "Roundcube installation complete"
     }
-
-    #MySql()
-    #{
-    #    sudo mysql -u root -p
-    #    CREATE DATABASE roundcube DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-    #    CREATE USER roundcubeuser@localhost IDENTIFIED BY "password";
-    #    GRANT ALL PRIVILEGES ON roundcube.* TO roundcubeuser@localhost;
-    #    flush privileges;
-    #}
-
-    VirtualHost([String]$VirtualHostname)
+    
+    VirtualHost([String]$VHost)
     {
-        $This.Path   = "/etc/httpd/conf.d/{0}" -f $VirtualHostname
-        $This.Config = ("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
+        $This.VirtualHostName = $VHost
+        $This.Path   = "/etc/httpd/conf.d/{0}" -f $This.VirtualHostname
+        $This.Output = ("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
                         "CustomLog {3}/_access.log combined;;  <Directory />;    Options FollowSymLinks;    " +
                         "AllowOverride All;  </Directory>;;  <Directory {2}>;    Options FollowSymLinks Mult" + 
                         "iViews;    AllowOverride All;    Order allow,deny;    allow from all;  </Directory>" + 
-                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.DocumentRoot,$This.Logs -Split ";"
+                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.Root,$This.Logs -Split ";"
     }
 
-    WriteVirtualHost()
+    Save()
     {
-        Set-Content -Path $This.Path -Value $This.Config -Verbose
+        Set-Content -Path $This.Path -Value $This.Output -Verbose
     }
 }

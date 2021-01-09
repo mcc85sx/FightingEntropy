@@ -49,12 +49,12 @@ Class RoundCube
     VirtualHost([String]$VHost)
     {
         $This.VirtualHostName = $VHost
-        $This.Path   = "/etc/httpd/conf.d/{0}" -f $This.VirtualHostname
-        $This.Output = ("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
+        $This.Path   = "/etc/httpd/conf.d/{0}.conf" -f $This.VirtualHostname
+        $This.Output = (("<VirtualHost *:{0}>;  ServerName {1};  DocumentRoot {2};;  ErrorLog {3}/_error.log;" +
                         "CustomLog {3}/_access.log combined;;  <Directory />;    Options FollowSymLinks;    " +
                         "AllowOverride All;  </Directory>;;  <Directory {2}>;    Options FollowSymLinks Mult" + 
                         "iViews;    AllowOverride All;    Order allow,deny;    allow from all;  </Directory>" + 
-                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.Root,$This.Logs -Split ";"
+                        ";;</VirtualHost>") -f $This.Port,$This.ServerName,$This.Path,$This.Logs) -Split ";"
     }
 
     Save()

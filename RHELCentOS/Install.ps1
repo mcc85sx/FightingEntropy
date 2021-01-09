@@ -155,8 +155,8 @@ Class RoundCube
     [String] $VirtualHostName
     [String]         $Version 
     [String]             $Url
-    [String]            $Path = "/var/www/roundcube"
-    [String]            $Logs = "/etc/httpd/logs"
+    [String]            $Path = "/var/www/roundcube/"
+    [String]            $Logs = "/etc/httpd/logs/"
     [String[]]       $Content
     [String[]]        $Output
 

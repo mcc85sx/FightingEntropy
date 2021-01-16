@@ -40,7 +40,7 @@ Class _DNSSuffix
 
         Else
         {
-            [System.Windows.Forms.MessageBox]::Show("System is part of a domain","Exception")
+            [System.Windows.MessageBox]::Show("System is part of a domain","Exception")
         }
     }
 }

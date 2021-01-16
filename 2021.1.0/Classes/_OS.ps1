@@ -50,10 +50,10 @@ Class _OS
 
     _OS()
     {
-        $This.Environment    = $This.GetItem("Env:\")
-        $This.Variable       = $This.GetItem("Variable:\")
-        $This.PSVersionTable = $This.Variable.PSVersionTable
-        $This.PSVersion      = $This.PSVersionTable.PSVersion
+        $This.Environment    = Get-ChildItem Env:\
+        $This.Variable       = Get-ChildItem Variable:\
+        $This.PSVersionTable = Get-Item Variable:\PSVersionTable | % Value
+        $This.PSVersion      = Get-Item Variable:\PSVersionTable | % Value | % PSVersion
         $This.Major          = $This.PSVersion.Major
         $This.Type           = $This.GetOSType()
     }

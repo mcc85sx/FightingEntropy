@@ -1,8 +1,8 @@
-Class _Schannel
+Class _SChannel
 {
     [String]   $Path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
 
-    _Schannel()
+    _SChannel()
     {
         ForEach ( $Type in "SSL 2.0;SSL 3.0;TLS 1.0;TLS 1.1;TLS 1.2".Split(";") )
         {

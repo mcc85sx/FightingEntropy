@@ -5,7 +5,7 @@ Class _Install
     [Object]               $Hive
 
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2021.1.0"
+    [String]            $Version
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
     [String]             $Status = "Initialized"
@@ -139,10 +139,10 @@ Class _Install
     {
         $This.OS                 = [_OS]::New()
         $This.Type               = $This.OS.Type
-        $This.Manifest           = [_Manifest]::New()
+        $This.Manifest           = [_Manifest]::New($Version)
         $This.Hive               = [_Hive]::New($This.Type,$Version)
 
-        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $This.Version
+        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
         $This.Classes            = @( )
         $This.Functions          = @( )
         $This.Control            = @( )

@@ -393,4 +393,4 @@ Function Install-FEModule
     [_Install]::New($Version)
 }
 
-$Module = [_Install]::New("2021.1.0")
+Install-FEModule -Version 2021.1.0

@@ -66,7 +66,7 @@ Function Install-FEModule
     Class _Manifest
     {
         [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
-        [String]     $Version = ( "2021.1.0" )
+        [String]     $Version
         [String]        $GUID = ( "d2402c18-0529-4e55-919f-ac477c49d4fe" )
         [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
         [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
@@ -74,9 +74,7 @@ Function Install-FEModule
         # //          Classes
         # \\          -------
         # //    Module (Core)      Manifest Hive Root Module OS Info RestObject
-        # \\      Write-Theme      Block Faces Track Theme Object Flag Banner
-        # // Network(ARP/NBT)      VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network
-        # \\    Network(Main)      Network NetInterface PingSweep PingObject Host FirewallRule
+        # \\    Network(Main)      Host FirewallRule
         # //           System      Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding
         # \\         Active D.     DNSSuffix DomainName ADLogin ADConnection FEDCPromo
         # //           Server      Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS
@@ -84,8 +82,6 @@ Function Install-FEModule
         # //             Role      Role Win32_Client Win32_Server UnixBSD RHELCentOS
 
         [String[]]   $Classes = (("Manifest Hive Root Install Module OS Info RestObject",
-                                  "Block Faces Track Theme Object Flag Banner",
-                                  "VendorList ArpHost ArpScan ArpStat NbtRef NbtHost NbtScan NbtStat NbtObj V4Network V6Network",
                                   "Host FirewallRule",
                                   "Drive Drives ViperBomb File Cache Icons Shortcut Brand Branding",
                                   "DNSSuffix DomainName ADLogin ADConnection FEDCPromo",
@@ -93,18 +89,18 @@ Function Install-FEModule
                                   "Image Images Updates",
                                   "Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " ").Split(" ") | % { "_$_.ps1" })
 
-        [String[]] $Functions = (("Get-FEModule Get-FEOS Get-FEManifest Get-FEHive Get-FEHost Get-FEService Get-XamlWindow",
-                                  "Write-Theme Write-Flag Write-Banner Show-ToastNotification Get-Certificate Get-ViperBomb",
-                                  "Get-FEDCPromoProfile Get-FEDCPromo Remove-FEShare Add-ACL New-ACLObject Install-IISServer",
-                                  "Configure-IISServer New-FECompany Get-ServerDependency" -join " ").Split(" ") | % { "$_.ps1" })
+        [String[]] $Functions = ("Get-FEManifest","Get-FEModule","Get-FEOS","Get-FEHive","Get-FEHost","Get-FEService","Get-XamlWindow","Get-FENetwork",
+                                 "Import-MDTModule","Write-Theme","Show-ToastNotification","Get-Certificate","Get-ViperBomb","Get-FEDCPromo",
+                                 "Get-FEDCPromoProfile","Remove-FEShare","Add-ACL","New-ACLObject","Install-IISServer","Configure-IISServer",
+                                 "New-FECompany","Get-ServerDependency","Get-DiskInfo" | % { "$_.ps1" })
 
         [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
                                   "ServerMod.xml" ) -Split " "
         [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
 
-        _Manifest()
+        _Manifest([String]$Version)
         {
-    
+            $This.Version = $Version
         }
 
         [String[]] CheckLib([String]$URL,[String]$Type)
@@ -229,7 +225,7 @@ Function Install-FEModule
         [Object]               $Hive
 
         [String]               $Name = "FightingEntropy"
-        [String]            $Version = "2021.1.0"
+        [String]            $Version
         [String]           $Provider = "Secure Digits Plus LLC"
         [String]               $Date = (Get-Date -UFormat %Y_%m%d-%H%M%S)
         [String]             $Status = "Initialized"
@@ -364,7 +360,8 @@ Function Install-FEModule
                         }
                     }
 
-                    "Module","Manifest" | % { Copy-Item $This.Hive.$_ -Destination "$Path\$Tree" -Verbose }
+                    Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose
+                    Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose
                 }
             }
         }
@@ -374,10 +371,10 @@ Function Install-FEModule
             $This.Version            = $Version
             $This.OS                 = [_OS]::New()
             $This.Type               = $This.OS.Type
-            $This.Manifest           = [_Manifest]::New()
+            $This.Manifest           = [_Manifest]::New($Version)
             $This.Hive               = [_Hive]::New($This.Type,$Version)
 
-            $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $This.Version
+            $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
             $This.Classes            = @( )
             $This.Functions          = @( )
             $This.Control            = @( )

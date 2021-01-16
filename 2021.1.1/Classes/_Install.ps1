@@ -126,11 +126,22 @@ Class _Install
     
     Scaffold([String]$String)
     {
-        ForEach ( $ModulePath in $This.Hive.PSModule )
+        $Tree = "FightingEntropy\{0}" -f $This.Version
+
+        ForEach ( $Path in $This.Hive.PSModule )
         {
-            If ( $ModulePath -match $String )
+            If ( $Path -match $String -and $Path -match "(Program Files)" )
             {
-                Copy-Item $This.Hive.Manifest -Destination $ModulePath -Verbose
+                "{0},{0}\{1}" -f "FightingEntropy",$This.Version -Split "," | % { 
+                    
+                    If ( ! ( Test-Path "$Path\$_" ) ) 
+                    { 
+                        New-Item -Path "$Path\$_" -ItemType Directory -Verbose
+                    }
+                }
+
+                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose
+                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose
             }
         }
     }

@@ -24,13 +24,12 @@ Class _Manifest
                               "Image Images Updates",
                               "Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " ").Split(" ") | % { "_$_.ps1" })
 
-    [String[]] $Functions = ("Get-FEManifest","Get-FEModule","Get-FEOS","Get-FEHive","Get-FEHost","Get-FEService","Get-XamlWindow","Get-FENetwork",
-                             "Import-MDTModule","Write-Theme","Show-ToastNotification","Get-Certificate","Get-ViperBomb","Get-FEDCPromo",
-                             "Get-FEDCPromoProfile","Remove-FEShare","Add-ACL","New-ACLObject","Install-IISServer","Configure-IISServer",
-                             "New-FECompany","Get-ServerDependency","Get-DiskInfo" | % { "$_.ps1" })
+    [String[]] $Functions = ("Add-ACL","Complete-IISServer","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
+                             "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-Manifest","Get-ServerDependency",
+                             "Get-ViperBomb","Get-XamlWindow","Import-MDTModule","Install-IISServer","New-ACLObject","New-Company","Remove-FEShare",
+                             "Show-ToastNotification","Write-Theme" | % { "$_.ps1" })
 
-    [String[]]   $Control = ( "Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml",
-                              "ServerMod.xml" ) -Split " "
+    [String[]]   $Control = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml","ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
 
     _Manifest([String]$Version)

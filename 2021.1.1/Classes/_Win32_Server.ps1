@@ -10,7 +10,7 @@ Class _Win32_Server
 
     _Win32_Server()
     {
-        $This.Host      = [_Host]::New()
+        $This.Host      = (Get-FEHost)
         $This.Info      = [_Info]::New()
         $This.Tools     = ("ViperBomb Chocolatey MDT WinPE WinADK WDS IIS/BITS ASP.Net DNS DHCP ADDS" -Split " ")
     }
@@ -27,6 +27,6 @@ Class _Win32_Server
     
     GetNetwork()
     {
-        $This.Network   = [_Network]::New()
+        $This.Network   = (Get-FENetwork)
     }
 }

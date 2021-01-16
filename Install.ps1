@@ -1,6 +1,6 @@
 Function Install-FEModule
 {
-    [CmdLetBinding()]Param([Parameter(Mandatory)][String]$Version)
+    [CmdLetBinding()]Param([Parameter()][String]$Version="2021.1.1")
 
     ForEach ( $Item in "OS Manifest RestObject Hive Install" -Split " " )
     {
@@ -10,4 +10,4 @@ Function Install-FEModule
     [_Install]::New($Version)
 }
 
-Install-FEModule -Version 2021.1.1
+Install-FEModule

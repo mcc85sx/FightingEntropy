@@ -148,6 +148,7 @@ Class _Install
 
     _Install([String]$Version)
     {
+        $This.Version            = $Version
         $This.OS                 = [_OS]::New()
         $This.Type               = $This.OS.Type
         $This.Manifest           = [_Manifest]::New($Version)

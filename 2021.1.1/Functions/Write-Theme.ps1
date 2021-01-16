@@ -1,8 +1,17 @@
 Function Write-Theme # Cross Platform
 {
-    [CmdLetBinding()]Param(
-        [Parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)][ValidateNotNullOrEmpty()][Object]$InputObject,
-        [Parameter()][Int32[]]$Palette=@(10,12,15,0))
+    [CmdLetBinding(DefaultParameterSetName = 0 )]
+    Param(
+        [Parameter(ParameterSetName = 0, Position = 0, Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [Object]       $InputObject ,
+        [Parameter(ParameterSetName = 1 )]
+        [Switch]            $Banner ,
+        [Parameter(ParameterSetName = 2 )]
+        [Switch]              $Flag ,
+        [Parameter(ParameterSetName = 0, Position = 1 )]
+        [Int32[]]          $Palette = @(10,12,15,0)
+    )
 
     Class _Block 
     {
@@ -600,6 +609,10 @@ Function Write-Theme # Cross Platform
         }
     }
 
-    $Theme = [_Object]::New($InputObject)
-    $Theme.Draw($Palette)
+    Switch ($PSCmdlet.ParameterSetName)
+    {
+        0 { [_Object]::New($InputObject).Draw($Palette) }
+        1 { [_Banner]::New().Draw() }
+        2 { [_Flag]::New().Draw() }
+    }
 }

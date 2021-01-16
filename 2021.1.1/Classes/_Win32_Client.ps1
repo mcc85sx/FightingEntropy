@@ -10,7 +10,7 @@ Class _Win32_Client
 
     _Win32_Client()
     {
-        $This.Host      = [_Host]::New()
+        $This.Host      = (Get-FEHost)
         $This.Info      = [_Info]::New()
         $This.Tools     = @("ViperBomb","Chocolatey")
     }
@@ -27,6 +27,6 @@ Class _Win32_Client
     
     GetNetwork()
     {
-        $This.Network   = [_Network]::New()
+        $This.Network   = (Get-FENetwork)
     }
 }

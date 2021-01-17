@@ -7,7 +7,7 @@ Function Install-FEModule
     [Parameter(Mandatory)]
     [String]$Version)
 
-    ForEach ( $Item in "OS Manifest RestObject Hive Root Install" -Split " " )
+    ForEach ( $Item in "OS Manifest RestObject Root Hive Install" -Split " " )
     {
         Invoke-Expression ( Invoke-RestMethod "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/$Version/Classes/_$Item.ps1" )
     }

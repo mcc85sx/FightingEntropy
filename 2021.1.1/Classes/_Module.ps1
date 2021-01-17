@@ -5,13 +5,13 @@ Class _Module
     [Object]               $Hive
     
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2021.1.0"
+    [String]            $Version = "2021.1.1"
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date
     [String]             $Status
     [String]               $Type
 
-    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2021.1.0"
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2021.1.1"
     
     [Object[]]          $Classes
     [Object[]]        $Functions
@@ -24,7 +24,7 @@ Class _Module
     {
         $This.OS                 = (Get-FEOS)
         $This.Type               = $This.OS.Type
-        $This.Manifest           = (Get-FEManifest)
+        $This.Manifest           = (Get-FEManifest -Version $This.Version)
         $This.Hive               = (Get-FEHive -Type $This.Type -Version $This.Version)
 
         If ( $This.Type -match "Win32_" )

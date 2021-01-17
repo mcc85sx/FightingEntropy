@@ -605,6 +605,11 @@ Function Get-FENetwork
             
             Return $This.Vendor.VenID[( $MacAddress -Replace "(:|-)" , "" ).SubString(0,6)]
         }
+
+        SweepV4([Object]$Span)
+        {
+            $This.Output = [_PingSweep]::New($This.Network.IPV4.Span).Output | ? Status -eq +
+        }
     }
 
     [_Network]::New()

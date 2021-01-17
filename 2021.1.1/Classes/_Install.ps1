@@ -124,9 +124,12 @@ Class _Install
 
     WriteFiles()
     {
-        ForEach ( $Item in "Classes Functions Control Graphics" -Split " " )
+        ForEach ( $Item in $This.Classes, $This.Functions, $This.Control, $This.Graphics )
         {
-            0..( $This.$($Item).Count - 1 ) | % { $This.Item[$_].Content() }
+            ForEach ( $X in 0..( $Item.Count - 1 ) )
+            {
+                $This.Item[$X].Content() 
+            }
         }
     }
 

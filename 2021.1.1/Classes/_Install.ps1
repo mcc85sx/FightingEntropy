@@ -140,8 +140,8 @@ Class _Install
                     }
                 }
 
-                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose
-                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose
+                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose | Unblock-File
+                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose | Unblock-File
             }
         }
     }

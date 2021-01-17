@@ -7,10 +7,14 @@ Function Install-FEModule
     [Parameter(Mandatory)]
     [String]$Version)
 
+    $Install = @( )
+    
     ForEach ( $Item in "OS Manifest RestObject Root Hive Install" -Split " " )
     {
-        Invoke-Expression ( Invoke-RestMethod "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/$Version/Classes/_$Item.ps1" )
+        $Install += Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/$Version/Classes/_$Item.ps1
     }
+    
+    Invoke-Expression ( $Install -join "`n" )
     
     [_Install]::New($Version)
 }

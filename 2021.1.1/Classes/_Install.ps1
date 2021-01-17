@@ -126,7 +126,7 @@ Class _Install
     {
         ForEach ( $Item in "Classes Functions Control Graphics" -Split " " )
         {
-            0..( $This.$($Item).Count - 1 ) ) | % { $This.Item[$_].Content() }
+            0..( $This.$($Item).Count - 1 ) | % { $This.Item[$_].Content() }
         }
     }
 

@@ -20,11 +20,20 @@ Class _Install
     Hidden [String[]]      $Load
     Hidden [String]      $Output
 
+    [Object[]] BuildType([String]$Type)
+    {
+        Return @( ForEach ( $X in $This.Manifest.$($Type) )
+        {
+            [_RestObject]::New("$($This.Resource)/$Type/$X","$($This.Hive.Path)/$Type/$X")
+        })
+    }
+
     BuildTree()
     {
         ForEach ( $Path in $This.Manifest.Folders )
         {
             $Item = $This.Hive.Path,$Path -join "\"
+
             If ( ! ( Test-Path $Item ) )
             {
                 New-Item $Item -ItemType Directory -Force -Verbose
@@ -32,39 +41,11 @@ Class _Install
             
             Switch ($Path)
             {
-                Classes 
-                {
-                    ForEach ( $X in $This.Manifest.Classes )
-                    {
-                        $This.Classes   += ([_RestObject]::New("$($This.Resource)/Classes/$X","$($This.Hive.Path)/Classes/$X"))
-                    }
-                }
-
-                Functions
-                {
-                    ForEach ( $X in $This.Manifest.Functions )
-                    {
-                        $This.Functions += ([_RestObject]::New("$($This.Resource)/Functions/$X","$($This.Hive.Path)/Functions/$X"))
-                    }
-                }
-
-                Control
-                {
-                    ForEach ( $X in $This.Manifest.Control )
-                    {
-                        $This.Control   += ([_RestObject]::New("$($This.Resource)/Control/$X","$($This.Hive.Path)/Control/$X"))
-                    }
-                }
-
-                Graphics
-                {
-                    ForEach ( $X in $This.Manifest.Graphics )
-                    {
-                        $This.Graphics  += ([_RestObject]::New("$($This.Resource)/Graphics/$X","$($This.Hive.Path)/Graphics/$X"))
-                    }
-                }
-
-                Default {}
+                Classes    { $This.Classes   = $This.BuildType($Path) }
+                Functions  { $This.Functions = $This.BuildType($Path) } 
+                Control    { $This.Control   = $This.BuildType($Path) }
+                Graphics   { $This.Graphics  = $This.BuildType($Path) }
+                Default    {}
             }
         }
     }
@@ -127,21 +108,27 @@ Class _Install
     Scaffold([String]$String)
     {
         $Tree = "FightingEntropy\{0}" -f $This.Version
+        $Path = $This.Hive.PSModule | ? { $_ -match $String }
 
-        ForEach ( $Path in $This.Hive.PSModule )
-        {
-            If ( $Path -match $String -and $Path -match "(Program Files)" )
+        $Path, "$Path\FightingEntropy", "$Path\$Tree" | % { 
+
+            If (!(Test-Path $_))
             {
-                ForEach ( $Item in ("{0},{0}\$($This.Version)" -f "$Path\FightingEntropy").Split(",") )
-                {     
-                    If ( ! ( Test-Path $Item ) ) 
-                    {
-                        New-Item -Path $Item -ItemType Directory -Verbose
-                    }
-                }
+                New-Item -Path $_ -ItemType Directory -Verbose
+            }
+        }
 
-                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose -Force
-                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose -Force
+        Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose -Force
+        Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose -Force
+    }
+
+    WriteFiles()
+    {
+        ForEach ( $Item in "Classes Functions Control Graphics" -Split " " )
+        { 
+            ForEach ( $X in 0..( $Install.$Item.Count - 1 ) )
+            {
+                $Install.$Item[$X].Content()
             }
         }
     }
@@ -152,7 +139,7 @@ Class _Install
         $This.OS                 = [_OS]::New()
         $This.Type               = $This.OS.Type
         $This.Manifest           = [_Manifest]::New($Version)
-        $This.Hive               = [_Hive]::New($This.Type,$Version)
+        $This.Hive               = [_Hive]::New([_OS]::New().Type,$Version)
 
         $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
         $This.Classes            = @( )
@@ -164,5 +151,6 @@ Class _Install
         $This.BuildTree()
         $This.BuildModule()
         $This.BuildManifest()
+        $This.WriteFiles()
     }
 }

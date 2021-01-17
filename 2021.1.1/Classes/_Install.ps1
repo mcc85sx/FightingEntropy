@@ -128,7 +128,7 @@ Class _Install
         {
             ForEach ( $X in 0..( $Item.Count - 1 ) )
             {
-                $This.Item[$X].Content() 
+                $Item[$X].Content()
             }
         }
     }

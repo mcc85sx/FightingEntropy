@@ -21,7 +21,7 @@ Class _OS
 
     [String] GetWinType()
     {
-        Return @( Switch -Regex ( Invoke-Expression "[wmiclass]'\\.\ROOT\CIMV2:Win32_OperatingSystem' | % GetInstances | % Caption" )
+        Return @( Switch -Regex ( Invoke-Expression "[wmiclass]'Win32_OperatingSystem' | % GetInstances | % Caption" )
         {
             "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
         })

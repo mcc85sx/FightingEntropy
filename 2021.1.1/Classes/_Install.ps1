@@ -132,16 +132,16 @@ Class _Install
         {
             If ( $Path -match $String -and $Path -match "(Program Files)" )
             {
-                "{0},{0}\{1}" -f "FightingEntropy",$This.Version -Split "," | % { 
-                    
-                    If ( ! ( Test-Path "$Path\$_" ) ) 
-                    { 
-                        New-Item -Path "$Path\$_" -ItemType Directory -Verbose
+                ForEach ( $Item in ("{0},{0}\$($This.Version)" -f "$Path\FightingEntropy").Split(",") )
+                {     
+                    If ( ! ( Test-Path $Item ) ) 
+                    {
+                        New-Item -Path $Item -ItemType Directory -Verbose
                     }
                 }
 
-                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose | Unblock-File
-                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose | Unblock-File
+                Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose -Force
+                Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose -Force
             }
         }
     }

@@ -19,4 +19,4 @@ Function Install-FEModule
     [_Install]::New($Version)
 }
 
-Install-FEModule -Version 2021.1.1
+$Install = Install-FEModule -Version 2021.1.1

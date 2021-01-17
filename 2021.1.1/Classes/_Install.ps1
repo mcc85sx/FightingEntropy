@@ -110,11 +110,11 @@ Class _Install
         $Tree = "FightingEntropy\{0}" -f $This.Version
         $Path = $This.Hive.PSModule | ? { $_ -match $String }
 
-        $Path, "$Path\FightingEntropy", "$Path\$Tree" | % { 
-
-            If (!(Test-Path $_))
+        ForEach ( $Item in $Path, "$Path\FightingEntropy", "$Path\$Tree" )
+        {
+            If (!(Test-Path $Item))
             {
-                New-Item -Path $_ -ItemType Directory -Verbose
+                New-Item -Path $Item -ItemType Directory -Verbose -Force
             }
         }
 

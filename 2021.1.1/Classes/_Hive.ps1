@@ -1,3 +1,4 @@
+
 Class _Hive
 {
     [String]        $Type
@@ -78,9 +79,6 @@ Class _Hive
         }
 
         $This.Check($This.Root)
-
-        [_Root]::new($This.Root,"FightingEntropy",$Version,"FEModule",$This.Path)
-        
         $This.Check($This.Path)
 
         $This.Manifest = $This.File -f $This.Path,"d"

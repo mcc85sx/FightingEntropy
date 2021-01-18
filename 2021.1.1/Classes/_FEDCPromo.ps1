@@ -115,26 +115,26 @@ Class _FEDCPromo
         $This.Connection                         = [_ADConnection]::New($This.HostMap)
     }
 
-    HostRange()
-    {
-        $This.Range                              = [_PingSweep]::New(
-        ($This.Host.Network.Interface.IPV4 | ? Gateway | % Range | Select -Unique | % Split `n))
-    }
+    #HostRange()
+    #{
+    #    $This.Range                              = [_PingSweep]::New(
+    #    ($This.Host.Network.Interface.IPV4 | ? Gateway | % Range | Select -Unique | % Split `n))
+    #}
 
     _FEDCPromo([Object]$Window,[Int32]$Mode)
     {
         $This.Window                            = $Window
         $This.IO                                = $Window.IO
         $This.Host                              = Get-FEModule | % Role | % Host
-        $This.Host._Network()
-        $This.Network                           = $This.Host.Network
-        $This.HostRange()
-        $This.HostMap                           = $This.Range._Filter()
+        # $This.Host._Network()
+        # $This.Network                           = $This.Host.Network
+        # $This.HostRange()
+        # $This.HostMap                           = $This.Range._Filter()
 
-        If ( $This.Hostmap )
-        {
-            $This.GetADConnection()
-        }
+        # If ( $This.Hostmap )
+        # {
+        #    $This.GetADConnection()
+        # }
 
         $This.Features                          = [_ServerFeatures]::New().Output
 

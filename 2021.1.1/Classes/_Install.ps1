@@ -53,6 +53,7 @@ Class _Install
     BuildModule()
     {
         $This.Load              += "# FightingEntropy.psm1 [Module]"
+        $This.Load              += ""
 
             "{0}.AccessControl {0}.Principal Management.Automation DirectoryServices" -f "Security" -Split " " | % { 
 
@@ -60,29 +61,40 @@ Class _Install
         }
 
         $This.Load              += "using namespace Windows.UI.Notifications"
+        $This.Load              += ""
         $This.Load              += "Add-Type -AssemblyName PresentationFramework"
+        $This.Load              += ""
 
-        $This.Manifest.Classes   | % { 
+        ForEach ( $Class in $This.Manifest.Classes )
+        { 
+            $This.Load          += "<#     Class: $Class"
 
-            $This.Load          += ""
-            $This.Load          += "# Class/$_"
-            $This.Load          += @( Get-Content "$($This.Hive.Path)\Classes\$_" )
+            $This.Classes        | ? Name -eq $Class | % {
+            
+                $This.Load      += " #       URI: $( $_.URI  ) "
+                $This.Load      += " #      Path: $( $_.Path ) #>"
+
+                $This.Load      += ""
+                $This.Load      += $_.Object
+            }
         }
 
-        $This.Manifest.Functions | % {
+        ForEach ( $Function in $This.Manifest.Functions ) 
+        {
+            $This.Load          += "<#  Function: $Function"
 
-            $This.Load          += ""
-            $This.Load          += "# Function/$_"
-            $This.Load          += @( Get-Content "$($This.Hive.Path)\Functions\$_" )
+            $This.Functions      | ? Name -eq $Function | % {
+            
+                $This.Load      += " #       URI: $( $_.URI  ) "
+                $This.Load      += " #      Path: $( $_.Path ) #>"
+                
+                $This.Load      += ""
+                $This.Load      += $_.Object
+            }
         }
 
         $This.Output             = $This.Load -join "`n"
         
-        $This.WriteModule()
-    }
-    
-    WriteModule()
-    {
         Set-Content -Path $This.Hive.Module -Value $This.Output -Force -Verbose
     }
    
@@ -110,27 +122,16 @@ Class _Install
         $Tree = "FightingEntropy\{0}" -f $This.Version
         $Path = $This.Hive.PSModule | ? { $_ -match $String }
 
-        ForEach ( $Item in $Path, "$Path\FightingEntropy", "$Path\$Tree" )
-        {
-            If (!(Test-Path $Item))
+        $Path, "$Path\FightingEntropy", "$Path\$Tree" | % { 
+
+            If (!(Test-Path $_))
             {
-                New-Item -Path $Item -ItemType Directory -Verbose -Force
+                New-Item -Path $_ -ItemType Directory -Verbose
             }
         }
 
         Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose -Force
         Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose -Force
-    }
-
-    WriteFiles()
-    {
-        ForEach ( $Item in $This.Classes, $This.Functions, $This.Control, $This.Graphics )
-        {
-            ForEach ( $X in 0..( $Item.Count - 1 ) )
-            {
-                $Item[$X].Content()
-            }
-        }
     }
 
     _Install([String]$Version)
@@ -141,16 +142,32 @@ Class _Install
         $This.Manifest           = [_Manifest]::New($Version)
         $This.Hive               = [_Hive]::New([_OS]::New().Type,$Version)
 
+        If ( !(Get-ItemProperty -Path $This.Hive.Root))
+        {
+            [_Root]::New($This.Hive.Root,$This.Type,"FightingEntropy",$Version,"FEModule",$This.Hive.Path)
+        }
+
         $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
-        $This.Classes            = @( )
-        $This.Functions          = @( )
-        $This.Control            = @( )
-        $This.Graphics           = @( )
-        $This.Load               = @( )
+
+        New-PSDrive -Name $This.Name -PSProvider FileSystem -Root $This.Hive.Path -Description $This.Name -Verbose
         
-        $This.BuildTree()
+        ForEach ( $Item in "Classes Functions Control Graphics Role" -Split " " )
+        {
+            If ( ! ( Test-Path FightingEntropy:\$Item ) )
+            { 
+                New-Item -Path FightingEntropy:\$Item -ItemType Directory -Force -Verbose
+            }
+
+            Switch ($Item)
+            {
+                Classes    { $This.Classes   = $This.BuildType($Item) }
+                Functions  { $This.Functions = $This.BuildType($Item) }
+                Control    { $This.Control   = $This.BuildType($Item) }
+                Graphics   { $This.Graphics  = $This.BuildType($Item) }
+            }
+        }
+       
         $This.BuildModule()
         $This.BuildManifest()
-        $This.WriteFiles()
     }
 }

@@ -14,9 +14,4 @@ Class _RestObject
         $This.URI     = $URI
         $This.Object  = Invoke-RestMethod -URI $This.URI -Outfile $This.Path -Passthru -Verbose
     }
-
-    Content()
-    {
-        Set-Content -Path $This.Path -Value $This.Object -Verbose
-    }
 }

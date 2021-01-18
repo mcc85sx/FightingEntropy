@@ -1,6 +1,7 @@
 Class _Root
 {
-    Hidden [String[]]     $Names = ("Name Version Provider Date Path Status" -Split " ") 
+    Hidden [String[]]     $Names = ("Name Type Version Provider Date Path Status" -Split " ")
+    [String]               $Type
     [String]               $Name
     [String]            $Version
     [String]           $Provider
@@ -8,8 +9,9 @@ Class _Root
     [String]               $Path
     [String]             $Status
 
-    _Root([String]$Registry,[String]$Name,[String]$Version,[String]$Provider,[String]$Path)
+    _Root([String]$Registry,[String]$Type,[String]$Name,[String]$Version,[String]$Provider,[String]$Path)
     {
+        $This.Type               = $Type
         $This.Name               = $Name
         $This.Version            = $Version
         $This.Provider           = $Provider

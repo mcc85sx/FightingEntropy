@@ -12,6 +12,6 @@ Class _RestObject
         $This.Type    = $URI.Split("/")[-2]
         $This.Name    = $URI.Split("/")[-1]
         $This.URI     = $URI
-        $This.Object  = Invoke-RestMethod -URI $This.URI -Outfile $This.Path -Passthru -Verbose
+        $This.Object  = Invoke-RestMethod -URI $This.URI -Outfile $This.Path -Verbose
     }
 }

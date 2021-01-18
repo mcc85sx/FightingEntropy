@@ -9,7 +9,7 @@ Function Install-FEModule
 
     $Install = @( )
     
-    ForEach ( $Item in "OS Manifest RestObject Root Hive Install" -Split " " )
+    ForEach ( $Item in "OS Root Manifest RestObject Hive Install" -Split " " )
     {
         $Install += Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/$Version/Classes/_$Item.ps1
     }

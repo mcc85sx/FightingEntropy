@@ -128,14 +128,14 @@ Class _Install
         
         Switch -Regex ($This.Type)
         {
-            "Win32"      { $This.Scaffold("Program Files/Windows") } "RHELCentOS" { $This.Scaffold("microsoft") }
+            "Win32"      { $This.Scaffold("(Program Files\\Windows)") } "RHELCentOS" { $This.Scaffold("(microsoft)") }
         }
     }
     
     Scaffold([String]$String)
     {
         $Tree = "FightingEntropy\{0}" -f $This.Version
-        $Path = $This.Hive.PSModule | ? { $_ -match $String }
+        $Path = $This.Hive.PSModule | ? { $_ -match "$String" }
 
         $Path, "$Path\FightingEntropy", "$Path\$Tree" | % { 
 

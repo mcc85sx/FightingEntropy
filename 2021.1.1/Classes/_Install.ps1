@@ -20,34 +20,49 @@ Class _Install
     Hidden [String[]]      $Load
     Hidden [String]      $Output
 
+    _Install([String]$Version)
+    {
+        $This.Version            = $Version
+        $This.OS                 = [_OS]::New()
+        $This.Type               = $This.OS.Type
+        $This.Manifest           = [_Manifest]::New($Version)
+        $This.Hive               = [_Hive]::New([_OS]::New().Type,$Version)
+
+        If ( !(Get-ItemProperty -Path $This.Hive.Root))
+        {
+            [_Root]::New($This.Hive.Root,$This.Type,"FightingEntropy",$Version,"FEModule",$This.Hive.Path)
+        }
+
+        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
+
+        New-PSDrive -Name $This.Name -PSProvider FileSystem -Root $This.Hive.Path -Description $This.Name -Verbose
+        
+        ForEach ( $Item in "Classes Functions Control Graphics Role" -Split " " )
+        {
+            If ( ! ( Test-Path FightingEntropy:\$Item ) )
+            { 
+                New-Item -Path FightingEntropy:\$Item -ItemType Directory -Force -Verbose
+            }
+
+            Switch ($Item)
+            {
+                Classes    { $This.Classes   = $This.BuildType($Item) }
+                Functions  { $This.Functions = $This.BuildType($Item) }
+                Control    { $This.Control   = $This.BuildType($Item) }
+                Graphics   { $This.Graphics  = $This.BuildType($Item) }
+            }
+        }
+       
+        $This.BuildModule()
+        $This.BuildManifest()
+    }
+
     [Object[]] BuildType([String]$Type)
     {
         Return @( ForEach ( $X in $This.Manifest.$($Type) )
         {
             [_RestObject]::New("$($This.Resource)/$Type/$X","$($This.Hive.Path)/$Type/$X")
         })
-    }
-
-    BuildTree()
-    {
-        ForEach ( $Path in $This.Manifest.Folders )
-        {
-            $Item = $This.Hive.Path,$Path -join "\"
-
-            If ( ! ( Test-Path $Item ) )
-            {
-                New-Item $Item -ItemType Directory -Force -Verbose
-            }
-            
-            Switch ($Path)
-            {
-                Classes    { $This.Classes   = $This.BuildType($Path) }
-                Functions  { $This.Functions = $This.BuildType($Path) } 
-                Control    { $This.Control   = $This.BuildType($Path) }
-                Graphics   { $This.Graphics  = $This.BuildType($Path) }
-                Default    {}
-            }
-        }
     }
     
     BuildModule()
@@ -69,13 +84,13 @@ Class _Install
         { 
             $This.Load          += "<#     Class: $Class"
 
-            $This.Classes        | ? Name -eq $Class | % {
+            $This.Classes        | ? Name -match $Class | % {
             
                 $This.Load      += " #       URI: $( $_.URI  ) "
                 $This.Load      += " #      Path: $( $_.Path ) #>"
 
                 $This.Load      += ""
-                $This.Load      += $_.Object
+                $This.Load      += Get-Content $_.Path
             }
         }
 
@@ -83,13 +98,13 @@ Class _Install
         {
             $This.Load          += "<#  Function: $Function"
 
-            $This.Functions      | ? Name -eq $Function | % {
+            $This.Functions      | ? Name -match $Function | % {
             
                 $This.Load      += " #       URI: $( $_.URI  ) "
                 $This.Load      += " #      Path: $( $_.Path ) #>"
                 
                 $This.Load      += ""
-                $This.Load      += $_.Object
+                $This.Load      += Get-Content $_.Path
             }
         }
 
@@ -132,42 +147,5 @@ Class _Install
 
         Copy-Item $This.Hive.Module   -Destination "$Path\$Tree" -Verbose -Force
         Copy-Item $This.Hive.Manifest -Destination "$Path\$Tree" -Verbose -Force
-    }
-
-    _Install([String]$Version)
-    {
-        $This.Version            = $Version
-        $This.OS                 = [_OS]::New()
-        $This.Type               = $This.OS.Type
-        $This.Manifest           = [_Manifest]::New($Version)
-        $This.Hive               = [_Hive]::New([_OS]::New().Type,$Version)
-
-        If ( !(Get-ItemProperty -Path $This.Hive.Root))
-        {
-            [_Root]::New($This.Hive.Root,$This.Type,"FightingEntropy",$Version,"FEModule",$This.Hive.Path)
-        }
-
-        $This.Resource           = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/{0}" -f $Version
-
-        New-PSDrive -Name $This.Name -PSProvider FileSystem -Root $This.Hive.Path -Description $This.Name -Verbose
-        
-        ForEach ( $Item in "Classes Functions Control Graphics Role" -Split " " )
-        {
-            If ( ! ( Test-Path FightingEntropy:\$Item ) )
-            { 
-                New-Item -Path FightingEntropy:\$Item -ItemType Directory -Force -Verbose
-            }
-
-            Switch ($Item)
-            {
-                Classes    { $This.Classes   = $This.BuildType($Item) }
-                Functions  { $This.Functions = $This.BuildType($Item) }
-                Control    { $This.Control   = $This.BuildType($Item) }
-                Graphics   { $This.Graphics  = $This.BuildType($Item) }
-            }
-        }
-       
-        $This.BuildModule()
-        $This.BuildManifest()
     }
 }

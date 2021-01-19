@@ -10,8 +10,13 @@ Class _Win32_Client
     [Bool]               $IsAdmin
     [Object]             $Network
 
-    [Object]            $Services
-    [Object]           $Processes
+    [Object]             $PSDrive
+    [Object]             $Profile
+    Hidden [String[]]      $Tools = ("ViperBomb Chocolatey MDT WinPE WinADK WDS IIS/BITS ASP.Net DNS DHCP ADDS" -Split " ")
+    [Object]                $Tool
+    [Object]             $Feature
+    [Object]             $Service
+    [Object]             $Process
 
     _Win32_Client()
     {

@@ -1,18 +1,28 @@
 Class _Win32_Client
 {
-    [Object] $Host
-    [Object] $Info
-    [Object] $Tools
-    [Object] $Services
-    [Object] $Processes
-    [Object] $Network
-    [Object] $Control
+    [String]                $Name = [Environment]::MachineName.ToLower()
+    [String]                 $DNS
+    [String]             $NetBIOS = [Environment]::UserDomainName.ToLower()
+
+    [String]            $Hostname
+    [String]            $Username = [Environment]::UserName
+    [Object]           $Principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+    [Bool]               $IsAdmin
+    [Object]             $Network
+
+    [Object]            $Services
+    [Object]           $Processes
 
     _Win32_Client()
     {
-        $This.Host      = (Get-FEHost)
-        $This.Info      = [_Info]::New()
-        $This.Tools     = @("ViperBomb","Chocolatey")
+        $This.DNS                 = @($Env:UserDNSDomain,"-")[!$env:USERDNSDOMAIN]
+        $This.Hostname            = @($This.Name;"{0}.{1}" -f $This.Name, $This.DNS)[(Get-CimInstance Win32_ComputerSystem).PartOfDomain].ToLower()
+        $This.IsAdmin             = $This.Principal.IsInRole("Administrator") -or $This.Principal.IsInRole("Administrators")
+        
+        If ( $This.IsAdmin -eq 0 )
+        {
+            Throw "Must run as administrator"
+        }
     }
     
     GetServices()

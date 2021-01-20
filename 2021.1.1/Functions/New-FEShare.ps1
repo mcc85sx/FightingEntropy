@@ -3,7 +3,7 @@ Function New-FEShare
     [CmdLetBinding()]
     Param(
     [ValidateNotNullOrEmpty()]
-    [Parameter(Mandatory)][String]        $Root ,
+    [Parameter(Mandatory)][String]        $Path ,
     [ValidateNotNullOrEmpty()]
     [Parameter(Mandatory)][String]   $ShareName ,
     [Parameter()]         [String] $Description = "[FightingEntropy]://Development Share" )
@@ -19,18 +19,18 @@ Function New-FEShare
         [String]   $NetworkPath
         [String]   $Description = $Null
 
-        _Share([String]$Root,[String]$SMBName,[String]$Description)
+        _Share([String]$Path,[String]$SMBName,[String]$Description)
         {
-            If (!(Test-Path $Root))
+            If (!(Test-Path $Path))
             {
-                 New-Item -Path $Root -ItemType Directory -Verbose
+                 New-Item -Path $Path -ItemType Directory -Verbose
             }
 
-            $This.Root         = Get-Item -Path $Root
+            $This.Root         = Get-Item -Path $Path
         
             If ($This.Root)
             {
-                $This.Path     = $Root
+                $This.Path     = $Path
             }
 
             $This.Description  = $Description
@@ -38,17 +38,6 @@ Function New-FEShare
             Import-Module (Get-MDTModule)
 
             $This.Shares       = Get-MDTPersistentDrive
-        
-            ForEach ( $Share in $This.Shares )
-            {
-                If (!(Test-Path $Share.Path))
-                {
-                    Write-Host "Deployment share missing, removing"
-                    Remove-MDTPersistentDrive -Name $Share.Name -Verbose -EA 0
-                    Remove-PSDrive -Name $Share.Name -Verbose -EA 0
-                    Remove-SMBShare -Path $Share.Path -Verbose -EA 0
-                }
-            }
 
             $This.Hostname     = [Environment]::MachineName
             $This.ShareName    = "{0}$" -f $SMBName.TrimEnd("$")
@@ -85,7 +74,7 @@ Function New-FEShare
 
         NewSMB()
         {
-            If ( $This.ShareName -notin (Get-SMBShare).Name )
+            If ( $This.ShareName -notin ( Get-SMBShare | % Name ) )
             {
                 Write-Host "New-SMBShare $($This.ShareName)"
 
@@ -100,7 +89,7 @@ Function New-FEShare
 
         NewPSD()
         {
-            If ( $This.Name -notin (Get-PSDrive).Name )
+            If ( $This.Name -notin ( Get-PSDrive | % Name ) )
             {
                 Write-Host "New-PSDrive $($This.Name)"
 
@@ -112,6 +101,12 @@ Function New-FEShare
                     NetworkPath    = $This.NetworkPath 
 
                 }                  | % { New-PSDrive @_ | Add-MDTPersistentDrive -Verbose }
+            }
+
+            Else
+            {
+                Write-Host "Drive exists"
+                New-PSDrive -Name $This.Name -Verbose
             }
         }
     }

@@ -1,4 +1,4 @@
-Function Import-MDTModule
+Function Get-MDTModule
 {
     [String]   $Path = "HKLM:\Software\Microsoft\Deployment 4"
         
@@ -22,5 +22,5 @@ Function Import-MDTModule
         Throw "MDT Module not found"
     }
 
-    $Output | Import-Module -Verbose -Force
+    $Output
 }

@@ -115,16 +115,24 @@ Class _Install
    
     BuildManifest()
     {
-        @{  GUID                 = "d2402c18-0529-4e55-919f-ac477c49d4fe"
+        $Item                    = @{  
+        
+            GUID                 = "d2402c18-0529-4e55-919f-ac477c49d4fe"
             Path                 = $This.Hive.Manifest
             ModuleVersion        = $This.Hive.Version
             Copyright            = "(c) 2021 mcc85sx. All rights reserved."
             CompanyName          = "Secure Digits Plus LLC" 
             Author               = "mcc85sx / Michael C. Cook Sr."
             Description          = "Beginning the fight against Identity Theft, and Cybercriminal Activities"
-            RootModule           = $This.Hive.Module
-            
-        }                        | % { New-ModuleManifest @_ }
+            RootModule           = $This.Hive.Module   
+        }
+        
+        If ( $This.OS.Type -match "Win32" )
+        {
+            $Item.RequiredAssemblies = PresentationFramework
+        }
+        
+        New-ModuleManifest @Item
         
         Switch -Regex ($This.Type)
         {

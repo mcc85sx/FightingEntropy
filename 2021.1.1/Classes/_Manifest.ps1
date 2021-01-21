@@ -25,7 +25,7 @@ Class _Manifest
                               "Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " ").Split(" ") | % { "_$_.ps1" })
 
     [String[]] $Functions = ("Add-ACL","Complete-IISServer","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
-                             "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-Manifest","Get-ServerDependency",
+                             "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEManifest","Get-ServerDependency",
                              "Get-ViperBomb","Get-XamlWindow","Import-MDTModule","Install-IISServer","New-ACLObject","New-Company","Remove-FEShare",
                              "Show-ToastNotification","Write-Theme" | % { "$_.ps1" })
 

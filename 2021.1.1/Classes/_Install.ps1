@@ -127,11 +127,6 @@ Class _Install
             RootModule           = $This.Hive.Module   
         }
         
-        If ( $This.OS.Type -match "Win32" )
-        {
-            $Item.RequiredAssemblies = PresentationFramework
-        }
-        
         New-ModuleManifest @Item
         
         Switch -Regex ($This.Type)

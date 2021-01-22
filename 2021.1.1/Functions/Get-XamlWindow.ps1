@@ -2,7 +2,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 {
     [CmdletBinding()]Param(
     [Parameter(Mandatory)]
-    [ValidateSet("Certificate","ADLogin","NewAccount","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","MBWin10","Test")]
+    [ValidateSet("Certificate","ADLogin","NewAccount","FENetwork","FEDCPromo","FEDCFound","FERoot","FEShare","FEService","MBWin10","Test")]
     [String]$Type,
     [Parameter()]
     [Switch]$Return)
@@ -122,7 +122,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     
     Class _XamlObject
     {
-        [String[]]        $Names = ("Certificate ADLogin NewAccount FEDCPromo FEDCFound FERoot FEShare FEService MBWin10 Test" -Split " ")
+        [String[]]        $Names = ("Certificate ADLogin NewAccount FENetwork FEDCPromo FEDCFound FERoot FEShare FEService MBWin10 Test" -Split " ")
         [Object]       $Glossary = [_XamlGlossary]::New().Output
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics")
         [Object]           $Xaml = @{ 
@@ -272,6 +272,259 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Grid>
 </Window>
 '@
+            FENetwork = @'
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Network Utility" Height="800" Width="800" Topmost="True" BorderBrush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style x:Key="SeparatorStyle1" TargetType="{x:Type Separator}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Border Height="24" SnapsToDevicePixels="True" Background="#FF4D4D4D" BorderBrush="Azure" BorderThickness="1,1,1,1" CornerRadius="5,5,5,5"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="LightGreen"/>
+        </Style>
+        <Style TargetType="GroupBox" x:Key="xGroupBox">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="CheckBox" x:Key="xCheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="Label" x:Key="xLabel">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="xButton">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="Info">
+                <MenuItem Name="URL" Header="Resources"/>
+                <MenuItem Name="About" Header="About"/>
+                <MenuItem Name="Site" Header="Company Website"/>
+                <MenuItem Name="Help" Header="Help"/>
+            </MenuItem>
+        </Menu>
+        <GroupBox Grid.Row="1" Style="{StaticResource xGroupBox}">
+            <Grid>
+                <TabControl BorderBrush="Gainsboro" Name="TabControl">
+                    <TabControl.Resources>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TabItem">
+                                        <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="False">
+                                                <Setter TargetName="Border" Property="Background" Value="GhostWhite"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.Resources>
+                    <TabItem Header="Interface">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <GroupBox Grid.Column="0" Header="[ Interface/Adapter(s) ]" Margin="5">
+                                    <DataGrid Margin="5" Name="_InterfaceDataGrid" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="False" SelectionMode="Extended">
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="{x:Type DataGridRow}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="AlternationIndex" Value="0">
+                                                        <Setter Property="Background" Value="White"/>
+                                                    </Trigger>
+                                                    <Trigger Property="AlternationIndex" Value="1">
+                                                        <Setter Property="Background" Value="SkyBlue"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="ToolTip">
+                                                            <Setter.Value>
+                                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Hostname" Width="100" Binding="{Binding Hostname}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Alias" Width="200" Binding="{Binding Alias}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Index" Width="50" Binding="{Binding Index}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Description" Width="75" Binding="{Binding Description}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Status" Width="75" Binding="{Binding Status}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="MacAddress" Width="150" Binding="{Binding MacAddress}" CanUserSort="True" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Vendor" Width="150" Binding="{Binding Vendor}" CanUserSort="True" IsReadOnly="True"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </GroupBox>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="320"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <GroupBox Grid.Row="0" Margin="5" Header="[ IPV4 ]">
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Content="IPAddress"/>
+                                            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Content="Class"/>
+                                            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="Prefix"/>
+                                            <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Content="Netmask"/>
+                                            <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Content="Network"/>
+                                            <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Content="Gateway"/>
+                                            <Label Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" Content="Subnet"/>
+                                            <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" Content="Broadcast"/>
+                                            <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Content="HostRange"/>
+                                            <Label Name ="_V4IPAddress" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name ="_V4Class" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name ="_V4Prefix" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name="_V4NetMask" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name ="_V4Network" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name="_V4Gateway" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name="_V4Subnet" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name="_V4Broadcast" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name="_V4HostRange" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </GroupBox>
+                                    <GroupBox Grid.Row="1" Header="[ IPV6 ]" Margin="5">
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Content="IPAddress"/>
+                                            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Content="Prefix"/>
+                                            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="Link"/>
+                                            <Label Name ="_V6IPAddress" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name ="_V6Prefix" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"/>
+                                            <Label Name ="_V6Link" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </GroupBox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Style="{StaticResource xGroupBox}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Style="{StaticResource xButton}" Name="Start" Content="Start"/>
+                <Button Grid.Column="2" Style="{StaticResource xButton}" Name="Cancel" Content="Cancel"/>
+                <GroupBox Grid.Column="3" Header="[Module Version]" Foreground="Black" Margin="5">
+                    <ComboBox Name="ModuleCfg" Height="24" SelectedIndex="0" IsEnabled="False">
+                        <ComboBoxItem Content="DevOPS (MC/SDP v1.0)" IsSelected="True"/>
+                    </ComboBox>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
+'@
+
             FEDCFound            = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="500" Height="260" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
     <Window.Resources>

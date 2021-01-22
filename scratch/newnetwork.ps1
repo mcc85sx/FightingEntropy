@@ -1,5 +1,5 @@
-Function Get-FENetwork
-{
+#Function Get-FENetwork
+#{
     # Gather classes for controller
 
     Class _VendorList # Obtains hardware vendor list to convert MacAddress to correct vendor name
@@ -68,6 +68,7 @@ Function Get-FENetwork
         _NbtReferenceObject([String]$In)
         {
             $This.ID, $This.Type, $This.Service = $In -Split "/"
+            $This.ID = "<$($This.ID)>"
         }
     }
 
@@ -134,46 +135,40 @@ Function Get-FENetwork
         }
     }
 
-    Class _ArpHostObject # Used to identify ARP network hosts
+    Class _NbtStat
     {
-        [String]       $Hostname
-        [String]      $IpAddress
-        [String]     $MacAddress
-        [String]         $Vendor
+        Hidden [Object] $Alias
+        Hidden [Object] $Table
+        Hidden [Object] $Section
+        [Object] $Output
 
-        _ArpHostObject([String]$Line)
+        _NbtStat([Object[]]$Interface)
         {
-            $This.IpAddress  = $This.Line.Substring( 0,24).Replace(" ","")
-            $This.MacAddress = $This.Line.Substring(24,17)
-        }
+            $This.Alias   = $Interface.Alias | % { "{0}:" -f $_ }
+            $This.Table   = nbtstat -N
+            $This.Section = @{ }
+            $X            = -1
 
-        GetHostName()
-        {
-            $This.Hostname   = Resolve-DNSName $This.IpAddress | % Namehost
-        }
+            ForEach ( $Line in $This.Table )
+            {
+                If ( $Line -in $This.Alias )
+                {
+                    $X ++
+                    $This.Section.Add($X,[_NbtTable]::New($Line))
+                }
 
-        GetVendor([Object]$Vendor)
-        {
-            $This.Vendor     = $Vendor.VenID[ ( $This.MacAddress -Replace "(-|:)","" | % Substring 0 6 ) ]
-        }
-    }
+                ElseIf ( $Line -match "Node IpAddress" )
+                {
+                    $This.Section[$X].NodeIp($Line)
+                }
+    
+                ElseIf ( $Line -match "Registered" )
+                {
+                    $This.Section[$X].AddHost($Line)
+                }
+            }
 
-    Class _ArpTable
-    {
-        [String]      $Name
-        [String] $IpAddress
-        [Object]     $Hosts
-
-        _ArpTable([String]$Line)
-        {
-            $This.IPAddress = $Line.Replace("Interface: ","").Split(" ")[0]
-            $This.Name      = $Line.Split(" ")[-1]
-            $This.Hosts     = @( )
-        }
-
-        AddHost([String]$Line)
-        {
-            $This.Hosts += [_ArpHostObject]::New($Line)
+            $This.Output = $This.Section | % GetEnumerator | Sort-Object Name | % Value
         }
     }
 
@@ -400,8 +395,10 @@ Function Get-FENetwork
         [String] $Status
         [String] $MacAddress
         [String] $Vendor
-        [Object] $IPV4
-        [Object] $IPV6
+        [Object] $IPv4
+        [Object] $IPv6
+        [Object] $Nbt
+        [Object] $Arp
 
         _NetInterface([Object]$Interface)
         {
@@ -446,42 +443,49 @@ Function Get-FENetwork
         {
             $This.Vendor = $Vendor.VenID[ ( $This.MacAddress -Replace "(-|:)","" | % Substring 0 6 ) ]
         }
+
+        Load([Object]$Nbt,[Object]$Arp)
+        {
+            $This.Nbt = $Nbt
+            $This.Arp = $Arp
+        }
     }
 
-    Class _NbtStat
+    Class _ArpHostObject # Used to identify ARP network hosts
     {
-        Hidden [Object] $Alias
-        Hidden [Object] $Table
-        Hidden [Object] $Section
-        [Object] $Output
+        [String]       $Hostname
+        [String]      $IpAddress
+        [String]     $MacAddress
+        [String]         $Vendor
 
-        _NbtStat([Object[]]$Interface)
+        _ArpHostObject([String]$Line)
         {
-            $This.Alias   = $Interface.Alias | % { "{0}:" -f $_ }
-            $This.Table   = nbtstat -N
-            $This.Section = @{ }
-            $X            = -1
+            $This.IpAddress  = $Line.Substring( 0,24).Replace(" ","")
+            $This.MacAddress = $Line.Substring(24,17)
+        }
 
-            ForEach ( $Line in $This.Table )
-            {
-                If ( $Line -in $This.Alias )
-                {
-                    $X ++
-                    $This.Section.Add($X,[_NbtTable]::New($Line))
-                }
+        GetHostName()
+        {
+            $This.Hostname   = Resolve-DNSName $This.IpAddress | % Namehost
+        }
 
-                ElseIf ( $Line -match "Node IpAddress" )
-                {
-                    $This.Section[$X].NodeIp($Line)
-                }
-    
-                ElseIf ( $Line -match "Registered" )
-                {
-                    $This.Section[$X].AddHost($Line)
-                }
-            }
+        GetVendor([Object]$Vendor)
+        {
+            $This.Vendor     = $Vendor.VenID[ ( $This.MacAddress -Replace "(-|:)","" | % Substring 0 6 ) ]
+        }
+    }
 
-            $This.Output = $This.Section | % GetEnumerator | Sort-Object Name | % Value
+    Class _ArpTable
+    {
+        [String]      $Name
+        [String] $IpAddress
+        [Object]     $Hosts
+
+        _ArpTable([String]$Line)
+        {
+            $This.Name      = $Line.Split(" ")[-1]
+            $This.IPAddress = $Line.Replace("Interface: ","").Split(" ")[0]
+            $This.Hosts     = @( )
         }
     }
 
@@ -507,10 +511,11 @@ Function Get-FENetwork
             {
                 If ( $Line -in $This.Alias )
                 {
-                    $This.Section.Add( $X++,[_ArpTable]::New($Line))
+                    $X ++
+                    $This.Section.Add( $X,[_ArpTable]::New($Line))
                 }
 
-                ElseIf ( $Line -match "static" )
+                ElseIf ( $Line -match "(static|dynamic)" )
                 {
                     $This.Section[$X].Hosts += [_ArpHostObject]::New($Line)
                 }
@@ -522,11 +527,12 @@ Function Get-FENetwork
 
     Class _Controller
     {
-        [Object]      $VendorList
-        [Object]    $NbtReference
-        [Object]       $Interface
-        [Object]             $Nbt
-        [Object]             $Arp
+        Hidden [Object]      $VendorList
+        Hidden [Object]    $NbtReference
+        Hidden [Object]             $Nbt
+        Hidden [Object]             $Arp
+        [Object]              $Interface
+        [Object]                $Network
 
         _Controller()
         {
@@ -544,8 +550,71 @@ Function Get-FENetwork
                 $This.Interface += $Adapter
             }
             
-            $This.NBT            = [_NbtStat]::New($This.Interface)
-            $This.ARP            = [_ArpStat]::New($This.Interface)
+            $This.NBT            = [_NbtStat]::New($This.Interface).Output
+            $This.ARP            = [_ArpStat]::New($This.Interface).Output
+
+            ForEach ( $Interface in $This.NBT )
+            {
+                ForEach ( $xHost in $Interface.Hosts )
+                {
+                    $xHost.Service = $This.NBTReference | ? ID -match $xHost.ID | ? Type -eq $xHost.Type | % Service
+                }
+            }
+
+            ForEach ( $I in 0..( $This.Interface.Count - 1 ) )
+            {
+                $This.Interface[$I].Load($This.NBT[$I].Hosts,$This.ARP[$I].Hosts)
+            }
+        }
+
+        Report()
+        {
+            ForEach ( $Interface in $This.Interface )
+            {
+                $Interface | % { 
+                    
+                    Write-Theme @(
+                    "Interface [$($_.Alias)]",
+                    " ",
+                    "[Host Information]";
+                    @{
+                        Hostname    = $_.Hostname
+                        Alias       = $_.Alias
+                        Index       = $_.Index
+                        Description = $_.Description
+                        Status      = $_.Status
+                        MacAddress  = $_.MacAddress
+                        Vendor      = $_.Vendor
+                    };
+                    " ",
+                    "[IPv4 Information]";
+                    ForEach ( $IPV4 in $_.IPV4 )
+                    {
+                        @{ 
+                            IPAddress   = $IPV4.IPAddress
+                            Class       = $IPV4.Class
+                            Prefix      = $IPV4.Prefix
+                            Netmask     = $IPV4.Netmask
+                            Network     = $IPV4.Network
+                            Gateway     = $IPV4.Gateway
+                            Subnet      = $IPV4.Subnet
+                            Broadcast   = $IPV4.Broadcast
+                            HostRange   = $IPV4.HostRange
+                        }
+                    };
+                    " ",
+                    "[IPv6 Information]";
+                    ForEach ( $IPV6 in $_.IPV6 )
+                    {
+                        @{
+                            IPAddress = $IPV6.IPAddress
+                            Prefix    = $IPV6.Prefix
+                        }  
+                    })
+
+                    Start-Sleep -Seconds 2
+                }
+            }
         }
     }
 

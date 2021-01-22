@@ -1,5 +1,5 @@
-#Function Get-FENetwork
-#{
+Function Get-FENetwork
+{
     # Gather classes for controller
 
     Class _VendorList # Obtains hardware vendor list to convert MacAddress to correct vendor name
@@ -31,7 +31,7 @@
 
                     $This.File = Invoke-RestMethod -URI $Path
                 
-                    If ( ! $This.File  )
+                    If ( ! $This.File )
                     {
                         Throw "Invalid URL"
                     }
@@ -135,7 +135,7 @@
         }
     }
 
-    Class _NbtStat
+    Class _NbtStat # Parses/Formats nbtstat -N
     {
         Hidden [Object] $Alias
         Hidden [Object] $Table
@@ -180,7 +180,7 @@
         [String]      $IPAddress
         [String]       $Hostname
 
-        _PingObject([UInt32]$Index,[String]$Address,[Object]$Reply)
+        _V4PingObject([UInt32]$Index,[String]$Address,[Object]$Reply)
         {
             $This.Reply          = $Reply.Result
             $This.Index          = $Index
@@ -370,6 +370,11 @@
             $This.Broadcast = ( $This.Subnet | % { ( $_ -Split "/" )[0] } )[-1]
             $This.GetHostRange()
         }
+
+        [Object[]] ScanV4()
+        {
+            Return @( [_V4PingSweep]::New($This.HostRange).Output | ? Status -eq + )
+        }
     }
 
     Class _V6Network
@@ -457,16 +462,13 @@
         [String]      $IpAddress
         [String]     $MacAddress
         [String]         $Vendor
+        [String]           $Type
 
         _ArpHostObject([String]$Line)
         {
-            $This.IpAddress  = $Line.Substring( 0,24).Replace(" ","")
-            $This.MacAddress = $Line.Substring(24,17)
-        }
-
-        GetHostName()
-        {
-            $This.Hostname   = Resolve-DNSName $This.IpAddress | % Namehost
+            $This.IpAddress  = $Line | % Substring  2 22 | % Replace " ",""
+            $This.MacAddress = $Line | % Substring 24 17
+            $This.Type       = $Line | % Substring 46
         }
 
         GetVendor([Object]$Vendor)
@@ -563,8 +565,34 @@
 
             ForEach ( $I in 0..( $This.Interface.Count - 1 ) )
             {
-                $This.Interface[$I].Load($This.NBT[$I].Hosts,$This.ARP[$I].Hosts)
+                $IPAddress  = $This.Interface[$I].IPV4.IPAddress
+
+                $xNbt       = $This.Nbt | ? IpAddress -match $IpAddress | % Hosts
+                $xArp       = $This.Arp | ? IpAddress -match $IpAddress | % Hosts
+
+                ForEach ( $Item in $xArp )
+                {
+                    If ( $Item.Type -match "static" )
+                    {
+                        $Item.Hostname = "-"
+                        $Item.Vendor   = "-"
+                    }
+
+                    If ( $Item.Type -match "dynamic" )
+                    {
+                        $Item.GetVendor($This.VendorList)
+
+                        If ( !$Item.Vendor )
+                        {
+                            $Item.Vendor = "<unknown>"
+                        }
+                    }
+                }
+
+                $This.Interface[$I].Load($xNbt,$xArp)
             }
+
+            $This.Network = $This.Interface | ? { $_.IPV4.Gateway }
         }
 
         Report()
@@ -576,7 +604,7 @@
                     Write-Theme @(
                     "Interface [$($_.Alias)]",
                     " ",
-                    "[Host Information]";
+                    "---- Host Information ---------------------------";
                     @{
                         Hostname    = $_.Hostname
                         Alias       = $_.Alias
@@ -587,7 +615,7 @@
                         Vendor      = $_.Vendor
                     };
                     " ",
-                    "[IPv4 Information]";
+                    "---- IPv4 Information ---------------------------";
                     ForEach ( $IPV4 in $_.IPV4 )
                     {
                         @{ 
@@ -603,7 +631,7 @@
                         }
                     };
                     " ",
-                    "[IPv6 Information]";
+                    "---- IPv6 Information ---------------------------";
                     ForEach ( $IPV6 in $_.IPV6 )
                     {
                         @{
@@ -617,5 +645,3 @@
             }
         }
     }
-
-    $Control = [_Controller]::New()

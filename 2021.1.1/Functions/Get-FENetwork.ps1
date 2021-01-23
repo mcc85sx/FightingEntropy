@@ -458,6 +458,7 @@ Function Get-FENetwork
 
     Class _ArpHostObject # Used to identify ARP network hosts
     {
+        Hidden [String]    $Line
         [String]       $Hostname
         [String]      $IpAddress
         [String]     $MacAddress
@@ -466,9 +467,10 @@ Function Get-FENetwork
 
         _ArpHostObject([String]$Line)
         {
-            $This.IpAddress  = $Line | % Substring  2 22 | % Replace " ",""
-            $This.MacAddress = $Line | % Substring 24 17
-            $This.Type       = $Line | % Substring 46
+            $This.Line       = $Line
+            $This.IpAddress  = $This.Line.Substring(2,22).Replace(" ","")
+            $This.MacAddress = $This.Line.Substring(24,17)
+            $This.Type       = $This.Line.Substring(46)
         }
 
         GetVendor([Object]$Vendor)

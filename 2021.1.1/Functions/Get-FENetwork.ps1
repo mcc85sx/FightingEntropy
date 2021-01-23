@@ -298,20 +298,20 @@ Function Get-FENetwork
             }) -join "."
         }
 
-        IPCheck()
-        {
-            $Item = [IPAddress]$This.IPAddress | % GetAddressBytes
+        #IPCheck()
+        #{
+        #    $Item = [IPAddress]$This.IPAddress | % GetAddressBytes
             
-            If ( $Item[0] -in @(0,127;224..255) )
-            {
-                Throw "Invalid Address Detected"
-            }
+        #    If ( $Item[0] -in @(0,127;224..255) )
+        #    {
+        #        Throw "Invalid Address Detected"
+        #    }
 
-            If ( ( $Item[0..1] -join '.' ) -eq "169.254" )
-            {
-                Throw "Automatic Private IP Address Detected"
-            }
-        }
+        #    If ( ( $Item[0..1] -join '.' ) -eq "169.254" )
+        #    {
+        #        Throw "Automatic Private IP Address Detected"
+        #    }
+        #}
 
         GetHostRange()
         {
@@ -359,7 +359,7 @@ Function Get-FENetwork
             }
 
             $This.IPAddress = $Address.IPAddress
-            $This.IPCheck()
+          # $This.IPCheck()
             $This.Class     = @('N/A';@('A')*126;'Local';@('B')*64;@('C')*32;@('MC')*16;@('R')*15;'BC')[[Int32]$This.IPAddress.Split(".")[0]]
             $This.Prefix    = $Address.PrefixLength
             $This.Netmask   = $This.GetNetMask($This.Prefix)

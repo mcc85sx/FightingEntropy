@@ -764,6 +764,17 @@ Function Get-FENetwork
         }
     }
 
+    Class _DGList
+    {
+        [String] $Name
+        [Object] $Value
+        _DGList([String]$Name,[Object]$Value)
+        {
+            $This.Name  = $Name
+            $This.Value = $Value
+        }
+    }
+
     Class _FENetwork
     {
         [Object] $Window
@@ -777,25 +788,48 @@ Function Get-FENetwork
             $This.Control                       = [_Controller]::New()
         }
 
+        [Object] HostInfo([Object]$Interface)
+        {
+            Return @( 
+
+                ("Hostname"    , $Interface.Hostname        ),
+                ("Alias"       , $Interface.Alias           ),
+                ("Index"       , $Interface.Index           ),
+                ("Description" , $Interface.Description     ),
+                ("Status"      , $Interface.Status          ),
+                ("MacAddress"  , $Interface.MacAddress      ),
+                ("Vendor"      , $Interface.Vendor          ) | % { [_DgList]::New($_[0],$_[1]) } 
+            )
+        }
+
+        [Object] IPV4Info([Object]$Interface)
+        {
+            Return @( 
+
+                ("Address"     , $Interface.IPV4.IPAddress  ),
+                ("Class"       , $Interface.IPV4.Class      ),
+                ("Prefix"      , $Interface.IPV4.Prefix     ),
+                ("Netmask"     , $Interface.IPV4.Netmask    ),
+                ("Network"     , $Interface.IPV4.Network    ),
+                ("Gateway"     , $Interface.IPV4.Gateway    ),
+                ("Broadcast"   , $Interface.IPV4.Broadcast  ) | % { [_DgList]::New($_[0],$_[1]) } 
+            )
+        }
+
+        [Object] IPV6Info([Object]$Interface)
+        {
+            Return @( 
+
+                ("Address"     , $Interface.IPV6.IPAddress  ),
+                ("Prefix"      , $Interface.IPV6.Prefix     ) | % { [_DgList]::New($_[0],$_[1]) } 
+            )
+        }
+
         Stage([Object]$Interface)
         {
-            $This.IO._Hostname.Content          = $Interface.Hostname
-            $This.IO._Alias.Content             = $Interface.Alias   
-            $This.IO._Index.Content             = $Interface.Index
-            $This.IO._Description.Content       = $Interface.Description
-            $This.IO._Status.Content            = $Interface.Status
-            $This.IO._MacAddress.Content        = $Interface.MacAddress
-            $This.IO._Vendor.Content            = $Interface.Vendor
-            $This.IO._V4IPAddress.Content       = $Interface.IPV4.IPAddress
-            $This.IO._V4Class.Content           = $Interface.IPV4.Class
-            $This.IO._V4Prefix.Content          = $Interface.IPV4.Prefix
-            $This.IO._V4Netmask.Content         = $Interface.IPV4.Netmask
-            $This.IO._V4Network.Content         = $Interface.IPV4.Network
-            $This.IO._V4Gateway.Content         = $Interface.IPV4.Gateway
-            $This.IO._V4Broadcast.Content       = $Interface.IPV4.Broadcast
-            $This.IO._V4HostRange.Content       = $Interface.IPV4.HostRange
-            $This.IO._V6IPAddress.Content       = $Interface.IPV6.IPAddress
-            $This.IO._V6Prefix.Content          = $Interface.IPV6.Prefix
+            $This.IO._HostInfo.ItemsSource      = $This.HostInfo($Interface)
+            $This.IO._IPV4Info.ItemsSource      = $This.IPV4Info($Interface)
+            $This.IO._IPV6Info.ItemsSource      = $This.IPV6Info($Interface)
             $This.IO._Nbt.ItemsSource           = $Interface.Nbt
             $This.IO._Arp.ItemsSource           = $Interface.Arp
         }

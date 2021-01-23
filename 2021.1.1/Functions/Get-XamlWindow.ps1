@@ -984,6 +984,9 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Left" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.Background>

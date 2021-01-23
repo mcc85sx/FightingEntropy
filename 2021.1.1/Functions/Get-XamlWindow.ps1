@@ -273,7 +273,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 '@
             FENetwork = @'
-            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Network Utility" Height="800" Width="1000" Topmost="True" BorderBrush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Network Utility" Height="800" Width="1000" Topmost="True" BorderBrush="Black" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -372,7 +372,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Window.Resources>
     <Grid>
         <Grid.Background>
-            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2020.12.0\Graphics\background.jpg"/>
+            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics\background.jpg"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>

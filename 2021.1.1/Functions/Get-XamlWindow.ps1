@@ -616,6 +616,14 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="LightGreen"/>
         </Style>
+        <Style TargetType="TextBox" x:Key="LTextBox">
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Left" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.Background>
@@ -761,28 +769,28 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="[Domain Name]" Name="_DomainName">
-                                <TextBox Height="20" Margin="5" Name="DomainName"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="DomainName"/>
                             </GroupBox>
                             <GroupBox Grid.Row="1" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
-                                <TextBox Height="20" Margin="5" Name="DomainNetBIOSName"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="DomainNetBIOSName"/>
                             </GroupBox>
                             <GroupBox Grid.Row="2" Header="[New Domain Name]" Name="_NewDomainName">
-                                <TextBox Height="20" Margin="5" Name="NewDomainName"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="NewDomainName"/>
                             </GroupBox>
                             <GroupBox Grid.Row="3" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSName">
-                                <TextBox Height="20" Margin="5" Name="NewDomainNetBIOSName"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="NewDomainNetBIOSName"/>
                             </GroupBox>
                             <GroupBox Grid.Row="4" Header="[Site Name]" Name="_SiteName">
-                                <TextBox Height="20" Margin="5" Name="SiteName"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="SiteName"/>
                             </GroupBox>
                             <GroupBox Grid.Row="5" Header="[Database Path]" Name="_DatabasePath">
-                                <TextBox Height="20" Margin="5" Name="DatabasePath"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="DatabasePath"/>
                             </GroupBox>
                             <GroupBox Grid.Row="6" Header="[Sysvol Path]" Name="_SysvolPath">
-                                <TextBox Height="20" Margin="5" Name="SysvolPath"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="SysvolPath"/>
                             </GroupBox>
                             <GroupBox Grid.Row="7" Header="[Log Path]" Name="_LogPath">
-                                <TextBox Height="20" Margin="5" Name="LogPath"/>
+                                <TextBox Style="{StaticResource LTextBox}" Name="LogPath"/>
                             </GroupBox>
                             <GroupBox Grid.Row="8" Header="[Credential]" Name="_Credential">
                                 <Grid>
@@ -791,7 +799,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                         <ColumnDefinition Width="3*"/>
                                     </Grid.ColumnDefinitions>
                                     <Button Content="Credential" Style="{StaticResource xButton}" Name="CredentialButton" Grid.Column="0"/>
-                                    <TextBox Height="20" Margin="5" Name="Credential" Grid.Column="1"/>
+                                    <TextBox Style="{StaticResource LTextBox}" Name="Credential" Grid.Column="1"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Grid.Row="9" Header="[Directory Services Recovery Mode Administrator (Password/Confirm)]">
@@ -800,8 +808,8 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <PasswordBox Grid.Column="0" Name="SafeModeAdministratorPassword" Margin="5,0,5,0" Height="20" PasswordChar="*"/>
-                                    <PasswordBox Grid.Column="1" Name="Confirm" Height="20" Margin="5,0,5,0" PasswordChar="*"/>
+                                    <PasswordBox Grid.Column="0" HorizontalContentAlignment="Left" Name="SafeModeAdministratorPassword" Margin="5,0,5,0" Height="20" PasswordChar="*"/>
+                                    <PasswordBox Grid.Column="1" HorizontalContentAlignment="Left" Name="Confirm" Height="20" Margin="5,0,5,0" PasswordChar="*"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Grid.Row="10" Header="[Initialize]">

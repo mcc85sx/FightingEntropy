@@ -633,6 +633,8 @@ Function Get-FENetwork
             $This.PingObject = $PingObject
             $This.IPAddress  = $PingObject.IPAddress
             $This.HostName   = $PingObject.Hostname
+
+            Write-Host ( "[~] {0}" -f $PingObject.Hostname )
             $This.NetBIOS    = nbtstat -A $PingObject.IPAddress
         }
     }
@@ -647,6 +649,7 @@ Function Get-FENetwork
         [Object]                $Network
         [Object]                $NetStat
         [Object]                $HostMap
+        [Object]                $NbtScan
 
         _Controller()
         {
@@ -738,8 +741,13 @@ Function Get-FENetwork
         NetBIOSScan()
         {
             $This.RefreshIPv4Scan()
+            
+            If ( !$This.Hostmap )
+            {
+                Throw "No hosts detected"
+            }
 
-            Foreach ( $Item in $This.HostMap )
+            $This.NBTScan = Foreach ( $Item in $This.HostMap )
             {
                 [_NetworkHost]::New($Item)
             }

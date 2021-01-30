@@ -56,8 +56,7 @@ Class _Module
         
         Foreach ( $Item in @{ Function = $This.Functions ; Class = $This.Classes }[$Type] )
         {
-            Write-Host ( "Loading {0}" -f $Item.Name )
-            Import-Module $Item.FullName
+            Import-Module -Path $Item.FullName -Verbose
         }
     }
 }

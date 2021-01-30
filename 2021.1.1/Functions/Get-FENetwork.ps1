@@ -755,11 +755,11 @@ Function Get-FENetwork
                 Throw "No hosts detected"
             }
 
-            $This.NBTScan = @( )
+            $This.NBTScan            = @( )
 
-            $This.HostMap | % { 
+            $This.HostMap            | % { 
             
-                $Item     = [_NetworkHost]::New($_)
+                $Item                = [_NetworkHost]::New($_)
                 
                 If ( $Item.NetBIOS.Count -gt 0 )
                 {
@@ -768,6 +768,8 @@ Function Get-FENetwork
                         $Obj.Service = $This.NbtReference | ? ID -match $Obj.ID | ? Type -match $Obj.Type | % Service
                     }
                 }
+
+                $This.NBTScan       += $Item
             }   
         }
 

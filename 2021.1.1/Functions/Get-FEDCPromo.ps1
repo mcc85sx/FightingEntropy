@@ -2,17 +2,7 @@ Function Get-FEDCPromo
 {
     Write-Theme "Loading Network [:] Domain Controller Initialization"
 
-    $Time                 = [System.Diagnostics.Stopwatch]::StartNew()
     $UI                   = [_FEDCPromo]::New((Get-FEModule))
-    $Time.Stop()
-
-    Write-Theme @("Scan [:] Complete";("-"*17 -join '');@{ 
-    
-        "Time Elapsed"    = $Time.Elapsed
-        "Detected Hosts"  = $UI.HostMap.Count
-        "Not On Domain"   = ($UI.HostMap | ? NBT -eq $Null).Count
-        "On Domain"       = ($UI.HostMap | ? NBT -ne $Null).Count
-    })
 
     $UI.IO.Forest.Add_Click({$UI.SetMode(0)})
     $UI.IO.Tree.Add_Click({$UI.SetMode(1)})
@@ -55,7 +45,7 @@ Function Get-FEDCPromo
             $DC.IO.DialogResult         = $True
         })
 
-        $DC.Invoke()
+        $DC.Window.Invoke()
 
         If ( $UI.Connection.Target )
         {

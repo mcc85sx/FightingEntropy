@@ -630,6 +630,7 @@ Function Get-FENetwork
         [Object]              $Interface
         [Object]                $Network
         [Object]                $NetStat
+        [Object]                $HostMap
 
         _Controller()
         {
@@ -708,9 +709,12 @@ Function Get-FENetwork
             Else
             {
                 Write-Host "Scanning available IPv4 network(s)..."
+                
+                $This.Hostmap = @( )
                 ForEach ( $Item in $This.Network.IPv4.ScanV4() )
                 {
                     $This.Network.Arp | ? IpAddress -match $Item.IpAddress | % { $_.HostName = $Item.Hostname }
+                    $This.HostMap += $Item
                 }
             }
         }

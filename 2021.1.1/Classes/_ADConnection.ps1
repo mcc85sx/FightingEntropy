@@ -8,18 +8,25 @@ Class _ADConnection
     [Object] $Output
     [Object] $Return
 
-    _ADConnection([Object]$Hostmap)
+    _ADConnection([Object]$DomainController,[Object]$GlobalBrowser)
     {
-        $This.Primary                        = $HostMap | ? { $_.NBT.ID -match "1b" }
-        $This.Secondary                      = $HostMap | ? { $_.NBT.ID -match "1c" }
+        $This.Primary                        = $DomainController
+        $This.Secondary                      = $GlobalBrowser
         $This.Swap                           = @( )
         
         $This.Target                         = $Null
         $This.Credential                     = $Null
 
-        If ( $This.Primary   ) { $This.Swap += $This.Primary   }
-        If ( $This.Secondary ) { $This.Swap += $This.Secondary }
+        If ( $This.Primary )
+        { 
+            $This.Swap += $This.Primary   
+        }
+        
+        If ( $This.Secondary )
+        { 
+            $This.Swap += $This.Secondary 
+        }
 
-        $This.Output                         = $This.Swap  | Select-Object -Unique IPAddress, Hostname, NetBIOS
+        $This.Output                         = $This.Swap | Select-Object -Unique
     }
 }

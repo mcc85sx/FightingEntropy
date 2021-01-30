@@ -1,6 +1,6 @@
 Function Get-FEDCPromo
 {
-    Write-Theme "Loading Network [:] Domain Controller Initialization"
+    Write-Host "Loading Network [~] FightingEntropy Domain Controller Promotion Tool"
 
     $UI                   = [_FEDCPromo]::New((Get-FEModule))
 

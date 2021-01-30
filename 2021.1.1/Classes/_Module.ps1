@@ -60,6 +60,6 @@ Class _Module
             $Collect += (Get-Content $Item.FullName)
         }
         
-        Invoke-Expression $Collect
+        Invoke-Expression ( $Collect -join "`n" )
     }
 }

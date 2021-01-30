@@ -621,6 +621,22 @@ Function Get-FENetwork
         }
     }
 
+    Class _NetworkHost
+    {
+        Hidden [Object] $PingObject
+        [String]         $IPAddress
+        [String]          $Hostname
+        [Object]           $NetBIOS
+
+        _NetworkHost([Object]$PingObject)
+        {
+            $This.PingObject = $PingObject
+            $This.IPAddress  = $PingObject.IPAddress
+            $This.HostName   = $PingObject.Hostname
+            $This.NetBIOS    = nbtstat -A $PingObject.IPAddress
+        }
+    }
+
     Class _Controller
     {
         Hidden [Object]      $VendorList
@@ -716,6 +732,16 @@ Function Get-FENetwork
                     $This.Network.Arp | ? IpAddress -match $Item.IpAddress | % { $_.HostName = $Item.Hostname }
                     $This.HostMap += $Item
                 }
+            }
+        }
+
+        NetBIOSScan()
+        {
+            $This.RefreshIPv4Scan()
+
+            Foreach ( $Item in $This.HostMap )
+            {
+                [_NetworkHost]::New($Item)
             }
         }
 

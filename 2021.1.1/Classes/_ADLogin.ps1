@@ -17,10 +17,10 @@ Class _ADLogin
     [Object]                            $Searcher
     [Object]                              $Result
 
-    _ADLogin([Object]$Window,[Object]$Target)
+    _ADLogin([Object]$Target)
     {
-        $This.Window       = $Window
-        $This.IO           = $Window.IO
+        $This.Window       = Get-XamlWindow -Type ADLogin
+        $This.IO           = $This.Window.IO
         $This.IPAddress    = $Target.IPAddress
         $This.DNSName      = $Target.Hostname
         $This.NetBIOS      = $Target.NetBIOS

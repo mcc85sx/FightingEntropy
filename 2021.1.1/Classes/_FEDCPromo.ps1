@@ -2,10 +2,13 @@ Class _FEDCPromo
 {
     [Object]                              $Window
     [Object]                                  $IO
-    [Object]                                $Host
-    [Object]                             $Network
-    [Object]                               $Range
+    [Object]                              $Module
+    [Object]                             $Control
     [Object]                             $HostMap
+
+    [Object]                    $DomainController
+    [Object]                       $GlobalBrowser
+
     [Object]                          $Connection
     [Object]                            $Features
 
@@ -34,6 +37,48 @@ Class _FEDCPromo
     [Object]                          $Credential
 
     [Object]                              $Output
+
+    _FEDCPromo([Object]$Module)
+    {
+        $This.Window                            = Get-XamlWindow -Type FEDCPromo
+        $This.IO                                = $This.Window.IO
+        $This.Module                            = $Module
+        
+        If ( !$This.Module.Role.Network)
+        {
+            $This.Module.Role.GetNetwork()
+
+            $This.Control                       = $This.Module.Role.Network
+
+            If ( !$This.Control )
+            {
+                Throw "No network detected"
+            }
+
+            Write-Host "Scanning [~] Detected network hosts for NetBIOS Nodes"
+            $This.Control.NetBIOSScan()
+
+            $This.HostMap                       = $This.Control.NbtScan | ? NetBIOS
+
+            $This.DomainController              = $This.Hostmap | ? { "<1C>" -in $_.NetBIOS.ID }
+            $This.GlobalBrowser                 = $This.Hostmap | ? { "<1B>" -in $_.NetBIOS.ID }
+        }
+
+        $This.Features                          = [_ServerFeatures]::New().Output
+
+        $This.IO.DataGrid.ItemsSource           = $This.Features
+
+        $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
+        $This.IO.DatabasePath.Text              = $This.DatabasePath
+
+        $This.LogPath                           = "$Env:SystemRoot\NTDS"
+        $This.IO.LogPath.Text                   = $This.LogPath 
+
+        $This.SysvolPath                        = "$Env:SystemRoot\SYSVOL"
+        $This.IO.SysvolPath.Text                = $This.SysvolPath
+
+        $This.SetMode(0)
+    }
 
     SetMode([Int32]$Mode)
     {
@@ -108,47 +153,5 @@ Class _FEDCPromo
         }
 
         $This.Output                               = @( )
-    }
-
-    GetADConnection()
-    {
-        $This.Connection                         = [_ADConnection]::New($This.HostMap)
-    }
-
-    #HostRange()
-    #{
-    #    $This.Range                              = [_PingSweep]::New(
-    #    ($This.Host.Network.Interface.IPV4 | ? Gateway | % Range | Select -Unique | % Split `n))
-    #}
-
-    _FEDCPromo([Object]$Window,[Int32]$Mode)
-    {
-        $This.Window                            = $Window
-        $This.IO                                = $Window.IO
-        $This.Host                              = Get-FEModule | % Role | % Host
-        # $This.Host._Network()
-        # $This.Network                           = $This.Host.Network
-        # $This.HostRange()
-        # $This.HostMap                           = $This.Range._Filter()
-
-        # If ( $This.Hostmap )
-        # {
-        #    $This.GetADConnection()
-        # }
-
-        $This.Features                          = [_ServerFeatures]::New().Output
-
-        $This.IO.DataGrid.ItemsSource           = $This.Features
-
-        $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
-        $This.IO.DatabasePath.Text              = $This.DatabasePath
-
-        $This.LogPath                           = "$Env:SystemRoot\NTDS"
-        $This.IO.LogPath.Text                   = $This.LogPath 
-
-        $This.SysvolPath                        = "$Env:SystemRoot\SYSVOL"
-        $This.IO.SysvolPath.Text                = $This.SysvolPath
-
-        $This.SetMode($Mode)
     }
 }

@@ -56,7 +56,7 @@ Class _Module
         
         Foreach ( $Item in @{ Function = $This.Functions ; Class = $This.Classes }[$Type] )
         {
-            Import-Module -Path $Item.FullName -Verbose
+            Import-Module $Item.FullName -Verbose
         }
     }
 }

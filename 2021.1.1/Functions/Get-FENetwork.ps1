@@ -643,7 +643,7 @@ Function Get-FENetwork
                 $This.NetBIOS = @( )
 
                 $Item.Split("`n") | ? { $_ -match "Registered" } | % { $This.NetBIOS += [_NbtHostObject]::New($_) }
-            }
+            }   
         }
     }
 
@@ -755,10 +755,20 @@ Function Get-FENetwork
                 Throw "No hosts detected"
             }
 
-            $This.NBTScan = Foreach ( $Item in $This.HostMap )
-            {
-                [_NetworkHost]::New($Item)
-            }
+            $This.NBTScan = @( )
+
+            $This.HostMap | % { 
+            
+                $Item     = [_NetworkHost]::New($_)
+                
+                If ( $Item.NetBIOS.Count -gt 0 )
+                {
+                    ForEach ( $Obj in $Item.NetBIOS )
+                    {
+                        $Obj.Service = $This.NbtReference | ? ID -match $Obj.ID | ? Type -match $Obj.Type | % Service
+                    }
+                }
+            }   
         }
 
         Report()

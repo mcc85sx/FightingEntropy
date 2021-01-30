@@ -46,4 +46,18 @@ Class _Module
 
         $This.Role               = [_Role]::New($This.Type).Output
     }
+
+    [Void] Load([String]$Type)
+    {
+        If ( $Type -notin "Function","Class")
+        {
+            Throw "Invalid Item"
+        }
+        
+        Foreach ( $Item in @{ Function = $This.Functions ; Class = $This.Classes }[$Type] )
+        {
+            Write-Host ( "Loading {0}" -f $Item.Name )
+            Import-Module $Item.FullName
+        }
+    }
 }

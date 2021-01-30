@@ -54,9 +54,12 @@ Class _Module
             Throw "Invalid Item"
         }
         
+        $Collect = @( )
         Foreach ( $Item in @{ Function = $This.Functions ; Class = $This.Classes }[$Type] )
         {
-            Import-Module $Item.FullName -Verbose
+            $Collect += (Get-Content $Item.FullName)
         }
+        
+        Invoke-Expression $Collect
     }
 }

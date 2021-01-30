@@ -154,4 +154,9 @@ Class _FEDCPromo
 
         $This.Output                               = @( )
     }
+    
+    GetADConnection()
+    {
+        $This.Connection                         = [_ADConnection]::New($This.HostMap)
+    }
 }

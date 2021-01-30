@@ -58,7 +58,6 @@ Class _Win32_Server
 
         $This.Hostname            = @($This.Name;"{0}.{1}" -f $This.Name, $This.DNS)[(Get-CimInstance Win32_ComputerSystem).PartOfDomain].ToLower()
         $This.Username            = [Environment]::UserName
-        $This.Network             = (Get-FENetwork)
         $This.Drive               = (Get-PSDrive)
     }
     

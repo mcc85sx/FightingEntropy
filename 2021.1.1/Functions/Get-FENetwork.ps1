@@ -734,9 +734,7 @@ Function Get-FENetwork
             }
 
             Else
-            {
-                Write-Host "Scanning available IPv4 network(s)..."
-                
+            {                
                 $This.Hostmap = @( )
                 ForEach ( $Item in $This.Network.IPv4.ScanV4() )
                 {
@@ -748,8 +746,6 @@ Function Get-FENetwork
 
         NetBIOSScan()
         {
-            $This.RefreshIPv4Scan()
-            
             If ( !$This.Hostmap )
             {
                 Throw "No hosts detected"

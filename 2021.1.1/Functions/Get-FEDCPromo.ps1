@@ -2,8 +2,8 @@ Function Get-FEDCPromo
 {
     Write-Theme "Loading Network [:] Domain Controller Initialization"
 
-    $Time = [System.Diagnostics.Stopwatch]::StartNew()
-    $UI   = [_FEDCPromo]::New((Get-XamlWindow -Type FEDCPromo),0)
+    $Time                 = [System.Diagnostics.Stopwatch]::StartNew()
+    $UI                   = [_FEDCPromo]::New((Get-FEModule))
     $Time.Stop()
 
     Write-Theme @("Scan [:] Complete";("-"*17 -join '');@{ 
@@ -20,25 +20,27 @@ Function Get-FEDCPromo
     $UI.IO.Clone.Add_Click({$UI.SetMode(3)})
     $UI.IO.Cancel.Add_Click({$UI.IO.DialogResult = $False})
 
-    $Max = Switch -Regex ([WMIClass]"\\.\ROOT\CIMV2:Win32_OperatingSystem" | % GetInstances | % Caption)
+    $Max                  = Switch -Regex ([WMIClass]"Win32_OperatingSystem" | % GetInstances | % Caption)
     {
-        "(2000)" { 0 }
-        "(2003)" { 1 }
+        "(2000)"         { 0 }
+        "(2003)"         { 1 }
         "(2008)+(R2){0}" { 2 }
-        "(2008 R2){1}" { 3 }
+        "(2008 R2){1}"   { 3 }
         "(2012)+(R2){0}" { 4 }
-        "(2012 R2){1}" { 5 }
-        "(2016|2019)" { 6 }
+        "(2012 R2){1}"   { 5 }
+        "(2016|2019)"    { 6 }
+    
     }
 
     $UI.IO.ForestMode.SelectedIndex = $Max
     $UI.IO.DomainMode.SelectedIndex = $Max
 
+    $UI.GetADConnection()
     $UI.IO.CredentialButton.Add_Click({
 
         $UI.Connection.Target           = $Null
-        $DC                             = Get-XAMLWindow -Type FEDCFound
-        $DC.IO.DataGrid.ItemsSource     = $UI.Connection.Output
+        $DC                             = [_DCFound]::New($UI.Connection)
+        $DC.IO.DataGrid.ItemsSource     = $DC.Control
         $DC.IO.DataGrid.SelectedIndex   = 0
         [Void]$DC.IO.DataGrid.Focus()
 

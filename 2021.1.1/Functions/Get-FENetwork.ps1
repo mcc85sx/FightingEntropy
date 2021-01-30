@@ -635,7 +635,15 @@ Function Get-FENetwork
             $This.HostName   = $PingObject.Hostname
 
             Write-Host ( "[~] {0}" -f $PingObject.Hostname )
-            $This.NetBIOS    = nbtstat -A $PingObject.IPAddress
+
+            $Item            = nbtstat -A $PingObject.IPAddress
+
+            If ( $Item -notmatch "Host not found" )
+            {
+                $This.NetBIOS = @( )
+
+                $Item.Split("`n") | ? { $_ -match "Registered" } | % { $This.NetBIOS += [_NbtHostObject]::New($_) }
+            }
         }
     }
 

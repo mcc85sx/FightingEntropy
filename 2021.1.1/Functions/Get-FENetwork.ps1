@@ -761,11 +761,16 @@ Function Get-FENetwork
                     ForEach ( $Obj in $Item.NBT )
                     {
                         $Obj.Service = $This.NbtReference | ? ID -match $Obj.ID | ? Type -match $Obj.Type | % Service
+
+                        If ( $Obj.Service -eq "Domain Name" )
+                        {
+                            $Item.NetBIOS = $Obj.Service
+                        }
                     }
                 }
 
                 $This.NBTScan       += $Item
-            }   
+            }
         }
 
         Report()

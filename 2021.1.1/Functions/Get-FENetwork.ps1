@@ -756,13 +756,13 @@ Function Get-FENetwork
 
             $This.NBTScan            = @( )
 
-            $This.HostMap            | % { 
-            
-                $Item                = [_NetworkHost]::New($_)
+            ForEach ( $XHost in $This.HostMap )
+            { 
+                $Item                = [_NetworkHost]::New($XHost)
                 
-                If ( $Item.NetBIOS.Count -gt 0 )
+                If ( $Item.NBT.Count -gt 0 )
                 {
-                    ForEach ( $Obj in $Item.NetBIOS )
+                    ForEach ( $Obj in $Item.NBT )
                     {
                         $Obj.Service = $This.NbtReference | ? ID -match $Obj.ID | ? Type -match $Obj.Type | % Service
                     }

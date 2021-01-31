@@ -92,9 +92,14 @@ Function Get-FEDCPromo
                 {
                     $DC.TestCredential($DC.IO.Username.Text,$DC.IO.Password.SecurePassword)
                 
-                    If (!$DC.Result)
+                    If (!$DC.Test)
                     {
                         [System.Windows.MessageBox]::Show("Exception","Could not connect")
+                    }
+
+                    Else
+                    {
+                        $DC.Initialize($DC.Test)
                     }
 
                     $UI.Connection.Return                   = $DC

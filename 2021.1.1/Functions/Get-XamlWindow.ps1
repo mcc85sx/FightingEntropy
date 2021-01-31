@@ -161,6 +161,9 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="TextBox" x:Key="LTextBox">
+            <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.Background>

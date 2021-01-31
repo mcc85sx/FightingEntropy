@@ -624,26 +624,29 @@ Function Get-FENetwork
     Class _NetworkHost
     {
         Hidden [Object] $PingObject
+        Hidden [Object]        $NBT
         [String]         $IPAddress
         [String]          $Hostname
-        [Object]           $NetBIOS
+        [String]           $NetBIOS
 
         _NetworkHost([Object]$PingObject)
         {
-            $This.PingObject = $PingObject
-            $This.IPAddress  = $PingObject.IPAddress
-            $This.HostName   = $PingObject.Hostname
+            $This.PingObject  = $PingObject
+            $This.IPAddress   = $PingObject.IPAddress
+            $This.HostName    = $PingObject.Hostname
 
             Write-Host ( "[~] {0}" -f $PingObject.Hostname )
 
-            $Item            = nbtstat -A $PingObject.IPAddress
+            $Item             = nbtstat -A $PingObject.IPAddress
 
             If ( $Item -notmatch "Host not found" )
             {
-                $This.NetBIOS = @( )
-
-                $Item.Split("`n") | ? { $_ -match "Registered" } | % { $This.NetBIOS += [_NbtHostObject]::New($_) }
-            }   
+                $This.NBT     = @( )
+                
+                $Item.Split("`n") | ? { $_ -match "Registered" } | % { $This.NBT += [_NbtHostObject]::New($_) }
+                
+                $This.NetBIOS = $This.NBT | ? ID -match "<00>" | ? Type -match "GROUP" | ? Service -eq "Domain Name" | % Name | Select-Object -Unique
+            }
         }
     }
 

@@ -8,10 +8,10 @@ Class _ADConnection
     [Object] $Output
     [Object] $Return
 
-    _ADConnection([Object]$DomainController,[Object]$GlobalBrowser)
+    _ADConnection([Object]$Hostmap)
     {
-        $This.Primary                        = $DomainController
-        $This.Secondary                      = $GlobalBrowser
+        $This.Primary                        = $Hostmap | ? { "<1C>" -in $_.NBT.ID }
+        $This.Secondary                      = $Hostmap | ? { "<1B>" -in $_.NBT.ID }
         $This.Swap                           = @( )
         
         $This.Target                         = $Null

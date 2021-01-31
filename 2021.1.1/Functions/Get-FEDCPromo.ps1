@@ -534,24 +534,46 @@ Function Get-FEDCPromo
 
             Switch ($UI.Mode)
             {
+                0
+                {
+                    $UI.IO.ParentDomainName.Text     = ""
+                    $UI.IO.DomainName.Text           = "<New Forest Name>"
+                    $UI.IO.DomainNetBIOSName.Text    = "<New Forest NetBIOS Name>"
+                    $UI.IO.SiteName.Text             = "<New Forest Sitename>"
+                    $UI.IO.NewDomainName.Text        = ""
+                    $UI.IO.NewDomainNetBIOSName.Text = ""
+                    $UI.ReplicationSourceDC.Text     = ""
+                }
+
                 1
                 {
-                    $UI.IO.ParentDomainName.Text    = $DC.Domain
-                    $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                    $UI.IO.ParentDomainName.Text     = $DC.Domain
+                    $UI.IO.DomainName.Text           = ""
+                    $UI.IO.DomainNetBIOSName.Text    = ""
+                    $UI.IO.Sitename.Text             = $DC.GetSiteName()
+                    $UI.IO.NewDomainName.Text        = "<New Domain Name>"
+                    $UI.IO.NewDomainNetBIOSName.Text = "<New Domain NetBIOS Name"
+                    $UI.IO.ReplicationSourceDC.Text  = ""
                 }
 
                 2
                 {
-                    $UI.IO.ParentDomainName.Text    = $DC.Domain
-                    $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                    $UI.IO.ParentDomainName.Text     = $DC.Domain
+                    $UI.IO.Sitename.Text             = $DC.GetSiteName()
+                    $UI.IO.NewDomainName.Text        = "<New Domain Name>"
+                    $UI.IO.NewDomainNetBIOSName.Text = "<New Domain NetBIOS Name"
+                    $UI.IO.ReplicationSourceDC.Text  = ""
                 }
 
                 3
                 {
-                    $UI.IO.ParentDomainName.Text    = ""
-                    $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                    $UI.IO.DomainName.Text          = $DC.Domain
-                    $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
+                    $UI.IO.ParentDomainName.Text     = ""
+                    $UI.IO.DomainName.Text           = $DC.Domain
+                    $UI.IO.DomainNetBIOSName         = $DC.NetBIOS
+                    $UI.IO.SiteName.Text             = $DC.GetSiteName()
+                    $UI.IO.NewDomainName.Text        = ""
+                    $UI.IO.NewDomainNetBIOSName.Text = ""
+                    $UI.IO.ReplicationSourceDC.Text  = $UI.Connection.Target.Hostname
                 }
             }
         }
@@ -576,6 +598,8 @@ Function Get-FEDCPromo
         {
             $UI.SafeModeAdministratorPassword = $Password.SecurePassword
             # Types
+
+            $UI.DomainType 
             ForEach ( $Type in $UI.Profile.Type )
             {
                 If ($Type.IsEnabled)
@@ -624,57 +648,32 @@ Function Get-FEDCPromo
                     {
                         ParentDomainName     
                         { 
-                            $UI.ParentDomainName  = [_DomainName]::New("Domain",$UI.IO.ParentDomainName.Text).String
+                            $UI.ParentDomainName     = [_DomainName]::New("Domain",$UI.IO.ParentDomainName.Text).String
                         }
 
                         DomainName
-                        { 
-                            $Type.Text = [_DomainName]::New("Domain",$UI.IO.DomainName.Text).String
-                            
-                            If ( $Type.Text )
-                            {
-                                $UI.DomainName    = $Type.Text
-                            }
+                        {
+                            $UI.DomainName           = [_DomainName]::New("Domain",$UI.IO.DomainName.Text).String
                         }
 
                         DomainNetBIOSName
                         { 
-                            $Type.Text = [_DomainName]::New("NetBIOS",$UI.IO.DomainNetBIOSName.Text).String
-                            
-                            If ( $Type.Text )
-                            {
-                                $UI.DomainNetBIOSName = $Type.Text
-                            }
+                            $UI.DomainNetBIOSName    = [_DomainName]::New("NetBIOS",$UI.IO.DomainNetBIOSName.Text).String
                         }
 
                         SiteName             
                         {
-                            $Type.Text      = [_DomainName]::New("SiteName",$UI.IO.SiteName.Text).String
-                            
-                            If ( $Type.Text )
-                            {
-                                $UI.SiteName = $Type.Text
-                            }
+                            $UI.SiteName             = [_DomainName]::New("SiteName",$UI.IO.SiteName.Text).String
                         }
 
                         NewDomainName        
                         { 
-                            $Type.Text = [_DomainName]::New("Domain",$UI.IO.NewDomainName.Text).String
-                            
-                            If ( $Type.Text )
-                            {
-                                $UI.NewDomainName = $Type.Text
-                            }
+                            $UI.NewDomainName        = [_DomainName]::New("Domain",$UI.IO.NewDomainName.Text).String
                         }
 
                         NewDomainNetBIOSName 
                         { 
-                            $Type.Text = [_DomainName]::New("NetBIOS",$UI.IO.NewDomainNetBIOSName.Text).String
-                            
-                            If ( $Type.Text )
-                            {
-                                $UI.NewDomainNetBIOSName = $Type.Text
-                            }
+                            $UI.NewDomainNetBIOSName = [_DomainName]::New("NetBIOS",$UI.IO.NewDomainNetBIOSName.Text).String
                         }
                     }
                 }

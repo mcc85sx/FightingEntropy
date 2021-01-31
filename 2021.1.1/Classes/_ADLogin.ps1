@@ -27,7 +27,7 @@ Class _ADLogin
         $This.Port         = 389
         $This.DC           = $This.DNSName.Split(".")[0]
         $This.Domain       = $This.DNSName.Replace($This.DC + '.','')
-        $This.Directory    = "LDAP://$( $This.DC )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
+        $This.Directory    = "LDAP://$( $This.DNSName )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
     }
 
     TestCredential([String]$Username,[SecureString]$Password)
@@ -36,24 +36,24 @@ Class _ADLogin
 
         Try 
         {
-            $This.Test     = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            $Check         = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
         }
 
         Catch
         {
-            $This.Test = $Null
+            $Check         = $Null
         }
 
-        If ($This.Test)
+        If ( $Check )
         {
-            $This.Initialize($This.Test)
+            $This.Test     = $Check
         }
 
         Else
         {
             [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
-            $This.Credential           = $Null
-            $This.Test                 = $Null
+            $This.Credential = $Null
+            $This.Test       = $Null
         }
     }
 

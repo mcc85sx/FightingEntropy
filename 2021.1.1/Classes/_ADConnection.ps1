@@ -27,6 +27,14 @@ Class _ADConnection
             $This.Swap += $This.Secondary 
         }
 
-        $This.Output                         = $This.Swap | Select-Object -Unique
+        $This.Output                         = @( ) 
+        
+        ForEach ( $Item in $This.Swap ) 
+        {
+            If ( $Item.IPAddress -notin $This.Output.IPAddress )
+            {
+                $This.Output += $Item
+            }
+        }
     }
 }

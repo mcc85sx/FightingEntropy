@@ -1,4 +1,3 @@
-
 Function New-EnvironmentKey
 {
     [CmdLetBinding()]
@@ -323,11 +322,5 @@ Function New-EnvironmentKey
 
     $Key.SetBranding()
 
-    $Key.Module
-    $Key.Graphics
-    $Key.Certificate
-    $Key.Company
-
-    # Background
-    # Tools
+    $Key
 }

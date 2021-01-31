@@ -5,7 +5,8 @@ Function Get-FEDCPromo
     [ValidateSet(0,1,2,3)]
     [Parameter(ParameterSetName=0)][UInt32]$Mode = 0,
     [ValidateSet("Forest","Tree","Child","Clone")]
-    [Parameter(ParameterSetname=1)][String]$Type)
+    [Parameter(ParameterSetname=1)][String]$Type,
+    [Parameter()][Switch]$Test)
 
     Class _DomainName
     {
@@ -751,8 +752,18 @@ Function Get-FEDCPromo
         Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
         
         If (!$X)
-        { 
-            Write-Host ( "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name )
+        {
+            $Line = "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name
+
+            If ( $Test )
+            {
+                Write-Host $Line
+            }
+
+            If (!$Test)
+            {
+                Invoke-Expression $Line
+            }
         }
     }
 
@@ -782,11 +793,25 @@ Function Get-FEDCPromo
 
     $Splat = $UI.Output
     
-    Switch ( $UI.Mode )
+    If ( $Test )
     {
-        0 { Test-ADDSForestInstallation @Splat }
-        1 { Test-ADDSDomainInstallation @Splat }
-        2 { Test-ADDSDomainInstallation @Splat }
-        3 { Test-ADDSDomainControllerInstallation @Splat }
+        Switch ( $UI.Mode )
+        {
+            0 { Test-ADDSForestInstallation @Splat }
+            1 { Test-ADDSDomainInstallation @Splat }
+            2 { Test-ADDSDomainInstallation @Splat }
+            3 { Test-ADDSDomainControllerInstallation @Splat }
+        }
+    }
+
+    If (!$Test)
+    {
+        Switch ( $UI.Mode )
+        {
+            0 { Install-ADDSForest @Splat }
+            1 { Install-ADDSDomain @Splat }
+            2 { Install-ADDSDomain @Splat }
+            3 { Install-ADDSDomainController @Splat }
+        }
     }
 }

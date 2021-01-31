@@ -64,7 +64,7 @@ Class _ADLogin
 
             If ( $This.Test )
             {
-                $This.Initialize()
+                $This.Initialize($This.Test)
             }
 
             Else

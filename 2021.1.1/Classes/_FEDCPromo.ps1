@@ -53,9 +53,6 @@ Class _FEDCPromo
             $This.Control.NetBIOSScan()
 
             $This.HostMap                       = $This.Control.NbtScan | ? NetBIOS
-
-            $This.DomainController              = $This.Hostmap | ? { "<1C>" -in $_.NetBIOS.ID }
-            $This.GlobalBrowser                 = $This.Hostmap | ? { "<1B>" -in $_.NetBIOS.ID }
         }
 
         $This.Features                          = [_ServerFeatures]::New().Output

@@ -34,7 +34,7 @@ Class _ADLogin
         $This.Directory    = "LDAP://$( $This.DNSName )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
     }
 
-    ClearCredential()
+    ClearADCredential()
     {
         $This.Credential   = $Null
         $This.Username     = $Null
@@ -42,33 +42,33 @@ Class _ADLogin
         $This.Confirm      = $Null
     }
 
-    StartCredential()
+    StartADCredential()
     {
         $This.Username     = $This.IO.Username.Text
         $This.Password     = $This.IO.Password.Password
         $This.Confirm      = $This.IO.Confirm.Password
     }
 
-    CheckCredential()
+    CheckADCredential()
     {
-        $This.StartCredential()
+        $This.StartADCredential()
         
         If (!$This.Username)
         {
             [System.Windows.MessageBox]::Show("Invalid Username","Error")
-            $This.ClearCredential()
+            $This.ClearADCredential()
         }
         
         ElseIf (!$This.Password)
         {
             [System.Windows.MessageBox]::Show("Invalid Password","Error")
-            $This.ClearCredential()
+            $This.ClearADCredential()
         }
         
         ElseIf ($This.Password -notmatch $This.Confirm)
         {
             [System.Windows.MessageBox]::Show("Passwords do not match","Error")
-            $This.ClearCredential()
+            $This.ClearADCredential()
         }
 
         Else
@@ -79,7 +79,7 @@ Class _ADLogin
             If (!$This.Test)
             {
                 [System.Windows.MessageBox]::Show("Login Error")
-                $This.ClearCredential()
+                $This.ClearADCredential()
             }
 
             Else

@@ -155,6 +155,6 @@ Class _FEDCPromo
     
     GetADConnection()
     {
-        $This.Connection                         = [_ADConnection]::New($This.DomainController,$This.GlobalBrowser)
+        $This.Connection                         = [_ADConnection]::New($This.Hostmap)
     }
 }

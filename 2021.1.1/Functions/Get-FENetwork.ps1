@@ -624,7 +624,7 @@ Function Get-FENetwork
     Class _NetworkHost
     {
         Hidden [Object] $PingObject
-        [Object]               $NBT
+        Hidden [Object]        $NBT
         [String]         $IPAddress
         [String]          $Hostname
         [String]           $NetBIOS
@@ -764,7 +764,7 @@ Function Get-FENetwork
 
                         If ( $Obj.Service -eq "Domain Name" )
                         {
-                            $Item.NetBIOS = $Obj.Service
+                            $Item.NetBIOS = $Obj.Name
                         }
                     }
                 }

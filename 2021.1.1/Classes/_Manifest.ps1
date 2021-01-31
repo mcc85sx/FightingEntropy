@@ -22,7 +22,7 @@ Class _Manifest
                               "DNSSuffix DomainName ADLogin ADConnection FEDCPromo",
                               "Certificate Company Key RootVar Share Source Target ServerDependency ServerFeature ServerFeatures IISFeatures IIS",
                               "Image Images Updates",
-                              "Role Win32_Client Win32_Server UnixBSD RHELCentOS" -join " ").Split(" ") | % { "_$_.ps1" })
+                              "Role Win32_Client Win32_Server UnixBSD RHELCentOS DCFound" -join " ").Split(" ") | % { "_$_.ps1" })
 
     [String[]] $Functions = ("Add-ACL","Complete-IISServer","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
                              "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEManifest","Get-ServerDependency",

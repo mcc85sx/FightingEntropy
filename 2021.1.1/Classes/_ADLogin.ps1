@@ -7,16 +7,17 @@ Class _ADLogin
     [String]                             $DNSName
     [String]                              $Domain
     [String]                             $NetBIOS
-
-    [Object]                          $Credential
     [UInt32]                                $Port
 
+    [Object]                          $Credential
     [String]                            $Username
     [Object]                            $Password
     [Object]                             $Confirm
 
+    [Int32]                                 $Code
     [String]                                  $DC
     [String]                           $Directory
+
     [Object]                                $Test
     [Object]                            $Searcher
     [Object]                              $Result
@@ -42,73 +43,72 @@ Class _ADLogin
         $This.Confirm      = $Null
     }
 
-    StartADCredential()
+    CheckADCredential()
     {
+        $This.Code         = -1
         $This.Username     = $This.IO.Username.Text
         $This.Password     = $This.IO.Password.Password
         $This.Confirm      = $This.IO.Confirm.Password
-    }
-
-    CheckADCredential()
-    {
-        $This.StartADCredential()
         
         If (!$This.Username)
         {
-            [System.Windows.MessageBox]::Show("Invalid Username","Error")
             $This.ClearADCredential()
+            $This.Code     = 0
         }
         
         ElseIf (!$This.Password)
         {
-            [System.Windows.MessageBox]::Show("Invalid Password","Error")
             $This.ClearADCredential()
+            $This.Code     = 1
         }
         
-        ElseIf ($This.Password -notmatch $This.Confirm)
+        ElseIf ($This.Password -ne $This.Confirm)
         {
-            [System.Windows.MessageBox]::Show("Passwords do not match","Error")
             $This.ClearADCredential()
+            $This.Code     = 2
         }
 
         Else
         {
             $This.Credential = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
-            $This.Test       = $This.TestADCredential($This.Credential)
-
-            If (!$This.Test)
+            $This.Test       = @( Try 
             {
-                [System.Windows.MessageBox]::Show("Login Error")
+                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            }
+
+            Catch
+            {
+                [System.Windows.MessageBox]::Show("Invalid Username")
+            })
+
+            If ($This.Test -eq $Null)
+            {
                 $This.ClearADCredential()
+                $This.Code   = 3
             }
 
-            Else
+            If ($This.Test -ne $Null)
             {
-                $This.Initialize($This.Test)
+                $This.Code   = 4
             }
         }
     }
 
-    [Object] TestADCredential([Object]$Credential)
+    Initialize()
     {
-        Return @( Try 
+        If ( $This.Code -eq 4 )
         {
-            [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$Credential.Username,$Credential.GetNetworkCredential().Password)
+            $This.Searcher                     = [System.DirectoryServices.DirectorySearcher]::New()
+            $This.Searcher.SearchRoot          = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            $This.Searcher.PageSize            = 1000
+            $This.Searcher.PropertiesToLoad.Clear()
+            $This.Result                       = $This.Searcher.FindAll()
         }
 
-        Catch
+        Else
         {
-            $Null
-        })
-    }
-
-    Initialize([Object]$SearchRoot)
-    {
-        $This.Searcher                     = [System.DirectoryServices.DirectorySearcher]::New()
-        $This.Searcher.SearchRoot          = $SearchRoot
-        $This.Searcher.PageSize            = 1000
-        $This.Searcher.PropertiesToLoad.Clear()
-        $This.Result                       = $This.Searcher.FindAll()
+            "Invalid operation"
+        }
     }
 
     [Object] Search([String]$Field)

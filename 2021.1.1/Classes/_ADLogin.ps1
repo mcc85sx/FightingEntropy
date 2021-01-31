@@ -30,50 +30,30 @@ Class _ADLogin
         $This.Directory    = "LDAP://$( $This.DC )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
     }
 
-    TestCredential()
+    TestCredential([String]$Username,[SecureString]$Password)
     {
-        $Username          = $This.IO.Username.Text
-        $Password          = $This.IO.Password.Password
-        $Confirm           = $This.IO.Confirm.Password
-        
-        If (!$Username)
+        $This.Credential   = [System.Management.Automation.PSCredential]::New($Username,$Password)
+
+        Try 
         {
-            [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
-        }
-        
-        ElseIf (!$Password)
-        {
-            [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
+            $This.Test     = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
         }
 
-        ElseIf (!$Password -match $Confirm)
+        Catch
         {
-            [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
+            $This.Test = $Null
+        }
+
+        If ($This.Test)
+        {
+            $This.Initialize($This.Test)
         }
 
         Else
         {
-            $This.Credential               = [System.Management.Automation.PSCredential]::New($Username,$This.IO.Confirm.SecurePassword)
-            $This.Test                     = Try 
-            { 
-                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
-            }
-            Catch
-            {
-                $Null
-            }
-
-            If ($This.Test)
-            {
-                $This.Initialize($This.Test)
-            }
-
-            Else
-            {
-                [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
-                $This.Credential           = $Null
-                $This.Test                 = $Null
-            }
+            [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
+            $This.Credential           = $Null
+            $This.Test                 = $Null
         }
     }
 

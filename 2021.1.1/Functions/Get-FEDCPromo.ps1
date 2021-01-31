@@ -1,8 +1,22 @@
 Function Get-FEDCPromo
 {
+    [CmdLetBinding(DefaultParameterSetName=0)]
+    Param(
+    [ValidateSet(0,1,2,3)]
+    [Parameter(ParameterSetName=0)][UInt32]$Mode = 0,
+    [ValidateSet("Forest","Tree","Child","Clone")]
+    [Parameter(ParameterSetname=1)][String]$Type)
+
+
     Write-Host "Loading Network [~] FightingEntropy Domain Controller Promotion Tool"
 
     $UI                   = [_FEDCPromo]::New((Get-FEModule))
+    If ( $Type )
+    {
+        $Mode = Switch ($Type) { Forest {0} Tree {1} Child {2} Clone {3} }
+    }
+
+    $UI.SetMode($Mode)
 
     $UI.IO.Forest.Add_Click({$UI.SetMode(0)})
     $UI.IO.Tree.Add_Click({$UI.SetMode(1)})
@@ -30,7 +44,7 @@ Function Get-FEDCPromo
 
         $UI.Connection.Target           = $Null
         $DC                             = [_DCFound]::New($UI.Connection)
-        $DC.IO.DataGrid.ItemsSource     = $DC.Control
+        $DC.IO.DataGrid.ItemsSource     = $DC.Control.Output
         $DC.IO.DataGrid.SelectedIndex   = 0
         [Void]$DC.IO.DataGrid.Focus()
 
@@ -49,7 +63,7 @@ Function Get-FEDCPromo
 
         If ( $UI.Connection.Target )
         {
-            $DC                         = [_ADLogin]::New((Get-XAMLWindow -Type ADLogin),$UI.Connection.Target)
+            $DC                         = [_ADLogin]::New($UI.Connection.Target)
 
             $DC.IO.Cancel.Add_Click(
             {

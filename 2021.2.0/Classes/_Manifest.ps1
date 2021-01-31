@@ -27,7 +27,7 @@ Class _Manifest
     [String[]] $Functions = ("Add-ACL","Complete-IISServer","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
                              "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEManifest","Get-ServerDependency",
                              "Get-ViperBomb","Get-XamlWindow","Get-MDTModule","Install-IISServer","New-ACLObject","New-Company",
-                             "Show-ToastNotification","New-FEShare","Get-FEShare","Remove-FEShare","Write-Theme","Remove-FEModule" | % { "$_.ps1" })
+                             "Show-ToastNotification","New-FEShare","Get-FEShare","Remove-FEShare","Write-Theme","Remove-FEModule",New-EnvironmentKey" | % { "$_.ps1" })
 
     [String[]]   $Control = ("Computer.png DefaultApps.xml MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml","ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")

@@ -161,9 +161,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="TextBox" x:Key="LTextBox">
-            <Setter Property="TextAlignment" Value="Left"/>
-        </Style>
     </Window.Resources>
     <Grid>
         <Grid.Background>
@@ -178,7 +175,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="User Name">
-                    <TextBox Name="UserName" Margin="5"/>
+                    <TextBox Name="UserName" HorizontalContentAlignment="Left" Margin="5"/>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="Password / Confirm">
                     <Grid>
@@ -186,8 +183,8 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
-                        <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
+                        <PasswordBox Grid.Column="0" HorizontalContentAlignment="Left" Name="Password" Margin="5"/>
+                        <PasswordBox Grid.Column="1" HorizontalContentAlignment="Left" Name="Confirm" Margin="5"/>
                     </Grid>
                 </GroupBox>
                 <Grid Grid.Row="2">

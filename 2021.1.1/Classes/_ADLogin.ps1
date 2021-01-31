@@ -14,11 +14,10 @@ Class _ADLogin
     [Object]                            $Password
     [Object]                             $Confirm
 
-    [Int32]                                 $Code
+    [Object]                                $Test
     [String]                                  $DC
     [String]                           $Directory
 
-    [Object]                                $Test
     [Object]                            $Searcher
     [Object]                              $Result
 
@@ -45,69 +44,42 @@ Class _ADLogin
 
     CheckADCredential()
     {
-        $This.Code         = -1
         $This.Username     = $This.IO.Username.Text
         $This.Password     = $This.IO.Password.Password
         $This.Confirm      = $This.IO.Confirm.Password
         
         If (!$This.Username)
         {
+            [System.Windows.Messagebox]::Show("Username","Error")
             $This.ClearADCredential()
-            $This.Code     = 0
         }
         
         ElseIf (!$This.Password)
         {
+            [System.Windows.MessageBox]::Show("Password","Error")
             $This.ClearADCredential()
-            $This.Code     = 1
         }
         
         ElseIf ($This.Password -ne $This.Confirm)
         {
+            [System.Windows.Messagebox]::Show("Confirm","Error")
             $This.ClearADCredential()
-            $This.Code     = 2
         }
 
         Else
         {
-            $This.Credential = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
-            $This.Test       = @( Try 
+            $This.Credential   = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
+            
+            Try 
             {
-                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+                $This.Test                = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
             }
 
             Catch
             {
-                [System.Windows.MessageBox]::Show("Invalid Username")
-            })
-
-            If ($This.Test -eq $Null)
-            {
+                [System.Windows.Messagebox]::Show("Login","Error")
                 $This.ClearADCredential()
-                $This.Code   = 3
             }
-
-            If ($This.Test -ne $Null)
-            {
-                $This.Code   = 4
-            }
-        }
-    }
-
-    Initialize()
-    {
-        If ( $This.Code -eq 4 )
-        {
-            $This.Searcher                     = [System.DirectoryServices.DirectorySearcher]::New()
-            $This.Searcher.SearchRoot          = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
-            $This.Searcher.PageSize            = 1000
-            $This.Searcher.PropertiesToLoad.Clear()
-            $This.Result                       = $This.Searcher.FindAll()
-        }
-
-        Else
-        {
-            "Invalid operation"
         }
     }
 

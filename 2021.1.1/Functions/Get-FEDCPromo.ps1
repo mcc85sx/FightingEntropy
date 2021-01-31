@@ -789,4 +789,6 @@ Function Get-FEDCPromo
         2 { Test-ADDSDomainInstallation @Splat }
         3 { Test-ADDSDomainControllerInstallation @Splat }
     }
+    
+    $UI
 }

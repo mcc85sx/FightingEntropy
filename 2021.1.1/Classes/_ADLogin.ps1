@@ -74,7 +74,7 @@ Class _ADLogin
         Else
         {
             $This.Credential = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
-            $This.Test       = $This.TestCredential($This.Credential)
+            $This.Test       = $This.TestADCredential($This.Credential)
 
             If (!$This.Test)
             {
@@ -89,7 +89,7 @@ Class _ADLogin
         }
     }
 
-    [Object] TestCredential([Object]$Credential)
+    [Object] TestADCredential([Object]$Credential)
     {
         Return @( Try 
         {

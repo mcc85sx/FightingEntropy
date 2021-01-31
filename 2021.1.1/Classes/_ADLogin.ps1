@@ -27,6 +27,7 @@ Class _ADLogin
         $This.Port         = 389
         $This.DC           = $This.DNSName.Split(".")[0]
         $This.Domain       = $This.DNSName.Replace($This.DC + '.','')
+        $This.Directory    = "LDAP://$( $This.DC )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
     }
 
     TestCredential()
@@ -62,7 +63,7 @@ Class _ADLogin
                 $Null
             }
 
-            If ( $This.Test )
+            If ($This.Test)
             {
                 $This.Initialize($This.Test)
             }

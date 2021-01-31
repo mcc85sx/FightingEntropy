@@ -72,46 +72,64 @@ Function Get-FEDCPromo
             })
 
             $DC.IO.Ok.Add_Click(
-            {
-                $DC.TestCredential()
-                
-                If (!$DC.Return)
+            {        
+                If (!$DC.IO.Username.Text)
                 {
-                    [System.Windows.MessageBox]::Show("Exception","Could not connect")
+                    [System.Windows.MessageBox]::Show("Invalid Username","Error") | Out-Null
                 }
-
-                $UI.Connection.Return                   = $DC
-                $UI.Connection.Credential               = $DC.Credential
-                $UI.IO.Credential                       | % { 
-                
-                    $_.Text                             = $DC.Credential.UserName
-                    $_.IsEnabled                        = $False
-                }
-
-                Switch ($UI.Mode)
+        
+                ElseIf (!$DC.IO.Password.Password)
                 {
-                    1
-                    {
-                        $UI.IO.ParentDomainName.Text    = $DC.Domain
-                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                    }
-
-                    2
-                    {
-                        $UI.IO.ParentDomainName.Text    = $DC.Domain
-                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                    }
-
-                    3
-                    {
-                        $UI.IO.ParentDomainName.Text    = ""
-                        $UI.IO.Sitename.Text            = $DC.GetSiteName()
-                        $UI.IO.DomainName.Text          = $DC.Domain
-                        $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
-                    }
+                    [System.Windows.MessageBox]::Show("Invalid Password","Error") | Out-Null
                 }
 
-                $DC.IO.DialogResult = $True
+                ElseIf ($DC.IO.Password.Password -notmatch $DC.IO.Confirm.Password)
+                {
+                    [System.Windows.MessageBox]::Show("Passwords do not match","Error") | Out-Null
+                }
+
+                Else
+                {
+                    $DC.TestCredential($DC.IO.Username.Text,$DC.IO.Password.SecurePassword)
+                
+                    If (!$DC.Result)
+                    {
+                        [System.Windows.MessageBox]::Show("Exception","Could not connect")
+                    }
+
+                    $UI.Connection.Return                   = $DC
+                    $UI.Connection.Credential               = $DC.Credential
+                    $UI.IO.Credential                       | % { 
+                
+                        $_.Text                             = $DC.Credential.UserName
+                        $_.IsEnabled                        = $False
+                    }
+
+                    Switch ($UI.Mode)
+                    {
+                        1
+                        {
+                            $UI.IO.ParentDomainName.Text    = $DC.Domain
+                            $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                        }
+
+                        2
+                        {
+                            $UI.IO.ParentDomainName.Text    = $DC.Domain
+                            $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                        }
+
+                        3
+                        {
+                            $UI.IO.ParentDomainName.Text    = ""
+                            $UI.IO.Sitename.Text            = $DC.GetSiteName()
+                            $UI.IO.DomainName.Text          = $DC.Domain
+                            $UI.IO.ReplicationSourceDC.Text = $UI.Connection.Target.Hostname
+                        }
+                    }
+
+                    $DC.IO.DialogResult = $True
+                }
             })
 
             $DC.Window.Invoke()

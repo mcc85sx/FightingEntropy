@@ -624,7 +624,7 @@ Function Get-FENetwork
     Class _NetworkHost
     {
         Hidden [Object] $PingObject
-        Hidden [Object]        $NBT
+        [Object]               $NBT
         [String]         $IPAddress
         [String]          $Hostname
         [String]           $NetBIOS
@@ -640,12 +640,8 @@ Function Get-FENetwork
             $Item             = nbtstat -A $PingObject.IPAddress
 
             If ( $Item -notmatch "Host not found" )
-            {
-                $This.NBT     = @( )
-                
-                $Item.Split("`n") | ? { $_ -match "Registered" } | % { $This.NBT += [_NbtHostObject]::New($_) }
-                
-                $This.NetBIOS = $This.NBT | ? ID -match "<00>" | ? Type -match "GROUP" | ? Service -eq "Domain Name" | % Name | Select-Object -Unique
+            {   
+                $This.NBT     = $Item.Split("`n") | ? { $_ -match "Registered" } | % { [_NbtHostObject]::New($_) }
             }
         }
     }

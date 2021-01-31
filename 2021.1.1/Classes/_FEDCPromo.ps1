@@ -76,8 +76,6 @@ Class _FEDCPromo
 
         $This.SysvolPath                        = "$Env:SystemRoot\SYSVOL"
         $This.IO.SysvolPath.Text                = $This.SysvolPath
-
-        $This.SetMode(0)
     }
 
     SetMode([Int32]$Mode)

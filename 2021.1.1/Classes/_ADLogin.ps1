@@ -11,6 +11,10 @@ Class _ADLogin
     [Object]                          $Credential
     [UInt32]                                $Port
 
+    [String]                            $Username
+    [Object]                            $Password
+    [Object]                             $Confirm
+
     [String]                                  $DC
     [String]                           $Directory
     [Object]                                $Test
@@ -30,31 +34,72 @@ Class _ADLogin
         $This.Directory    = "LDAP://$( $This.DNSName )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
     }
 
-    TestCredential([String]$Username,[SecureString]$Password)
+    ClearCredential()
     {
-        $This.Credential   = [System.Management.Automation.PSCredential]::New($Username,$Password)
+        $This.Credential   = $Null
+        $This.Username     = $Null
+        $This.Password     = $Null
+        $This.Confirm      = $Null
+    }
 
-        Try 
+    StartCredential()
+    {
+        $This.Username     = $This.IO.Username.Text
+        $This.Password     = $This.IO.Password.Password
+        $This.Confirm      = $This.IO.Confirm.Password
+    }
+
+    CheckCredential()
+    {
+        $This.StartCredential()
+        
+        If (!$This.Username)
         {
-            $Check         = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            [System.Windows.MessageBox]::Show("Invalid Username","Error")
+            $This.ClearCredential()
         }
-
-        Catch
+        
+        ElseIf (!$This.Password)
         {
-            $Check         = $Null
+            [System.Windows.MessageBox]::Show("Invalid Password","Error")
+            $This.ClearCredential()
         }
-
-        If ( $Check )
+        
+        ElseIf ($This.Password -notmatch $This.Confirm)
         {
-            $This.Test     = $Check
+            [System.Windows.MessageBox]::Show("Passwords do not match","Error")
+            $This.ClearCredential()
         }
 
         Else
         {
-            [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
-            $This.Credential = $Null
-            $This.Test       = $Null
+            $This.Credential = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
+            $This.Test       = $This.TestCredential($This.Credential)
+
+            If (!$This.Test)
+            {
+                [System.Windows.MessageBox]::Show("Login Error")
+                $This.ClearCredential()
+            }
+
+            Else
+            {
+                $This.Initialize($This.Test)
+            }
         }
+    }
+
+    [Object] TestCredential([Object]$Credential)
+    {
+        Return @( Try 
+        {
+            [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$Credential.Username,$Credential.GetNetworkCredential().Password)
+        }
+
+        Catch
+        {
+            $Null
+        })
     }
 
     Initialize([Object]$SearchRoot)

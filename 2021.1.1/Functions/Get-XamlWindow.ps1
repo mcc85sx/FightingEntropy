@@ -175,7 +175,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="User Name">
-                    <TextBox Name="UserName" HorizontalContentAlignment="Left" Margin="5"/>
+                    <TextBox Name="UserName" TextAlignment="Left" Margin="5"/>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="Password / Confirm">
                     <Grid>
@@ -193,7 +193,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <RadioButton Name="Switch" Grid.Column="0" Content="Change Login Port" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <TextBox Name="Port" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" IsEnabled="False">389</TextBox>
+                    <TextBox Name="Port" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Left" Width="120" IsEnabled="False">389</TextBox>
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>

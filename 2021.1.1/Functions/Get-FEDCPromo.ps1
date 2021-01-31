@@ -151,4 +151,6 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
+    
+    $UI
 }

@@ -29,6 +29,53 @@ Class _ADLogin
         $This.Domain       = $This.DNSName.Replace($This.DC + '.','')
     }
 
+    TestCredential()
+    {
+        $Username          = $This.IO.Username.Text
+        $Password          = $This.IO.Password.Password
+        $Confirm           = $This.IO.Confirm.Password
+        
+        If (!$Username)
+        {
+            [Void][System.Windows.MessageBox]::Show("Invalid Username","Error")
+        }
+        
+        ElseIf (!$Password)
+        {
+            [Void][System.Windows.MessageBox]::Show("Invalid Password","Error")
+        }
+
+        ElseIf (!$Password -match $Confirm)
+        {
+            [Void][System.Windows.MessageBox]::Show("Passwords do not match","Error")
+        }
+
+        Else
+        {
+            $This.Credential               = [System.Management.Automation.PSCredential]::New($Username,$This.IO.Confirm.SecurePassword)
+            $This.Test                     = Try 
+            { 
+                [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+            }
+            Catch
+            {
+                $Null
+            }
+
+            If ( $This.Test )
+            {
+                $This.Initialize()
+            }
+
+            Else
+            {
+                [System.Windows.MessageBox]::Show("Invalid Administrator Account","Error")
+                $This.Credential           = $Null
+                $This.Test                 = $Null
+            }
+        }
+    }
+
     Initialize([Object]$SearchRoot)
     {
         $This.Searcher                     = [System.DirectoryServices.DirectorySearcher]::New()

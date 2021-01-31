@@ -5,17 +5,11 @@ Class _FEDCPromo
     [Object]                              $Module
     [Object]                             $Control
     [Object]                             $HostMap
-
-    [Object]                    $DomainController
-    [Object]                       $GlobalBrowser
-
     [Object]                          $Connection
     [Object]                            $Features
-
     [String]                             $Command
     [Int32]                                 $Mode
     [Object]                             $Profile
-
     [Object]                          $ForestMode
     [Object]                          $DomainMode
     [Object]                          $DomainType

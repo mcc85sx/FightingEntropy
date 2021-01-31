@@ -343,14 +343,15 @@ Function Get-FEDCPromo
 
             $This.IO.DataGrid.ItemsSource           = $This.Features
 
-            $This.DatabasePath                      = "$Env:SystemRoot\NTDS"
-            $This.IO.DatabasePath.Text              = $This.DatabasePath
+            "$Env:SystemRoot\NTDS"                  | % {
 
-            $This.LogPath                           = "$Env:SystemRoot\NTDS"
-            $This.IO.LogPath.Text                   = $This.LogPath 
-
-            $This.SysvolPath                        = "$Env:SystemRoot\SYSVOL"
-            $This.IO.SysvolPath.Text                = $This.SysvolPath
+                $This.DatabasePath                  = $_
+                $This.IO.DatabasePath.Text          = $_
+                $This.LogPath                       = $_
+                $This.IO.LogPath.Text               = $_
+                $This.SysvolPath                    = $_.Replace("NTDS","SYSVOL")
+                $This.IO.SysvolPath.Text            = $_.Replace("NTDS","SYSVOL")
+            }
         }
 
         SetMode([Int32]$Mode)
@@ -432,8 +433,6 @@ Function Get-FEDCPromo
         {
             $This.Connection                         = [_ADConnection]::New($This.Hostmap)
         }
-
-
     }
 
     Write-Host "Loading Network [~] FightingEntropy Domain Controller Promotion Tool"
@@ -494,6 +493,7 @@ Function Get-FEDCPromo
 
             $DC.IO.Cancel.Add_Click(
             {
+                $UI.Credential          = $Null
                 $UI.IO.Credential.Text  = ""
                 $DC.IO.DialogResult     = $False
             })
@@ -524,12 +524,14 @@ Function Get-FEDCPromo
 
             $DC.Window.Invoke()
 
-            $UI.Connection.Return                   = $DC
-            $UI.Connection.Credential               = $DC.Credential
-            $UI.IO.Credential                       | % { 
+            $UI.Credential             = $DC.Credential
+                                         $DC.ClearADCredential()
+
+            $UI.Connection.Return      = $DC
+            $UI.IO.Credential          | % {
                 
-                $_.Text                             = $DC.Credential.UserName
-                $_.IsEnabled                        = $False
+                $_.Text                = $UI.Credential.UserName
+                $_.IsEnabled           = $False
             }
 
             Switch ($UI.Mode)
@@ -559,6 +561,8 @@ Function Get-FEDCPromo
                 2
                 {
                     $UI.IO.ParentDomainName.Text     = $DC.Domain
+                    $UI.IO.DomainName.Text           = ""
+                    $UI.IO.DomainNetBIOSName.Text    = ""
                     $UI.IO.Sitename.Text             = $DC.GetSiteName()
                     $UI.IO.NewDomainName.Text        = "<New Domain Name>"
                     $UI.IO.NewDomainNetBIOSName.Text = "<New Domain NetBIOS Name"
@@ -569,7 +573,7 @@ Function Get-FEDCPromo
                 {
                     $UI.IO.ParentDomainName.Text     = ""
                     $UI.IO.DomainName.Text           = $DC.Domain
-                    $UI.IO.DomainNetBIOSName         = $DC.NetBIOS
+                    $UI.IO.DomainNetBIOSName         = $DC.GetNetBIOSName()
                     $UI.IO.SiteName.Text             = $DC.GetSiteName()
                     $UI.IO.NewDomainName.Text        = ""
                     $UI.IO.NewDomainNetBIOSName.Text = ""
@@ -599,7 +603,8 @@ Function Get-FEDCPromo
             $UI.SafeModeAdministratorPassword = $Password.SecurePassword
             # Types
 
-            $UI.DomainType 
+            $UI.DomainType = @("-","TreeDomain","ChildDomain","-")[$UI.Mode]
+
             ForEach ( $Type in $UI.Profile.Type )
             {
                 If ($Type.IsEnabled)
@@ -684,7 +689,7 @@ Function Get-FEDCPromo
                     {
                         ParentDomainName     { $UI.ForestMode           = "-" }
                         DomainName           { $UI.DomainMode           = "-" }
-                        DomainNetBIOSName    { $UI.ReplicationSourceDC  = "-" }
+                        DomainNetBIOSName    { $UI.DomainNetBIOSName    = "-" }
                         Sitename             { $UI.ParentDomainName     = "-" }
                         NewDomainName        { $UI.NewDomainName        = "-" }
                         NewDomainNetBIOSName { $UI.NewDomainNetBIOSName = "-" }
@@ -737,6 +742,51 @@ Function Get-FEDCPromo
     })
 
     $UI.Window.Invoke()
+
+    ForEach ( $Feature in $UI.Features )
+    {
+        $Feature.Name = $Feature.Name -Replace "_","-"
+        $X            = $Feature.Installed
+
+        Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
+        
+        If (!$X)
+        { 
+            Write-Host ( "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name )
+        }
+    }
+
+    $UI.Output = @{ }
+
+    ForEach ( $Group in $UI.Profile.Type, $UI.Profile.Role, $UI.Profile.Text )
+    {
+        ForEach ( $Item in $Group )
+        {
+            If ( $Item.IsEnabled )
+            {
+                If ( !$UI.Output[$Item.Name] )
+                {
+                    $UI.Output.Add($Item.Name,$UI.$($Item.Name))
+                }
+            }
+        }
+    }
+
+    "Database Log Sysvol".Split(" ") | % { "$_`Path"} | % { $UI.Output.Add($_,$UI.$_) }
+
+    If ( $UI.Credential )
+    {
+        $UI.Output.Add("Credential",$UI.Credential)
+        $UI.Output.Add("SafeModeAdministratorPassword",$UI.SafeModeAdministratorPassword)
+    }
+
+    $Splat = $UI.Output
     
-    $UI
+    Switch ( $UI.Mode )
+    {
+        0 { Test-ADDSForestInstallation @Splat }
+        1 { Test-ADDSDomainInstallation @Splat }
+        2 { Test-ADDSDomainInstallation @Splat }
+        3 { Test-ADDSDomainControllerInstallation @Splat }
+    }
 }

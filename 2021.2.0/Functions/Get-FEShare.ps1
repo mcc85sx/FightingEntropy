@@ -32,7 +32,7 @@ Function Get-FEShare
 
         [String] ToString()
         {
-            Return $This.Label
+            Return $This.Name
         }
     }
 
@@ -42,7 +42,30 @@ Function Get-FEShare
 
     ForEach ( $Item in $Return )
     {
-        Get-SMBShare | ? Path -eq $Item.Path | % { $Item.Load($_) }
+        If ( $Name )
+        {
+            Get-SMBShare | ? Name -eq $Name | % { $Item.Load($_) }
+            
+            If (!$Item.Name)
+            {
+                Throw "Invalid name"
+            }
+        }
+
+        ElseIf ( $Path )
+        {
+            Get-SMBShare | ? Path -eq $Path | % { $Item.Load($_) }
+            
+            If (!$Item.Path)
+            {
+                Throw "Invalid path"
+            }
+        }
+
+        Else
+        {
+            Get-SMBShare | ? Path -eq $Item.Path | % { $Item.Load($_) }
+        }
     }
 
     $Return

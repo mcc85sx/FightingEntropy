@@ -29,37 +29,20 @@ Function Get-FEShare
             $This.ScopeName   = $Share.ScopeName
             $This.NetworkPath = "\\{0}\{1}$" -f $This.Hostname,$This.Name.TrimEnd("$")
         }
+
+        [String] ToString()
+        {
+            Return $This.Label
+        }
     }
 
     Import-Module (Get-MDTModule)
 
-    [Object] $Persist = @( )
-    [Object] $Return  = @( )
+    [Object] $Return  = Get-MDTPersistentDrive | % { [_Share]::New($_) }
 
-    ForEach ( $xDrive in Get-MDTPersistentDrive | % { [_Share]::New($_) } )
+    ForEach ( $Item in $Return )
     {
-        Get-SMBShare | ? Path -eq $xDrive.Path | % { $xDrive.Load($_) }
-
-        $Persist += $xDrive
-    }
-
-    ForEach ( $xDrive in $Persist )
-    { 
-        If ( ! ( Get-PSDrive | ? Name -eq $xDrive.Label ) )
-        {
-            $Splat          = @{  
-                
-                Name        = $xDrive.Label 
-                PSProvider  = "MDTProvider"
-                Root        = $xDrive.Path 
-                Description = $xDrive.Description 
-                NetworkPath = $xDrive.NetworkPath
-            } 
-            
-            New-PSDrive @Splat -Verbose
-        }
-
-        $Return            += $xDrive
+        Get-SMBShare | ? Path -eq $Item.Path | % { $Item.Load($_) }
     }
 
     $Return

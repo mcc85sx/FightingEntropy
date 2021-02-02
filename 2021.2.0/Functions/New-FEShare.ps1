@@ -8,8 +8,6 @@ Function New-FEShare
     [Parameter(Mandatory)][String]   $ShareName ,
     [Parameter()]         [String] $Description = "[FightingEntropy]://Development Share" )
 
-    Import-Module ( Get-MDTModule ) -Verbose
-    
     Class _Share
     {
         Hidden [Object] $Shares
@@ -112,6 +110,8 @@ Function New-FEShare
             }
         }
     }
+
+    Import-Module (Get-MDTModule)
 
     $Item = [_Share]::New($Path,$ShareName,$Description)
     $Item.NewSMB()

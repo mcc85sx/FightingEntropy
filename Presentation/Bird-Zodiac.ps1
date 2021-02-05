@@ -1,4 +1,6 @@
 Write-Theme @("Item[0][Original Filename = US-9 13 (1)]",
+"[Resampled] https://drive.google.com/file/d/13NPoJyRENfdy7_kwMVCjfrJccoU3MxUU",
+"[Original]  https://drive.google.com/file/d/1kl_zBSSEqGKk3ri3WKuiF9ISVZoyxErx",
 " ",
 "First initial contact with this 'device'.",
 "Sounds like a BIRD... doesn't it?",
@@ -23,6 +25,8 @@ Write-Theme @("Item[1][Original Filename = IMG_0391.MOV]",
 "I talk about this in IMG_403.")
 
 Write-Theme @( "Item[2][Filename = New Recording 12.m4a]",
+"[Resampled] https://drive.google.com/file/d/1kwus8BqjURYZ6nb8_697W4gdD_jN23bs",
+"[Original]  https://drive.google.com/file/d/1QS6HETkJu-9nbnm84auzjOc8j8vAwSHG",
 " ",
 "I recorded this about an hour or two *after* first showing up at",
 "Stratton Air National Guard on May 22, 2020. The date had changed to May 23, 2020.",

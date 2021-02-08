@@ -1760,7 +1760,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                 <DataGridTemplateColumn Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                                 <ComboBoxItem Content="Skip"/>
                                                 <ComboBoxItem Content="Enable"/>
                                                 <ComboBoxItem Content="Disable"/>
@@ -1786,7 +1786,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                 <DataGridTemplateColumn Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                                 <ComboBoxItem Content="Skip"/>
                                                 <ComboBoxItem Content="Enable"/>
                                                 <ComboBoxItem Content="Disable"/>
@@ -1812,7 +1812,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                 <DataGridTemplateColumn Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                                 <ComboBoxItem Content="Skip"/>
                                                 <ComboBoxItem Content="Enable"/>
                                                 <ComboBoxItem Content="Disable"/>
@@ -1838,7 +1838,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                 <DataGridTemplateColumn Width="100">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                                 <ComboBoxItem Content="Skip"/>
                                                 <ComboBoxItem Content="Enable"/>
                                                 <ComboBoxItem Content="Disable"/>
@@ -1859,7 +1859,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1879,7 +1879,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1899,7 +1899,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1919,7 +1919,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1939,7 +1939,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1959,7 +1959,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1979,7 +1979,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -1999,7 +1999,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>
@@ -2019,7 +2019,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <DataGridTemplateColumn Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                        <ComboBox SelectedIndex="{Binding Slot, Mode=TwoWay, NotifyOnTargetUpdated=True}">
                                             <ComboBoxItem Content="Skip"/>
                                             <ComboBoxItem Content="Enable"/>
                                             <ComboBoxItem Content="Disable"/>

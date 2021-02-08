@@ -1608,7 +1608,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
 </Window>
 '@
             MBWin10 = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Windows 10 Settings/Tweaks Script By Madbomb122" Height="500" Width="700" BorderBrush="Black" Background="White">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Windows 10 Settings/Tweaks Script By Madbomb122" Height="600" Width="800" BorderBrush="Black" Background="White">
     <Window.Resources>
         <Style x:Key="SeparatorStyle1" TargetType="{x:Type Separator}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -1658,23 +1658,26 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="DataGridRow">
+            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" VerticalAlignment="Top">
             <MenuItem Header="Help">
-                <MenuItem Name="UI_Feedback"  Header="Feedback/Bug Report"/>
-                <MenuItem Name="UI_FAQ"       Header="FAQ"/>
-                <MenuItem Name="UI_About"     Header="About"/>
-                <MenuItem Name="UI_Copyright" Header="Copyright"/>
-                <MenuItem Name="UI_Contact"   Header="Contact Me"/>
+                <MenuItem Name="_Feedback" Header="Feedback/Bug Report"/>
+                <MenuItem Name="_FAQ" Header="FAQ"/>
+                <MenuItem Name="_About" Header="About"/>
+                <MenuItem Name="_Copyright" Header="Copyright"/>
+                <MenuItem Name="_Contact" Header="Contact Me"/>
             </MenuItem>
-            <MenuItem Name="UI_Donation"      Header="Donate to Me" Background="#FFFFAD2F" FontWeight="Bold"/>
-            <MenuItem Name="UI_Madbomb"       Header="Madbomb122&apos;s GitHub" Background="#FFFFDF4F" FontWeight="Bold"/>
+            <MenuItem Name="_Donation" Header="Donate to Me" Background="#FFFFAD2F" FontWeight="Bold"/>
+            <MenuItem Name="_Madbomb" Header="Madbomb122&apos;s GitHub" Background="#FFFFDF4F" FontWeight="Bold"/>
         </Menu>
         <TabControl Name="TabControl" Grid.Row="1" BorderBrush="Gainsboro" TabStripPlacement="Left">
             <TabControl.Resources>
@@ -1683,7 +1686,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                         <Setter.Value>
                             <ControlTemplate TargetType="TabItem">
                                 <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4" Margin="2">
-                                    <ContentPresenter x:Name="ContentSite"  VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>
+                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
@@ -1715,11 +1718,11 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Grid.Row="0" Style="{StaticResource xCheckBox}" Name="UI_RestorePoint"  Content="Create Restore Point"/>
-                                <CheckBox Grid.Row="1" Style="{StaticResource xCheckBox}" Name="UI_ShowSkipped"   Content="Show Skipped Items"/>
-                                <CheckBox Grid.Row="2" Style="{StaticResource xCheckBox}" Name="UI_Restart"       Content="Restart When Done (Restart is Recommended)"/>
-                                <CheckBox Grid.Row="3" Style="{StaticResource xCheckBox}" Name="UI_VersionCheck"  Content="Check for Update (If found, will run with current settings)"/>
-                                <CheckBox Grid.Row="4" Style="{StaticResource xCheckBox}" Name="UI_InternetCheck" Content="Skip Internet Check"/>
+                                <CheckBox Grid.Row="0" Style="{StaticResource xCheckBox}" Name="_RestorePoint" Content="Create Restore Point"/>
+                                <CheckBox Grid.Row="1" Style="{StaticResource xCheckBox}" Name="_ShowSkipped" Content="Show Skipped Items"/>
+                                <CheckBox Grid.Row="2" Style="{StaticResource xCheckBox}" Name="_Restart" Content="Restart When Done (Restart is Recommended)"/>
+                                <CheckBox Grid.Row="3" Style="{StaticResource xCheckBox}" Name="_VersionCheck" Content="Check for Update (If found, will run with current settings)"/>
+                                <CheckBox Grid.Row="4" Style="{StaticResource xCheckBox}" Name="_InternetCheck" Content="Skip Internet Check"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Header="Backup" Margin="5">
@@ -1730,10 +1733,10 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Style="{StaticResource xButton}" Name="UI_Save"         Content="Save Settings"/>
-                                <Button Grid.Column="1" Style="{StaticResource xButton}" Name="UI_Load"         Content="Load Settings"/>
-                                <Button Grid.Column="2" Style="{StaticResource xButton}" Name="UI_WinDefault"   Content="Windows Default"/>
-                                <Button Grid.Column="3" Style="{StaticResource xButton}" Name="UI_ResetDefault" Content="Reset All Items"/>
+                                <Button Grid.Column="0" Style="{StaticResource xButton}" Name="_Save" Content="Save Settings"/>
+                                <Button Grid.Column="1" Style="{StaticResource xButton}" Name="_Load" Content="Load Settings"/>
+                                <Button Grid.Column="2" Style="{StaticResource xButton}" Name="_WinDefault" Content="Windows Default"/>
+                                <Button Grid.Column="3" Style="{StaticResource xButton}" Name="_ResetDefault" Content="Reset All Items"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="2" Header="Script" Margin="5">
@@ -1751,191 +1754,74 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Telemetry]">
-                                <ComboBox Name="_Telemetry"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Wi-Fi Sense]">
-                                <ComboBox Name="_WiFiSense"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[SmartScreen]">
-                                <ComboBox Name="_SmartScreen"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Location Tracking]">
-                                <ComboBox Name="_LocationTracking"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Feedback]">
-                                <ComboBox Name="_Feedback"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Advertising ID]">
-                                <ComboBox Name="_AdvertisingID"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Cortana]">
-                                <ComboBox Name="_Cortana"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Cortana Search]">
-                                <ComboBox Name="_CortanaSearch"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Error Reporting]">
-                                <ComboBox Name="_ErrorReporting"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Automatic Logging]">
-                                <ComboBox Name="_AutoLogging"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Diagnostics Tracking]">
-                                <ComboBox Name="_DiagnosticsTracking"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Windows App]">
-                                <ComboBox Name="_WindowsApp"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[Windows Store Auto Download]">
-                                <ComboBox Name="_WindowsAppAutoDL"/>
-                            </GroupBox>
-                        </Grid>
+                        <DataGrid Name="_Privacy" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                                <ComboBoxItem Content="Skip"/>
+                                                <ComboBoxItem Content="Enable"/>
+                                                <ComboBoxItem Content="Disable"/>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Services">
+            <TabItem Header="Service">
                 <GroupBox Style="{StaticResource xGroupBox}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[UAC Level]">
-                                <ComboBox Name="_UAC"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Share Mapped Drives]">
-                                <ComboBox Name="_SMBDrives"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Administrative Shares]">
-                                <ComboBox Name="_AdminShares"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Firewall]">
-                                <ComboBox Name="_Firewall"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Windows Defender]">
-                                <ComboBox Name="_WinDefender"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[HomeGroups]">
-                                <ComboBox Name="_HomeGroups"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Remote Assistance]">
-                                <ComboBox Name="_RemoteAssistance"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Remote Desktop w/ Network Authentication]">
-                                <ComboBox Name="_RemoteDesktop"/>
-                            </GroupBox>
-                        </Grid>
+                        <DataGrid Name="_Service" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                                <ComboBoxItem Content="Skip"/>
+                                                <ComboBoxItem Content="Enable"/>
+                                                <ComboBoxItem Content="Disable"/>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Context/Start">
-                <GroupBox  Style="{StaticResource xGroupBox}">
+            <TabItem Header="Context">
+                <GroupBox Style="{StaticResource xGroupBox}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Cast to Device]">
-                                <ComboBox Name="_CastToDevice"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Previous Versions]">
-                                <ComboBox Name="_PreviousVersions"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Include in Library]">
-                                <ComboBox Name="_IncludeinLibrary"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Pin to Start]">
-                                <ComboBox Name="_PinToStart"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Pin to Quick Access]">
-                                <ComboBox Name="_PinToQuickAccess"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Share w/...]">
-                                <ComboBox Name="_ShareWith"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[Send To...]">
-                                <ComboBox Name="_SendTo"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Bing Search]">
-                                <ComboBox Name="_StartMenuWebSearch"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Start Suggestions]">
-                                <ComboBox Name="_StartSuggestions"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Most Used Apps]">
-                                <ComboBox Name="_MostUsedAppStartMenu"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Recent Items/Frequent Places]">
-                                <ComboBox Name="_RecentItemsFrequent"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Unpin All Items]">
-                                <ComboBox Name="_UnpinItems"/>
-                            </GroupBox>
-                        </Grid>
+                        <DataGrid Name="_Context" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                                <ComboBoxItem Content="Skip"/>
+                                                <ComboBoxItem Content="Enable"/>
+                                                <ComboBoxItem Content="Disable"/>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
@@ -1946,443 +1832,236 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Battery UI Bar]">
-                                <ComboBox Name="_BatteryUIBar"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Clock UI Bar]">
-                                <ComboBox Name="_ClockUIBar"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Volume Control Bar]">
-                                <ComboBox Name="_VolumeControlBar"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Taskbar Search Box]">
-                                <ComboBox Name="_TaskbarSearchBox"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Task View Button]">
-                                <ComboBox Name="_TaskViewButton"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Taskbar Icon Size]">
-                                <ComboBox Name="_TaskbarIconSize"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Taskbar Item Grouping]">
-                                <ComboBox Name="_TaskbarGrouping"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Tray Icons]">
-                                <ComboBox Name="_TrayIcons"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Seconds In Clock]">
-                                <ComboBox Name="_SecondsInClock"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Last Active Click]">
-                                <ComboBox Name="_LastActiveClick"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Taskbar on Multi-Display]">
-                                <ComboBox Name="_TaskBarMultiDisplay"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Taskbar button on Multi-Display]">
-                                <ComboBox Name="_TaskbarButtonMultiDisplay"/>
-                            </GroupBox>
-                        </Grid>
+                        <DataGrid Name="_Taskbar" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox SelectedIndex="{Binding Slot}">
+                                                <ComboBoxItem Content="Skip"/>
+                                                <ComboBoxItem Content="Enable"/>
+                                                <ComboBoxItem Content="Disable"/>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Explorer">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Quick Access/recent files]">
-                                <ComboBox Name="_RecentFileQuickAccess"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Quick Access/frequent folders]">
-                                <ComboBox Name="_FrequentFoldersQuickAccess"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Show window while dragging]">
-                                <ComboBox Name="_WinContentWhileDrag"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Search unknown file extensions]">
-                                <ComboBox Name="_StoreOpenWith"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Show long file path(s)]">
-                                <ComboBox Name="_LongFilePath"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Default Explorer View]">
-                                <ComboBox Name="_ExplorerOpenLoc"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[PowerShell -> Command-X]">
-                                <ComboBox Name="_WinXPowerShell" />
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[App hibernation file]">
-                                <ComboBox Name="_AppHibernationFile"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Process ID on title bar]">
-                                <ComboBox Name="_PidTitleBar"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Accessibility key prompt]">
-                                <ComboBox Name="_AccessKeyPrompt"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[Window Timeline]">
-                                <ComboBox Name="_Timeline"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Aero Snap]">
-                                <ComboBox Name="_AeroSnap"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Aero Shake]">
-                                <ComboBox Name="_AeroShake"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[Known Extentions]">
-                                <ComboBox Name="_KnownExtensions"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Column="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Hidden Files]">
-                                <ComboBox Name="_HiddenFiles"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[System Files]">
-                                <ComboBox Name="_SystemFiles"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[Auto-Play]">
-                                <ComboBox Name="_AutoPlay"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[AutoRun]">
-                                <ComboBox Name="_AutoRun"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Task Manager Details]">
-                                <ComboBox Name="_TaskManager"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[F1 Help Key]">
-                                <ComboBox Name="_F1HelpKey"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[Reopen apps after reboot]">
-                                <ComboBox Name="_ReopenApps"/>
-                            </GroupBox>
-                        </Grid>
-                    </Grid>
+                    <DataGrid Name="_Explorer" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </GroupBox>
             </TabItem>
-            <TabItem Header="Desktop/PC">
+            <TabItem Header="StartMenu">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="Desktop" Margin="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[This PC/My Computer]">
-                                    <ComboBox Name="_MyComputer"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="[Network]">
-                                    <ComboBox Name="_Network"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[Recycle Bin]">
-                                    <ComboBox Name="_RecycleBin"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[User Documents]">
-                                    <ComboBox Name="_UserDocuments"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="4" Header="[Control Panel]">
-                                    <ComboBox Name="_ControlPanel"/>
-                                </GroupBox>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="This PC" Margin="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[Desktop]">
-                                    <ComboBox Name="_Desktop"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="[Documents]">
-                                    <ComboBox Name="_Documents"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[Downloads]">
-                                    <ComboBox Name="_Downloads"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[Music]">
-                                    <ComboBox Name="_Music"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="4" Header="[Pictures]">
-                                    <ComboBox Name="_Pictures"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="5" Header="[Videos]">
-                                    <ComboBox Name="_Videos"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="6" Header="[3D Objects]">
-                                    <ComboBox Name="_3DObjects"/>
-                                </GroupBox>
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
+                    <DataGrid Name="_StartMenu" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Paths">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <DataGrid Name="_Paths" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Icons">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <DataGrid Name="_Icons" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Lock Screen">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <DataGrid Name="_LockScreen" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Miscellaneous">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid>
-                            <Grid Grid.Column="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="120"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="Photo Viewer" Margin="5">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <GroupBox Grid.Row="0" Header="[File Association]">
-                                            <ComboBox Name="_PhotoViewerFileAssociation"/>
-                                        </GroupBox>
-                                        <GroupBox Grid.Row="1" Header="[Add (Open with...)]">
-                                            <ComboBox Name="_PhotoViewerOpenWithMenu"/>
-                                        </GroupBox>
-                                    </Grid>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="Lockscreen" Margin="5">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <GroupBox Grid.Row="0" Header="[Lockscreen]">
-                                            <ComboBox Name="_LockScreen"/>
-                                        </GroupBox>
-                                        <GroupBox Grid.Row="1" Header="[Power Menu]">
-                                            <ComboBox Name="_PowerMenuLockScreen"/>
-                                        </GroupBox>
-                                        <GroupBox Grid.Row="2" Header="[Camera]">
-                                            <ComboBox Name="_CameraLockScreen"/>
-                                        </GroupBox>
-                                        <GroupBox Grid.Row="3" Header="[Account protection warning]">
-                                            <ComboBox Name="_AccountProtection"/>
-                                        </GroupBox>
-                                    </Grid>
-                                </GroupBox>
-                            </Grid>
-                        </Grid>
-                        <GroupBox Grid.Column="1" Header="Miscellaneous" Margin="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[Action Center]">
-                                    <ComboBox Name="_ActionCenter"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="[Sticky Key Prompt]">
-                                    <ComboBox Name="_StickyKeyPrompt"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[NumLock on startup]">
-                                    <ComboBox Name="_NumLockStart"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[F8 Boot Menu]">
-                                    <ComboBox Name="_F8BootMenu"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="4" Header="[Remote UAC Local Account Token Filter]">
-                                    <ComboBox Name="_RemoteUACAccountToken"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="5" Header="[Hibernate Option]">
-                                    <ComboBox Name="_HibernatePower"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="6" Header="[Sleep Option]">
-                                    <ComboBox Name="_SleepPower"/>
-                                </GroupBox>
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
+                    <DataGrid Name="_Miscellaneous" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="PhotoViewer">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <DataGrid Name="_PhotoViewer" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Windows Store">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                <DataGrid Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended" Margin="5">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="{x:Type DataGridRow}">
-                            <Style.Triggers>
-                                <Trigger Property="AlternationIndex" Value="0">
-                                    <Setter Property="Background" Value="White"/>
-                                </Trigger>
-                                <Trigger Property="AlternationIndex" Value="1">
-                                    <Setter Property="Background" Value="#FFD8D8D8"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Display Name" Width="150" Binding="{Binding CName}" CanUserSort="True" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Header="Option" Width="80" SortMemberPath="AppSelected" CanUserSort="True">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding AppOptions}" Text="{Binding Path=AppSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Appx Name" Width="180" Binding="{Binding AppxName}" IsReadOnly="True"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                    <DataGrid Name="_WindowsStore" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </GroupBox>
             </TabItem>
             <TabItem Header="Windows Update">
                 <GroupBox Style="{StaticResource xGroupBox}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="Application/Feature" Margin="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[OneDrive]">
-                                    <ComboBox Name="_OneDrive"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="[OneDrive Install]">
-                                    <ComboBox Name="_OneDriveInstall"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[Xbox DVR]">
-                                    <ComboBox Name="_XboxDVR"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[Media Player]">
-                                    <ComboBox Name="_MediaPlayer"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="4" Header="[Work Folders]">
-                                    <ComboBox Name="_WorkFolders"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="5" Header="[Fax and Scan]">
-                                    <ComboBox Name="_FaxAndScan"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="6" Header="[Windows Subsystem for Linux]">
-                                    <ComboBox Name="_LinuxSubsystem"/>
-                                </GroupBox>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="Windows Update" Margin="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <GroupBox Grid.Row="0" Header="[Check for Update]">
-                                    <ComboBox Name="_CheckForWinUpdate"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="1" Header="[Update Check Type]">
-                                    <ComboBox Name="_WinUpdateType"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[Update P2P]">
-                                    <ComboBox Name="_WinUpdateDownload"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[Update MSRT]">
-                                    <ComboBox Name="_UpdateMSRT"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="4" Header="[Update Driver]">
-                                    <ComboBox Name="_UpdateDriver"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="5" Header="[Restart on Update]">
-                                    <ComboBox Name="_RestartOnUpdate"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="6" Header="[Update Available Popup]">
-                                    <ComboBox Name="_UpdateAvailablePopup"/>
-                                </GroupBox>
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
+                    <DataGrid Name="_WindowsUpdate" Margin="5" AutoGenerateColumns="False" AlternationCount="2" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="150" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Slot}">
+                                            <ComboBoxItem Content="Skip"/>
+                                            <ComboBoxItem Content="Enable"/>
+                                            <ComboBoxItem Content="Disable"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="AppX">
+                <GroupBox Style="{StaticResource xGroupBox}">
+                    <DataGrid Name="_AppX" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended" Margin="5">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="0">
+                                        <Setter Property="Background" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="#FFD8D8D8"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Display Name" Width="150" Binding="{Binding CName}" CanUserSort="True" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="Option" Width="80" SortMemberPath="AppSelected" CanUserSort="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding AppOptions}" Text="{Binding Path=AppSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Appx Name" Width="180" Binding="{Binding AppxName}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </GroupBox>
             </TabItem>
         </TabControl>
-        <Button Name="RunScriptButton" Grid.Row="2" Content="Run Script" VerticalAlignment="Bottom" Height="20" FontWeight="Bold"/>
+        <Button Name="_Start" Grid.Row="2" Width="200" Content="Run Script" VerticalAlignment="Center" Height="20" FontWeight="Bold"/>
     </Grid>
 </Window>
 '@

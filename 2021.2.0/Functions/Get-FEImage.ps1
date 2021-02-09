@@ -137,4 +137,23 @@ Function Get-FEImage
             Dismount-DiskImage -ImagePath $Item
         }
     }
+    
+    $Source      = "\\bluestreet\(2021-01)\Images"
+    $Destination = "C:\ImageTest"
+    $Images      = [_ImageStore]::New($Base,$Destination)
+
+    $Index       = 0
+    $Images.AddImage("Server","Windows Server 2016.iso")
+    $Images.Store[$Index].AddMap(4)
+    $Index ++
+
+    $Images.AddImage("Client","Win10_20H2_English_x64.iso")
+    $Images.Store[$Index].AddMap((4,1,6))
+    $Index ++
+
+    $Images.AddImage("Client","Win10_20H2_English_x32.iso")
+    $Images.Store[$Index].AddMap((4,1,6))
+    $Index ++
+
+    $Images.GetOutput()
 }

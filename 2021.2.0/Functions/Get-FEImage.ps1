@@ -1,5 +1,10 @@
+
 Function Get-FEImage
 {
+    [CmdLetBinding()]Param(
+    [Parameter(Mandatory)][String]$Source,
+    [Parameter(Mandatory)][String]$Target)
+
     Class _ImageIndex
     {
         [String]          $SourceIndex
@@ -32,7 +37,7 @@ Function Get-FEImage
         _ImageFile([String]$Type,[String]$Path)
         {
             $This.Type  = $Type
-
+        
             If ( ! ( Test-Path $Path ) )
             {
                 Throw "Invalid Path"
@@ -73,6 +78,11 @@ Function Get-FEImage
                 Throw "Path exists !"
             }
 
+            If ( !(Test-Path $Target) )
+            {
+                New-Item -Path $Target -ItemType Directory -Verbose
+            }
+
             $This.Source = $Source
             $This.Target = $Target
             $This.Drive  = [Char]( [Int32]( Get-Volume | ? DriveLetter | % DriveLetter )[-1] + 1 )
@@ -101,6 +111,8 @@ Function Get-FEImage
         ExtractImages()
         {
             $Item = $Null
+            $Last = $Null
+            $Swap = $Null
 
             If ( ! $This.Output )
             {
@@ -109,19 +121,21 @@ Function Get-FEImage
 
             ForEach ( $Image in $This.Output )
             {
-                If (!$Item)
-                {
-                    $Item = $Image.SourceImagePath
-                    Write-Theme $Item
-                    Mount-DiskImage -ImagePath $Item
-                }
+                $Item = $Image.SourceImagePath
+                $Swap = Get-DiskImage $Item
 
-                ElseIf ( $Item -ne $Image.SourceImagePath )
+                If (!$Swap.Attached)
                 {
-                    Dismount-DiskImage -ImagePath $Item -EA 0
-                    Start-Sleep -Seconds 2
-                    $Item = $Image.SourceImagePath
-                    Write-Theme $Item
+                    If ( $Last )
+                    {
+                        If ( Get-DiskImage -ImagePath $Last | % Attached )
+                        {
+                            Dismount-DiskImage -ImagePath $Last
+                            Start-Sleep -Seconds 2
+                        }
+                    }
+
+                    Write-Theme "Mounting... $Last"
                     Mount-DiskImage -ImagePath $Item
                 }
 
@@ -130,19 +144,19 @@ Function Get-FEImage
                     SourceImagePath      = "$($This.Drive):\sources\install.wim"
                     DestinationImagePath = $Image.DestinationImagePath
                     DestinationName      = $Image.DestinationName
+            
+                } | % { Export-WindowsImage @_ -Verbose }
 
-                } | % { Export-WindowsImage @_ }
+                $Last = $Item
             }
 
             Dismount-DiskImage -ImagePath $Item
         }
     }
-    
-    $Source      = "\\bluestreet\(2021-01)\Images"
-    $Destination = "C:\ImageTest"
-    $Images      = [_ImageStore]::New($Base,$Destination)
 
-    $Index       = 0
+    $Images = [_ImageStore]::New($Source,$Target)
+
+    $Index  = 0
     $Images.AddImage("Server","Windows Server 2016.iso")
     $Images.Store[$Index].AddMap(4)
     $Index ++
@@ -154,6 +168,4 @@ Function Get-FEImage
     $Images.AddImage("Client","Win10_20H2_English_x32.iso")
     $Images.Store[$Index].AddMap((4,1,6))
     $Index ++
-
-    $Images.GetOutput()
 }

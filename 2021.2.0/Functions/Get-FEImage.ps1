@@ -105,71 +105,6 @@ Function Get-FEImage
                 }
             }
         }
-
-        ExtractImages()
-        {
-            $Item = $Null
-            $Last = $Null
-            $Swap = $Null
-            $Path = $Null
-            $Info = $Null
-
-            If ( ! $This.Output )
-            {
-                Throw "No images detected"
-            }
-
-            ForEach ( $Image in 0..($This.Output.Count - 1) )
-            {
-                $Item = $This.Output[$Image]
-                $Swap = Get-DiskImage -ImagePath $Item.SourceImagePath
-
-                If (!$Swap.Attached)
-                {
-                    If ( $Last -ne $Null )
-                    {
-                        If ( Get-DiskImage -ImagePath $Last | % Attached )
-                        {
-                            Write-Theme "Dismounting... $Last"
-                            Dismount-DiskImage -ImagePath $Last -Verbose
-                            Start-Sleep -Seconds 10
-                        }
-                    }
-
-                    Write-Theme "Mounting... $($Item.SourceImagePath)"
-                    Mount-DiskImage -ImagePath $Item.SourceImagePath -Verbose
-
-                    $Info = Get-WindowsImage -ImagePath "$(Get-DiskImage -ImagePath $Item.SourceImagePath | Get-Volume | % DriveLetter ):\sources\install.wim" -Verbose
-                }
-
-                $ISO                     = @{ 
-
-                    SourceIndex          = $Item.SourceIndex
-                    SourceImagePath      = $Item.SourceImagePath
-                    DestinationImagePath = $Item.DestinationImagePath
-                    DestinationName      = $Info | ? ImageIndex -eq $Item.SourceIndex | % ImageName
-                }
-
-                If ( $Iso.DestinationName -match "Server" )
-                {
-                    $Iso.DestinationName = "{0} (x64)" -f [Regex]::Matches($Iso.DestinationName,"(Windows Server )+(\d){4}( Datacenter| Standard)").Value
-                }
-
-                Else
-                {
-                    $Arch                = Switch -Regex ($Item.DestinationImagePath) { x64 {"64"} x32 {"86"} x86 {"86"} }
-                    $Iso.DestinationName = "{0} (x$Arch)" -f [Regex]::Matches($Iso.DestinationName,"(Windows 10 )+(Pro*|Education|Home)").Value
-                }
-                
-                Write-Theme "Extracting [~] $($ISO.DestinationImagePath)"
-
-                Export-WindowsImage @ISO
-
-                $Last = $Item.SourceImagePath
-            }
-
-            Dismount-DiskImage -ImagePath $Item.SourceImagePath
-        }
     }
 
     $Images = [_ImageStore]::New($Source,$Target)
@@ -229,7 +164,7 @@ Function Get-FEImage
 
             SourceIndex          = $Item.SourceIndex
             SourceImagePath      = $Path
-            DestinationImagePath = $Item.DestinationImagePath
+            DestinationImagePath = $Item.DestinationImagePath.Replace("$Target\","$Target\[$Image]")
             DestinationName      = $Info | ? ImageIndex -eq $Item.SourceIndex | % ImageName
         }
         
@@ -252,4 +187,39 @@ Function Get-FEImage
     }
 
     Dismount-DiskImage -ImagePath $Item.SourceImagePath
+    
+    $Step = 0
+
+    ForEach ( $Item in Get-ChildItem -Path $Target )
+    {
+        $Info = Get-WindowsImage -ImagePath $Item.FullName
+        
+        Switch -Regex ($Item.Name)
+        {
+            Server
+            {
+                $Edition   = Switch -Regex ($Info.ImageName) { Standard { "SD" } Datacenter { "DC" } }
+                $Year      = [Regex]::Matches($Info.ImageName,"(\d{4})").Value
+                $Label     = "{0}{1}" -f $Edition,$Year
+            }
+
+            Client
+            {
+                $Edition   = Switch -Regex ($Info.ImageName) { Pro {"P"} Edu {"E"} Home {"H"} }
+                $Arch      = Switch -Regex ($Item.Name) { x64 {"64"} x32 {"86"} x86 {"86"} }
+                $Label     = "10{0}{1}" -f $Edition,$Arch
+            }
+        }
+
+        $Path = "{0}\[$Step]$Label" -f ($Item.Fullname | Split-Path -Parent)
+
+        If ( ! ( Test-Path -LiteralPath $Path ) )
+        {
+           New-Item -Path $Path -ItemType Directory
+        }
+
+        Move-Item -LiteralPath $Item.FullName -Destination $Path -Verbose
+        Get-ChildItem -LiteralPath $Path -Filter *.wim | Rename-Item -NewName "$Label.wim"
+        $Step ++
+    }
 }

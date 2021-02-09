@@ -211,7 +211,7 @@ Function Get-FEImage
             }
         }
 
-        $Path = "{0}\[$Step]$Label" -f ($Item.Fullname | Split-Path -Parent)
+        $Path = "{0}\($Step)$Label" -f ($Item.Fullname | Split-Path -Parent)
 
         If ( ! ( Test-Path -LiteralPath $Path ) )
         {

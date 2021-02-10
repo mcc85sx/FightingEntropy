@@ -1,4 +1,4 @@
-Function Get-FEImage
+Function New-FEImage
 {
     [CmdLetBinding()]Param(
     [Parameter(Mandatory)][String]$Source,

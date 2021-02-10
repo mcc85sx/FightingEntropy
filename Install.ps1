@@ -20,3 +20,6 @@ Function Install-FEModule
 }
 
 $Install = Install-FEModule -Version 2021.2.0
+Set-ExecutionPolicy Bypass -Scope Process -Force
+Add-Type -AssemblyName PresentationFramework
+Import-Module FightingEntropy -Verbose

@@ -13,14 +13,15 @@ Function New-FEShare
         Hidden [Object] $Shares
         [String]          $Path
         [String]      $Hostname
+        [String]         $Label
         [String]          $Name
         [Object]          $Root
         [String]     $ShareName
         [String]   $NetworkPath
         [String]   $Description = $Null
-        [String]      $Comments = (Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]")
+        [String]      $Comments = "[FightingEntropy($([Char]960))]$(Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]")"
 
-        _Share([String]$Path,[String]$SMBName,[String]$Description)
+        _Share([String]$Path,[String]$Name,[String]$Description)
         {
             If (!(Test-Path $Path))
             {
@@ -41,23 +42,23 @@ Function New-FEShare
             $This.Shares       = Get-MDTPersistentDrive
 
             $This.Hostname     = Resolve-DNSName ([Environment]::MachineName) | % Name | Select-Object -Unique
-            $This.ShareName    = "{0}$" -f $SMBName.TrimEnd("$")
+            $This.ShareName    = "{0}$" -f $Name.TrimEnd("$")
 
-            $This.Name         = $This.GetLabel()
+            $This.Label        = $This.GetLabel()
             $This.NetworkPath  = "\\{0}\{1}" -f $This.HostName, $This.ShareName
         }
 
         [String] GetLabel()
         {                
-            Return @( If ($This.Shares)
+            If ($This.Shares)
             {
-                $This.Shares | % Name | % { @($_,$_[-1])[[Int32]($_.Count -gt 1)].Replace("DS","") } | % { "FE{0:d3}" -f ( [Int32]$_ + 1 ) }
+                Return @( $This.Shares | % Name | % { @($_,$_[-1])[[Int32]($_.Count -gt 1)].Replace("DS","") } | % { "FE{0:d3}" -f ( [Int32]$_ + 1 ) } )
             }
 
             Else
             {
-                "FE001"
-            })
+                Return "FE001"
+            }
         }
 
         [Object] CheckPath()
@@ -73,7 +74,7 @@ Function New-FEShare
             })
         }
 
-        NewSMB()
+        NewSMBShare()
         {
             If ( $This.ShareName -notin ( Get-SMBShare | % Name ) )
             {
@@ -88,14 +89,14 @@ Function New-FEShare
             }
         }
 
-        NewPSD()
+        NewPSDrive()
         {
             If ( $This.Name -notin ( Get-PSDrive | % Name ) )
             {
                 Write-Host "New-PSDrive $($This.Name)"
 
                 @{  
-                    Name           = $This.Name
+                    Name           = $This.Label
                     PSProvider     = "MDTProvider"
                     Root           = $This.Root
                     Description    = $This.Description
@@ -110,13 +111,20 @@ Function New-FEShare
                 New-PSDrive -Name $This.Name -Verbose
             }
         }
+
+        LoadPSDrive()
+        {
+            Get-MDTPersistentDrive | % { New-PSDrive -Name $_.Name -PSProvider MDTProvider -Root $This.Root }
+        }
     }
 
     Import-Module (Get-MDTModule)
 
     $Item   = [_Share]::New($Path,$ShareName,$Description)
-    $Item.NewSMB()
-    $Item.NewPSD()
+    $Item.NewSMBShare()
+    $Item.NewPSDrive()
+    
+    Get-MDTPersistentDrive | % { New-PSDrive -Name $_.Name -PSProvider MDTProvider -Root $Item.Root }
 
     # Load Module / Share Drive Mount
     $Module                = Get-FEModule
@@ -177,7 +185,7 @@ Function New-FEShare
 
     ForEach ( $File in $Module.Control | ? Extension -eq ".png" )
     {
-        If ( (Get-Item "$Scripts\$($File.Name)" | % Length ) -ne $File.Length )
+        If ( (Get-Item "$Script\$($File.Name)" | % Length ) -ne $File.Length )
         {
             Copy-Item -Path $File.Fullname -Destination $Scripts -Force -Verbose
         }

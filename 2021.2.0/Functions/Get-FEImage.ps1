@@ -61,9 +61,9 @@ Function Get-FEImage
 
     Else
     {
-        Get-ChildItem -Path $Source -Recurse -Filter *.wim | % { 
+        Get-ChildItem -Path $Source -Recurse -Filter *.wim | ? InstallationType -ne WindowsPE | % { 
         
-            [_ImageIndex]::New($X++,$_.FullName)     
+            [_ImageIndex]::New($X++,$_.FullName)
         }
     }
 }

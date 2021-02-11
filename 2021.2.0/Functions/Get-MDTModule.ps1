@@ -151,7 +151,7 @@ Function Get-MDTModule
 
             ForEach ( $Template in Get-FEModule -Control | ? Name -match Mod.xml )
             {
-                If (!(Test-Path $Install\Templates\$Template))
+                If (!(Test-Path $Install\Templates\$($Template.Name)))
                 {
                     Copy-Item -Path $Template.FullName -Destination $Install\Templates
                 }

@@ -10,84 +10,65 @@ Function Import-FEImage
         Throw "Invalid path"
     }
 
-    $Images = @( )
-    
-    ForEach ( $Image in Get-FEImage -Source $Source )
-    {
-        $Images  += $Image
-    }
+    $Images = Get-FEImage -Source $Source
     
     If (!$Images)
     {
         Throw "No images detected"
     }
 
-    $Images  | Format-Table
-
     Import-Module (Get-MDTModule) -Verbose
 
-    $Share   = Get-FEShare -Name $ShareName
-    $Share   | % { New-PSDrive -Name $_.Label -PSProvider MDTProvider -Root $_.Path -Verbose -EA 0 } 
-
-    # Operating Systems ------------
-    $OS      = "$($Share.Label):\Operating Systems"
-    $TS      = "$($Share.Label):\Task Sequences"
-    $Comment = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]"
-
-    "Client","Server" | % { 
+    $Share       = Get-FEShare -Name $ShareName
     
-        If (!(Test-Path "$OS\$_"))
-        {
-            New-Item -Path $OS -Enable True -Name $_ -Comments $Comment -ItemType Folder -Verbose
-        }
+    New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Verbose -EA 0 
 
-        If (!(Test-Path "$TS\$_"))
-        {
-            New-Item -Path $TS -Enable True -Name $_ -Comments $Comment -ItemType Folder -Verbose
-        }
+    $OS          = "$($Share.Label):\Operating Systems"
+    $TS          = "$($Share.Label):\Task Sequences"
+    $Comment     = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]"
+    $Control     = Get-FEModule -Control
 
-        $Version = $Images | ? InstallationType -eq $_ | % Version | Select-Object -Unique
+    ForEach ( $Type in "Client","Server" )
+    {
+        $Version = $Images | ? InstallationType -eq $Type | % Version | Select-Object -Unique
 
-        If (!(Test-Path "$OS\$_\$Version"))
-        {
-            New-Item -Path "$OS\$_" -Enable True -Name $Version -Comments $Comment -ItemType Folder -Verbose
-        }
+        $OS,$TS | % { 
+        
+            If (!(Test-Path "$_\$Type"))
+            {
+                New-Item -Path $_ -Enable True -Name $Type -Comments $Comment -ItemType Folder -Verbose
+            }
 
-        If (!(Test-Path "$TS\$_\$Version"))
-        {
-            New-Item -Path "$TS\$_" -Enable True -Name $Version -Comments $Comment -ItemType Folder -Verbose
+            If (!(Test-Path "$_\$Type\$Version"))
+            {
+                New-Item -Path "$_\$Type" -Enable True -Name $Version -Comments $Comment -ItemType Folder -Verbose
+            }
         }
     }
-
-    $Control                    = Get-FEModule -Control
 
     ForEach ( $Image in $Images )
     {
         $Type                   = $Image.InstallationType
+        $Path                   = "$OS\$Type\$($Image.Version)"
 
         $OperatingSystem        = @{
 
-            Path                = $OS,$Type,$Image.Version -join '\'
+            Path                = $Path
             SourceFile          = $Image.SourceImagePath
             DestinationFolder   = $Image.Label
         }
         
         Import-MDTOperatingSystem @OperatingSystem -Move -Verbose
 
-        $Guid                   = Get-ChildItem $OperatingSystem.Path | ? Name -match $Image.Label | % Guid
-        $Swap                   = $Control | ? Name -match "MDT$Type" | Get-Content 
-        $Line                   = [Regex]::Matches($Swap,("{"+((8,4,4,4,12|%{"[0-9a-f]{$_}"}) -join '-')+"}")).Value | Select-Object -Unique
-        $Swap                   = $Guid.Swap -Replace $Line, $Guid
-
         $TaskSequence           = @{ 
             
-            Path                = "$TS\$Type\$Version"
+            Path                = "$TS\$Type\$($Image.Version)"
             Name                = $Image.ImageName
-            Template            = $Swap
-            Comments            = $Comments
+            Template            = "FE{0}Mod.xml" -f $Type
+            Comments            = $Comment
             ID                  = $Image.Label
             Version             = "1.0"
-            OperatingSystemPath = Get-ChildItem -Path $OperatingSystem.Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Splat.Path, $_.Name }
+            OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
             FullName            = "Administrator"
             OrgName             = "Secure Digits Plus"
             HomePage            = "www.securedigitsplus.com"

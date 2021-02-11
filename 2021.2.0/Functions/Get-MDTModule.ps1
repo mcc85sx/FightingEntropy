@@ -146,7 +146,18 @@ Function Get-MDTModule
     {
         If ( $MDT.Registry | ? DisplayName -match "Microsoft Deployment Toolkit" )
         {
-            Get-ItemProperty "HKLM:\Software\Microsoft\Deployment 4" | % Install_Dir | Get-ChildItem -Filter *Toolkit.psd1 -Recurse | % FullName
+            $Install   = Get-ItemProperty "HKLM:\Software\Microsoft\Deployment 4" | % Install_Dir | % TrimEnd \
+            $Templates = Get-FEModule -Control | ? Name -match Mod.xml
+
+            ForEach ( $Template in Get-FEModule -Control | ? Name -match Mod.xml )
+            {
+                If (!(Test-Path $Install\Templates\$Template))
+                {
+                    Copy-Item -Path $Template.FullName -Destination $Install\Templates -Verbose
+                }
+            }
+
+            $Install | Get-ChildItem -Filter *Toolkit.psd1 -Recurse | % FullName
         }
     }
 }

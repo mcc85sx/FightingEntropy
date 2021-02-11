@@ -153,7 +153,7 @@ Function Get-MDTModule
             {
                 If (!(Test-Path $Install\Templates\$Template))
                 {
-                    Copy-Item -Path $Template.FullName -Destination $Install\Templates -Verbose
+                    Copy-Item -Path $Template.FullName -Destination $Install\Templates
                 }
             }
 

@@ -6,15 +6,14 @@ Function New-FEImage
     
     Class _ImageIndex
     {
-        [UInt32] $Rank
-        [UInt32] $SourceIndex
-        [String] $SourceImagePath
-        [String] $Path
-        [String] $DestinationImagePath
-        [String] $DestinationName
-        [Object] $Disk
+        Hidden [UInt32] $Rank
+        Hidden [UInt32] $SourceIndex
+        Hidden [String] $SourceImagePath
+        Hidden [String] $Path
+        Hidden [String] $DestinationImagePath
+        Hidden [String] $DestinationName
+        Hidden [Object] $Disk
         [Object] $Label
-
         [UInt32] $ImageIndex            = 1
         [String] $ImageName
         [String] $ImageDescription
@@ -146,15 +145,16 @@ Function New-FEImage
             {
                 $Image       = $This.Swap[$X]
 
-                If ( $Last -ne $Null -and $Last -notmatch $Image.SourceImagePath )
+                If ( $Last -ne $Null -and $Last -ne $Image.SourceImagePath )
                 {
-                    Write-Theme "Dismounting... $Last"
+                    Write-Theme "Dismounting... $Last" 12,15,15,0
+
                     Dismount-DiskImage -ImagePath $Last -Verbose
                 }
 
                 If (!(Get-DiskImage -ImagePath $Image.SourceImagePath | % Attached))
                 {
-                    Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath)
+                    Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath) 11,15,15,0
                     Mount-DiskImage -ImagePath $Image.SourceImagePath
                 }
 
@@ -206,7 +206,7 @@ Function New-FEImage
 
                 Export-WindowsImage @ISO
 
-                Write-Theme "Extracted [+] $($Iso.DestinationName)"
+                Write-Theme "Extracted [+] $($Iso.DestinationName)" 10,11,15,0
 
                 $Last = $Image.SourceImagePath
 

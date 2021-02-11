@@ -190,4 +190,6 @@ Function New-FEShare
             Copy-Item -Path $File.Fullname -Destination $Scripts -Force -Verbose
         }
     }
+
+    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEmodule.ps1) -Destination $Script
 }

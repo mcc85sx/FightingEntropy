@@ -24,12 +24,11 @@ Class _Manifest
                               "Image Images Updates",
                               "Role Win32_Client Win32_Server UnixBSD RHELCentOS DCFound" -join " ").Split(" ") | % { "_$_.ps1" })
 
-    [String[]] $Functions = ("Add-ACL","Complete-IISServer","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
-                             "Get-FEHost","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEManifest","Get-ServerDependency",
-                             "Get-ViperBomb","Get-XamlWindow","Get-MDTModule","Install-IISServer","New-ACLObject","New-Company",
-                             "Show-ToastNotification","New-FEShare","Get-FEShare","Remove-FEShare","Write-Theme","Remove-FEModule",
-                             "New-EnvironmentKey","Get-MadBomb","New-FEImage" ,"Get-FEImage","Import-FEImage","Export-Ini",
-                             "Install-FEModule" | % { "$_.ps1" })
+    [String[]] $Functions = (("Add-ACL","Complete-IISServer","Export-Ini","Get-Certificate","Get-DiskInfo","Get-FEDCPromo","Get-FEDCPromoProfile","Get-FEHive",
+                              "Get-FEHost","Get-FEImage","Get-FEManifest","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEShare","Get-MadBomb",
+                              "Get-MDTModule","Get-ServerDependency","Get-ViperBomb","Get-XamlWindow","Import-FEImage","Install-FEModule","Install-IISServer",
+                              "New-ACLObject","New-Company","New-EnvironmentKey","New-FEImage","New-FEShare","Remove-FEModule","Remove-FEShare",
+                              "Show-ToastNotification","Update-FEShare","Write-Theme" | % { "$_" })
 
     [String[]]   $Control = ("Computer.png DefaultApps.xml FE{0} FE{1} MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml","ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")

@@ -17,7 +17,7 @@ Function Get-FEShare
 
         _Share([Object]$Persist)
         {
-            $This.Hostname    = [Environment]::MachineName
+            $This.Hostname    = [Environment]::MachineName | Resolve-DNSName | % Name | Select-Object -Unique
             $This.Label       = $Persist.Name
             $This.Path        = $Persist.Path
             $This.Description = $Persist.Description

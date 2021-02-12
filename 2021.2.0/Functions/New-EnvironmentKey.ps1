@@ -245,7 +245,7 @@ Function New-EnvironmentKey
             {                
                 If ( ! ( Test-Path $This.FilePath[$I] ) )
                 {
-                    New-Item -Path $This.FilePath[$I] -Verbose
+                    New-Item -Path $This.FilePath[$I] -ItemType Directory -Verbose
                 }
 
                 Copy-Item -Path @( $This.Logo, $This.Background )[[Int32]( $I -in 2..4 )] -Destination $This.FilePath[$I] -Verbose

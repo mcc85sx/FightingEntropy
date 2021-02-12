@@ -3,7 +3,13 @@ Function Update-FEShare
     [CmdLetBinding()]Param(
     [Parameter(Mandatory)][String]$ShareName,
     [ValidateSet(0,1,2)]
-    [Parameter()][UInt32]$Mode)
+    [Parameter()][UInt32]$Mode,
+    [Parameter(Mandatory)][PSCredential]$Credential = $Null)
+
+    If ( $Credential -eq $Null )
+    {
+        $Credential = Get-Credential
+    }
 
     Class _BootImage
     {
@@ -61,6 +67,60 @@ Function Update-FEShare
 
     # Load FEShare(PSDrive)
     New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description
+
+    $Control = "$($Share.Path)\Control"
+    Do
+    {
+        $X = @( ) 
+        $X += Read-Host "Enter Company Name"
+        $X += Read-Host "Confirm Company Name"
+    }
+    Until( $X[0] -match $X[1] )
+
+    # Share Settings
+    Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
+    Set-ItemProperty $Root -Name MonitorHost -Value $Item.HostName -Verbose
+
+    # Image Names/Background
+    $Names  = 64 , 86 | % { "Boot.x$_" } | % { "$_.Generate{0}ISO $_.{0}WIMDescription $_.{0}ISOName $_.BackgroundFile" -f "LiteTouch" -Split " " }
+    $Values = 64 , 86 | % { "$($Module.Name)(x$_)" } | % { "True;$_;$_.iso;$($Module.Graphics | ? Name -match OEMbg.jpg)" -Split ";" }
+
+    ForEach ( $X in 0..($Names.Count - 1 ) )
+    {
+        If ( ( Get-ItemProperty -Path $Root | % $Names[$X] ) -ne $Values[$X] )
+        {
+            Set-ItemProperty -Path $Root -Name $Names[$X] -Value $Values[$X] -Verbose
+        }
+    }
+
+    # Insert Credential Object
+    # Bootstrap
+    Export-Ini $Control\Bootstrap.ini @{ 
+
+        Settings           = @{ Priority           = "Default"                      }
+        Default            = @{ DeployRoot         = $Item.NetworkPath
+                                UserID             = $Credential.UserName
+                                UserPassword       = $Credential.GetNetworkCredential().Password
+                                UserDomain         = $env:USERDOMAIN
+                                SkipBDDWelcome     = "YES"                          }
+    }
+
+    # CustomSettings
+    Export-Ini $Control\CustomSettings.ini @{
+
+        Settings           = @{ Priority           = "Default" 
+                                Properties         = "MyCustomProperty" }
+        Default            = @{ _SMSTSOrgName      = $X[1]
+                                OSInstall          = "Y"
+                                SkipCapture        = "NO"
+                                SkipAdminPassword  = "YES" 
+                                SkipProductKey     = "YES" 
+                                SkipComputerBackup = "NO" 
+                                SkipBitLocker      = "YES" 
+                                KeyboardLocale     = "en-US" 
+                                TimeZoneName       = Get-TimeZone | % ID
+                                EventService       = "http://{0}:9800" -f $Item.Hostname }
+    }
 
     # Update FEShare(MDT)
     Switch($Mode)

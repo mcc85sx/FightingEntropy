@@ -6,7 +6,7 @@ Function New-FEShare
     [Parameter(Mandatory)][String]        $Path ,
     [ValidateNotNullOrEmpty()]
     [Parameter(Mandatory)][String]   $ShareName ,
-    [Parameter()]         [String] $Description = "[FightingEntropy]://Development Share" )
+    [Parameter()]         [String] $Description = "[FightingEntropy($([Char]960))]]://Development Share" )
 
     Class _Share
     {
@@ -18,8 +18,8 @@ Function New-FEShare
         [Object]          $Root
         [String]     $ShareName
         [String]   $NetworkPath
-        [String]   $Description = $Null
-        [String]      $Comments = "[FightingEntropy($([Char]960))]$(Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]")"
+        [String]   $Description
+        [String]      $Comments = "$(Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]")"
 
         _Share([String]$Path,[String]$Name,[String]$Description)
         {
@@ -40,25 +40,10 @@ Function New-FEShare
             Import-Module (Get-MDTModule)
 
             $This.Shares       = Get-MDTPersistentDrive
-
+            $This.Label        = If ($This.Shares) { "FE{0:d3}" -f ($This.Shares.Count + 1) } Else { "FE001" }
             $This.Hostname     = Resolve-DNSName ([Environment]::MachineName) | % Name | Select-Object -Unique
             $This.ShareName    = "{0}$" -f $Name.TrimEnd("$")
-
-            $This.Label        = $This.GetLabel()
             $This.NetworkPath  = "\\{0}\{1}" -f $This.HostName, $This.ShareName
-        }
-
-        [String] GetLabel()
-        {                
-            If ($This.Shares)
-            {
-                Return @( $This.Shares | % Name | % { @($_,$_[-1])[[Int32]($_.Count -gt 1)].Replace("DS","") } | % { "FE{0:d3}" -f ( [Int32]$_ + 1 ) } )
-            }
-
-            Else
-            {
-                Return "FE001"
-            }
         }
 
         [Object] CheckPath()
@@ -111,20 +96,24 @@ Function New-FEShare
                 New-PSDrive -Name $This.Name -Verbose
             }
         }
-
-        LoadPSDrive()
-        {
-            Get-MDTPersistentDrive | % { New-PSDrive -Name $_.Name -PSProvider MDTProvider -Root $This.Root }
-        }
     }
 
     Import-Module (Get-MDTModule)
 
+    #$Item        = [_Share]::New("C:\FlightTest","FightingEntropy$",$Description)
+    
     $Item   = [_Share]::New($Path,$ShareName,$Description)
+
     $Item.NewSMBShare()
     $Item.NewPSDrive()
     
-    Get-MDTPersistentDrive | % { New-PSDrive -Name $_.Name -PSProvider MDTProvider -Root $Item.Root }
+    Get-MDTPersistentDrive | % { 
+
+        If ((Get-PSDrive -Name $_.Name -EA 0 -Verbose) -eq $Null )
+        {
+            New-PSDrive -Name $_.Name -PSProvider MDTProvider -Root $_.Path -Verbose
+        }
+    }
 
     # Load Module / Share Drive Mount
     $Module                = Get-FEModule
@@ -155,41 +144,37 @@ Function New-FEShare
     }
 
     # Bootstrap
-    $Bootstrap             = @{ 
+    Export-Ini $Control\Bootstrap.ini @{ 
+
         Settings           = @{ Priority           = "Default"                      }
-        Default            = @{ DeployRoot         = $This.Share.NetworkPath
-                                UserID             = "mcook85@securedigitsplus.com"
-                                UserPassword       = "password"
-                                UserDomain         = "SECURED"
+        Default            = @{ DeployRoot         = $Item.NetworkPath
+                                UserID             = ""
+                                UserPassword       = ""
+                                UserDomain         = ""
                                 SkipBDDWelcome     = "YES"                          }
     }
-    Export-Ini -Path $Control\Bootstrap.ini -Value $BootStrap | Out-Null
 
     # CustomSettings
-    $CustomSettings        = @{ 
+    Export-Ini $Control\CustomSettings.ini @{
+
         Settings           = @{ Priority           = "Default" 
-                                Properties         = "MyCustomProperty" } 
-        Default            = @{ _SMSTSOrgName      = "Secure Digits Plus LLC"
-                                OSInstall          = "Y" 
-                                SkipCapture        = "NO" 
+                                Properties         = "MyCustomProperty" }
+        Default            = @{ _SMSTSOrgName      = ""
+                                OSInstall          = "Y"
+                                SkipCapture        = "NO"
                                 SkipAdminPassword  = "YES" 
                                 SkipProductKey     = "YES" 
                                 SkipComputerBackup = "NO" 
                                 SkipBitLocker      = "YES" 
                                 KeyboardLocale     = "en-US" 
                                 TimeZoneName       = Get-TimeZone | % ID
-                                EventService       = "http://{0}:9800" -f $This.Share.Hostname }
+                                EventService       = "http://{0}:9800" -f $Item.Hostname }
     }
 
-    Export-Ini -Path $Control\CustomSettings.ini -Value $CustomSettings | Out-Null
-
-    ForEach ( $File in $Module.Control | ? Extension -eq ".png" )
+    ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {
-        If ( (Get-Item "$Script\$($File.Name)" | % Length ) -ne $File.Length )
-        {
-            Copy-Item -Path $File.Fullname -Destination $Scripts -Force -Verbose
-        }
+        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 
-    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEmodule.ps1) -Destination $Script
+    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEmodule.ps1) -Destination $Script -Force -Verbose
 }

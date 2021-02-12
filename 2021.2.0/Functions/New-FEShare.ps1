@@ -148,9 +148,9 @@ Function New-FEShare
 
         Settings           = @{ Priority           = "Default"                      }
         Default            = @{ DeployRoot         = $Item.NetworkPath
-                                UserID             = ""
-                                UserPassword       = ""
-                                UserDomain         = ""
+                                UserID             = "mcook85@securedigitsplus.com"
+                                UserPassword       = "password"
+                                UserDomain         = "SECURED"
                                 SkipBDDWelcome     = "YES"                          }
     }
 
@@ -159,7 +159,7 @@ Function New-FEShare
 
         Settings           = @{ Priority           = "Default" 
                                 Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = ""
+        Default            = @{ _SMSTSOrgName      = "Secure Digits Plus LLC"
                                 OSInstall          = "Y"
                                 SkipCapture        = "NO"
                                 SkipAdminPassword  = "YES" 
@@ -176,5 +176,5 @@ Function New-FEShare
         Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 
-    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEmodule.ps1) -Destination $Script -Force -Verbose
+    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEModule.ps1) -Destination $Script -Force -Verbose
 }

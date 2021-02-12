@@ -1,0 +1,100 @@
+# What got me started with programming... a batch file.
+
+setlocal
+set P1="C:\Program Files (x86)\VMware\VMware Workstation\vmrun"
+set P2="C:\Program Files (x86)\VMware\VMware Workstation\vmware-vdiskmanager"
+set name=VM_1
+set mach=.vmx
+set disk=.vmdk
+set envy=.nvram
+set log1=.log
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+set name=VM_2
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+set name=VM_3
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+set name=VM_4
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+set name=VM_5
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+set name=VM_6
+set s_=D:\%name%\
+set e_=V:\VDI\%name%\
+set r1=robocopy %s_% %e_% %name%%mach%
+set r2=robocopy %s_% %e_% %name%%disk%
+set r3=robocopy %s_% %e_% %name%%envy%
+set r4=robocopy %s_% %e_% %name%%log1%
+%P1% -T ws stop "%s_%%name%%mach%"
+ping 127.0.0.1 -n 30 >Nul
+%P2% -d %s_%%name%%disk%
+%r1%
+%r2%
+%r3%
+%r4%
+%P1% -T ws start "%s_%%name%%mach%"
+:end</pre>

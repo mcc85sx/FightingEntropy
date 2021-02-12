@@ -1,14 +1,21 @@
 Function Update-FEShare
 {
     [CmdLetBinding()]Param(
-    [Parameter(Mandatory)][String]$ShareName,
+    [Parameter(ParameterSetName=0,Mandatory)][String]$ShareName,
+    [Parameter(ParameterSetName=1,Mandatory)][Object]$Share,
     [ValidateSet(0,1,2)]
     [Parameter()][UInt32]$Mode,
     [Parameter(Mandatory)][PSCredential]$Credential = $Null)
 
-    If ( $Credential -eq $Null )
+    # Load Credential
+    If (!($Credential))
     {
         $Credential = Get-Credential
+    }
+
+    If (!($Credential))
+    {
+        Throw "Invalid entry"
     }
 
     Class _BootImage
@@ -58,7 +65,10 @@ Function Update-FEShare
     Import-Module (Get-MDTModule)
 
     # Load FEShare(SMBShare)
-    $Share = Get-FEShare -Name $ShareName
+    If ( $ShareName )
+    {
+        $Share = Get-FEShare -Name $ShareName
+    }
 
     If (!($Share))
     {
@@ -66,8 +76,12 @@ Function Update-FEShare
     }
 
     # Load FEShare(PSDrive)
-    New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description
+    If (!(Get-PSDrive -Name $Share.Label))
+    {
+        New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description
+    }
 
+    # Get _SMSTSOrg Name
     $Control = "$($Share.Path)\Control"
     Do
     {
@@ -76,6 +90,7 @@ Function Update-FEShare
         $X += Read-Host "Confirm Company Name"
     }
     Until( $X[0] -match $X[1] )
+    $Company = $X[0]
 
     # Share Settings
     Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
@@ -93,7 +108,6 @@ Function Update-FEShare
         }
     }
 
-    # Insert Credential Object
     # Bootstrap
     Export-Ini $Control\Bootstrap.ini @{ 
 
@@ -110,7 +124,7 @@ Function Update-FEShare
 
         Settings           = @{ Priority           = "Default" 
                                 Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = $X[1]
+        Default            = @{ _SMSTSOrgName      = $Company
                                 OSInstall          = "Y"
                                 SkipCapture        = "NO"
                                 SkipAdminPassword  = "YES" 
@@ -125,10 +139,9 @@ Function Update-FEShare
     # Update FEShare(MDT)
     Switch($Mode)
     {
-        0 
-        {  
-            Update-MDTDeploymentShare -Path "$($Share.Label):\" -Force -Verbose
-        }
+        0 { Update-MDTDeploymentShare -Path "$($Share.Label):\"                  -Force -Verbose }
+        1 { Update-MDTDeploymentShare -Path "$($Share.Label):\" -Compress $False -Force -Verbose }
+        2 { Update-MDTDeploymentShare -Path "$($Share.Label)\"  -Compress $True  -Force -Verbose }
     }
 
     # Update/Flush FEShare(Images)
@@ -171,11 +184,11 @@ Function Update-FEShare
     {        
         If (Get-WdsBootImage -Architecture $Image.Type -ImageName $Image.Name )
         {
-            Write-Theme "Detected [!] ($($Image.Name)), removing..." 12,4,15,0
-            Remove-WDSBootImage -Architecture $Image.Type -ImageName $Image
+            Write-Theme "Detected [!] $($Image.Name), removing..." 12,4,15,0
+            Remove-WDSBootImage -Architecture $Image.Type -ImageName $Image.Name
         }
 
-        Write-Theme "Importing [~] ($($Image.Name))" 10,11,15,0
+        Write-Theme "Importing [~] $($Image.Name)" 11,3,15,0
         Import-WdsBootImage -Path $Image.Wim.FullName -NewDescription $Image.Name
     }
 

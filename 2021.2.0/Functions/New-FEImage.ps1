@@ -30,16 +30,41 @@ Function New-FEImage
             $This.Disk                  = Get-DiskImage -ImagePath $This.SourceImagePath
         }
 
-        Load()
+        Load([String]$Target)
         {
-            $This.Image                 = Get-WindowsImage -ImagePath $This.DestinationImagePath -Index $This.SourceIndex
-            $This.Image                 | % {
+            Get-WindowsImage -ImagePath $This.Path -Index $This.SourceIndex | % {
 
                 $This.ImageName         = $_.ImageName
                 $This.ImageDescription  = $_.ImageDescription
-                $This.Architecture      = $_.Architecture
+                $This.Architecture      = Switch ([UInt32]($_.Architecture -eq 9)) { 0 { 86 } 1 { 64 } }
                 $This.Version           = $_.Version
-                $This.InstallationType  = $_.InstallationType
+                $This.InstallationType  = $_.InstallationType.Split(" ")[0]
+            }
+
+            Switch($This.InstallationType)
+            {
+                Server
+                {
+                    $Year    = [Regex]::Matches($This.ImageName,"(\d{4})").Value
+                    $Edition = Switch -Regex ($This.ImageName) { STANDARD { "Standard" } DATACENTER { "Datacenter" } }
+                    $This.DestinationName = "Windows Server $Year $Edition (x64)"
+                    $This.Label           = "{0}{1}" -f $(Switch -Regex ($This.ImageName){Standard{"SD"}Datacenter{"DC"}}),[Regex]::Matches($This.ImageName,"(\d{4})").Value
+                }
+
+                Client
+                {
+                    $This.DestinationName = "{0} (x{1})" -f $This.ImageName, $This.Architecture
+                    $This.Label           = "10{0}{1}"   -f $(Switch -Regex ($This.ImageName) { Pro {"P"} Edu {"E"} Home {"H"} }),$This.Architecture
+                }
+            }
+
+            $This.DestinationImagePath    = "{0}\({1}){2}\{2}.wim" -f $Target,$This.Rank,$This.Label
+
+            $Folder                       = $This.DestinationImagePath | Split-Path -Parent
+
+            If (!(Test-Path $Folder))
+            {
+                New-Item -Path $Folder -ItemType Directory -Verbose
             }
         }
     }
@@ -120,7 +145,7 @@ Function New-FEImage
 
                         SourceIndex          = $Index
                         SourceImagePath      = $Image.Path
-                        DestinationImagePath = "{0}\({1}){2}({3}).wim" -f $This.Target, $Ct, $Image.DisplayName, $Index
+                        DestinationImagePath = ("{0}\({1}){2}({3}).wim" -f $This.Target, $Ct, $Image.DisplayName, $Index)
                         DestinationName      = "{0}({1})" -f $Image.DisplayName,$Index
                     }
 
@@ -148,7 +173,6 @@ Function New-FEImage
                 If ( $Last -ne $Null -and $Last -ne $Image.SourceImagePath )
                 {
                     Write-Theme "Dismounting... $Last" 12,15,15,0
-
                     Dismount-DiskImage -ImagePath $Last -Verbose
                 }
 
@@ -158,41 +182,13 @@ Function New-FEImage
                     Mount-DiskImage -ImagePath $Image.SourceImagePath
                 }
 
-                $Image.Path                 = $This.GetImagePath($Image.SourceImagePath)
-
-                Get-WindowsImage -ImagePath $Image.Path -Index $Image.SourceIndex | % {
-
-                    $Image.ImageName        = $_.ImageName
-                    $Image.ImageDescription = $_.ImageDescription
-                    $Image.Version          = $_.Version
-                    $Image.Architecture     = Switch ([UInt32]($_.Architecture -eq 9)) { 0 { 86 } 1 { 64 } }
-                    $Image.InstallationType = $_.InstallationType
-
-                    Switch($Image.InstallationType)
-                    {
-                        Server
-                        {
-                            $Image.DestinationName = "{0} (x64)" -f [Regex]::Matches($Image.ImageName,"(Windows Server )+(\d){4}( Datacenter| Standard)").Value | Select -First 1
-                            $Image.Label           = "{0}{1}" -f $(Switch -Regex ($Image.ImageName){Standard{"SD"}Datacenter{"DC"}}),[Regex]::Matches($Image.ImageName,"(\d{4})").Value
-                        }
-
-                        Client
-                        {
-                            $Image.DestinationName = "{0} (x{1})" -f $Image.ImageName, $Image.Architecture
-                            $Image.Label           = "10{0}{1}"   -f $(Switch -Regex ($Image.ImageName) { Pro {"P"} Edu {"E"} Home {"H"} }),$Image.Architecture
-                        }
-                    }
-                }
-
-                $Slot                              = [Regex]::Matches($Image.DestinationImagePath,"(\\\(\d+\))").Value
-                $Path                              = "{0}{1}{2}" -f $This.Target, $Slot, $Image.Label
-
-                If ( ! ( Test-Path $Path ) )
+                $Image.Path                 = "{0}:\sources\install.wim" -f (Get-DiskImage -ImagePath $Image.SourceImagePath | Get-Volume | % DriveLetter)
+                If (!(Test-Path $Image.Path))
                 {
-                    New-Item $Path -ItemType Directory -Verbose
+                    Throw "Invalid path"
                 }
 
-                $Image.DestinationImagePath        = "{0}\{1}.wim" -f $Path,$Image.Label
+                $Image.Load($This.Target)
 
                 $ISO                        = @{
         
@@ -203,14 +199,11 @@ Function New-FEImage
                 }
                 
                 Write-Theme "Extracting [~] $($Iso.DestinationImagePath)"
-
                 Export-WindowsImage @ISO
-
                 Write-Theme "Extracted [+] $($Iso.DestinationName)" 10,11,15,0
 
-                $Last = $Image.SourceImagePath
-
-                $This.Output += $Image
+                $Last                       = $Image.SourceImagePath
+                $This.Output               += $Image
             }
 
             Dismount-DiskImage -ImagePath $Last
@@ -234,5 +227,4 @@ Function New-FEImage
 
     $Images.GetSwap()
     $Images.GetOutput()
-    $Images
 }

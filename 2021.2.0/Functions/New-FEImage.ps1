@@ -172,13 +172,13 @@ Function New-FEImage
 
                 If ( $Last -ne $Null -and $Last -ne $Image.SourceImagePath )
                 {
-                    Write-Theme "Dismounting... $Last" 12,15,15,0
+                    Write-Theme "Dismounting... $Last" 12,4,15,0
                     Dismount-DiskImage -ImagePath $Last -Verbose
                 }
 
                 If (!(Get-DiskImage -ImagePath $Image.SourceImagePath | % Attached))
                 {
-                    Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath) 11,15,15,0
+                    Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath) 14,6,15,0
                     Mount-DiskImage -ImagePath $Image.SourceImagePath
                 }
 
@@ -199,9 +199,9 @@ Function New-FEImage
                     DestinationName         = $Image.DestinationName
                 }
                 
-                Write-Theme "Extracting [~] $($Iso.DestinationImagePath)"
+                Write-Theme "Extracting [~] $($Iso.DestinationImagePath)" 11,7,15,0
                 Export-WindowsImage @ISO
-                Write-Theme "Extracted [+] $($Iso.DestinationName)" 10,11,15,0
+                Write-Theme "Extracted [+] $($Iso.DestinationName)" 10,10,15,0
 
                 $Last                       = $Image.SourceImagePath
                 $This.Output               += $Image

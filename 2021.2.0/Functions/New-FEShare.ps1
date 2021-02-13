@@ -171,17 +171,11 @@ Function New-FEShare
 
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {
-        If ( (Get-Item "$Script\$($File.Name)" ).Length -notmatch $File.Length )
-        {
-            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
-        }
+        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 
     ForEach ( $File in $Module.Functions | ? Name -eq Install-FEModule.ps1 )
     {
-        If ( ( Get-Item "$Script\Install-FEModule.ps1" ).Length -notmatch $File.Length )
-        {
-            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
-        }
+        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 }

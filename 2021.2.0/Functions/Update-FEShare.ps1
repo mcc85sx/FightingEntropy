@@ -76,12 +76,14 @@ Function Update-FEShare
     }
 
     # Load FEShare(PSDrive)
-    If (!(Get-PSDrive -Name $Share.Label))
+    If (!(Get-PSDrive -Name $Share.Label -EA 0 ))
     {
         New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description
     }
 
     # Get _SMSTSOrg Name
+    $Module  = Get-FEModule
+    $Root    = "$($Share.Label):\"
     $Control = "$($Share.Path)\Control"
     Do
     {
@@ -94,7 +96,7 @@ Function Update-FEShare
 
     # Share Settings
     Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
-    Set-ItemProperty $Root -Name MonitorHost -Value $Item.HostName -Verbose
+    Set-ItemProperty $Root -Name MonitorHost -Value $Share.HostName -Verbose
 
     # Image Names/Background
     $Names  = 64 , 86 | % { "Boot.x$_" } | % { "$_.Generate{0}ISO $_.{0}WIMDescription $_.{0}ISOName $_.BackgroundFile" -f "LiteTouch" -Split " " }
@@ -117,7 +119,7 @@ Function Update-FEShare
                                 UserPassword       = $Credential.GetNetworkCredential().Password
                                 UserDomain         = $env:USERDOMAIN
                                 SkipBDDWelcome     = "YES"                          }
-    }
+    } | % Output
 
     # CustomSettings
     Export-Ini $Control\CustomSettings.ini @{
@@ -134,7 +136,7 @@ Function Update-FEShare
                                 KeyboardLocale     = "en-US" 
                                 TimeZoneName       = Get-TimeZone | % ID
                                 EventService       = "http://{0}:9800" -f $Share.Hostname }
-    }
+    } | % Output
 
     # Update FEShare(MDT)
     Switch($Mode)

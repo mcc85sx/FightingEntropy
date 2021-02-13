@@ -84,7 +84,7 @@ Function Update-FEShare
     $Module  = Get-FEModule
     $Root    = "$($Share.Label):\"
     $Control = "$($Share.Path)\Control"
-    $Script  = "$($Item.Path)\Scripts"
+    $Script  = "$($Share.Path)\Scripts"
     
     # Get _SMSTSOrg Name
     Do

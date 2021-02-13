@@ -81,17 +81,20 @@ Function Update-FEShare
         New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description
     }
 
-    # Get _SMSTSOrg Name
     $Module  = Get-FEModule
     $Root    = "$($Share.Label):\"
     $Control = "$($Share.Path)\Control"
+    $Script  = "$($Item.Path)\Scripts"
+    
+    # Get _SMSTSOrg Name
     Do
     {
-        $X = @( ) 
-        $X += Read-Host "Enter Company Name"
-        $X += Read-Host "Confirm Company Name"
+        $X   = @( ) 
+        $X  += Read-Host "Enter Company Name"
+        $X  += Read-Host "Confirm Company Name"
     }
     Until( $X[0] -match $X[1] )
+
     $Company = $X[0]
 
     # Share Settings
@@ -137,6 +140,22 @@ Function Update-FEShare
                                 TimeZoneName       = Get-TimeZone | % ID
                                 EventService       = "http://{0}:9800" -f $Share.Hostname }
     } | % Output
+    
+    ForEach ( $File in $Module.Control | ? Extension -eq .png )
+    {
+        If ( (Get-Item "$Script\$($File.Name)" ).Length -notmatch $File.Length )
+        {
+            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        }
+    }
+
+    ForEach ( $File in $Module.Functions | ? Name -eq Install-FEModule.ps1 )
+    {
+        If ( ( Get-Item "$Script\Install-FEModule.ps1" ).Length -notmatch $File.Length )
+        {
+            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        }
+    }
 
     # Update FEShare(MDT)
     Switch($Mode)

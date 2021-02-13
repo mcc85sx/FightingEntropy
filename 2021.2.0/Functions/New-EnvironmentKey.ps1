@@ -241,14 +241,19 @@ Function New-EnvironmentKey
 
         Scaffold()
         {
+            $OOBE = "{0}\OOBE" -f [Environment]::SystemDirectory
+
+            If (!(Test-Path $OOBE))
+            {
+                New-Item $OOBE -ItemType Directory -Verbose
+            }
+
             ForEach ( $I in 0..( $This.FilePath.Count - 1 ) )
             {                
                 If ( ! ( Test-Path $This.FilePath[$I] ) )
                 {
-                    New-Item -Path $This.FilePath[$I] -ItemType Directory -Verbose
+                    New-Item -Path $This.FilePath[$I] -ItemType Directory -Verbose -EA 0
                 }
-
-                Copy-Item -Path @( $This.Logo, $This.Background )[[Int32]( $I -in 2..4 )] -Destination $This.FilePath[$I] -Verbose
             }
 
             ForEach ( $I in 0..( $This.RegistryPath.Count - 1 ) )
@@ -259,6 +264,11 @@ Function New-EnvironmentKey
                 {
                     New-Item -Path ($Item | Split-Path -Parent) -Name ($Item | Split-Path -Leaf) -Verbose
                 }
+            }
+            
+            ForEach ( $I in 0..5 ) 
+            {
+                Copy-Item -Path @( $This.Logo, $This.Background )[0,0,1,1,1,0][$I] -Destination $This.FilePath[$I] -Verbose
             }
         }
          
@@ -290,7 +300,7 @@ Function New-EnvironmentKey
 
         SetBranding()
         {
-            $This.Branding      = [_Branding]::New($This.Company)
+            $This.Branding  = [_Branding]::New($This.Company)
             $This.Branding.Scaffold()
             $This.Branding.Register()
         }
@@ -308,7 +318,7 @@ Function New-EnvironmentKey
         $Logo       = $Module.Graphics | ? Name -match OEMlogo | % FullName
     }
 
-    $Key   = [_EnvironmentKey]::New((Get-FEModule),$Organization,$CommonName,$Background,$Logo)
+    $Key   = [_EnvironmentKey]::New($Module,$Organization,$CommonName,$Background,$Logo)
 
     If ( $Phone )
     {
@@ -320,7 +330,7 @@ Function New-EnvironmentKey
         $Key.Company.Hours = $Hours
     }
 
+    [_Icons]::New(0,1,0,1,0) | Out-Null
     $Key.SetBranding()
-
     $Key
 }

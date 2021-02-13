@@ -171,7 +171,7 @@ Function New-FEImage
                     Dismount-DiskImage -ImagePath $Last -Verbose
                 }
 
-                If (!($Disk.Attached))
+                If (!(Get-DiskImage -ImagePath $Image.SourceImagePath).Attached)
                 {
                     Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath) 14,6,15,0
                     Mount-DiskImage -ImagePath $Image.SourceImagePath

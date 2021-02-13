@@ -6,7 +6,7 @@ Function New-FEShare
     [Parameter(Mandatory)][String]        $Path ,
     [ValidateNotNullOrEmpty()]
     [Parameter(Mandatory)][String]   $ShareName ,
-    [Parameter()]         [String] $Description = "[FightingEntropy($([Char]960))]]://Development Share" )
+    [Parameter()]         [String] $Description = "[FightingEntropy($([Char]960))]://Development Share" )
 
     Class _Share
     {
@@ -76,9 +76,10 @@ Function New-FEShare
 
         NewPSDrive()
         {
-            If ( $This.Name -notin ( Get-PSDrive | % Name ) )
+            $ID = Get-PSDrive
+            If ( $This.Name -notin $ID.Name -and $This.Root -notin $ID.Root )
             {
-                Write-Host "New-PSDrive $($This.Name)"
+                Write-Host "New-PSDrive $($This.Label)"
 
                 @{  
                     Name           = $This.Label
@@ -92,8 +93,7 @@ Function New-FEShare
 
             Else
             {
-                Write-Host "Drive exists"
-                New-PSDrive -Name $This.Name -Verbose
+                Throw "Drive exists"
             }
         }
     }

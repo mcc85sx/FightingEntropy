@@ -99,8 +99,6 @@ Function New-FEShare
     }
 
     Import-Module (Get-MDTModule)
-
-    #$Item        = [_Share]::New("C:\FlightTest","FightingEntropy$",$Description)
     
     $Item   = [_Share]::New($Path,$ShareName,$Description)
 
@@ -173,8 +171,17 @@ Function New-FEShare
 
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {
-        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        If ( (Get-Item "$Script\$($File.Name)" ).Length -notmatch $File.Length )
+        {
+            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        }
     }
 
-    Copy-Item -Path ($Module.Functions | ? Name -eq Install-FEModule.ps1) -Destination $Script -Force -Verbose
+    ForEach ( $File in $Module.Functions | ? Name -eq Install-FEModule.ps1 )
+    {
+        If ( ( Get-Item "$Script\Install-FEModule.ps1" ).Length -notmatch $File.Length )
+        {
+            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        }
+    }
 }

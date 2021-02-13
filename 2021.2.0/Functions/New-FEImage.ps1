@@ -164,7 +164,6 @@ Function New-FEImage
             ForEach ( $X in 0..( $This.Swap.Count - 1 ) )
             {
                 $Image       = $This.Swap[$X]
-                $Disk        = Get-DiskImage -ImagePath $Image.SourceImagePath
 
                 If ( $Last -ne $Null -and $Last -ne $Image.SourceImagePath )
                 {
@@ -177,14 +176,9 @@ Function New-FEImage
                     Write-Theme ("Mounting [+] {0}" -f $Image.SourceImagePath) 14,6,15,0
                     Mount-DiskImage -ImagePath $Image.SourceImagePath
                 }
-
-                $Image.Path    = "{0}:\sources\install.wim" -f ($Disk | Get-Volume | % DriveLetter)
-
-                If (!(Test-Path $Image.Path))
-                {
-                    Throw "Invalid path"
-                }
-
+                
+                $Image.Path = "{0}:\sources\install.wim" -f (Get-DiskImage -ImagePath $Image.SourceImagePath | Get-Volume | % DriveLetter)
+                
                 $Image.Load($This.Target)
 
                 $ISO                        = @{

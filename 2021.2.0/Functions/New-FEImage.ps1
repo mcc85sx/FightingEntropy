@@ -182,7 +182,7 @@ Function New-FEImage
                     Mount-DiskImage -ImagePath $Image.SourceImagePath
                 }
 
-                $Image.Path                 = $This.GetImagePath($Image.SourceImagePath)
+                $Image.Path                 = "{0}:\sources\install.wim" -f (Get-DiskImage -ImagePath $Image.SourceImagePath | Get-Volume | % DriveLetter)
 
                 If (!(Test-Path $Image.Path))
                 {

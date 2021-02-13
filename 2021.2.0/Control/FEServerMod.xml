@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <sequence version="3.00" name="Standard Server Task Sequence" description="A complete task sequence for deploying a server operating system">
   <globalVarList>
-    <variable name="OSGUID" property="OSGUID">{da276bbb-73ad-44b0-8514-f74297ee69ec}</variable>
+    <variable name="OSGUID" property="OSGUID">{253cd23a-bab1-4ffa-8c9e-690f328ad5dc}</variable>
     <variable name="DestinationDisk" property="DestinationDisk">0</variable>
     <variable name="DestinationPartition" property="DestinationPartition">1</variable>
     <variable name="DestinationOSVariable" property="DestinationOSVariable">OSDisk</variable>
     <variable name="DestinationOSRefresh" property="DestinationOSRefresh"></variable>
     <variable name="DestinationOSDriveLetter" property="DestinationOSDriveLetter"></variable>
     <variable name="DestinationOSInstallType" property="DestinationOSInstallType">ByVariable</variable>
-    <variable name="OSGUID" property="OSGUID">{da276bbb-73ad-44b0-8514-f74297ee69ec}</variable>
+    <variable name="OSGUID" property="OSGUID">{253cd23a-bab1-4ffa-8c9e-690f328ad5dc}</variable>
   </globalVarList>
   <group name="Initialization" disable="false" continueOnError="false" description="Initialize the TS environment" expand="false">
     <step type="BDD_Gather" name="Gather local only" disable="false" continueOnError="false" successCodeList="0 3010" description="" startIn="">
@@ -339,7 +339,7 @@
     </condition>
     <step type="BDD_InstallOS" name="Install Operating System" description="" disable="false" continueOnError="false" runIn="WinPEandFullOS" successCodeList="0 3010">
       <defaultVarList>
-        <variable name="OSGUID" property="OSGUID">{da276bbb-73ad-44b0-8514-f74297ee69ec}</variable>
+        <variable name="OSGUID" property="OSGUID">{253cd23a-bab1-4ffa-8c9e-690f328ad5dc}</variable>
         <variable name="DestinationDisk" property="DestinationDisk">0</variable>
         <variable name="DestinationPartition" property="DestinationPartition">1</variable>
         <variable name="DestinationOSDriveLetter" property="DestinationOSDriveLetter"></variable>
@@ -484,13 +484,15 @@
         <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
     </step>
-    <step type="BDD_RunPowerShellAction" name="Install FightingEntropy Module" description="Initializes the installer for FightingEntropy" disable="false" continueOnError="false" successCodeList="0 3010">
+    <step type="SMS_TaskSequence_RunCommandLineAction" name="Install FightingEntropy(π)" description="Installs the FightingEntropy modification for Windows." disable="false" continueOnError="false" startIn="" successCodeList="0 3010" runIn="WinPEandFullOS">
       <defaultVarList>
-        <variable name="ScriptName" property="ScriptName">Install-FEModule.ps1</variable>
-        <variable name="Parameters" property="Parameters">-ExecutionPolicy Bypass -Scope Process -Force</variable>
         <variable name="PackageID" property="PackageID"></variable>
+        <variable name="RunAsUser" property="RunAsUser">false</variable>
+        <variable name="SMSTSRunCommandLineUserName" property="SMSTSRunCommandLineUserName"></variable>
+        <variable name="SMSTSRunCommandLineUserPassword" property="SMSTSRunCommandLineUserPassword"></variable>
+        <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
-      <action>cscript.exe "%SCRIPTROOT%\ZTIPowerShell.wsf</action>
+      <action>cmd /c powershell -ExecutionPolicy Bypass -File %ScriptRoot%\Install-FEModule.ps1</action>
     </step>
     <step type="BDD_InstallApplication" name="Install Applications" disable="false" continueOnError="false" successCodeList="0 3010" description="" startIn="">
       <action>cscript.exe "%SCRIPTROOT%\ZTIApplications.wsf"</action>
@@ -551,7 +553,7 @@
         <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
     </step>
-    <group expand="false" name="Imaging" description="" disable="false" continueOnError="false">
+    <group expand="true" name="Imaging" description="" disable="false" continueOnError="false">
       <action />
       <group name="Prepare Only" disable="false" continueOnError="false" expand="false" description="">
         <condition>

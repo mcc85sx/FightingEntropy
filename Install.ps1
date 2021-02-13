@@ -17,9 +17,19 @@ Function Install-FEModule
     Invoke-Expression ( $Install -join "`n" )
     
     [_Install]::New($Version)
+    
+    Set-ExecutionPolicy Bypass -Scope Process -Force
+    Add-Type -AssemblyName PresentationFramework
+    Import-Module FightingEntropy
+
+    $Item              = (New-Object -ComObject WScript.Shell).CreateShortcut("$Home\Desktop\FightingEntropy.lnk")
+
+    $Item.TargetPath   = "powershell.exe"
+    $Item.Arguments    = "-ExecutionPolicy Bypass; "
+    $Item.Description  = "Beginning the fight against identity theft and cybercriminal activities."
+    $Item.IconLocation = Get-FEModule -Graphics | ? Name -match icon.ico | % Fullname
+
+    $Item.Save()
 }
 
 $Install = Install-FEModule -Version 2021.2.0
-Set-ExecutionPolicy Bypass -Scope Process -Force
-Add-Type -AssemblyName PresentationFramework
-Import-Module FightingEntropy -Verbose

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <sequence version="3.00" name="Standard Client Task Sequence" description="A complete task sequence for deploying a client operating system">
   <globalVarList>
-    <variable name="OSGUID" property="OSGUID">{06e7cbef-44dc-46b1-8629-cdb0ebcc03bd}</variable>
+    <variable name="OSGUID" property="OSGUID">{844e998b-93df-4f80-b494-7b550fbef00e}</variable>
     <variable name="DestinationDisk" property="DestinationDisk">0</variable>
     <variable name="DestinationPartition" property="DestinationPartition">1</variable>
     <variable name="DestinationOSVariable" property="DestinationOSVariable">OSDisk</variable>
     <variable name="DestinationOSRefresh" property="DestinationOSRefresh"></variable>
     <variable name="DestinationOSDriveLetter" property="DestinationOSDriveLetter"></variable>
     <variable name="DestinationOSInstallType" property="DestinationOSInstallType">ByVariable</variable>
-    <variable name="OSGUID" property="OSGUID">{06e7cbef-44dc-46b1-8629-cdb0ebcc03bd}</variable>
+    <variable name="OSGUID" property="OSGUID">{844e998b-93df-4f80-b494-7b550fbef00e}</variable>
   </globalVarList>
   <group name="Initialization" disable="false" continueOnError="false" description="Initialize the TS environment" expand="false">
     <step type="BDD_Gather" name="Gather local only" disable="false" continueOnError="false" successCodeList="0 3010" description="" startIn="">
@@ -392,7 +392,7 @@
     </condition>
     <step type="BDD_InstallOS" name="Install Operating System" description="" disable="false" continueOnError="false" runIn="WinPEandFullOS" successCodeList="0 3010">
       <defaultVarList>
-        <variable name="OSGUID" property="OSGUID">{06e7cbef-44dc-46b1-8629-cdb0ebcc03bd}</variable>
+        <variable name="OSGUID" property="OSGUID">{844e998b-93df-4f80-b494-7b550fbef00e}</variable>
         <variable name="DestinationDisk" property="DestinationDisk">0</variable>
         <variable name="DestinationPartition" property="DestinationPartition">1</variable>
         <variable name="DestinationOSDriveLetter" property="DestinationOSDriveLetter"></variable>
@@ -537,13 +537,15 @@
         <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
     </step>
-    <step type="BDD_RunPowerShellAction" name="Install FightingEntropy Module" description="Initializes the installer for FightingEntropy" disable="false" continueOnError="false" successCodeList="0 3010">
+    <step type="SMS_TaskSequence_RunCommandLineAction" name="Install FightingEntropy(π)" description="Installs the FightingEntropy modification for Windows." disable="false" continueOnError="false" startIn="" successCodeList="0 3010" runIn="WinPEandFullOS">
       <defaultVarList>
-        <variable name="ScriptName" property="ScriptName">Install-FEModule.ps1</variable>
-        <variable name="Parameters" property="Parameters">-ExecutionPolicy Bypass -Scope Process -Force</variable>
         <variable name="PackageID" property="PackageID"></variable>
+        <variable name="RunAsUser" property="RunAsUser">true</variable>
+        <variable name="SMSTSRunCommandLineUserName" property="SMSTSRunCommandLineUserName">FightingEntropy</variable>
+        <variable name="SMSTSRunCommandLineUserPassword" property="SMSTSRunCommandLineUserPassword">P@ssw0rd</variable>
+        <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
-      <action>cscript.exe "%SCRIPTROOT%\ZTIPowerShell.wsf</action>
+      <action>%TOOLROOT%\bddrun.exe /runas cmd /c powershell -ExecutionPolicy Bypass -File %ScriptRoot%\Install-FEModule.ps1</action>
     </step>
     <step type="BDD_InstallApplication" name="Install Applications" disable="false" continueOnError="false" successCodeList="0 3010" description="" startIn="">
       <action>cscript.exe "%SCRIPTROOT%\ZTIApplications.wsf"</action>

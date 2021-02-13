@@ -76,24 +76,22 @@ Function New-FEShare
 
         NewPSDrive()
         {
-            $ID = Get-PSDrive
-            If ( $This.Name -notin $ID.Name -and $This.Root -notin $ID.Root )
+            If ( $This.Name -notin ( Get-PSDrive | % Name ) )
             {
-                Write-Host "New-PSDrive $($This.Label)"
-
+                Write-Host "New-PSDrive $($This.Name)"
                 @{  
                     Name           = $This.Label
                     PSProvider     = "MDTProvider"
                     Root           = $This.Root
                     Description    = $This.Description
                     NetworkPath    = $This.NetworkPath 
-
                 }                  | % { New-PSDrive @_ | Add-MDTPersistentDrive -Verbose }
             }
 
             Else
             {
                 Throw "Drive exists"
+                # New-PSDrive -Name $This.Name -PSProvider MDTProvider -Verbose
             }
         }
     }

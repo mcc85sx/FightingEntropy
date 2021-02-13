@@ -112,7 +112,7 @@ Function Update-FEShare
     Export-Ini $Control\Bootstrap.ini @{ 
 
         Settings           = @{ Priority           = "Default"                      }
-        Default            = @{ DeployRoot         = $Item.NetworkPath
+        Default            = @{ DeployRoot         = $Share.NetworkPath
                                 UserID             = $Credential.UserName
                                 UserPassword       = $Credential.GetNetworkCredential().Password
                                 UserDomain         = $env:USERDOMAIN
@@ -133,7 +133,7 @@ Function Update-FEShare
                                 SkipBitLocker      = "YES" 
                                 KeyboardLocale     = "en-US" 
                                 TimeZoneName       = Get-TimeZone | % ID
-                                EventService       = "http://{0}:9800" -f $Item.Hostname }
+                                EventService       = "http://{0}:9800" -f $Share.Hostname }
     }
 
     # Update FEShare(MDT)

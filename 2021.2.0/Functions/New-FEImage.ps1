@@ -157,11 +157,6 @@ Function New-FEImage
             }
         }
 
-        [String] GetImagePath([String]$Path)
-        {
-            Return @( "{0}:\sources\install.wim" -f (Get-DiskImage -ImagePath $Path | Get-Volume | % DriveLetter) )
-        }
-
         GetOutput()
         {
             $Last = $Null

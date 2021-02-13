@@ -2,15 +2,32 @@ Function Import-FEImage
 {
     [CmdLetBinding()]
     Param(
-    [Parameter(Mandatory)][String]$ShareName,
-    [Parameter(Mandatory)][String]$Source)
+    [Parameter(ParameterSetName=0,Mandatory)][Object]$ImageObject,
+    [Parameter(ParameterSetName=1,Mandatory)][String]$Source,
+    [Parameter(Mandatory)][String]$ShareName)
 
-    If ( ! ( Test-Path $Source ) )
+    Switch($PSCmdlet.ParameterSetName)
     {
-        Throw "Invalid path"
-    }
+        0
+        {
+            $Images = @( ) 
 
-    $Images = Get-FEImage -Source $Source
+            ForEach ($Image in $ImageObject )
+            {
+                $Images += $Image
+            }
+        }
+
+        1 
+        { 
+            If ( ! ( Test-Path $Source ) )
+            {
+                Throw "Invalid path"
+            }
+
+            $Images = Get-FEImage -Source $Source
+        }
+    }
     
     If (!$Images)
     {
@@ -20,6 +37,11 @@ Function Import-FEImage
     Import-Module (Get-MDTModule) -Verbose
 
     $Share       = Get-FEShare -Name $ShareName
+
+    If (!($Share))
+    {
+        Throw "Share not detected"
+    }
     
     New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Verbose -EA 0 
 

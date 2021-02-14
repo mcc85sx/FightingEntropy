@@ -7,9 +7,78 @@ Function New-EnvironmentKey
     [Parameter()][String]   $Background ,
     [Parameter()][String]         $Logo ,
     [Parameter()][String]        $Phone ,
-    [Parameter()][String]      $Website = "support.microsoft.com",
+    [Parameter()][String]      $Website ,
     [Parameter()][String]        $Hours )
 
+    Class _TelemetryObject
+    {
+        [String]       $ExternalIP
+        Hidden [Object]      $Ping
+        [String]     $Organization
+        [String]       $CommonName
+        [String]         $Location
+        [String]           $Region
+        [String]          $Country
+        [Int32]            $Postal
+        [String]         $TimeZone
+        [String]         $SiteLink
+        [String]           $Branch
+
+        _TelemetryObject([String]$Organization,[String]$CommonName)
+        {
+            $This.ExternalIP       = Invoke-RestMethod "http://ifconfig.me/ip"
+            $This.Ping             = Invoke-RestMethod "http://ipinfo.io/$($This.ExternalIP)"
+            $This.Organization     = $Organization
+            $This.CommonName       = $CommonName
+            $This.Location         = $This.Ping.City
+            $This.Region           = $This.Ping.Region
+            $This.Country          = $This.Ping.Country
+            $This.Postal           = $This.Ping.Postal
+            $This.TimeZone         = $This.Ping.TimeZone
+            $This.SiteLink         = $This.GetSiteLink($This.Ping)
+            $This.Branch           = $This.Sitelink.Replace("-",".").tolower(), $This.CommonName -join '.'
+        }
+
+        [String] GetSiteLink([Object]$Ping)
+        {
+            $Return = @( )
+            $Return += ( $Ping.City -Split " " | % { $_[0] } ) -join ''
+            $Return += ( $Ping.Region -Split " " | % { $_[0] } ) -join ''
+            $Return += $Ping.Country
+            $Return += $Ping.Postal
+
+            Return $Return -join '-'
+        }
+
+        [String] ToString()
+        {
+            Return $This.SiteLink
+        }
+    }
+
+    Class _CompanyObject
+    {
+        [Object]        $Telemetry
+        [String]             $Name
+        [String]       $Background
+        [String]             $Logo
+        [String]            $Phone
+        [String]          $Website
+        [String]            $Hours
+
+        _CompanyObject([Object]$Telemetry)
+        {
+            $This.Telemetry    = $Telemetry
+            $This.Name         = $Telemetry.Organization
+        }
+
+        [String] ToString()
+        {
+            Return $This.Name
+        }
+    }
+
+    
     Class _Icons
     {
         [Object]         $Item
@@ -41,110 +110,29 @@ Function New-EnvironmentKey
 
             $This.Item         = Get-Item         -Path $This.Path
             $This.Property     = Get-ItemProperty -Path $This.Path
+        }
 
+        Set()
+        {
             ForEach ( $I in "Computer ControlPanel Documents Libraries Network".Split(" ") )
             {
                 Set-ItemProperty -Path $This.Path -Name $This.Hash.$I -Value $This.$I -Verbose
             }
         }
-    }
 
-    Class _Shortcut
-    {
-        [Object]               $Item
-    
-        _Shortcut(
-        [String]               $Path ,
-        [String]         $TargetPath ,
-        [String[]]        $Arguments ,
-        [String]       $IconLocation ,
-        [String]        $Description ,
-        [String]   $WorkingDirectory )
+        [String] ToString()
         {
-            If ( ! ( Test-Path $Path ) )
-            {
-                Throw "Invalid Path"
-            }
-
-            If ( Test-Path $TargetPath )
-            {
-                Throw "Path exists"
-            }
-
-            $This.Item                  = (New-Object -ComObject WScript.Shell).CreateShortcut($TargetPath)
-
-            $This.Item.TargetPath       = $Path
-            $This.Item.Arguments        = $Arguments
-            $This.Item.IconLocation     = $IconLocation
-            $This.Item.Description      = $Description
-            $This.Item.WorkingDirectory = $WorkingDirectory
-            $This.Item.Save()
+            Return @( $This.Hash.Keys )
         }
     }
 
-    Class _Graphics
-    {
-        [Object] $Background
-        [Object]       $Logo
-
-        _Graphics([String]$Background,[String]$Logo)
-        {
-            $This.Background = $Background
-            $This.Logo       = $Logo
-        }
-    }
-
-    Class _Certificate
-    {
-        [String]       $ExternalIP
-        [Object]             $Ping
-        [String]     $Organization
-        [String]       $CommonName
-        [String]         $Location
-        [String]           $Region
-        [String]          $Country
-        [Int32]            $Postal
-        [String]         $TimeZone
-        [String]         $SiteLink
-
-        _Certificate(
-        [String]       $ExternalIP ,
-        [Object]             $Ping ,
-        [String]     $Organization ,
-        [String]       $CommonName )
-        {
-            $This.ExternalIP       = $ExternalIP
-            $This.Ping             = $Ping
-            $This.Organization     = $Organization
-            $This.CommonName       = $CommonName
-            $This.Location         = $This.Ping.City
-            $This.Region           = $This.Ping.Region
-            $This.Country          = $This.Ping.Country
-            $This.Postal           = $This.Ping.Postal
-            $This.TimeZone         = $This.Ping.TimeZone
-
-            $This.SiteLink         = $This.GetSiteLink($Ping)
-        }
-
-        [String] GetSiteLink([Object]$Ping)
-        {
-            $Return = @( )
-            $Return += ( $Ping.City -Split " " | % { $_[0] } ) -join ''
-            $Return += ( $Ping.Region -Split " " | % { $_[0] } ) -join ''
-            $Return += $Ping.Country
-            $Return += $Ping.Postal
-
-            Return $Return -join '-'
-        }
-    }
-
-    Class _Brand
+    Class _BrandingState
     {
         [String] $Path
         [String] $Name
         [Object] $Value
 
-        _Brand([String]$Path,[String]$Name,[Object]$Value)
+        _BrandingState([String]$Path,[String]$Name,[Object]$Value)
         {
             $This.Path  = $Path
             $This.Name  = $Name
@@ -152,62 +140,22 @@ Function New-EnvironmentKey
         }
     }
 
-    Class _Company
+    Class _BrandingObject
     {
-        Hidden [Object] $Certificate
-        [String]       $Name
-        [String]     $Branch
-        [String]   $Location
-        [String]     $Region
-        [String]    $Country
-        [String]     $Postal
-        [String]   $TimeZone
-        [String]   $SiteLink
-
-        [Object] $Background
-        [Object]       $Logo
-        [String]    $Website
-        [String]      $Phone
-        [String]      $Hours
-
-        _Company([Object]$Certificate,[Object]$Graphics)
-        {
-            $This.Certificate  = $Certificate      
-            
-            $Certificate       | % { 
-            
-                $This.Name     = $_.Organization                        #: Secure Digits Plus LLC
-                $This.Branch   = $_.Sitelink.Replace("-",".").tolower(), $_.CommonName -join '.' #: cp.ny.us.12065
-                $This.Location = $_.Location                            #: Clifton Park
-                $This.Region   = $_.Region                              #: New York
-                $This.Country  = $_.Country                             #: US
-                $This.Postal   = $_.Postal                              #: 12065
-                $This.TimeZone = $_.TimeZone                            #: America/New_York
-                $This.SiteLink = $_.SiteLink                            #: CP-NY-US-12065
-                $This.Website  = $_.CommonName
-            }
-
-            $This.Background   = $Graphics.Background
-            $This.Logo         = $Graphics.Logo
-        }
-    }
-
-    Class _Branding
-    {
-        Hidden [Object] $Company
+        [Object]       $Provider
+        [Object]        $Company
         Hidden [String[]] $Names = ("{0};{0}Style;Logo;Manufacturer;{1}Phone;{1}Hours;{1}URL;LockScreenImage;OEMBackground") -f "Wallpaper","Support" -Split ";"
         Hidden [Object]   $Items 
         Hidden [Object]  $Values
-
-        [Object]    $Certificate
+        [Object]    $Certificate 
         [Object]         $Branch
-        [String]       $Provider
         [String]       $SiteLink
         [String]     $Background
         [String]           $Logo
         [String]        $Website
         [String]          $Phone
         [String]          $Hours
+        [Object]          $Icons
         [Object]         $Output
 
         [String[]]     $FilePath = ("{0}\{1};{0}\{1}\{2};{0}\{1}\{2}\Backgrounds;{0}\Web\Screen;{0}\Web\Wallpaper\Windows;C:\ProgramData\Microsoft\" + 
@@ -216,30 +164,25 @@ Function New-EnvironmentKey
         [String[]] $RegistryPath = @(("HKCU:\{0}\{1}\Policies\System;HKLM:\{0}\{1}\OEMInformation;HKLM:\{0}\{1}\Authentication\LogonUI\Background;" +
                                       "HKLM:\{0}\Policies\Microsoft\Windows\Personalization") -f "Software","Microsoft\Windows\CurrentVersion" -Split ";")
 
-        _Branding([Object]$Company)
+        _BrandingObject([Object]$Company)
         {
+            $This.Provider       = "Secure Digits Plus"
             $This.Company        = $Company
-            $This.Certificate    = $Company.Certificate
-            $This.Branch         = $Company.Branch
-            $This.Provider       = $Company.Name
-            $This.SiteLink       = $Company.SiteLink
+            $This.Certificate    = "<Obtain Certificate>"
+            $This.Branch         = $Company.Telemetry.Branch
+            $This.SiteLink       = $Company.Telemetry.SiteLink
             $This.Background     = $Company.Background
             $This.Logo           = $Company.Logo
             $This.Website        = $Company.Website
             $This.Phone          = $Company.Phone
             $This.Hours          = $Company.Hours
-
+            $This.Icons          = [_Icons]::New(0,1,0,1,0)
             $This.Items           = $This.RegistryPath[0,0,1,1,1,1,1,3,2]
             $This.Values          = @($This.Background,2,$This.Logo,$This.Provider,$This.Phone,$This.Hours,$This.Website,$This.Background,1)
-            $This.Output          = @( )
-
-            ForEach ( $I in 0..8 ) 
-            {
-                $This.Output     += [_Brand]::New($This.Items[$I],$This.Names[$I],$This.Values[$I])
-            }
+            $This.Output          = @( 0..8 | % { [_BrandingState]::New($This.Items[$_],$This.Names[$_],$This.Values[$_]) })
         }
 
-        Scaffold()
+        BuildFilePath()
         {
             $OOBE = "{0}\OOBE" -f [Environment]::SystemDirectory
 
@@ -255,7 +198,10 @@ Function New-EnvironmentKey
                     New-Item -Path $This.FilePath[$I] -ItemType Directory -Verbose -EA 0
                 }
             }
+        }
 
+        BuildRegistryPath()
+        {
             ForEach ( $I in 0..( $This.RegistryPath.Count - 1 ) )
             {
                 $Item            = $This.RegistryPath[$I]
@@ -265,72 +211,65 @@ Function New-EnvironmentKey
                     New-Item -Path ($Item | Split-Path -Parent) -Name ($Item | Split-Path -Leaf) -Verbose
                 }
             }
+        }
             
-            ForEach ( $I in 0..5 ) 
-            {
-                Copy-Item -Path @( $This.Logo, $This.Background )[0,0,1,1,1,0][$I] -Destination $This.FilePath[$I] -Verbose
-            }
+        Copy()
+        {
+            0..5 | % { Copy-Item -Path @( $This.Logo, $This.Background )[0,0,1,1,1,0][$_] -Destination $This.FilePath[$_] -Verbose }
         }
          
-        Register()
+        Set()
         {
             $This.Output  | % { Set-ItemProperty -Path $_.Path -Name $_.Name -Value $_.Value -Verbose }
         }
-    }
 
-    Class _EnvironmentKey
-    {
-        [Object]         $Module
-        [Object]       $Graphics
-        [Object]    $Certificate
-        [Object]        $Company
-        [Object]       $Branding
-
-        _EnvironmentKey([Object]$Module,[String]$Organization,[String]$CommonName,[String]$Background,[String]$Logo)
+        Apply()
         {
-            $This.Module        = $Module
-            $This.Graphics      = [_Graphics]::New($Background,$Logo)
-            
-            $ExternalIP         = Invoke-RestMethod http://ifconfig.me/ip
-            $Ping               = Invoke-RestMethod http://ipinfo.io/$ExternalIP
-            
-            $This.Certificate   = [_Certificate]::New($ExternalIP,$Ping,$Organization,$CommonName)
-            $This.Company       = [_Company]::New($This.Certificate,$This.Graphics)
-        }
-
-        SetBranding()
-        {
-            $This.Branding  = [_Branding]::New($This.Company)
-            $This.Branding.Scaffold()
-            $This.Branding.Register()
+            $This.BuildFilePath()
+            $This.BuildRegistryPath()
+            $This.Copy()
+            $This.Set()
+            $This.Icons.Set()
         }
     }
 
-    $Module = Get-FEModule
+    $Graphics         = Get-FEModule -Graphics
+    $Organization     = "Secure Digits Plus"
+    $CommonName       = "securedigitsplus.com"
+    $Telemetry        = [_TelemetryObject]::New($Organization,$CommonName)
+    $Company          = [_CompanyObject]::New($Telemetry)
+    $Company.Phone      = If(!$Phone  ) { "N/A" } Else { $Phone }
+    $Company.Website    = If(!$Website) { "www.securedigitsplus.com" } Else { $Website }
+    $Company.Hours      = If(!$Hours  ) { "N/A" } Else { $Hours }
 
-    If ( !$Background )
+    If ($Background)
     {
-        $Background = $Module.Graphics | ? Name -match OEMbg   | % FullName
+        If (!(Test-Path $Background))
+        {
+            $Background = $Graphics | ? Name -match OEMbg.jpg | % FullName
+        }
     }
 
-    If ( !$Logo )
+    If (!($Background))
     {
-        $Logo       = $Module.Graphics | ? Name -match OEMlogo | % FullName
+        $Background = $Graphics | ? Name -match OEMbg.jpg | % FullName
     }
 
-    $Key   = [_EnvironmentKey]::New($Module,$Organization,$CommonName,$Background,$Logo)
-
-    If ( $Phone )
+    If ($Logo)
     {
-        $Key.Company.Phone = $Phone
+        If (!(Test-Path $Logo))
+        {
+            $Logo       = $Graphics | ? Name -match OEMlogo.bmp | % FullName
+        }
     }
 
-    If ( $Hours )
+    If (!($Logo))
     {
-        $Key.Company.Hours = $Hours
+        $Logo       = $Graphics | ? Name -match OEMlogo.bmp | % FullName
     }
 
-    [_Icons]::New(0,1,0,1,0) | Out-Null
-    $Key.SetBranding()
-    $Key
+    $Company.Background = $Background
+    $Company.Logo       = $Logo 
+
+    [_BrandingObject]::New($Company)
 }

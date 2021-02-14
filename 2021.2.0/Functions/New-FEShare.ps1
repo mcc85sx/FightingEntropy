@@ -3,10 +3,12 @@ Function New-FEShare
     [CmdLetBinding()]
     Param(
     [ValidateNotNullOrEmpty()]
-    [Parameter(Mandatory)][String]        $Path ,
+    [Parameter(Mandatory)][String]            $Path ,
     [ValidateNotNullOrEmpty()]
-    [Parameter(Mandatory)][String]   $ShareName ,
-    [Parameter()]         [String] $Description = "[FightingEntropy($([Char]960))]://Development Share" )
+    [Parameter(Mandatory)][String]       $ShareName ,
+    [Parameter()]         [String]     $Description = "[FightingEntropy($([Char]960))]:\\Development Share",
+    [Parameter(Mandatory)][PSCredential]$Credential ,
+    [Parameter(Mandatory)][Object]             $Key )
 
     Class _Share
     {
@@ -20,9 +22,12 @@ Function New-FEShare
         [String]   $NetworkPath
         [String]   $Description
         [String]      $Comments = "$(Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]")"
+        [Object]           $Key
 
-        _Share([String]$Path,[String]$Name,[String]$Description)
+        _Share([String]$Path,[String]$Name,[String]$Description,[Object]$Key)
         {
+            $This.Key         = $Key
+
             If (!(Test-Path $Path))
             {
                  New-Item -Path $Path -ItemType Directory -Verbose
@@ -91,14 +96,13 @@ Function New-FEShare
             Else
             {
                 Throw "Drive exists"
-                # New-PSDrive -Name $This.Name -PSProvider MDTProvider -Verbose
             }
         }
     }
 
     Import-Module (Get-MDTModule)
-    
-    $Item   = [_Share]::New($Path,$ShareName,$Description)
+    $Key = New-EnvironmentKey -Organization "Secure Digits Plus LLC" -CommonName securedigitsplus.com -Phone "(518)-406-8569" -Website www.securedigitsplus.com -Hours "24h/d;7d/w;365.25d/y;"
+    $Item   = [_Share]::New($Path,$ShareName,$Description,$Key)
 
     $Item.NewSMBShare()
     $Item.NewPSDrive()
@@ -144,9 +148,9 @@ Function New-FEShare
 
         Settings           = @{ Priority           = "Default"                      }
         Default            = @{ DeployRoot         = $Item.NetworkPath
-                                UserID             = "mcook85@securedigitsplus.com"
-                                UserPassword       = "password"
-                                UserDomain         = "SECURED"
+                                UserID             = $Credential.Username
+                                UserPassword       = $Credential.GetNetworkCredential().Password
+                                UserDomain         = $ENV:Userdomain
                                 SkipBDDWelcome     = "YES"                          }
     }
 
@@ -155,7 +159,7 @@ Function New-FEShare
 
         Settings           = @{ Priority           = "Default" 
                                 Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = "Secure Digits Plus LLC"
+        Default            = @{ _SMSTSOrgName      = $Item.Key.Company.Name
                                 OSInstall          = "Y"
                                 SkipCapture        = "NO"
                                 SkipAdminPassword  = "YES" 
@@ -172,8 +176,10 @@ Function New-FEShare
         Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 
-    ForEach ( $File in $Module.Functions | ? Name -eq Install-FEModule.ps1 )
+    Set-Content -Path $Script\Install.ps1 -Value (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true) -Force -Verbose
+
+    ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
     {
-        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+        Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
     }
 }

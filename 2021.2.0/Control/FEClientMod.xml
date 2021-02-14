@@ -537,15 +537,7 @@
         <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
     </step>
-    <step type="BDD_RunPowerShellAction" name="Run PowerShell Script" description="" disable="false" continueOnError="false" successCodeList="0 3010">
-      <defaultVarList>
-        <variable name="ScriptName" property="ScriptName">%SCRIPTROOT%\Install-FEModule.ps1</variable>
-        <variable name="Parameters" property="Parameters"></variable>
-        <variable name="PackageID" property="PackageID"></variable>
-      </defaultVarList>
-      <action>cscript.exe "%SCRIPTROOT%\ZTIPowerShell.wsf</action>
-    </step>
-    <step type="SMS_TaskSequence_RunCommandLineAction" name="Run Command Line" description="" disable="false" continueOnError="false" startIn="" successCodeList="0 3010" runIn="WinPEandFullOS">
+    <step type="SMS_TaskSequence_RunCommandLineAction" name="Install FightingEntropy" description="Installs the FightingEntropy modification for Windows." disable="false" continueOnError="false" startIn="" successCodeList="0 3010" runIn="WinPEandFullOS">
       <defaultVarList>
         <variable name="PackageID" property="PackageID"></variable>
         <variable name="RunAsUser" property="RunAsUser">false</variable>
@@ -553,7 +545,7 @@
         <variable name="SMSTSRunCommandLineUserPassword" property="SMSTSRunCommandLineUserPassword"></variable>
         <variable name="LoadProfile" property="LoadProfile">false</variable>
       </defaultVarList>
-      <action>powershell -command "Install-FEModule -Version 2021.2.0"</action>
+      <action>powershell -command "Invoke-Expression (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1)"</action>
     </step>
     <step type="BDD_InstallApplication" name="Install Applications" disable="false" continueOnError="false" successCodeList="0 3010" description="" startIn="">
       <action>cscript.exe "%SCRIPTROOT%\ZTIApplications.wsf"</action>

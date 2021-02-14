@@ -5,7 +5,8 @@ Function Update-FEShare
     [Parameter(ParameterSetName=1,Mandatory)][Object]$Share,
     [ValidateSet(0,1,2)]
     [Parameter()][UInt32]$Mode,
-    [Parameter(Mandatory)][PSCredential]$Credential = $Null)
+    [Parameter(Mandatory)][PSCredential]$Credential = (Get-Credential),
+    [Parameter(Mandatory)][Object]$Key)
 
     # Load Credential
     If (!($Credential))
@@ -85,17 +86,6 @@ Function Update-FEShare
     $Root    = "$($Share.Label):\"
     $Control = "$($Share.Path)\Control"
     $Script  = "$($Share.Path)\Scripts"
-    
-    # Get _SMSTSOrg Name
-    Do
-    {
-        $X   = @( ) 
-        $X  += Read-Host "Enter Company Name"
-        $X  += Read-Host "Confirm Company Name"
-    }
-    Until( $X[0] -match $X[1] )
-
-    $Company = $X[0]
 
     # Share Settings
     Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
@@ -129,7 +119,7 @@ Function Update-FEShare
 
         Settings           = @{ Priority           = "Default" 
                                 Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = $Company
+        Default            = @{ _SMSTSOrgName      = $Key.Company.Name
                                 OSInstall          = "Y"
                                 SkipCapture        = "NO"
                                 SkipAdminPassword  = "YES" 

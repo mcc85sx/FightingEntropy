@@ -139,13 +139,7 @@ Function Update-FEShare
         }
     }
 
-    ForEach ( $File in $Module.Functions | ? Name -eq Install-FEModule.ps1 )
-    {
-        If ( ( Get-Item "$Script\Install-FEModule.ps1" ).Length -notmatch $File.Length )
-        {
-            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
-        }
-    }
+    Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
 
     # Update FEShare(MDT)
     Switch($Mode)

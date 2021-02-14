@@ -234,12 +234,10 @@ Function New-EnvironmentKey
     }
 
     $Graphics         = Get-FEModule -Graphics
-    $Organization     = "Secure Digits Plus"
-    $CommonName       = "securedigitsplus.com"
     $Telemetry        = [_TelemetryObject]::New($Organization,$CommonName)
     $Company          = [_CompanyObject]::New($Telemetry)
     $Company.Phone      = If(!$Phone  ) { "N/A" } Else { $Phone }
-    $Company.Website    = If(!$Website) { "www.securedigitsplus.com" } Else { $Website }
+    $Company.Website    = If(!$Website) { "https://www.securedigitsplus.com" } Else { $Website }
     $Company.Hours      = If(!$Hours  ) { "N/A" } Else { $Hours }
 
     If ($Background)

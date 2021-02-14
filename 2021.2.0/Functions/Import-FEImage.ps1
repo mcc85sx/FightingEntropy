@@ -4,11 +4,10 @@ Function Import-FEImage
     Param(
     [Parameter(ParameterSetName=0,Mandatory)][Object]$ImageObject,
     [Parameter(ParameterSetName=1,Mandatory)][String]$Source,
-    [Parameter(Mandatory)][String]$ShareName,
+    [Parameter(Mandatory)][String] $ShareName,
     [Parameter()][String]$Admin    = "Administrator",
     [Parameter()][String]$Password = "password", 
-    [Parameter()][String]$Company  = "Default",
-    [Parameter()][String]$Website  = "support.microsoft.com")
+    [Parameter(Mandatory)][Object] $Key)
 
     Switch($PSCmdlet.ParameterSetName)
     {
@@ -96,8 +95,8 @@ Function Import-FEImage
             Version             = "1.0"
             OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
             FullName            = $Admin
-            OrgName             = $Company
-            HomePage            = $WebSite
+            OrgName             = $Key.Company
+            HomePage            = $Key.WebSite
             AdminPassword       = $Password
         }
 

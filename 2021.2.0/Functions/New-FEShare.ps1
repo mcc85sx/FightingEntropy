@@ -150,7 +150,7 @@ Function New-FEShare
                                 UserPassword       = $Credential.GetNetworkCredential().Password
                                 UserDomain         = $ENV:Userdomain
                                 SkipBDDWelcome     = "YES"                          }
-    }
+    } | % Output
 
     # CustomSettings
     Export-Ini $Control\CustomSettings.ini @{
@@ -167,7 +167,7 @@ Function New-FEShare
                                 KeyboardLocale     = "en-US" 
                                 TimeZoneName       = Get-TimeZone | % ID
                                 EventService       = "http://{0}:9800" -f $Item.Hostname }
-    }
+    } | % Output
 
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {

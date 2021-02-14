@@ -101,9 +101,7 @@ Function New-FEShare
     }
 
     Import-Module (Get-MDTModule)
-    $Key = New-EnvironmentKey -Organization "Secure Digits Plus LLC" -CommonName securedigitsplus.com -Phone "(518)-406-8569" -Website www.securedigitsplus.com -Hours "24h/d;7d/w;365.25d/y;"
     $Item   = [_Share]::New($Path,$ShareName,$Description,$Key)
-
     $Item.NewSMBShare()
     $Item.NewPSDrive()
     

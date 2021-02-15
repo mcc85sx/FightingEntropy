@@ -85,7 +85,7 @@
     {
         Start-Sleep 5
         Write-Host "..."
-        $Object = Get-xMDTOData -Server dsc0.securedigitsplus.com -Port 9801 | ? Name -match $ID
+        $Object = Get-MDTOData -Server dsc0.securedigitsplus.com -Port 9801 | ? Name -match $ID
         Switch -Regex ($Object.DeploymentStatus)
         {
             "Active/Running"

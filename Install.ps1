@@ -7,6 +7,7 @@ Function Install-FEModule
     [Parameter(Mandatory)]
     [String]$Version)
 
+    [Net.ServicePointManager]::SecurityProtocol = 3072
     $Install = @( )
     
     ForEach ( $Item in "OS Root Manifest RestObject Hive Install" -Split " " )

@@ -54,12 +54,6 @@ Function Get-MDTOData # Modified version of (Mykal Nystrom/Deployment Bunny)'s s
 
     $URL                           = ("http://{0}:{1}/MDTMonitorData/Computers" -f $Server , $Port )
     $Data                          = Invoke-RestMethod $URL
-    $Report                        = $Data.Content.Properties | %  { [_MDTODataObject]::New($_) } 
-
-    Foreach( $Property in $Data.content.properties )
-    {
-        $Report += [_MDTODataObject]::New($Property)
-    }
     
-    $Report
+    $Data.Content.Properties       | %  { [_MDTODataObject]::New($_) } 
 }

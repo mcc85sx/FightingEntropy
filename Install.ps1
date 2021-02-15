@@ -25,7 +25,7 @@ Function Install-FEModule
     $Item              = (New-Object -ComObject WScript.Shell).CreateShortcut("$Home\Desktop\FightingEntropy.lnk")
 
     $Item.TargetPath   = "powershell"
-    $Item.Arguments    = "-ExecutionPolicy Bypass -Command `"Add-Type PresentationFramework;Import-Module FightingEntropy;Get-FEModule`""
+    $Item.Arguments    = "-NoExit -ExecutionPolicy Bypass -Command `"Add-Type -AssemblyName PresentationFramework;Import-Module FightingEntropy;Get-FEModule`""
     $Item.Description  = "Beginning the fight against identity theft and cybercriminal activities."
     $Item.IconLocation = Get-FEModule -Graphics | ? Name -match icon.ico | % Fullname
 

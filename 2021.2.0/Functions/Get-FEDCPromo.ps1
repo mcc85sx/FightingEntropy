@@ -5,7 +5,30 @@ Function Get-FEDCPromo
     [ValidateSet(0,1,2,3)]
     [Parameter(ParameterSetName=0)][UInt32]$Mode = 0,
     [ValidateSet("Forest","Tree","Child","Clone")]
-    [Parameter(ParameterSetname=1)][String]$Type)
+    [Parameter(ParameterSetname=1)][String]$Type,
+    [Parameter()][Switch]$Test)
+
+    $ADDS = Get-WindowsFeature | ? Name -match AD-Domain-Services
+    
+    If ( $ADDS.InstallState -eq "Available" )
+    {
+        Write-Theme "Exception [!] Must have ADDS installed first" 12,4,15,0
+        
+        Switch($Host.UI.PromptForChoice("Exception [!] ","Must have ADDS installed first, install it? (This will reboot the system)",
+        [System.Management.Automation.Host.ChoiceDescription[]]@("&Yes","&No"),0))
+        {
+            0 
+            {  
+                Install-WindowsFeature -Name $ADDS.Name -IncludeAllSubFeature -IncludeManagementTools
+                Restart-Computer
+            } 
+            
+            1 
+            {  
+                Throw "Exception [!] Must have ADDS installed first" 
+            }
+        }
+    }
 
     Class _DomainName
     {
@@ -782,11 +805,25 @@ Function Get-FEDCPromo
 
     $Splat = $UI.Output
     
-    Switch ( $UI.Mode )
+    If ( $Test )
     {
-        0 { Test-ADDSForestInstallation @Splat }
-        1 { Test-ADDSDomainInstallation @Splat }
-        2 { Test-ADDSDomainInstallation @Splat }
-        3 { Test-ADDSDomainControllerInstallation @Splat }
+        Switch ( $UI.Mode )
+        {
+            0 { Test-ADDSForestInstallation @Splat }
+            1 { Test-ADDSDomainInstallation @Splat }
+            2 { Test-ADDSDomainInstallation @Splat }
+            3 { Test-ADDSDomainControllerInstallation @Splat }
+        }
+    }
+
+    Else
+    {
+        Switch ( $UI.Mode )
+        {
+            0 { Install-ADDSForest @Splat }
+            1 { Install-ADDSDomain @Splat }
+            2 { Install-ADDSDomain @Splat }
+            3 { Install-ADDSDomainController @Splat }
+        }
     }
 }

@@ -2,6 +2,7 @@
 # [Begin]
     $Credential = Get-Credential  # [Service Account]
     $Time       = [System.Diagnostics.Stopwatch]::StartNew()
+    $Log        = @( )
 
 # [Starting VM-Variables]
     $ID         = "10P64"

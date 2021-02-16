@@ -232,8 +232,11 @@ Function New-EnvironmentKey
             $This.Copy()
             $This.Set()
             $This.Icons.Set()
-            "HKLM","HKCU" | % { Set-ItemProperty -Path "$_:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 }
-            RUNDLL32 user32.dll,UpdatePerUserSystemParameters
+            
+            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1
+            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1
+            
+            RUNDLL32 user32.dll, UpdatePerUserSystemParameters
         }
     }
 

@@ -128,10 +128,10 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         [Object]           $Xaml = @{ 
 
         ADLogin                  = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="260" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="410" Height="270" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
@@ -171,7 +171,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         <Grid.Background>
             <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\background.jpg"/>
         </Grid.Background>
-        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="220" Margin="5" VerticalAlignment="Center">
+        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="220" VerticalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -2067,7 +2067,7 @@ C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico
 '@
 
             NewAccount           = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Account" Width="400" Height="220" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Account" Width="410" Height="230" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>

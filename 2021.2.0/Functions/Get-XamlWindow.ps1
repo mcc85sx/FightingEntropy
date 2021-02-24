@@ -1392,7 +1392,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
             <Setter Property="Foreground" Value="Black"/>
         </Style>
         <Style TargetType="TextBox" x:Key="TextBro">
-            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Margin" Value="5"/>
@@ -1596,6 +1595,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="75"/>
                             <RowDefinition Height="75"/>
                             <RowDefinition Height="75"/>
+                            <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
                         <GroupBox Grid.Row="0" Header="[Install BITS/IIS Server]">
                             <Grid>
@@ -1604,7 +1604,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <RadioButton Style="{StaticResource RadButton}" Grid.Column="0" Content="True"/>
-                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="1" Content="False"/>
+                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="1" Content="False" IsChecked="True"/>
                             </Grid>
                         </GroupBox>
                         <Grid Grid.Row="1">
@@ -1614,16 +1614,26 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="[Site Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISName"/>
+                                <TextBox Style="{StaticResource TextBro}" Name="_IISName" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="1" Header="[App Pool Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISAppPool"/>
+                                <TextBox Style="{StaticResource TextBro}" Name="_IISAppPool" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="2" Header="[Virtual Host Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISVirtualHost"/>
+                                <TextBox Style="{StaticResource TextBro}" Name="_IISVirtualHost" IsEnabled="False"/>
                             </GroupBox>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <GroupBox Grid.Row="2" Header="[Legacy MDT/PSD]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="0" Content="Legacy MDT" IsChecked="True"/>
+                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="1" Content="PSD"/>
+                            </Grid>
+                        </GroupBox>
+                        <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -1635,10 +1645,10 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Style="{StaticResource TextBro}" Name="_ImageSwap"/>
                             </GroupBox>
                         </Grid>
-                        <GroupBox Grid.Row="3" Header="[(Local Admin) Username]">
+                        <GroupBox Grid.Row="4" Header="[(Local Admin) Username]">
                             <TextBox Style="{StaticResource TextBro}" Name="_LMUsername"/>
                         </GroupBox>
-                        <Grid Grid.Row="4">
+                        <Grid Grid.Row="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -1646,7 +1656,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <GroupBox Grid.Column="0" Header="[Password]">
                                 <PasswordBox Name="_LMPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
                             </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Password]">
+                            <GroupBox Grid.Column="1" Header="[Confirm]">
                                 <PasswordBox Name="_LMConfirm"  Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
                             </GroupBox>
                         </Grid>

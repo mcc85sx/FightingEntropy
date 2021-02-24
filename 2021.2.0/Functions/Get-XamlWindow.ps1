@@ -1323,360 +1323,358 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 </Window>
 '@
             FEShare              = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="750" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Style TargetType="GroupBox" x:Key="xGroupBox">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="GroupBox">
-                        <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="Button" x:Key="xButton">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="Label" x:Key="HeadLabel">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Label">
-                        <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{ TemplateBinding ContentTemplate }" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="TabItem" x:Key="xTabItem">
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="RadioButton" x:Key="RadButton">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-        <Style TargetType="TextBox" x:Key="TextBro">
-            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="Height" Value="24"/>
-        </Style>
-    </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-        <Grid.Background>
-            <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\background.jpg"/>
-        </Grid.Background>
-        <Image Grid.Row="0" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\banner.png"/>
-        <TabControl Grid.Row="1" Width="600" Background="{x:Null}" BorderBrush="Black" Foreground="{x:Null}" HorizontalAlignment="Center">
-            <TabControl.Resources>
-                <Style TargetType="TabItem">
+            <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="750" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+            <Window.Resources>
+                <Style TargetType="GroupBox" x:Key="xGroupBox">
+                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="TabItem">
-                                <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
-                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                            <ControlTemplate TargetType="GroupBox">
+                                <Border CornerRadius="10" Background="White" BorderBrush="Black" BorderThickness="3">
+                                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
                                 </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="False">
-                                        <Setter TargetName="Border" Property="Background" Value="GhostWhite"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </TabControl.Resources>
-            <TabItem Header="Company" BorderBrush="{x:Null}">
-                <GroupBox Style="{StaticResource xGroupBox}" Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Organization]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Organization"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Common Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_CommonName"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="0.25*"/>
-                                <ColumnDefinition Width="0.15*"/>
-                                <ColumnDefinition Width="0.25*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Location]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Location"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Region]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Region"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[Country]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Country"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="3" Header="[Postal]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Postal"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.66*"/>
-                                    <ColumnDefinition Width="0.33*"/>
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column="0" Header="[Site Link]">
-                                    <TextBox Style="{StaticResource TextBro}" Name="_Sitelink"/>
+                <Style TargetType="Button" x:Key="xButton">
+                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
+                                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="Label" x:Key="HeadLabel">
+                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Label">
+                                <Border CornerRadius="5" Background="#FF0080FF" BorderBrush="Black" BorderThickness="3">
+                                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{ TemplateBinding ContentTemplate }" Margin="5"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="TabItem" x:Key="xTabItem">
+                    <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border CornerRadius="10" Background="#007bff" BorderBrush="Black" BorderThickness="3">
+                                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="5"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="RadioButton" x:Key="RadButton">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Style>
+                <Style TargetType="TextBox" x:Key="TextBro">
+                    <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="Height" Value="24"/>
+                </Style>
+            </Window.Resources>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <ImageBrush Stretch="UniformToFill" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\background.jpg"/>
+                </Grid.Background>
+                <Image Grid.Row="0" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\banner.png"/>
+                <TabControl Grid.Row="1" Width="600" Background="{x:Null}" BorderBrush="Black" Foreground="{x:Null}" HorizontalAlignment="Center">
+                    <TabControl.Resources>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TabItem">
+                                        <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="LightSkyBlue"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="False">
+                                                <Setter TargetName="Border" Property="Background" Value="GhostWhite"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.Resources>
+                    <TabItem Header="Company" BorderBrush="{x:Null}">
+                        <GroupBox Style="{StaticResource xGroupBox}" Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Organization]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Organization"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Common Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_CommonName"/>
+                                    </GroupBox>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.25*"/>
+                                        <ColumnDefinition Width="0.15*"/>
+                                        <ColumnDefinition Width="0.25*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Location]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Location"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Region]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Region"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="2" Header="[Country]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Country"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="3" Header="[Postal]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Postal"/>
+                                    </GroupBox>
+                                </Grid>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.66*"/>
+                                            <ColumnDefinition Width="0.33*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <GroupBox Grid.Column="0" Header="[Site Link]">
+                                            <TextBox Style="{StaticResource TextBro}" Name="_Sitelink"/>
+                                        </GroupBox>
+                                    <GroupBox Grid.Column="2" Header="[Time Zone]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_TimeZone"/>
+                                    </GroupBox>
+                                </Grid>
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Phone]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Phone"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Hours]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Hours"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="2" Header="[Website]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Website"/>
+                                    </GroupBox>
+                                </Grid>
+                                <GroupBox Grid.Row="4" Header="[Logo (120x120) Bitmap/*.bmp)]">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Style="{StaticResource xButton}"  Name="_LogoDialog" Content="Select"/>
+                                        <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_Logo"/>
+                                    </Grid>
                                 </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[Time Zone]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_TimeZone"/>
-                            </GroupBox>
-                        </Grid>
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="0.5*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Phone]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Phone"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Hours]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Hours"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[Website]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Website"/>
-                            </GroupBox>
-                        </Grid>
-                        <GroupBox Grid.Row="4" Header="[Logo (120x120) Bitmap/*.bmp)]">
+                                <GroupBox Grid.Row="5" Header="[Background (Common Image File)]">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Style="{StaticResource xButton}"  Name="_BackgroundDialog" Content="Select"/>
+                                        <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_Background"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Header="Deployment" BorderBrush="{x:Null}">
+                        <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Style="{StaticResource xButton}"  Name="_LogoDialog" Content="Select"/>
-                                <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_Logo"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Deployment Root]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_Path"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Share Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_ShareName"/>
+                                    </GroupBox>
+                                </Grid>
+                                <GroupBox Grid.Row="1" Header="[Description]">
+                                    <TextBox Style="{StaticResource TextBro}" Name="_Description"/>
+                                </GroupBox>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.66*"/>
+                                        <ColumnDefinition Width="0.33*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[DNS Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_DNS"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[NetBIOS Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_NetBIOS"/>
+                                    </GroupBox>
+                                </Grid>
+                                <GroupBox Grid.Row="3" Header="[Organizational Unit Name]">
+                                    <TextBox Style="{StaticResource TextBro}" Name="_OU"/>
+                                </GroupBox>
+                                <GroupBox Grid.Row="4" Header="[(Domain Admin) Username]">
+                                    <TextBox Style="{StaticResource TextBro}" Name="_DCUsername"/>
+                                </GroupBox>
+                                <Grid Grid.Row="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Password]" Padding="5">
+                                        <PasswordBox Name="_DCPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Confirm]" Padding="5">
+                                        <PasswordBox Name="_DCConfirm" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                                    </GroupBox>
+                                </Grid>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="5" Header="[Background (Common Image File)]">
+                    </TabItem>
+                    <TabItem Header="Imaging" BorderBrush="{x:Null}">
+                        <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Style="{StaticResource xButton}"  Name="_BackgroundDialog" Content="Select"/>
-                                <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_Background"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <GroupBox Header="[Install BITS/IIS Server]">
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <RadioButton GroupName="_IISInstall" Style="{StaticResource RadButton}" Content="False" Grid.Column="0" IsChecked="True"/>
+                                        <RadioButton GroupName="_IISInstall" Style="{StaticResource RadButton}" Content="True"  Grid.Column="1"/>
+                                    </Grid>
+                                </GroupBox>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Site Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_IISName" IsEnabled="False"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[App Pool Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_IISAppPool" IsEnabled="False"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="2" Header="[Virtual Host Name]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_IISVirtualHost" IsEnabled="False"/>
+                                    </GroupBox>
+                                </Grid>
+                                <GroupBox Grid.Row="2" Header="[Legacy MDT/PSD]">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <RadioButton GroupName="_MDTInstall" Style="{StaticResource RadButton}" Grid.Column="0" Content="MDT (Production/Development)" IsChecked="True"/>
+                                        <RadioButton GroupName="_MDTInstall" Style="{StaticResource RadButton}" Grid.Column="1" Content="PSD (Development)"/>
+                                    </Grid>
+                                </GroupBox>
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Source Directory]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_ImageRoot"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Temp/Swap Directory]">
+                                        <TextBox Style="{StaticResource TextBro}" Name="_ImageSwap"/>
+                                    </GroupBox>
+                                </Grid>
+                                <GroupBox Grid.Row="4" Header="[(Local Admin) Username]">
+                                    <TextBox Style="{StaticResource TextBro}" Name="_LMUsername"/>
+                                </GroupBox>
+                                <Grid Grid.Row="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="[Password]">
+                                        <PasswordBox Name="_LMPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[Confirm]">
+                                        <PasswordBox Name="_LMConfirm"  Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                                    </GroupBox>
+                                </Grid>
                             </Grid>
                         </GroupBox>
-                    </Grid>
-                </GroupBox>
-            </TabItem>
-            <TabItem Header="Deployment" BorderBrush="{x:Null}">
-                <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.6*"/>
-                                <ColumnDefinition Width="0.4*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Deployment Root]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Path"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Share Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_ShareName"/>
-                            </GroupBox>
-                        </Grid>
-                        <GroupBox Grid.Row="1" Header="[Description]">
-                            <TextBox Style="{StaticResource TextBro}" Name="_Description"/>
-                        </GroupBox>
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.66*"/>
-                                <ColumnDefinition Width="0.33*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[DNS Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_DNS"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[NetBIOS Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_NetBIOS"/>
-                            </GroupBox>
-                        </Grid>
-                        <GroupBox Grid.Row="3" Header="[Organizational Unit Name]">
-                            <TextBox Style="{StaticResource TextBro}" Name="_OU"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="4" Header="[(Domain Admin) Username]">
-                            <TextBox Style="{StaticResource TextBro}" Name="_DCUsername"/>
-                        </GroupBox>
-                        <Grid Grid.Row="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Password]" Padding="5">
-                                <PasswordBox Name="_DCPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Confirm]" Padding="5">
-                                <PasswordBox Name="_DCConfirm" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
-                            </GroupBox>
-                        </Grid>
-                    </Grid>
-                </GroupBox>
-            </TabItem>
-            <TabItem Header="Imaging" BorderBrush="{x:Null}">
-                <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="75"/>
-                        </Grid.RowDefinitions>
-                        <GroupBox Header="[Install BITS/IIS Server]">
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <RadioButton GroupName="_InstallIIS" Style="{StaticResource RadButton}" Content="False" Grid.Column="0" IsChecked="True"/>
-                                <RadioButton GroupName="_InstallIIS" Style="{StaticResource RadButton}" Content="True"  Grid.Column="1"/>
-                            </Grid>
-                        </GroupBox>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Site Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISName" IsEnabled="False"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[App Pool Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISAppPool" IsEnabled="False"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[Virtual Host Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_IISVirtualHost" IsEnabled="False"/>
-                            </GroupBox>
-                        </Grid>
-                        <GroupBox Grid.Row="2" Header="[Legacy MDT/PSD]">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="0" Content="Legacy MDT" IsChecked="True"/>
-                                <RadioButton Style="{StaticResource RadButton}" Grid.Column="1" Content="PSD"/>
-                            </Grid>
-                        </GroupBox>
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Source Directory]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_ImageRoot"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Temp/Swap Directory]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_ImageSwap"/>
-                            </GroupBox>
-                        </Grid>
-                        <GroupBox Grid.Row="4" Header="[(Local Admin) Username]">
-                            <TextBox Style="{StaticResource TextBro}" Name="_LMUsername"/>
-                        </GroupBox>
-                        <Grid Grid.Row="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Password]">
-                                <PasswordBox Name="_LMPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Confirm]">
-                                <PasswordBox Name="_LMConfirm"  Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
-                            </GroupBox>
-                        </Grid>
-                    </Grid>
-                </GroupBox>
-            </TabItem>
-        </TabControl>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.25*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Style="{StaticResource xButton}" Name="Start" Content="Start"/>
-            <Button Grid.Column="2" Style="{StaticResource xButton}" Name="Cancel" Content="Cancel"/>
-        </Grid>
-    </Grid>
-</Window>
+                    </TabItem>
+                </TabControl>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Style="{StaticResource xButton}" Name="Start" Content="Start"/>
+                    <Button Grid.Column="2" Style="{StaticResource xButton}" Name="Cancel" Content="Cancel"/>
+                </Grid>
+            </Grid>
+        </Window>
 '@
             MBWin10 = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Windows 10 Settings/Tweaks Script By Madbomb122" Height="600" Width="800" BorderBrush="Black" Background="White">

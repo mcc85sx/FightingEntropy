@@ -31,7 +31,7 @@ Class _DeploymentShare
     [String]        $IISInstall
     [String]           $IISName
     [String]        $IISAppPool
-    [String]          $IISVHost
+    [String]    $IISVirtualHost
     [String]         $ISOSource
     [String]         $WIMSource
     [String]        $LMUsername
@@ -43,40 +43,78 @@ Class _DeploymentShare
     [PSCredential]  $Credential
     [Object]               $Key
 
+    # Main()
     _DeploymentShare()
     {
         $This.Window     = Get-XamlWindow -Type FEShare
         $This.IO         = $This.Window.IO
         $This.Graphics   = Get-FEModule -Graphics
-        $This.IsDomain   = [WMIClass]"Win32_ComputerSystem" | % GetInstances | % PartOfDomain
-        If ( $This.IsDomain )
+        $This.IsDomain   = Get-CimInstance Win32_ComputerSystem | % PartOfDomain
+
+        Switch([UInt32]($This.IsDomain))
         {
-            Import-Module ActiveDirectory
-            $This.Domain               = Get-ADDomain
-            $This.DNSName              = $This.Domain.DNSRoot
-            $This.IO._DNS.Text         = $This.Domain.DNSRoot
+            0 # Non-domain
+            {
+                $This.Domain               = "-"
+                $This.DNSName              = Get-Item Env:\UserDNSDomain | % Value
+                $This.IO._DNS.Text         = $This.DNSName
 
-            $This.NetBIOSName          = $This.Domain.NetBIOSName
-            $This.IO._NetBIOS.Text     = $This.Domain.NetBIOSName
-        }
+                $This.NetBIOSName          = Get-Item Env:\UserDomain    | % Value
+                $This.IO._NetBIOS.Text     = $This.NetBIOSName
+            }
 
-        Else
-        {
-            $This.Domain               = "-"
-            $This.DNSName              = Get-Item Env:\UserDNSDomain | % Value
-            $This.IO._DNS.Text         = $This.DNSName
+            1 # Domain Member
+            {
+                Import-Module ActiveDirectory
+                $This.Domain               = Get-ADDomain
+                $This.DNSName              = $This.Domain.DNSRoot
+                $This.IO._DNS.Text         = $This.DNSName
 
-            $This.NetBIOSName          = Get-Item Env:\UserDomain    | % Value
-            $This.IO._NetBIOS.Text     = $This.NetBIOSName
+                $This.NetBIOSName          = $This.Domain.NetBIOSName
+                $This.IO._NetBIOS.Text     = $This.NetBIOSName
+            }
         }
 
         $This.GetSiteLink($This.Ping)
-        $This.Location                 = $This.Ping.City
-        $This.Region                   = $This.Ping.Region
-        $This.Country                  = $This.Ping.Country
-        $This.Postal                   = $This.Ping.Postal
-        $This.TimeZone                 = $This.Ping.TimeZone
+        $This.SetIIS()
         $This.GetGraphics()
+    }
+
+    GetIIS()
+    {
+        If ($This.IO._InstallIIS.IsChecked)
+        {
+            $This.InstallIIS = 0
+        }
+
+        If ($This.IO._InstallIIS.IsChecked)
+        {
+            $This.InstallIIS = 1
+        }
+    }
+
+    SetIIS()
+    {
+        Switch ($This.IISInstall)
+        {
+            0
+            {
+                $This.IISName         = "N/A"
+                $This.IISAppPool      = "N/A"
+                $This.IISVirtualHost  = "N/A"
+            }
+
+            1
+            {
+                $This.IISName         = "<Enter IIS Name>"
+                $This.IISAppPool      = "<Enter App Pool Name>"
+                $This.IISVirtualHost  = "<Enter Virtual Hostname>"
+            }
+        }
+
+        $This.IO._IISName.Text        = $This.IISName
+        $This.IO._IISAppPool.Text     = $This.IISAppPool
+        $This.IO._IISVirtualHost.Text = $This.IISVhost
     }
 
     GetGraphics()

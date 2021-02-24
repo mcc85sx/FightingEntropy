@@ -85,7 +85,7 @@ Class _DeploymentShare
         $This.IO._Logo.Text       = $This.Logo
 
         $This.Background          = $This.Graphics | ? Name -match OEMbg.jpg | % FullName
-        $This.IO._Background.Text = $This.Logo
+        $This.IO._Background.Text = $This.Background
     }
 
     GetSiteLink([Object]$Ping)

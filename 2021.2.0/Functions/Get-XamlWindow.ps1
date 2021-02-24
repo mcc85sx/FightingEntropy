@@ -1432,7 +1432,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            <TabItem Header="Company" BorderBrush="{x:Null}">
+            <TabItem Header="Domain" BorderBrush="{x:Null}">
                 <GroupBox Style="{StaticResource xGroupBox}" Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -1443,7 +1443,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="75"/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
+                        <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -1455,7 +1455,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Style="{StaticResource TextBro}" Name="_CommonName"/>
                             </GroupBox>
                         </Grid>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*"/>
                                 <ColumnDefinition Width="0.25*"/>
@@ -1475,19 +1475,47 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Style="{StaticResource TextBro}" Name="_Postal"/>
                             </GroupBox>
                         </Grid>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.66*"/>
-                                    <ColumnDefinition Width="0.33*"/>
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column="0" Header="[Site Link]">
-                                    <TextBox Style="{StaticResource TextBro}" Name="_Sitelink"/>
-                                </GroupBox>
+                                <ColumnDefinition Width="0.66*"/>
+                                <ColumnDefinition Width="0.33*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Site Link]">
+                                <TextBox Style="{StaticResource TextBro}" Name="_Sitelink"/>
+                            </GroupBox>
                             <GroupBox Grid.Column="2" Header="[Time Zone]">
                                 <TextBox Style="{StaticResource TextBro}" Name="_TimeZone"/>
                             </GroupBox>
                         </Grid>
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.66*"/>
+                                <ColumnDefinition Width="0.33*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[DNS Name]">
+                                <TextBox Style="{StaticResource TextBro}" Name="_DNS"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[NetBIOS Name]">
+                                <TextBox Style="{StaticResource TextBro}" Name="_NetBIOS"/>
+                            </GroupBox>
+                        </Grid>
+                        <GroupBox Grid.Row="4" Header="[Branch]">
+                            <TextBox Style="{StaticResource TextBro}" Name="_Branch"/>
+                        </GroupBox>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="Branding" BorderBrush="{x:Null}">
+                <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="75"/>
+                            <RowDefinition Height="75"/>
+                            <RowDefinition Height="75"/>
+                            <RowDefinition Height="75"/>
+                            <RowDefinition Height="75"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.4*"/>
                                 <ColumnDefinition Width="0.5*"/>
@@ -1503,7 +1531,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Style="{StaticResource TextBro}" Name="_Website"/>
                             </GroupBox>
                         </Grid>
-                        <GroupBox Grid.Row="4" Header="[Logo (120x120) Bitmap/*.bmp)]">
+                        <GroupBox Grid.Row="1" Header="[Logo (120x120) Bitmap/*.bmp)]">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80"/>
@@ -1513,7 +1541,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_Logo"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="5" Header="[Background (Common Image File)]">
+                        <GroupBox Grid.Row="2" Header="[Background (Common Image File)]">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80"/>
@@ -1537,33 +1565,24 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="75"/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.6*"/>
-                                <ColumnDefinition Width="0.4*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Deployment Root]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_Path"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[Share Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_ShareName"/>
-                            </GroupBox>
-                        </Grid>
+                        <GroupBox Grid.Row="0" Header="[Deployment Share : Root Path - Share Name - (Legacy MDT/PSD)]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.6*"/>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.3*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Name="_MDTInstall" Grid.Column="2" Margin="10" Height="24">
+                                    <ComboBoxItem Content="MDT" IsSelected="True"/>
+                                    <ComboBoxItem Content="PSD"/>
+                                </ComboBox>
+                                <TextBox Grid.Column="0" Style="{StaticResource TextBro}" Name="_Path"/>
+                                <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_ShareName"/>
+                            </Grid>
+                        </GroupBox>
                         <GroupBox Grid.Row="1" Header="[Description]">
                             <TextBox Style="{StaticResource TextBro}" Name="_Description"/>
                         </GroupBox>
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.66*"/>
-                                <ColumnDefinition Width="0.33*"/>
-                            </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[DNS Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_DNS"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="1" Header="[NetBIOS Name]">
-                                <TextBox Style="{StaticResource TextBro}" Name="_NetBIOS"/>
-                            </GroupBox>
-                        </Grid>
                         <GroupBox Grid.Row="3" Header="[Organizational Unit Name]">
                             <TextBox Style="{StaticResource TextBro}" Name="_OU"/>
                         </GroupBox>
@@ -1611,16 +1630,6 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <TextBox Grid.Column="1" Style="{StaticResource TextBro}" Name="_IISName" IsEnabled="False"/>
                                 <TextBox Grid.Column="2" Style="{StaticResource TextBro}" Name="_IISAppPool" IsEnabled="False"/>
                                 <TextBox Grid.Column="3" Style="{StaticResource TextBro}" Name="_IISVirtualHost" IsEnabled="False"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Header="[Install (Legacy MDT/PSD)]">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <RadioButton GroupName="_MDTInstall" Style="{StaticResource RadButton}" Grid.Column="0" Content="MDT (Production/Development)" IsChecked="True"/>
-                                <RadioButton GroupName="_MDTInstall" Style="{StaticResource RadButton}" Grid.Column="1" Content="PSD (Development)"/>
                             </Grid>
                         </GroupBox>
                         <Grid Grid.Row="3">

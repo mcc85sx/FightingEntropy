@@ -1598,14 +1598,14 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                             <RowDefinition Height="75"/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
-                        <GroupBox Grid.Row="0" Header="[Install BITS/IIS Server]">
-                            <Grid>
+                        <GroupBox Header="[Install BITS/IIS Server]">
+                            <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <RadioButton Name="_InstallIIS_0" Style="{StaticResource RadButton}" Grid.Column="0" Content="False" IsChecked="True"/>
-                                <RadioButton Name="_InstallIIS_1"  Style="{StaticResource RadButton}" Grid.Column="1" Content="True"/>
+                                <RadioButton GroupName="_InstallIIS" Style="{StaticResource RadButton}" Content="False" Grid.Column="0" IsChecked="True"/>
+                                <RadioButton GroupName="_InstallIIS" Style="{StaticResource RadButton}" Content="True"  Grid.Column="1"/>
                             </Grid>
                         </GroupBox>
                         <Grid Grid.Row="1">

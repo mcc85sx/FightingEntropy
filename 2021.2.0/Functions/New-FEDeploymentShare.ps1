@@ -1,10 +1,13 @@
 Function New-FEDeploymentShare
 {
+
+
     Class _DeploymentShare
     {
         [Object]            $Window
         [Object]                $IO
         [Object]          $Graphics
+        [Object]            $Shares
         Hidden [Bool]     $IsDomain
         [Object]            $Domain
         [Object]          $Provider = "Secure Digits Plus"
@@ -24,43 +27,52 @@ Function New-FEDeploymentShare
         [String]           $Website
         [String]              $Logo
         [String]        $Background
-        [String]        $DCUsername
-        [String]        $DCPassword
-        [String]         $DCConfirm
         [String]           $DNSName
         [String]       $NetBIOSName
         [String]            $OUName
+
+        [Object]        $MDTInstall
+
         [Object]        $IISInstall
         [String]           $IISName
         [String]        $IISAppPool
         [String]    $IISVirtualHost
-        [String]         $ISOSource
-        [String]         $WIMSource
-        [String]        $LMUsername
-        [String]        $LMPassword
-        [String]         $LMConfirm
-        [Object]        $MDTInstall
-        [String]              $Path
-        [String]         $Sharename
-        [String]       $Description
-        [PSCredential]  $Credential
-        [Object]               $Key
+
+        Hidden [String] $DCUsername
+        Hidden [String] $DCPassword
+        Hidden [String]  $DCConfirm
+
+        Hidden [String] $LMUsername = "Administrator"
+        Hidden [String] $LMPassword
+        Hidden [String]  $LMConfirm
+
+        [Object]         $ImageRoot
+        [Object]         $ImageSwap
+
+        [String]              $Path # // 
+        [String]         $ShareName # \\ 
+        [String]       $Description # // 
+        [PSCredential]  $Credential # \\ 
+        [Object]               $Key # // 
 
         _DeploymentShare()
         {
             $This.Window      = Get-XamlWindow -Type FEShare
             $This.IO          = $This.Window.IO
             $This.Graphics    = Get-FEModule -Graphics
+            $This.Shares      = Get-FEShare
             $This.GetGraphics()
             $This.GetDomain()
             $This.GetMDT()
             $This.GetIIS()
-
             $This.GetPing()
             $This.GetSiteLink()
 
-            $This.Description          = $This.GetDate()
+            $This.Description          = ("[FightingEntropy({0})({1})]:\\Development Share" -f [Char]960,$This.GetDate())
             $This.IO._Description.Text = $This.Description
+
+            $This.LMUserName           = "Administrator" 
+            $This.IO._LMUsername.Text  = $This.LMUserName
         }
 
         GetGraphics()
@@ -140,21 +152,21 @@ Function New-FEDeploymentShare
 
         GetPing()
         {
-            $This.Ping              = Invoke-RestMethod "http://ipinfo.io/$($This.ExternalIP)"
+            $This.Ping              = Invoke-RestMethod http://ipinfo.io/$($This.ExternalIP)
             $This.Location          = $This.Ping.City
-            $This.IO._Location.Text = $This.Ping.City
+            $This.IO._Location.Text = $This.Location
             
             $This.Region            = $This.Ping.Region
-            $This.IO._Region.Text   = $This.Ping.Region
+            $This.IO._Region.Text   = $This.Region
 
             $This.Country           = $This.Ping.Country
-            $This.IO._Country.Text  = $This.Ping.Country
+            $This.IO._Country.Text  = $This.Country
             
             $This.Postal            = $This.Ping.Postal
-            $This.IO._Postal.Text   = $This.Ping.Postal
+            $This.IO._Postal.Text   = $This.Postal
             
             $This.TimeZone          = $This.Ping.TimeZone
-            $This.IO._TimeZone.Text = $This.Ping.TimeZone
+            $This.IO._TimeZone.Text = $This.TimeZone
 
             $This.SiteLink          = $This.GetSiteLink()
             $This.IO._SiteLink.Text = $This.SiteLink
@@ -163,10 +175,10 @@ Function New-FEDeploymentShare
         [String] GetSiteLink()
         {
             $Return = @( )
-            $Return += ( $This.Ping.City -Split " " | % { $_[0] } ) -join ''
-            $Return += ( $This.Ping.Region -Split " " | % { $_[0] } ) -join ''
-            $Return += $This.Ping.Country
-            $Return += $This.Ping.Postal
+            $Return += ( $This.Location -Split " " | % { $_[0] } ) -join ''
+            $Return += ( $This.Region -Split " " | % { $_[0] } ) -join ''
+            $Return += $This.Country
+            $Return += $This.Postal
 
             Return @( $Return -join '-' )
         }
@@ -192,55 +204,93 @@ Function New-FEDeploymentShare
 
         [String] GetDate()
         {
-            Return @( Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]")
+            Return @( Get-Date -UFormat "%Y-%m%d" )
         }
 
-        [Bool] Validate([SecureString]$Password,[SecureString]$Confirm)
+        NewFEImage()
         {
-            Return @( $Password -match $Confirm )
+            New-FEImage -Source $This.ImageRoot -Target $This.ImageSwap
         }
 
+        NewFEShare()
+        {
+            Get-FEShare -Name $This.ShareName | Remove-FEShare
+            New-FEShare -Path $This.Path -ShareName $This.ShareName -Credential $This.Credential -Key $This.Key
+        }
+
+        ImportFEImage()
+        {
+            Import-FEImage -ShareName $This.ShareName -Source $This.ImageSwap -Admin $This.LMUsername -Password $This.LMPassword -Key $This.Key
+        }
+
+        UpdateFEShare([UInt32]$Mode)
+        {
+            Update-FEShare -ShareName $This.ShareName -Mode $Mode -Credential $This.Credential -Key $This.Key
+        }
     }
 
     $Root = [_DeploymentShare]::New()
 
     $Root.IO._Cancel.Add_Click({ $Root.IO.DialogResult = $False })
-    
     $Root.IO._Start.Add_Click(
     {  
-        $Root.DCUsername = $Root.IO._DCUsername.Text
-        If (!$Root.DCUsername)
+        If ($Root.ShareName -in $Root.Shares.Name)
+        {
+            [System.Windows.MessageBox]::Show("A share with that name already exists","[!] Error")
+        }
+
+        ElseIf ($Root.Path -in $Root.Shares.Path)
+        {
+            [System.Windows.MessageBox]::Show("A share with that path already exists","[!] Error")
+        }
+
+        ElseIf (!$Root.IO._DCUsername.Text)
         {
             [System.Windows.MessageBox]::Show("Invalid Username","[!] Error")
         }
 
+        ElseIf ($Root.IO._DCPassword.Password -notmatch $Root.IO._DCConfirm.Password)
+        {
+            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
+        }
+        
+        ElseIf ($Root.IO._LMPassword.Password -notmatch $Root.IO._LMConfirm.Password)
+        {
+            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
+        }
+
+        ElseIf (!(Test-Path $Root.IO._ImageRoot.Text))
+        {
+            [System.Windows.MessageBox]::Show("Invalid image source folder","[!] Error")
+        }
+
+        ElseIf (Test-Path $Root.IO._ImageSwap.Text)
+        {
+            [System.Windows.MessageBox]::Show("Path exists","[!] Error")
+        }
+
+        $Root.DCUsername      = $Root.IO._DCUsername.Text
         $Root.DCPassword      = $Root.IO._DCPassword.Password
         $Root.DCConfirm       = $Root.IO._DCConfirm.Password
-        
-        If ( $Root.DCPassword -notmatch $Root.DCConfirm )
-        {
-            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
-        }
-
-        $Root.Credential      = New-Object System.Management.Automation.PSCredential -ArgumentList $Root.DCUsername,$Root.IO._DCPassword.SecurePassword
-
+        $Root.Credential      = [System.Management.Automation.PSCredential]::New($Root.DCUsername,$Root.IO._DCPassword.SecurePassword)
         $Root.LMUsername      = $Root.IO._LMUsername.Text
-        If (!$Root.LMUsername)
-        {
-            $Root.LMUsername  = "Administrator"
-        }
-
         $Root.LMPassword      = $Root.IO._LMPassword.Password
         $Root.LMConfirm       = $Root.IO._LMConfirm.Password
-        
-        If ( $Root.LMPassword -notmatch $Root.LMConfirm )
-        {
-            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
+        $Root.ImageRoot       = $Root.IO._ImageRoot.Text
+        $Root.ImageSwap       = $Root.IO._ImageSwap.Text
+        $Root.OUName          = $Root.IO._OU.Text
+        $Root.Key             = @{ 
+
+            Organization      = $Root.Organization
+            CommonName        = $Root.CommonName
+            Background        = $Root.Background
+            Logo              = $Root.Logo
+            Phone             = $Root.Phone
+            Hours             = $Root.Hours
+            Website           = $Root.Website
+            NetworkRoot       = ("\\{0}.{1}\{2}" -f $Env:ComputerName,$Root.CommonName,$Root.ShareName)
         }
 
-        $Root.ISOSource       = $Root.IO._ImageRoot.Text
-        $Root.WIMSource       = $Root.IO._ImageSwap.Text
-        $Root.OUName          = $Root.IO._OU.Text
         $Root.IO.DialogResult = $True 
     })
 
@@ -299,5 +349,12 @@ Function New-FEDeploymentShare
     })
 
     $Root.Window.Invoke()
-    $Root
+
+    If ($Root.Window.IO.DialogResult)
+    {
+        $Root.NewFEImage()
+        $Root.NewFEShare()
+        $Root.ImportFEImage()
+        $Root.UpdateFEShare(0)
+    }
 }

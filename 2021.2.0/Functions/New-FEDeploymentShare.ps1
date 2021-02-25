@@ -1,7 +1,5 @@
 Function New-FEDeploymentShare
 {
-
-
     Class _DeploymentShare
     {
         [Object]            $Window

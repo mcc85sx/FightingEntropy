@@ -28,7 +28,7 @@ Class _Manifest
                               "Get-FEHost","Get-FEImage","Get-FEManifest","Get-FEModule","Get-FENetwork","Get-FEOS","Get-FEService","Get-FEShare","Get-MadBomb",
                               "Get-MDTModule","Get-ServerDependency","Get-ViperBomb","Get-XamlWindow","Import-FEImage","Install-FEModule","Install-IISServer",
                               "New-ACLObject","New-Company","New-EnvironmentKey","New-FEImage","New-FEShare","Remove-FEModule","Remove-FEShare",
-                              "Show-ToastNotification","Update-FEShare","Write-Theme","Get-MDTOData" | % { "$_.ps1" })
+                              "Show-ToastNotification","Update-FEShare","Write-Theme","Get-MDTOData","New-FEDeploymentShare" | % { "$_.ps1" })
 
     [String[]]   $Control = ("Computer.png DefaultApps.xml FE{0} FE{1} MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml","ServerMod.xml" ) -Split " "
     [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")

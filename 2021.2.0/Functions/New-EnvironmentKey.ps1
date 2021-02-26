@@ -5,12 +5,13 @@ Function New-EnvironmentKey
     [Parameter(Mandatory,ParameterSetName=0)][Object]$Key,
     [Parameter(Mandatory,ParameterSetName=1)][String]$Path)
 
-    $Key = @( Switch($pscmdlet.ParameterSetName)
+    If (($Path) -and (Test-Path $Path))
     {
-        0 { $Key | ConvertFrom-JSON }
-        1 { Get-Content -Path $Path | ConvertFrom-Json }
-    } )
+        $Key = Get-Content -Path $Path
+    }
 
+    $Key = ( $Key | ConvertFrom-Json )
+    
     Class _TelemetryObject
     {
         [String]       $ExternalIP

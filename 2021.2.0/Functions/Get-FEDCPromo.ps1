@@ -20,7 +20,6 @@ Function Get-FEDCPromo
             0 
             {  
                 Install-WindowsFeature -Name $ADDS.Name -IncludeAllSubFeature -IncludeManagementTools
-                Restart-Computer
             } 
             
             1 

@@ -287,8 +287,8 @@ Function New-FEDeploymentShare
 
                 1
                 {
-                    Write-Theme "Abort [~] Unable to proceed" 12,4,15,0
-                    Break
+                    Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
+                    [System.Windows.MessageBox]::Show("Cannot overwrite a currently open share","Abort [!]")
                 }
             }
         }
@@ -307,8 +307,8 @@ Function New-FEDeploymentShare
 
                 1
                 {
-                    Write-Theme "Abort [~] Unable to proceed" 12,4,15,0
-                    Break
+                    Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
+                    [System.Windows.MessageBox]::Show("Cannot overwrite a currently open share","Abort [!]")
                 }
             }
         }
@@ -320,7 +320,22 @@ Function New-FEDeploymentShare
 
         ElseIf (Test-Path $Root.IO._ImageSwap.Text)
         {
-            [System.Windows.MessageBox]::Show("Error, the designated image swap path exists","Error [!]")
+            Switch ($host.UI.PromptForChoice("Error [!]","The designated image swap path already exists, remove?",
+            [System.Management.Automation.Host.ChoiceDescription[]]@('&Yes','&No'),[Int]1)) 
+            {   
+                0   
+                { 
+                    Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
+                    Get-FEShare -Path $Root.Path | Remove-FEShare
+                    $Root.Shares = Get-FEShare
+                }
+
+                1
+                {
+                    Write-Theme "Abort [!] Cannot (remove/overwrite) designated (Temp/Swap) path." 12,4,15,0
+                    [System.Windows.MessageBox]::Show("Cannot (remove/overwrite) designated (Temp/Swap) path.","Abort [!]")
+                }
+            }
         }
 
         Else

@@ -129,9 +129,12 @@ Function New-FEShare
             Copy-Item -Path $File -Destination $Script -Verbose
         }
 
-        $Item = ("{0}\Script\$Name" -f $Key.NetworkPath)
+        If ($File -notlike $Key.NetworkPath)
+        {
+            $Item = ("{0}\Scripts\$Name" -f $Key.NetworkPath)
+        }
 
-        Switch($File)
+        Switch ($File)
         {
             $Key.Logo       { $Key.Logo       = $Item }
             $Key.Background { $Key.Background = $Item }

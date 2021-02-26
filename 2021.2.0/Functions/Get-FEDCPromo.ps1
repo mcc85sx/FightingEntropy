@@ -1,4 +1,4 @@
-Function Get-FEDCPromo
+﻿Function Get-FEDCPromo
 {
     [CmdLetBinding(DefaultParameterSetName=0)]
     Param(
@@ -513,6 +513,11 @@ Function Get-FEDCPromo
         {
             $DC                         = [_ADLogin]::New($UI.Connection.Target)
 
+            $DC.IO.Switch.Add_Click({
+
+                $DC.IO.Port.IsEnabled = $True
+            })
+
             $DC.IO.Cancel.Add_Click(
             {
                 $UI.Credential          = $Null
@@ -523,6 +528,7 @@ Function Get-FEDCPromo
             $DC.IO.Ok.Add_Click(
             {
                 $DC.CheckADCredential()
+                $DC.Port                = $DC.IO.Port.Text
 
                 If ( $DC.Test.distinguishedName )
                 {

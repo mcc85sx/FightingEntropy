@@ -50,6 +50,11 @@ Function Get-MDTOData # Modified version of (Mykal Nystrom/Deployment Bunny)'s s
             $This.StartTime        = $Obj.StartTime.'#text' -replace "T"," "
             $This.EndTime          = $Obj.EndTime.'#text' -replace "T"," "
         }
+        
+        [String] ToString()
+        {
+            Return @( $This.Name )
+        }
     }
 
     $URL                           = ("http://{0}:{1}/MDTMonitorData/Computers" -f $Server , $Port )

@@ -2,7 +2,7 @@ Function New-EnvironmentKey
 {
     [CmdLetBinding(DefaultParameterSet=0)]
     Param(
-    [Parameter(Mandatory,ParameterSetName=0)][Object]$Key
+    [Parameter(Mandatory,ParameterSetName=0)][Object]$Key,
     [Parameter(Mandatory,ParameterSetName=1)][String]$Path)
 
     $Key = @( Switch($pscmdlet.ParameterSetName)

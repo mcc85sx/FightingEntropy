@@ -769,12 +769,13 @@ Function Get-FEDCPromo
     {
         $Feature.Name = $Feature.Name -Replace "_","-"
         $X            = $Feature.Installed
+        $Y            = "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name
 
         Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
         
-        If (!$X)
-        { 
-            Write-Host ( "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name )
+        If (!$F)
+        {
+            If ($Test) { Write-Host $Y } Else { Invoke-Expression $Y }
         }
     }
 

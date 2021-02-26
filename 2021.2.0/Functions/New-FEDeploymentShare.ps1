@@ -1,9 +1,34 @@
 Function New-FEDeploymentShare
 {
+    Class _Key
+    {
+        [String]     $NetworkPath
+        [String]    $Organization
+        [String]      $CommonName
+        [String]      $Background
+        [String]            $Logo
+        [String]           $Phone
+        [String]           $Hours
+        [String]         $Website
+
+        _Key([Object]$Root)
+        {
+            $This.NetworkPath     = ("\\{0}\{1}" -f $Root.Hostname,$Root.ShareName)
+            $This.Organization    = $Root.Organization
+            $This.CommonName      = $Root.CommonName
+            $This.Background      = $Root.Background
+            $This.Logo            = $Root.Logo
+            $This.Phone           = $Root.Phone
+            $This.Hours           = $Root.Hours
+            $This.Website         = $Root.Website
+        }
+    }
+
     Class _DeploymentShare
     {
         [Object]            $Window
         [Object]                $IO
+        [String]          $Hostname
         [Object]          $Graphics
         [Object]            $Shares
         Hidden [Bool]     $IsDomain
@@ -12,7 +37,7 @@ Function New-FEDeploymentShare
         [String]      $Organization
         [String]        $CommonName
         [String]        $ExternalIP = (Invoke-RestMethod http://ifconfig.me/ip)
-        [Object]              $Ping
+        Hidden [Object]       $Ping
         [String]          $Location
         [String]            $Region
         [String]           $Country
@@ -57,6 +82,7 @@ Function New-FEDeploymentShare
         {
             $This.Window      = Get-XamlWindow -Type FEShare
             $This.IO          = $This.Window.IO
+            $This.Hostname    = $Env:ComputerName
             $This.Graphics    = Get-FEModule -Graphics
             $This.Shares      = Get-FEShare
             $This.GetGraphics()
@@ -232,64 +258,84 @@ Function New-FEDeploymentShare
     $Root.IO._Cancel.Add_Click({ $Root.IO.DialogResult = $False })
     $Root.IO._Start.Add_Click(
     {  
-        If ($Root.ShareName -in $Root.Shares.Name)
+        If (!$Root.IO._DCUsername.Text)
         {
-            [System.Windows.MessageBox]::Show("A share with that name already exists","[!] Error")
-        }
-
-        ElseIf ($Root.Path -in $Root.Shares.Path)
-        {
-            [System.Windows.MessageBox]::Show("A share with that path already exists","[!] Error")
-        }
-
-        ElseIf (!$Root.IO._DCUsername.Text)
-        {
-            [System.Windows.MessageBox]::Show("Invalid Username","[!] Error")
+            [System.Windows.MessageBox]::Show("Invalid Domain Username","Error [!]")
         }
 
         ElseIf ($Root.IO._DCPassword.Password -notmatch $Root.IO._DCConfirm.Password)
         {
-            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
+            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","Error [!]")
         }
         
         ElseIf ($Root.IO._LMPassword.Password -notmatch $Root.IO._LMConfirm.Password)
         {
-            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","[!] Error")
+            [System.Windows.MessageBox]::Show("Invalid Password/Confirm","Error [!]")
+        }
+
+        ElseIf ($Root.ShareName -in $Root.Shares.Name)
+        {
+            Switch ($host.UI.PromptForChoice("Error [!]","A deployment share with that name already exists, remove?",
+            [System.Management.Automation.Host.ChoiceDescription[]]@('&Yes','&No'),[Int]1)) 
+            {   
+                0   
+                { 
+                    Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
+                    Get-FEShare -Name $Root.ShareName | Remove-FEShare
+                }
+
+                1
+                {
+                    Write-Theme "Abort [~] Unable to proceed" 12,4,15,0
+                    Break
+                }
+            }
+        }
+
+        ElseIf ($Root.Path -in $Root.Shares.Path)
+        {
+            Switch ($host.UI.PromptForChoice("Error [!]","A deployment share with that path already exists, remove?",
+            [System.Management.Automation.Host.ChoiceDescription[]]@('&Yes','&No'),[Int]1)) 
+            {   
+                0   
+                { 
+                    Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
+                    Get-FEShare -Path $Root.Path | Remove-FEShare
+                }
+
+                1
+                {
+                    Write-Theme "Abort [~] Unable to proceed" 12,4,15,0
+                    Break
+                }
+            }
         }
 
         ElseIf (!(Test-Path $Root.IO._ImageRoot.Text))
         {
-            [System.Windows.MessageBox]::Show("Invalid image source folder","[!] Error")
+            [System.Windows.MessageBox]::Show("Invalid image source folder","Error [!]")
         }
 
         ElseIf (Test-Path $Root.IO._ImageSwap.Text)
         {
-            [System.Windows.MessageBox]::Show("Path exists","[!] Error")
+            [System.Windows.MessageBox]::Show("Error, the designated image swap path exists","Error [!]")
         }
 
-        $Root.DCUsername      = $Root.IO._DCUsername.Text
-        $Root.DCPassword      = $Root.IO._DCPassword.Password
-        $Root.DCConfirm       = $Root.IO._DCConfirm.Password
-        $Root.Credential      = [System.Management.Automation.PSCredential]::New($Root.DCUsername,$Root.IO._DCPassword.SecurePassword)
-        $Root.LMUsername      = $Root.IO._LMUsername.Text
-        $Root.LMPassword      = $Root.IO._LMPassword.Password
-        $Root.LMConfirm       = $Root.IO._LMConfirm.Password
-        $Root.ImageRoot       = $Root.IO._ImageRoot.Text
-        $Root.ImageSwap       = $Root.IO._ImageSwap.Text
-        $Root.OUName          = $Root.IO._OU.Text
-        $Root.Key             = @{ 
-
-            Organization      = $Root.Organization
-            CommonName        = $Root.CommonName
-            Background        = $Root.Background
-            Logo              = $Root.Logo
-            Phone             = $Root.Phone
-            Hours             = $Root.Hours
-            Website           = $Root.Website
-            NetworkRoot       = ("\\{0}.{1}\{2}" -f $Env:ComputerName,$Root.CommonName,$Root.ShareName)
+        Else
+        {
+            $Root.DCUsername      = $Root.IO._DCUsername.Text
+            $Root.DCPassword      = $Root.IO._DCPassword.Password
+            $Root.DCConfirm       = $Root.IO._DCConfirm.Password
+            $Root.Credential      = [System.Management.Automation.PSCredential]::New($Root.DCUsername,$Root.IO._DCPassword.SecurePassword)
+            $Root.LMUsername      = $Root.IO._LMUsername.Text
+            $Root.LMPassword      = $Root.IO._LMPassword.Password
+            $Root.LMConfirm       = $Root.IO._LMConfirm.Password
+            $Root.ImageRoot       = $Root.IO._ImageRoot.Text
+            $Root.ImageSwap       = $Root.IO._ImageSwap.Text
+            $Root.OUName          = $Root.IO._OU.Text
+            $Root.Key             = [_Key]::New($Root)
+            $Root.IO.DialogResult = $True
         }
-
-        $Root.IO.DialogResult = $True 
     })
 
     $Root.IO._LogoDialog.Add_Click(
@@ -319,6 +365,8 @@ Function New-FEDeploymentShare
 
         $Root.Branch              = ("{0}.{1}" -f ($Root.SiteLink -Replace "-","."),$Root.CommonName).ToLower()
         $Root.IO._Branch.Text     = $Root.Branch
+
+        $Root.HostName            = ("{0}.{1}" -f $Env:ComputerName, $Root.CommonName)
     })
 
     $Root.IO._Phone.Add_TextChanged(

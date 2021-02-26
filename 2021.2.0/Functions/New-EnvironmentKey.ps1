@@ -96,20 +96,6 @@ Function New-EnvironmentKey
             Return $This.Name
         }
     }
-
-    $Key = '{
-        
-        "NetworkPath":  "\\\\DSC0.securedigitsplus.com\\FlightTest$",
-        "Organization":  "Secure Digits Plus LLC",
-        "CommonName":  "securedigitsplus.com",
-        "Background":  "\\\\DSC0.securedigitsplus.com\\FlightTest$\\Scripts\\OEMbg.jpg",
-        "Logo":  "\\\\DSC0.securedigitsplus.com\\FlightTest$\\Scripts\\OEMlogo.bmp",
-        "Phone":  "(518)406-8569",
-        "Hours":  "24h/d;7d/w;365.25d/y;",
-        "Website":  "https://www.securedigitsplus.com"
-    
-    }' | ConvertFrom-Json
-
     
     Class _Icons
     {

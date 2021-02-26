@@ -3,12 +3,12 @@ Function New-FEShare
     [CmdLetBinding()]
     Param(
     [ValidateNotNullOrEmpty()]
-    [Parameter(Mandatory)][String]            $Path ,
+    [Parameter(Mandatory)][String]             $Path ,
     [ValidateNotNullOrEmpty()]
-    [Parameter(Mandatory)][String]       $ShareName ,
-    [Parameter()]         [String]     $Description = "[FightingEntropy($([Char]960))]:\\Development Share",
-    [Parameter(Mandatory)][PSCredential]$Credential ,
-    [Parameter(Mandatory)][Object]             $Key )
+    [Parameter(Mandatory)][String]        $ShareName ,
+    [Parameter()]         [String]      $Description = "[FightingEntropy($([Char]960))]:\\Development Share",
+    [Parameter(Mandatory)][PSCredential] $Credential ,
+    [Parameter(Mandatory)][Object]              $Key )
 
     Class _Share
     {
@@ -101,9 +101,9 @@ Function New-FEShare
     }
 
     Import-Module (Get-MDTModule)
-    $Item   = [_Share]::New($Path,$ShareName,$Description,$Key)
-    $Item.NewSMBShare()
-    $Item.NewPSDrive()
+    $Share   = [_Share]::New($Path,$ShareName,$Description,$Key)
+    $Share.NewSMBShare()
+    $Share.NewPSDrive()
     
     Get-MDTPersistentDrive | % { 
 
@@ -115,17 +115,42 @@ Function New-FEShare
 
     # Load Module / Share Drive Mount
     $Module                = Get-FEModule
-    $Root                  = "$($Item.Label):\"
-    $Control               = "$($Item.Path)\Control"
-    $Script                = "$($Item.Path)\Scripts"
+    $Root                  = "$($Share.Label):\"
+    $Control               = "$($Share.Path)\Control"
+    $Script                = "$($Share.Path)\Scripts"
+
+    ForEach ($File in $Key.Background, $Key.Logo)
+    {
+        $Item = $File | Split-Path -Leaf
+
+        If (!(Test-Path "$Script\$Item"))
+        {
+            Copy-Item -Path $File -Destination $Script -Verbose
+        }
+
+        $Item = ("{0}\Scripts\$Item" -f $Key.NetworkPath)
+        Switch($File)
+        {
+            $Key.Logo       { $Key.Logo       = $Item }
+            $Key.Background { $Key.Background = $Item }
+        }
+    }
+
+    $Install = @( ) 
+    $Install += (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true)
+    $Install += "`$Key = '$($Key | ConvertTo-Json)' | ConvertFrom-Json`n"
+    $Install += "`$Return = New-EnvironmentKey -Key `$Key`n"
+    $Install += "`$Return.Apply()"
+
+    Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
 
     # Share Settings
     Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
-    Set-ItemProperty $Root -Name MonitorHost -Value $Item.HostName -Verbose
+    Set-ItemProperty $Root -Name MonitorHost -Value $Share.HostName -Verbose
 
     # Image Names/Background
     $Names  = 64 , 86 | % { "Boot.x$_" } | % { "$_.Generate{0}ISO $_.{0}WIMDescription $_.{0}ISOName $_.BackgroundFile" -f "LiteTouch" -Split " " }
-    $Values = 64 , 86 | % { "$($Module.Name)(x$_)" } | % { "True;$_;$_.iso;$($Module.Graphics | ? Name -match OEMbg.jpg)" -Split ";" }
+    $Values = 64 , 86 | % { "$($Module.Name)(x$_)" } | % { "True;$_;$_.iso;$($Key.Background)" -Split ";" }
 
     ForEach ( $X in 0..($Names.Count - 1 ) )
     {
@@ -144,37 +169,41 @@ Function New-FEShare
     # Bootstrap
     Export-Ini $Control\Bootstrap.ini @{ 
 
-        Settings           = @{ Priority           = "Default"                      }
-        Default            = @{ DeployRoot         = $Item.NetworkPath
-                                UserID             = $Credential.Username
-                                UserPassword       = $Credential.GetNetworkCredential().Password
-                                UserDomain         = $ENV:Userdomain
-                                SkipBDDWelcome     = "YES"                          }
+        Settings           = @{ Priority             = "Default"                      }
+        Default            = @{ DeployRoot           = $Key.NetworkPath
+                                UserID               = $Credential.Username
+                                UserPassword         = $Credential.GetNetworkCredential().Password
+                                UserDomain           = $Key.CommonName
+                                SkipBDDWelcome       = "YES"                          }
     } | % Output
 
     # CustomSettings
     Export-Ini $Control\CustomSettings.ini @{
 
-        Settings           = @{ Priority           = "Default" 
-                                Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = $Item.Key.Company.Name
-                                OSInstall          = "Y"
-                                SkipCapture        = "NO"
-                                SkipAdminPassword  = "YES" 
-                                SkipProductKey     = "YES" 
-                                SkipComputerBackup = "NO" 
-                                SkipBitLocker      = "YES" 
-                                KeyboardLocale     = "en-US" 
-                                TimeZoneName       = Get-TimeZone | % ID
-                                EventService       = "http://{0}:9800" -f $Item.Hostname }
+        Settings           = @{ Priority             = "Default" 
+                                Properties           = "MyCustomProperty" }
+        Default            = @{ _SMSTSOrgName        = $Key.Organization
+                                JoinDomain           = $Key.CommonName
+                                DomainAdmin          = $Credential.Username
+                                DomainAdminPassword  = $Credential.GetNetworkCredential().Password
+                                DomainAdminDomain    = $Key.CommonName
+                                MachineObjectOU      = "OU=Computers,DC=$($Key.CommonName.Split(".") -join ',DC=')"
+                                SkipDomainMembership = "YES"
+                                OSInstall            = "Y"
+                                SkipCapture          = "NO"
+                                SkipAdminPassword    = "YES" 
+                                SkipProductKey       = "YES" 
+                                SkipComputerBackup   = "NO" 
+                                SkipBitLocker        = "YES" 
+                                KeyboardLocale       = "en-US" 
+                                TimeZoneName         = Get-TimeZone | % ID
+                                EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
     } | % Output
 
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {
         Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
-
-    Set-Content -Path $Script\Install.ps1 -Value (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true) -Force -Verbose
 
     ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
     {

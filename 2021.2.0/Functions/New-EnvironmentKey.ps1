@@ -1,14 +1,15 @@
 Function New-EnvironmentKey
 {
-    [CmdLetBinding()]
+    [CmdLetBinding(DefaultParameterSet=0)]
     Param(
-    [Parameter()][String] $Organization = "Default",
-    [Parameter()][String]   $CommonName = "test.localhost",
-    [Parameter()][String]   $Background ,
-    [Parameter()][String]         $Logo ,
-    [Parameter()][String]        $Phone ,
-    [Parameter()][String]      $Website ,
-    [Parameter()][String]        $Hours )
+    [Parameter(Mandatory,ParameterSetName=0)][Object]$Key
+    [Parameter(Mandatory,ParameterSetName=1)][String]$Path)
+
+    $Key = @( Switch($pscmdlet.ParameterSetName)
+    {
+        0 { $Key | ConvertFrom-JSON }
+        1 { Get-Content -Path $Path | ConvertFrom-Json }
+    } )
 
     Class _TelemetryObject
     {
@@ -24,12 +25,12 @@ Function New-EnvironmentKey
         [String]         $SiteLink
         [String]           $Branch
 
-        _TelemetryObject([String]$Organization,[String]$CommonName)
+        _TelemetryObject([Object]$Key)
         {
             $This.ExternalIP       = Invoke-RestMethod "http://ifconfig.me/ip"
             $This.Ping             = Invoke-RestMethod "http://ipinfo.io/$($This.ExternalIP)"
-            $This.Organization     = $Organization
-            $This.CommonName       = $CommonName
+            $This.Organization     = $Key.Organization
+            $This.CommonName       = $Key.CommonName
             $This.Location         = $This.Ping.City
             $This.Region           = $This.Ping.Region
             $This.Country          = $This.Ping.Country
@@ -66,10 +67,28 @@ Function New-EnvironmentKey
         [String]          $Website
         [String]            $Hours
 
-        _CompanyObject([Object]$Telemetry)
+        _CompanyObject([Object]$Telemetry,[Object]$Key)
         {
-            $This.Telemetry    = $Telemetry
-            $This.Name         = $Telemetry.Organization
+            $This.Telemetry     = $Telemetry
+            $This.Name          = $Key.Organization
+
+            $Graphics           = Get-FEModule -Graphics
+
+            If (!($Key.Background) -or (!(Test-Path $Key.Background)))
+            {
+                $Key.Background = $Graphics | ? Name -match OEMbg.jpg | % FullName
+            }
+        
+            If (!($Key.Logo) -or (!(Test-Path $Key.Logo)))
+            {
+                $Key.Logo       = $Graphics | ? Name -match OEMlogo.bmp | % FullName
+            }
+
+            $This.Background    = $Key.Background
+            $This.Logo          = $Key.Logo
+            $This.Phone         = If (!$Key.Phone) { "N/A" } Else { $Key.Phone }
+            $This.Hours         = If(!$Key.Website) { "https://www.securedigitsplus.com" } Else { $Key.Website }
+            $This.Website       = If(!$Key.Hours  ) { "N/A" } Else { $Key.Hours }
         }
 
         [String] ToString()
@@ -211,8 +230,6 @@ Function New-EnvironmentKey
                     New-Item -Path ($Item | Split-Path -Parent) -Name ($Item | Split-Path -Leaf) -Verbose
                 }
             }
-            
-            
         }
             
         Copy()
@@ -240,41 +257,9 @@ Function New-EnvironmentKey
         }
     }
 
-    $Graphics         = Get-FEModule -Graphics
-    $Telemetry        = [_TelemetryObject]::New($Organization,$CommonName)
-    $Company          = [_CompanyObject]::New($Telemetry)
-    $Company.Phone      = If(!$Phone  ) { "N/A" } Else { $Phone }
-    $Company.Website    = If(!$Website) { "https://www.securedigitsplus.com" } Else { $Website }
-    $Company.Hours      = If(!$Hours  ) { "N/A" } Else { $Hours }
-
-    If ($Background)
-    {
-        If (!(Test-Path $Background))
-        {
-            $Background = $Graphics | ? Name -match OEMbg.jpg | % FullName
-        }
-    }
-
-    If (!($Background))
-    {
-        $Background = $Graphics | ? Name -match OEMbg.jpg | % FullName
-    }
-
-    If ($Logo)
-    {
-        If (!(Test-Path $Logo))
-        {
-            $Logo       = $Graphics | ? Name -match OEMlogo.bmp | % FullName
-        }
-    }
-
-    If (!($Logo))
-    {
-        $Logo       = $Graphics | ? Name -match OEMlogo.bmp | % FullName
-    }
-
-    $Company.Background = $Background
-    $Company.Logo       = $Logo 
+    $Graphics           = Get-FEModule -Graphics
+    $Telemetry          = [_TelemetryObject]::New($Key.Organization,$Key.CommonName)
+    $Company            = [_CompanyObject]::New($Telemetry,$Key)
 
     [_BrandingObject]::New($Company)
 }

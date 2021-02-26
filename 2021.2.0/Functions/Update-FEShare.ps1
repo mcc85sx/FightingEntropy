@@ -89,15 +89,20 @@ Function Update-FEShare
 
     ForEach ($File in $Key.Background, $Key.Logo)
     {
-        $Item = $File | Split-Path -Leaf
+        $Name = $File | Split-Path -Leaf
+        $Item = "$Script\$Name"
 
-        If (!(Test-Path "$Script\$Item"))
+        If (!(Test-Path $Item))
         {
             Copy-Item -Path $File -Destination $Script -Verbose
         }
 
-        $Item = ("{0}\Scripts\$Item" -f $Key.NetworkPath)
-        Switch($File)
+        If ($File -notlike $Key.NetworkPath)
+        {
+            $Item = ("{0}\Scripts\$Name" -f $Key.NetworkPath)
+        }
+
+        Switch ($File)
         {
             $Key.Logo       { $Key.Logo       = $Item }
             $Key.Background { $Key.Background = $Item }
@@ -106,9 +111,8 @@ Function Update-FEShare
 
     $Install = @( ) 
     $Install += (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true)
-    $Install += "`$Key = '$($Key | ConvertTo-Json)' | ConvertFrom-Json`n"
-    $Install += "`$Return = New-EnvironmentKey -Key `$Key`n"
-    $Install += "`$Return.Apply()"
+    $Install += "`$Key = '$($Key | ConvertTo-Json)'`n"
+    $Install += "`New-EnvironmentKey -Key `$Key | % Apply `n"
 
     Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
 
@@ -176,7 +180,7 @@ Function Update-FEShare
     {
         0 { Update-MDTDeploymentShare -Path "$($Share.Label):\"                  -Force -Verbose }
         1 { Update-MDTDeploymentShare -Path "$($Share.Label):\" -Compress $False -Force -Verbose }
-        2 { Update-MDTDeploymentShare -Path "$($Share.Label)\"  -Compress $True  -Force -Verbose }
+        2 { Update-MDTDeploymentShare -Path "$($Share.Label):\" -Compress $True  -Force -Verbose }
     }
 
     # Update/Flush FEShare(Images)

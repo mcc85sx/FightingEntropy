@@ -87,13 +87,38 @@ Function Update-FEShare
     $Control = "$($Share.Path)\Control"
     $Script  = "$($Share.Path)\Scripts"
 
+    ForEach ($File in $Key.Background, $Key.Logo)
+    {
+        $Item = $File | Split-Path -Leaf
+
+        If (!(Test-Path "$Script\$Item"))
+        {
+            Copy-Item -Path $File -Destination $Script -Verbose
+        }
+
+        $Item = ("{0}\Scripts\$Item" -f $Key.NetworkPath)
+        Switch($File)
+        {
+            $Key.Logo       { $Key.Logo       = $Item }
+            $Key.Background { $Key.Background = $Item }
+        }
+    }
+
+    $Install = @( ) 
+    $Install += (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true)
+    $Install += "`$Key = '$($Key | ConvertTo-Json)' | ConvertFrom-Json`n"
+    $Install += "`$Return = New-EnvironmentKey -Key `$Key`n"
+    $Install += "`$Return.Apply()"
+
+    Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
+
     # Share Settings
     Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
     Set-ItemProperty $Root -Name MonitorHost -Value $Share.HostName -Verbose
 
     # Image Names/Background
     $Names  = 64 , 86 | % { "Boot.x$_" } | % { "$_.Generate{0}ISO $_.{0}WIMDescription $_.{0}ISOName $_.BackgroundFile" -f "LiteTouch" -Split " " }
-    $Values = 64 , 86 | % { "$($Module.Name)(x$_)" } | % { "True;$_;$_.iso;$($Module.Graphics | ? Name -match OEMbg.jpg)" -Split ";" }
+    $Values = 64 , 86 | % { "$($Module.Name)(x$_)" } | % { "True;$_;$_.iso;$($Key.Background)" -Split ";" }
 
     ForEach ( $X in 0..($Names.Count - 1 ) )
     {
@@ -106,40 +131,45 @@ Function Update-FEShare
     # Bootstrap
     Export-Ini $Control\Bootstrap.ini @{ 
 
-        Settings           = @{ Priority           = "Default"                      }
-        Default            = @{ DeployRoot         = $Share.NetworkPath
-                                UserID             = $Credential.UserName
-                                UserPassword       = $Credential.GetNetworkCredential().Password
-                                UserDomain         = $env:USERDOMAIN
-                                SkipBDDWelcome     = "YES"                          }
+        Settings           = @{ Priority             = "Default"                      }
+        Default            = @{ DeployRoot           = $Key.NetworkPath
+                                UserID               = $Credential.UserName
+                                UserPassword         = $Credential.GetNetworkCredential().Password
+                                UserDomain           = $Key.CommonName
+                                SkipBDDWelcome       = "YES"                          }
     } | % Output
 
     # CustomSettings
     Export-Ini $Control\CustomSettings.ini @{
 
-        Settings           = @{ Priority           = "Default" 
-                                Properties         = "MyCustomProperty" }
-        Default            = @{ _SMSTSOrgName      = $Key.Company.Name
-                                OSInstall          = "Y"
-                                SkipCapture        = "NO"
-                                SkipAdminPassword  = "YES" 
-                                SkipProductKey     = "YES" 
-                                SkipComputerBackup = "NO" 
-                                SkipBitLocker      = "YES" 
-                                KeyboardLocale     = "en-US" 
-                                TimeZoneName       = Get-TimeZone | % ID
-                                EventService       = "http://{0}:9800" -f $Share.Hostname }
+        Settings           = @{ Priority             = "Default" 
+                                Properties           = "MyCustomProperty" }
+        Default            = @{ _SMSTSOrgName        = $Key.Organization
+                                JoinDomain           = $Key.CommonName
+                                DomainAdmin          = $Credential.Username
+                                DomainAdminPassword  = $Credential.GetNetworkCredential().Password
+                                DomainAdminDomain    = $Key.CommonName
+                                SkipDomainMembership = "YES"
+                                OSInstall            = "Y"
+                                SkipCapture          = "NO"
+                                SkipAdminPassword    = "YES" 
+                                SkipProductKey       = "YES" 
+                                SkipComputerBackup   = "NO" 
+                                SkipBitLocker        = "YES" 
+                                KeyboardLocale       = "en-US" 
+                                TimeZoneName         = Get-TimeZone | % ID
+                                EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
     } | % Output
     
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {
-        If ( (Get-Item "$Script\$($File.Name)" ).Length -notmatch $File.Length )
-        {
-            Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
-        }
+        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
     }
 
-    Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+    ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
+    {
+        Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
+    }
 
     # Update FEShare(MDT)
     Switch($Mode)

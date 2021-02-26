@@ -14,7 +14,7 @@ Function Get-FEDCPromo
     {
         Write-Theme "Exception [!] Must have ADDS installed first" 12,4,15,0
         
-        Switch($Host.UI.PromptForChoice("Exception [!] ","Must have ADDS installed first, install it? (This will reboot the system)",
+        Switch($Host.UI.PromptForChoice("Exception [!] ","Must have ADDS installed first, install it?",
         [System.Management.Automation.Host.ChoiceDescription[]]@("&Yes","&No"),0))
         {
             0 

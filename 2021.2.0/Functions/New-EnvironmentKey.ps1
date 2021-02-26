@@ -258,7 +258,7 @@ Function New-EnvironmentKey
     }
 
     $Graphics           = Get-FEModule -Graphics
-    $Telemetry          = [_TelemetryObject]::New($Key.Organization,$Key.CommonName)
+    $Telemetry          = [_TelemetryObject]::New($Key)
     $Company            = [_CompanyObject]::New($Telemetry,$Key)
 
     [_BrandingObject]::New($Company)

@@ -88,8 +88,8 @@ Function New-EnvironmentKey
             $This.Background    = $Key.Background
             $This.Logo          = $Key.Logo
             $This.Phone         = If (!$Key.Phone) { "N/A" } Else { $Key.Phone }
-            $This.Hours         = If(!$Key.Website) { "https://www.securedigitsplus.com" } Else { $Key.Website }
-            $This.Website       = If(!$Key.Hours  ) { "N/A" } Else { $Key.Hours }
+            $This.Website       = If(!$Key.Website) { "https://www.securedigitsplus.com" } Else { $Key.Website }
+            $This.Hours         = If(!$Key.Hours  ) { "N/A" } Else { $Key.Hours }
         }
 
         [String] ToString()

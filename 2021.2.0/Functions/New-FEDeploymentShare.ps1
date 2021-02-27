@@ -238,7 +238,6 @@ Function New-FEDeploymentShare
 
         NewFEShare()
         {
-            Get-FEShare -Name $This.ShareName | Remove-FEShare
             New-FEShare -Path $This.Path -ShareName $This.ShareName -Credential $This.Credential -Key $This.Key
         }
 
@@ -273,42 +272,31 @@ Function New-FEDeploymentShare
             [System.Windows.MessageBox]::Show("Invalid Password/Confirm","Error [!]")
         }
 
-        ElseIf ($Root.ShareName -in $Root.Shares.Name)
+        ElseIf (($Root.ShareName -in $Root.Shares.Name) -or ($Root.Path -in $Root.Shares.Path))
         {
-            Switch ($host.UI.PromptForChoice("Error [!]","A deployment share with that name already exists, remove?",
+            Switch ($host.UI.PromptForChoice("Error [!]","A deployment share with that (path/name) already exists, remove?",
             [System.Management.Automation.Host.ChoiceDescription[]]@('&Yes','&No'),[Int]1)) 
             {   
                 0   
-                { 
-                    Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
-                    Get-FEShare -Name $Root.ShareName | Remove-FEShare
-                    $Root.Shares = Get-FEShare
+                {
+                    If ($Root.ShareName -in $Root.Shares.Name)
+                    {
+                        Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
+                        Get-FEShare -Name $Root.ShareName | Remove-FEShare
+                    }
+
+                    If ($Root.Path -in $Root.Shares.Path)
+                    {
+                        Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
+                        Get-FEShare -Path $Root.Path | Remove-FEShare
+                    }
                 }
 
                 1
                 {
                     Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
                     [System.Windows.MessageBox]::Show("Cannot overwrite a currently open share","Abort [!]")
-                }
-            }
-        }
-
-        ElseIf ($Root.Path -in $Root.Shares.Path)
-        {
-            Switch ($host.UI.PromptForChoice("Error [!]","A deployment share with that path already exists, remove?",
-            [System.Management.Automation.Host.ChoiceDescription[]]@('&Yes','&No'),[Int]1)) 
-            {   
-                0   
-                { 
-                    Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
-                    Get-FEShare -Path $Root.Path | Remove-FEShare
-                    $Root.Shares = Get-FEShare
-                }
-
-                1
-                {
-                    Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
-                    [System.Windows.MessageBox]::Show("Cannot overwrite a currently open share","Abort [!]")
+                    Throw "Abort [!]"
                 }
             }
         }
@@ -325,15 +313,15 @@ Function New-FEDeploymentShare
             {   
                 0   
                 { 
-                    Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
-                    Get-FEShare -Path $Root.Path | Remove-FEShare
-                    $Root.Shares = Get-FEShare
+                    Write-Theme "Removing [!] Image swap folder $($Root.IO._ImageSwap.Text)" 10,14,15,0
+                    Remove-Item $Root.IO._ImageSwap.Text -Recurse -Force -Verbose
                 }
 
                 1
                 {
                     Write-Theme "Abort [!] Cannot (remove/overwrite) designated (Temp/Swap) path." 12,4,15,0
                     [System.Windows.MessageBox]::Show("Cannot (remove/overwrite) designated (Temp/Swap) path.","Abort [!]")
+                    Throw "Abort [!] Existing temp/swap folder"
                 }
             }
         }

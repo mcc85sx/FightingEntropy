@@ -104,7 +104,7 @@ Function Get-MDTModule
 
                     [Net.ServicePointManager]::SecurityProtocol = 3072
 
-                    If ( ! ( Test-Path $Path ) )
+                    If (!(Test-Path $Path))
                     {
                         New-Item $Path -ItemType Directory -Verbose
                     }
@@ -113,9 +113,9 @@ Function Get-MDTModule
 
                     $Process          = Start-Process -FilePath "$Path\$File" -ArgumentList $Arguments -PassThru
 
-                    While ( ! ( $Process.HasExited ) )
+                    While (!$Process.HasExited)
                     {
-                        For ( $X = 0; $X -le 100; $X++ )
+                        For ($X = 0; $X -le 100; $X++)
                         {
                             Write-Progress -Activity "[Installing] @: $($Name)" -PercentComplete $X
                             Start-Sleep -Milliseconds 50

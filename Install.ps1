@@ -23,7 +23,7 @@ Function Install-FEModule
     Add-Type -AssemblyName PresentationFramework
     Import-Module FightingEntropy
 
-    $Item              = (New-Object -ComObject WScript.Shell).CreateShortcut("$Home\Desktop\FightingEntropy.lnk")
+    $Item              = (New-Object -ComObject WScript.Shell).CreateShortcut("$Env:Public\Desktop\FightingEntropy.lnk")
 
     $Item.TargetPath   = "powershell"
     $Item.Arguments    = "-NoExit -ExecutionPolicy Bypass -Command `"Add-Type -AssemblyName PresentationFramework;Import-Module FightingEntropy;`$Module = Get-FEModule;`$Module`""

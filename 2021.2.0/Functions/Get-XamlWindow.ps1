@@ -128,7 +128,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         [Object]           $Xaml = @{ 
 
         ADLogin                  = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="400" Height="260" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://AD Login" Width="420" Height="260" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -519,7 +519,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 '@
 
             FEDCFound            = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="520" Height="260" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Found" Width="540" Height="260" HorizontalAlignment="Center" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="Margin" Value="10"/>
@@ -566,7 +566,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
-                <DataGrid Grid.Row="0" Grid.Column="0" Name="DataGrid" FrozenColumnCount="2" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
+                <DataGrid Grid.Row="0" Grid.Column="0" Name="DataGrid" AutoGenerateColumns="False" AlternationCount="2" HeadersVisibility="Column" CanUserResizeRows="False" CanUserAddRows="False" IsTabStop="True" IsTextSearchEnabled="True" SelectionMode="Extended">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Address" Width="140" Binding="{Binding IPAddress}" CanUserSort="True" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Hostname" Width="200" Binding="{Binding HostName}" CanUserSort="True" IsReadOnly="True"/>
@@ -591,8 +591,8 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Domain Controller Promotion" Width="800" Height="800" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.2.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -607,6 +607,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
         <Style TargetType="Button" x:Key="xButton">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Margin" Value="3"/>
@@ -771,46 +772,46 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1.2*"/>
+                                <RowDefinition Height="1.2*"/>
                             </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[Domain Name]" Name="_DomainName">
-                                <TextBox Style="{StaticResource LTextBox}" Name="DomainName"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[Domain NetBIOS Name]" Name="_DomainNetBIOSName">
-                                <TextBox Style="{StaticResource LTextBox}" Name="DomainNetBIOSName"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[New Domain Name]" Name="_NewDomainName">
-                                <TextBox Style="{StaticResource LTextBox}" Name="NewDomainName"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[New Domain NetBIOS Name]" Name="_NewDomainNetBIOSName">
-                                <TextBox Style="{StaticResource LTextBox}" Name="NewDomainNetBIOSName"/>
-                            </GroupBox>
-                            <GroupBox Grid.Row="4" Header="[Site Name]" Name="_SiteName">
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="[Domain Name]" Name="_DomainName">
+                                    <TextBox Style="{StaticResource LTextBox}" Name="DomainName"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="[NetBIOS Name]" Name="_DomainNetBIOSName">
+                                    <TextBox Style="{StaticResource LTextBox}" Name="DomainNetBIOSName"/>
+                                </GroupBox>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="[New Domain Name]" Name="_NewDomainName">
+                                    <TextBox Style="{StaticResource LTextBox}" Name="NewDomainName"/>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="[New NetBIOS Name]" Name="_NewDomainNetBIOSName">
+                                    <TextBox Style="{StaticResource LTextBox}" Name="NewDomainNetBIOSName"/>
+                                </GroupBox>
+                            </Grid>
+                            <GroupBox Grid.Row="2" Header="[Site Name]" Name="_SiteName">
                                 <TextBox Style="{StaticResource LTextBox}" Name="SiteName"/>
                             </GroupBox>
-                            <GroupBox Grid.Row="5" Header="[Database Path]" Name="_DatabasePath">
+                            <GroupBox Grid.Row="3" Header="[Database Path]" Name="_DatabasePath">
                                 <TextBox Style="{StaticResource LTextBox}" Name="DatabasePath"/>
                             </GroupBox>
-                            <GroupBox Grid.Row="6" Header="[Sysvol Path]" Name="_SysvolPath">
+                            <GroupBox Grid.Row="4" Header="[Sysvol Path]" Name="_SysvolPath">
                                 <TextBox Style="{StaticResource LTextBox}" Name="SysvolPath"/>
                             </GroupBox>
-                            <GroupBox Grid.Row="7" Header="[Log Path]" Name="_LogPath">
+                            <GroupBox Grid.Row="5" Header="[Log Path]" Name="_LogPath">
                                 <TextBox Style="{StaticResource LTextBox}" Name="LogPath"/>
                             </GroupBox>
-                            <GroupBox Grid.Row="8" Header="[Credential]" Name="_Credential">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Content="Credential" Style="{StaticResource xButton}" Name="CredentialButton" Grid.Column="0"/>
-                                    <TextBox Style="{StaticResource LTextBox}" Name="Credential" Grid.Column="1"/>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Grid.Row="9" Header="[Directory Services Recovery Mode Administrator (Password/Confirm)]">
+                            <GroupBox Grid.Row="6" Header="[Directory Services Recovery Mode Administrator (Password/Confirm)]">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -820,7 +821,17 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                                     <PasswordBox Grid.Column="1" HorizontalContentAlignment="Left" Name="Confirm" Height="20" Margin="5,0,5,0" PasswordChar="*"/>
                                 </Grid>
                             </GroupBox>
-                            <GroupBox Grid.Row="10" Header="[Initialize]">
+                            <GroupBox Grid.Row="7" Header="[Credential]" Name="_Credential">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="Credential" Style="{StaticResource xButton}" Name="CredentialButton" Grid.Column="0"/>
+                                    <TextBox Style="{StaticResource LTextBox}" Name="Credential" Grid.Column="1"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="8" Header="[Initialize]">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>

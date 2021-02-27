@@ -117,10 +117,10 @@ Function New-FEDeploymentShare
                 0 # Non-domain
                 {
                     $This.Domain               = "-"
-                    $This.DNSName              = Get-Item Env:\UserDNSDomain | % Value
+                    $This.DNSName              = Resolve-DnsName $env:COMPUTERNAME | % Name | Select-Object -Unique
                     $This.IO._DNS.Text         = $This.DNSName
 
-                    $This.NetBIOSName          = Get-Item Env:\UserDomain    | % Value
+                    $This.NetBIOSName          = Get-Item Env:\UserDomain | % Value
                     $This.IO._NetBIOS.Text     = $This.NetBIOSName
                 }
 

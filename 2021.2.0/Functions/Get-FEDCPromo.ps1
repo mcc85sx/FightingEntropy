@@ -1,4 +1,4 @@
-﻿Function Get-FEDCPromo
+Function Get-FEDCPromo
 {
     [CmdLetBinding(DefaultParameterSetName=0)]
     Param(
@@ -771,65 +771,73 @@
 
     $UI.Window.Invoke()
 
-    ForEach ( $Feature in $UI.Features )
+    If ($UI.IO.DialogResult)
     {
-        $Feature.Name = $Feature.Name -Replace "_","-"
-        $X            = $Feature.Installed
-        $Y            = "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name
-
-        Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
-        
-        If (!$F)
+        ForEach ( $Feature in $UI.Features )
         {
-            If ($Test) { Write-Host $Y } Else { Invoke-Expression $Y }
-        }
-    }
+            $Feature.Name = $Feature.Name -Replace "_","-"
+            $X            = $Feature.Installed
+            $Y            = "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name
 
-    $UI.Output = @{ }
-
-    ForEach ( $Group in $UI.Profile.Type, $UI.Profile.Role, $UI.Profile.Text )
-    {
-        ForEach ( $Item in $Group )
-        {
-            If ( $Item.IsEnabled )
+            Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
+            
+            If (!$F)
             {
-                If ( !$UI.Output[$Item.Name] )
+                If ($Test) { Write-Host $Y } Else { Invoke-Expression $Y }
+            }
+        }
+
+        $UI.Output = @{ }
+
+        ForEach ( $Group in $UI.Profile.Type, $UI.Profile.Role, $UI.Profile.Text )
+        {
+            ForEach ( $Item in $Group )
+            {
+                If ( $Item.IsEnabled )
                 {
-                    $UI.Output.Add($Item.Name,$UI.$($Item.Name))
+                    If ( !$UI.Output[$Item.Name] )
+                    {
+                        $UI.Output.Add($Item.Name,$UI.$($Item.Name))
+                    }
                 }
             }
         }
-    }
 
-    "Database Log Sysvol".Split(" ") | % { "$_`Path"} | % { $UI.Output.Add($_,$UI.$_) }
+        "Database Log Sysvol".Split(" ") | % { "$_`Path"} | % { $UI.Output.Add($_,$UI.$_) }
 
-    If ( $UI.Credential )
-    {
-        $UI.Output.Add("Credential",$UI.Credential)
-        $UI.Output.Add("SafeModeAdministratorPassword",$UI.SafeModeAdministratorPassword)
-    }
-
-    $Splat = $UI.Output
-    
-    If ( $Test )
-    {
-        Switch ( $UI.Mode )
+        If ( $UI.Credential )
         {
-            0 { Test-ADDSForestInstallation @Splat }
-            1 { Test-ADDSDomainInstallation @Splat }
-            2 { Test-ADDSDomainInstallation @Splat }
-            3 { Test-ADDSDomainControllerInstallation @Splat }
+            $UI.Output.Add("Credential",$UI.Credential)
+            $UI.Output.Add("SafeModeAdministratorPassword",$UI.SafeModeAdministratorPassword)
+        }
+
+        $Splat = $UI.Output
+        
+        If ( $Test )
+        {
+            Switch ( $UI.Mode )
+            {
+                0 { Test-ADDSForestInstallation @Splat }
+                1 { Test-ADDSDomainInstallation @Splat }
+                2 { Test-ADDSDomainInstallation @Splat }
+                3 { Test-ADDSDomainControllerInstallation @Splat }
+            }
+        }
+
+        Else
+        {
+            Switch ( $UI.Mode )
+            {
+                0 { Install-ADDSForest @Splat }
+                1 { Install-ADDSDomain @Splat }
+                2 { Install-ADDSDomain @Splat }
+                3 { Install-ADDSDomainController @Splat }
+            }
         }
     }
 
     Else
     {
-        Switch ( $UI.Mode )
-        {
-            0 { Install-ADDSForest @Splat }
-            1 { Install-ADDSDomain @Splat }
-            2 { Install-ADDSDomain @Splat }
-            3 { Install-ADDSDomainController @Splat }
-        }
+        Write-Theme "Exception [!] Either the user cancelled, or the dialog failed" 12,4,15,0
     }
 }

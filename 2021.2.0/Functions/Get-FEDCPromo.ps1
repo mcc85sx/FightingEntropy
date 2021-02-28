@@ -833,8 +833,8 @@ Function Get-FEDCPromo
             Write-Host "Reboot [!] required to proceed."
 
             $Value = @(
-            "Remove-Item $Env:Public\script.ps1 -EA 0",
-            "Unregister-ScheduledTask -TaskName 'FEDCPromo'"
+            "Remove-Item $Env:Public\script.ps1 -Force -EA 0",
+            "Unregister-ScheduledTask -TaskName 'FEDCPromo' -Force"
             "@{"," "
             ForEach ( $Item in $Splat.GetEnumerator() )
             {

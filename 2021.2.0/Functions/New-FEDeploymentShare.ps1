@@ -72,11 +72,11 @@ Function New-FEDeploymentShare
         [Object]         $ImageRoot
         [Object]         $ImageSwap
 
-        [String]              $Path # // 
-        [String]         $ShareName # \\ 
-        [String]       $Description # // 
-        [PSCredential]  $Credential # \\ 
-        [Object]               $Key # // 
+        [String]              $Path
+        [String]         $ShareName
+        [String]       $Description
+        [PSCredential]  $Credential
+        [Object]               $Key
 
         _DeploymentShare()
         {

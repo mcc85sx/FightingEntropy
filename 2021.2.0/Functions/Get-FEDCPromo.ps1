@@ -863,7 +863,7 @@ Function Get-FEDCPromo
                     }
                 }
             }
-            " ","} | % { $($UI.Command) @_ }")
+            " ","} | % { $($UI.Command) @_ -Force }")
 
             Set-Content "$Env:Public\script.ps1" -Value $Value -Force
             $Action = New-ScheduledTaskAction -Execute PowerShell -Argument "-ExecutionPolicy Bypass -Command (& $Env:Public\script.ps1)"

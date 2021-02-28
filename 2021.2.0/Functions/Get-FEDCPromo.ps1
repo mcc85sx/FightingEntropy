@@ -460,7 +460,7 @@ Function Get-FEDCPromo
     Write-Host "Loading Network [~] FightingEntropy Domain Controller Promotion Tool"
 
     $UI                   = [_FEDCPromo]::New((Get-FEModule))
-    If ( $Type )
+    If ($Type)
     {
         $Mode = Switch ($Type) { Forest {0} Tree {1} Child {2} Clone {3} }
     }
@@ -773,17 +773,32 @@ Function Get-FEDCPromo
 
     If ($UI.IO.DialogResult)
     {
+        $Reboot = 0
+
         ForEach ( $Feature in $UI.Features )
         {
             $Feature.Name = $Feature.Name -Replace "_","-"
-            $X            = $Feature.Installed
-            $Y            = "Install-WindowsFeature -Name {0} -IncludeAllSubFeature -IncludeManagementTools" -f $Feature.Name
-
-            Write-Host ( "[{0}] {1} is {2} installed" -f @("~","+")[$X], $Feature.Name, @("now being","already")[$X] ) -ForegroundColor Cyan
             
-            If (!$F)
+            If (!$Feature.Installed)
             {
-                If ($Test) { Write-Host $Y } Else { Invoke-Expression $Y }
+                If ($Test) 
+                { 
+                    Write-Host "Install-WindowsFeature -Name $($Feature.Name) -IncludeAllSubFeature -IncludeManagementTools" -F Cyan
+                } 
+                
+                Else 
+                {
+                    $X = Install-WindowsFeature -Name $($Feature.Name) -IncludeAllSubFeature -IncludeManagementTools
+                    If ($X.RestartNeeded)
+                    {
+                        $Reboot = 1
+                    }
+                }
+            }
+
+            If ($Feature.Installed)
+            {
+                Write-Host "$($Feature.Name) is already installed." -F Red
             }
         }
 
@@ -812,10 +827,54 @@ Function Get-FEDCPromo
         }
 
         $Splat = $UI.Output
-        
-        If ( $Test )
+
+        If ($Reboot -eq 1)
         {
-            Switch ( $UI.Mode )
+            Write-Host "Reboot [!] required to proceed."
+
+            $Value = @(
+            "Remove-Item $Env:Public\script.ps1",
+            "Unregister-ScheduledTask -TaskName 'FEDCPromo'"
+            "@{"," "
+            ForEach ( $Item in $Splat.GetEnumerator() )
+            {
+                Switch ($Item.Name)
+                {
+                    SafeModeAdministratorPassword 
+                    { 
+                        "    SafeModeAdministratorPassword = '{0}' | ConvertTo-SecureString -AsPlainText -Force" -f $UI.IO.Confirm.Password 
+                    }
+                    Credential 
+                    { 
+                        "    Credential = [System.Management.Automation.PSCredential]::New('{0}',('{1}' | ConvertTo-SecureString -AsPlainText -Force))" -f $UI.Credential.UserName,$UI.Credential.GetNetworkCredential().Password 
+                    }
+
+                    Default    
+                    { 
+                        If ( $Item.Value -in "True","False")
+                        {
+                            "    {0}=$`{1}" -f $Item.Name,$Item.Value
+                        }
+
+                        Else
+                        {
+                            "    {0}='{1}'" -f $Item.Name,$Item.Value
+                        }
+                    }
+                }
+            }
+            " ","} | % { $($UI.Command) @_ }")
+
+            Set-Content "$Env:Public\script.ps1" -Value $Value -Force
+            $Action = New-ScheduledTaskAction -Execute PowerShell -Argument "-ExecutionPolicy Bypass -Command (& $Env:Public\script.ps1)"
+            $Trigger = New-ScheduledTaskTrigger -AtLogon
+            Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName FEDCPromo -Description "Restarting, then promote system"
+            Restart-Computer
+        }
+        
+        If ($Test)
+        {
+            Switch ($UI.Mode)
             {
                 0 { Test-ADDSForestInstallation @Splat }
                 1 { Test-ADDSDomainInstallation @Splat }

@@ -5,15 +5,19 @@ Function Install-VMGroup
         [Parameter(Mandatory)][UInt32]      $Port ,    
         [Parameter(Mandatory)][String[]] $NamedVM )
 
+        $Server = "dsc0.securedigitsplus.com"
+        $Port = 9801
+        $NamedVM = "DSC2","10P64"
+
     Class _VMObject
     {
         Hidden [Object] $Object
         [String] $Name
-        [String] $HostName
+        [Object] $HostName
         [String] $VMState
         [String] $VMStatus
         [String] $VMId
-        [UInt32] $MdtPercent
+        [Object] $MdtPercent
         [String] $MdtStatus
         [String] $MdtId
 
@@ -21,12 +25,17 @@ Function Install-VMGroup
         {
             $This.Object     = $VM
             $This.Name       = $VM.Name 
-            $This.HostName   = Resolve-DNSName $This.Name | % Name | Select-Object -Unique
+            $This.HostName   = $This.ResolveDNS() 
             $This.VmState    = $VM.State
             $This.VmStatus   = $VM.Status
             $This.VmId       = $VM.Id.Guid
             $This.MdtPercent = $Mdt.PercentComplete
             $This.MdtStatus  = $Mdt.DeploymentStatus
+        }
+
+        [String] ResolveDNS()
+        {
+            Return @( Resolve-DNSName $This.Name | % Name )
         }
     }
 
@@ -44,8 +53,6 @@ Function Install-VMGroup
             $This.Server   = $Server
             $This.Port     = $Port
             $This.NamedVM  = $NamedVM
-
-            $This.Refresh()
         }
 
         Refresh()
@@ -64,13 +71,12 @@ Function Install-VMGroup
     }
     
     $VM      = [_VMGroup]::New($Server,$Port,$NamedVM)
-    $Ready   = @( )
 
-    Do 
+    Do
     {
-        $VM.Output | ? MdtPercent -eq 100 | % { $Ready += $_ }
-        Start-Sleep -Seconds 5
         $VM.Refresh()
+        $Status = $VM.Output | ? MdtPercent -ne 100
+        Start-Sleep -Seconds 5
     }
-    Until ($Ready.Count -eq $VM.Count)
+    Until (!$Status)
 }

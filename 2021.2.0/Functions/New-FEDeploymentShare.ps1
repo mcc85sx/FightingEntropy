@@ -283,12 +283,14 @@ Function New-FEDeploymentShare
                     {
                         Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
                         Get-FEShare -Name $Root.ShareName | Remove-FEShare
+                        $Root.Shares = Get-FEShare
                     }
 
-                    If ($Root.Path -in $Root.Shares.Path)
+                    ElseIf ($Root.Path -in $Root.Shares.Path)
                     {
                         Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
                         Get-FEShare -Path $Root.Path | Remove-FEShare
+                        $Root.Shares = Get-FEShare
                     }
                 }
 

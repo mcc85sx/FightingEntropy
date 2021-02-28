@@ -283,15 +283,16 @@ Function New-FEDeploymentShare
                     {
                         Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
                         Get-FEShare -Name $Root.ShareName | Remove-FEShare
-                        $Root.Shares = Get-FEShare
                     }
 
                     ElseIf ($Root.Path -in $Root.Shares.Path)
                     {
                         Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
                         Get-FEShare -Path $Root.Path | Remove-FEShare
-                        $Root.Shares = Get-FEShare
                     }
+                    
+                    $Root.Shares = Get-FEShare
+                    Continue
                 }
 
                 1
@@ -317,6 +318,7 @@ Function New-FEDeploymentShare
                 { 
                     Write-Theme "Removing [!] Image swap folder $($Root.IO._ImageSwap.Text)" 10,14,15,0
                     Remove-Item $Root.IO._ImageSwap.Text -Recurse -Force -Verbose
+                    Continue
                 }
 
                 1

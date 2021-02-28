@@ -5,10 +5,6 @@ Function Install-VMGroup
         [Parameter(Mandatory)][UInt32]      $Port ,    
         [Parameter(Mandatory)][String[]] $NamedVM )
 
-        $Server = "dsc0.securedigitsplus.com"
-        $Port = 9801
-        $NamedVM = "DSC2","10P64"
-
     Class _VMObject
     {
         Hidden [Object] $Object

@@ -142,7 +142,7 @@ Function Update-FEShare
                                 UserPassword         = $Credential.GetNetworkCredential().Password
                                 UserDomain           = $Key.CommonName
                                 SkipBDDWelcome       = "YES"                          }
-    }
+    } | % Output
 
     # CustomSettings
     Export-Ini -Path $Control\CustomSettings.ini -Value @{
@@ -164,17 +164,7 @@ Function Update-FEShare
                                 KeyboardLocale       = "en-US" 
                                 TimeZoneName         = Get-TimeZone | % ID
                                 EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
-    }
-    
-    ForEach ( $File in $Module.Control | ? Extension -eq .png )
-    {
-        Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
-    }
-
-    ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
-    {
-        Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
-    }
+    } | % Output
 
     # Update FEShare(MDT)
     Switch($Mode)

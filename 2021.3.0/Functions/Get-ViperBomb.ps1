@@ -6,7 +6,7 @@ Function Get-ViperBomb
     Class _ViperBombConfig
     {
         [String]               $Name = "FightingEntropy/ViperBomb"
-        [String]            $Version = "2021.1.0"
+        [String]            $Version = "2021.3.0"
         [String]            $Release = "Development"
         [String]           $Provider = "Secure Digits Plus LLC"
         [String]                $URL = "https://github.com/mcc85sx/FightingEntropy"
@@ -106,7 +106,7 @@ Function Get-ViperBomb
         {
             $This.Window  = $Window
             $This.IO      = $Window.IO
-            $This.Info    = (Get-FEModule | % Role | % Info)
+            $This.Info    = (Get-FEModule | % Role)
             $This.Config  = [_ViperBombConfig]::New()
             $This.Service = (Get-FEService | % Output)
         }

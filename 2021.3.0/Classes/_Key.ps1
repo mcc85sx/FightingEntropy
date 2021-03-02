@@ -1,13 +1,23 @@
 Class _Key
 {
-    [String]           $Path
-    [String]       $Username
-    [Object]       $Password
+    [String]     $NetworkPath
+    [String]    $Organization
+    [String]      $CommonName
+    [String]      $Background
+    [String]            $Logo
+    [String]           $Phone
+    [String]           $Hours
+    [String]         $Website
 
-    Key([String]$Path,[String]$Username,[Object]$Password)
+    _Key([Object]$Root)
     {
-        $This.Path     = $Path
-        $This.Username = $Username
-        $This.Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+        $This.NetworkPath     = ("\\{0}\{1}" -f $Root.Hostname,$Root.ShareName)
+        $This.Organization    = $Root.Organization
+        $This.CommonName      = $Root.CommonName
+        $This.Background      = $Root.Background
+        $This.Logo            = $Root.Logo
+        $This.Phone           = $Root.Phone
+        $This.Hours           = $Root.Hours
+        $This.Website         = $Root.Website
     }
 }

@@ -199,7 +199,7 @@ Function Update-FEShare
                 Remove-Item -Path $Image.NewName -Force -Verbose
             }
 
-            $Image | % { Rename-Item -Path $_.Path -NewName "$Label$($_.Extension)" }
+            $Image | % { Rename-Item -Path $_.Path -NewName "$Label.$($_.Extension)" }
         }
     }
 

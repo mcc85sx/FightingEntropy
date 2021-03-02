@@ -134,7 +134,7 @@ Function Update-FEShare
     }
 
     # Bootstrap
-    Export-Ini $Control\Bootstrap.ini @{ 
+    Export-Ini -Path $Control\Bootstrap.ini -Value @{ 
 
         Settings           = @{ Priority             = "Default"                      }
         Default            = @{ DeployRoot           = $Key.NetworkPath
@@ -142,10 +142,10 @@ Function Update-FEShare
                                 UserPassword         = $Credential.GetNetworkCredential().Password
                                 UserDomain           = $Key.CommonName
                                 SkipBDDWelcome       = "YES"                          }
-    } | % Output
+    }
 
     # CustomSettings
-    Export-Ini $Control\CustomSettings.ini @{
+    Export-Ini -Path $Control\CustomSettings.ini -Value @{
 
         Settings           = @{ Priority             = "Default" 
                                 Properties           = "MyCustomProperty" }
@@ -164,7 +164,7 @@ Function Update-FEShare
                                 KeyboardLocale       = "en-US" 
                                 TimeZoneName         = Get-TimeZone | % ID
                                 EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
-    } | % Output
+    }
     
     ForEach ( $File in $Module.Control | ? Extension -eq .png )
     {

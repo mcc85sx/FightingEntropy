@@ -108,7 +108,7 @@ Class _Install
             }
         }
         
-        $This.Load              += "Write-Theme 'Loaded Module [+] FightingEntropy [$Version]' 10,3,15,0"
+        $This.Load              += "Write-Theme "Loaded Module [+] FightingEntropy [$($This.Version)]" 10,3,15,0"
 
         $This.Output             = $This.Load -join "`n"
         

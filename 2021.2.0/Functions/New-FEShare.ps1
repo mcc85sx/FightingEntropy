@@ -142,6 +142,7 @@ Function New-FEShare
     }
 
     $Install = @( ) 
+    $Install += "[Net.ServicePointManager]::SecurityProtocol = 3072"
     $Install += (Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true)
     $Install += "`$Key = '$($Key | ConvertTo-Json)'`n"
     $Install += "`New-EnvironmentKey -Key `$Key | % Apply `n"

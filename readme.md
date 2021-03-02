@@ -12,10 +12,10 @@
     IEX ( IRM https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1 )
 
 # Preview (12/31/2020)
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020_1231-(GUI%20Diagram).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/GFX/2020_1231-(GUI%20Diagram).jpg?raw=true)
 
 # Preview (12/30/2020)
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020_1230-(GUI%20Diagram).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/GFX/2020_1230-(GUI%20Diagram).jpg?raw=true)
 
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>

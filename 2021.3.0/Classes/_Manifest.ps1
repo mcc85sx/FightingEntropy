@@ -2,7 +2,7 @@ Class _Manifest
 {
     [String[]]     $Names = ( "Name Version Provider Date Path Status Type" -Split " " )
     [String]     $Version
-    [String]        $GUID = ( "b5b6972b-7369-4c82-b0d5-df4f60d266a4" )
+    [String]        $GUID = ( "b08df44b-b55b-4f6a-ba05-840daf5c2216" )
     [String[]]      $Role = ( "Win32_Client Win32_Server UnixBSD RHELCentOS" -Split " " )
     [String[]]   $Folders = ( " Classes Control Functions Graphics Role" -Split " " )
 

@@ -1,7 +1,7 @@
 # README
 ## This is a custsom Visual Studio Code theme that I made. 
-# Looks like my PowerShell ISE theme, "Boss Mode".
-# -------------------------------------------------
+Made to look like my PowerShell ISE theme, "Boss Mode".
+
 ## This is the README for your extension "bossmode"
 You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
 

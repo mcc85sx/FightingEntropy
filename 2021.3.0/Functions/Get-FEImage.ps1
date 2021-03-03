@@ -1,105 +1,74 @@
-Function Import-FEImage
+Function Get-FEImage
 {
-    [CmdLetBinding()]
-    Param(
-    [Parameter(ParameterSetName=0,Mandatory)][Object]$ImageObject,
-    [Parameter(ParameterSetName=1,Mandatory)][String]$Source,
-    [Parameter(Mandatory)][String]$ShareName,
-    [Parameter()][String]$Admin    = "Administrator",
-    [Parameter()][String]$Password = "password", 
-    [Parameter(Mandatory)][Object] $Key)
-
-    Switch($PSCmdlet.ParameterSetName)
+    [CmdLetBinding()]Param([Parameter(Mandatory)][String]$Source)
+    
+    Class _ImageIndex
     {
-        0
+        [UInt32] $Rank
+        [Object] $Label
+        [UInt32] $ImageIndex            = 1
+        [String] $ImageName
+        [String] $ImageDescription
+        [String] $Version
+        [String] $Architecture
+        [String] $InstallationType
+        [String] $SourceImagePath
+
+        _ImageIndex([UInt32]$Rank,[String]$Image)
         {
-            $Images = @( ) 
-
-            ForEach ($Image in $ImageObject )
+            If ( ! ( Test-Path $Image ) )
             {
-                $Images += $Image
-            }
-        }
-
-        1 
-        { 
-            If ( ! ( Test-Path $Source ) )
-            {
-                Throw "Invalid path"
+                Throw "Invalid Path"
             }
 
-            $Images = Get-FEImage -Source $Source
+            $This.SourceImagePath       = $Image
+            $This.Rank                  = $Rank
+
+            Get-WindowsImage -ImagePath $Image -Index 1 | % {
+                
+                $This.Version           = $_.Version
+                $This.Architecture      = @(86,64)[$_.Architecture -eq 9]
+                $This.InstallationType  = $_.InstallationType
+                $This.ImageName         = $_.ImageName
+                $This.Label             = Switch($This.InstallationType)
+                {
+                    Server
+                    {
+                        "{0}{1}" -f $(Switch -Regex ($This.ImageName){Standard{"SD"}Datacenter{"DC"}}),[Regex]::Matches($This.ImageName,"(\d{4})").Value
+                    }
+
+                    Client
+                    {
+                        "10{0}{1}" -f $(Switch -Regex ($This.ImageName) { Pro {"P"} Edu {"E"} Home {"H"} }),$This.Architecture
+                    }
+                }
+
+                $This.ImageDescription  = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)][$($This.Label)]"
+
+                If ( $This.ImageName -match "Evaluation" )
+                {
+                    $This.ImageName     = $This.ImageName -Replace "Evaluation \(Desktop Experience\) ",""
+                }
+            }
         }
     }
-    
-    If (!$Images)
+
+    $X = 0
+    If ( ! ( Test-Path $Source ) )
     {
-        Throw "No images detected"
+        Throw "Invalid path"
     }
 
-    Import-Module (Get-MDTModule) -Verbose
-
-    $Share       = Get-FEShare -Name $ShareName
-
-    If (!($Share))
+    Else
     {
-        Throw "Share not detected"
-    }
-    
-    New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Verbose -EA 0 
-
-    $OS          = "$($Share.Label):\Operating Systems"
-    $TS          = "$($Share.Label):\Task Sequences"
-    $Comment     = Get-Date -UFormat "[%Y-%m%d(MCC/SDP)]"
-    $Control     = Get-FEModule -Control
-
-    ForEach ( $Type in "Client","Server" )
-    {
-        $Version = $Images | ? InstallationType -eq $Type | % Version | Select-Object -Unique
-
-        $OS,$TS | % { 
+        Get-ChildItem -Path $Source -Recurse -Filter *.wim | % { 
         
-            If (!(Test-Path "$_\$Type"))
+            $Item = [_ImageIndex]::New($X,$_.FullName)
+            If ( $Item.InstallationType -in "Server","Client" )
             {
-                New-Item -Path $_ -Enable True -Name $Type -Comments $Comment -ItemType Folder -Verbose
-            }
-
-            If (!(Test-Path "$_\$Type\$Version"))
-            {
-                New-Item -Path "$_\$Type" -Enable True -Name $Version -Comments $Comment -ItemType Folder -Verbose
+                $Item
+                $X++
             }
         }
-    }
-
-    ForEach ( $Image in $Images )
-    {
-        $Type                   = $Image.InstallationType
-        $Path                   = "$OS\$Type\$($Image.Version)"
-
-        $OperatingSystem        = @{
-
-            Path                = $Path
-            SourceFile          = $Image.SourceImagePath
-            DestinationFolder   = $Image.Label
-        }
-        
-        Import-MDTOperatingSystem @OperatingSystem -Move -Verbose
-
-        $TaskSequence           = @{ 
-            
-            Path                = "$TS\$Type\$($Image.Version)"
-            Name                = $Image.ImageName
-            Template            = "FE{0}Mod.xml" -f $Type
-            Comments            = $Comment
-            ID                  = $Image.Label
-            Version             = "1.0"
-            OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
-            FullName            = $Admin
-            OrgName             = $Company
-            HomePage            = $WebSite
-            AdminPassword       = $Password
-        }
-
-        Import-MDTTaskSequence @TaskSequence -Verbose
     }
 }

@@ -1,3 +1,4 @@
+
 Class _Key
 {
     [String]     $NetworkPath
@@ -8,6 +9,26 @@ Class _Key
     [String]           $Phone
     [String]           $Hours
     [String]         $Website
+
+    _Key([String] $ServerName ,
+    [String]       $ShareName ,
+    [String]    $Organization ,
+    [String]      $CommonName ,
+    [String]      $Background ,
+    [String]            $Logo ,
+    [String]           $Phone ,
+    [String]           $Hours ,
+    [String]         $Website )
+    {
+        $This.NetworkPath     = ("\\{0}\{1}" -f $ServerName, $ShareName)
+        $This.Organization    = $Organization
+        $This.CommonName      = $CommonName
+        $This.Background      = $Background
+        $This.Logo            = $Logo
+        $This.Phone           = $Phone
+        $This.Hours           = $Hours
+        $This.Website         = $Website
+    }
 
     _Key([Object]$Root)
     {

@@ -1,4 +1,3 @@
-
 Class _Key
 {
     [String]     $NetworkPath

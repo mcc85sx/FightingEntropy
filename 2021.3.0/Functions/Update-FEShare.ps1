@@ -188,7 +188,7 @@ Function Update-FEShare
 
             Path        = $_.FullName
             Name        = $_.Name
-            NewName     = "{0}\{1}{2}" -f $_.Directory,$Label,$_.Extension
+            NewName     = "{0}{1}" -f $Label,$_.Extension
             Extension   = $_.Extension
         }
 
@@ -199,7 +199,7 @@ Function Update-FEShare
                 Remove-Item -Path $Image.NewName -Force -Verbose
             }
 
-            $Image | % { Rename-Item -Path $_.Path -NewName "$Label.$($_.Extension)" }
+            Rename-Item -Path $Image.Path -NewName $Image.NewName
         }
     }
 

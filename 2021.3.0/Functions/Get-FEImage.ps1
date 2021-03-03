@@ -29,7 +29,7 @@ Function Get-FEImage
                 $This.Version           = $_.Version
                 $This.Architecture      = @(86,64)[$_.Architecture -eq 9]
                 $This.InstallationType  = $_.InstallationType
-                $This.ImageName         = $_.ImageName
+                $This.ImageName         = ("{0} (x{1}" -f $_.ImageName, $This.Architecture)
                 $This.Label             = Switch($This.InstallationType)
                 {
                     Server

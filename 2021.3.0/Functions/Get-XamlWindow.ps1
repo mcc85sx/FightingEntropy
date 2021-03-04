@@ -2147,10 +2147,12 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
 '@
 
             NewAccount           = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Account" Width="400" Height="220" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.3.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New User" Width="400" Height="360" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.3.0\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GroupBox">
@@ -2178,38 +2180,73 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="TextBox" x:Key="LTextBox">
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.Background>
-            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.3.0\Graphics\background.jpg"/>
+            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics\background.jpg"/>
         </Grid.Background>
-        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="180" Margin="5" VerticalAlignment="Center">
+        <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="300" Margin="5" VerticalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="55"/>
+                    <RowDefinition Height="55"/>
+                    <RowDefinition Height="55"/>
+                    <RowDefinition Height="55"/>
+                    <RowDefinition Height="55"/>
                 </Grid.RowDefinitions>
-                <GroupBox Grid.Row="0" Header="User Name">
-                    <TextBox Name="UserName" Margin="5"/>
-                </GroupBox>
-                <GroupBox Grid.Row="1" Header="[Password/Confirm]">
+                <Grid  Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="First Name" Grid.Column="0">
+                        <TextBox Style="{StaticResource LTextBox}" Name="_GivenName"/>
+                    </GroupBox>
+                    <GroupBox Header="MI" Grid.Column="1">
+                        <TextBox Style="{StaticResource LTextBox}" Name="_Initials"/>
+                    </GroupBox>
+                    <GroupBox Header="Surname" Grid.Column="2">
+                        <TextBox Style="{StaticResource LTextBox}" Name="_Surname"/>
+                    </GroupBox>
+                </Grid>
+                <Grid  Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Display Name" Grid.Column="0">
+                        <TextBox Style="{StaticResource LTextBox}" Name="_DisplayName" Margin="5"/>
+                    </GroupBox>
+                    <GroupBox Header="Username" Grid.Column="1">
+                        <TextBox Style="{StaticResource LTextBox}" Name="_Username"/>
+                    </GroupBox>
+                </Grid>
+                <GroupBox Grid.Row="2" Header="Password / Confirm">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <PasswordBox Grid.Column="0" Name="Password" Margin="5"/>
-                        <PasswordBox Grid.Column="1" Name="Confirm" Margin="5"/>
+                        <PasswordBox Grid.Column="0" HorizontalContentAlignment="Left" Name="_Password" Margin="5"/>
+                        <PasswordBox Grid.Column="1" HorizontalContentAlignment="Left" Name="_Confirm" Margin="5"/>
                     </Grid>
                 </GroupBox>
-                <Grid Grid.Row="2">
+                <GroupBox Header="Credential" Grid.Row="3">
+                    <TextBox Style="{StaticResource LTextBox}" Name="_Credential"/>
+                </GroupBox>
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Name="Ok" Style="{StaticResource xButton}" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
-                    <Button Name="Cancel" Style="{StaticResource xButton}" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
+                    <Button Name="_Ok" Style="{StaticResource xButton}" Content="Ok" Grid.Column="0" Grid.Row="1" Margin="5"/>
+                    <Button Name="_Cancel" Style="{StaticResource xButton}" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5"/>
                 </Grid>
             </Grid>
         </GroupBox>

@@ -222,7 +222,6 @@ Function Get-FEDCPromo
             $This.Port         = 389
             $This.DC           = $This.DNSName.Split(".")[0]
             $This.Domain       = $This.DNSName.Replace($This.DC + '.','')
-            $This.Directory    = "LDAP://$( $This.DNSName )/CN=Partitions,CN=Configuration,DC=$( $This.Domain.Split( '.' ) -join ',DC=' )"
         }
 
         ClearADCredential()
@@ -235,11 +234,18 @@ Function Get-FEDCPromo
 
         CheckADCredential()
         {
+            $This.Port         = $This.IO.Port.Text
             $This.Username     = $This.IO.Username.Text
             $This.Password     = $This.IO.Password.Password
             $This.Confirm      = $This.IO.Confirm.Password
-        
-            If (!$This.Username)
+
+            If (!$This.Port)
+            {
+                [System.Windows.Messagebox]::Show("Port missing...","Error")
+                $This.ClearADCredential()
+            }
+
+            ElseIf (!$This.Username)
             {
                 [System.Windows.Messagebox]::Show("Username","Error")
                 $This.ClearADCredential()
@@ -260,7 +266,8 @@ Function Get-FEDCPromo
             Else
             {
                 $This.Credential   = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
-            
+                $This.Directory    = "LDAP://$($This.DNSName):$($This.Port)/CN=Partitions,CN=Configuration,DC=$($This.Domain.Split('.') -join ',DC=')"
+
                 Try 
                 {
                     $This.Test                = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)

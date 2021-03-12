@@ -841,7 +841,7 @@ Function Get-FEDCPromo
 
             $Value = @(
             "Remove-Item $Env:Public\script.ps1 -Force -EA 0",
-            "Unregister-ScheduledTask -TaskName FEDCPromo -Confirm:$False"
+            "Unregister-ScheduledTask -TaskName FEDCPromo -Confirm:`$False"
             "@{"," "
             ForEach ( $Item in $Splat.GetEnumerator() )
             {

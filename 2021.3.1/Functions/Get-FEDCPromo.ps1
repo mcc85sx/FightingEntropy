@@ -874,7 +874,7 @@ Function Get-FEDCPromo
 
             Set-Content "$Env:Public\script.ps1" -Value $Value -Force
             $Action = New-ScheduledTaskAction -Execute PowerShell -Argument "-ExecutionPolicy Bypass -Command (& $Env:Public\script.ps1)"
-            $Trigger = New-ScheduledTaskTrigger -AtLogon
+            $Trigger = New-ScheduledTaskTrigger -AtStartup
             Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName FEDCPromo -Description "Restarting, then promote system"
             Restart-Computer
         }

@@ -250,10 +250,16 @@ Function New-EnvironmentKey
             $This.Set()
             $This.Icons.Set()
             
-            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1
-            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1
+            Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 -Verbose
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 -Verbose
+            Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name fDenyTSConnections -Value 0 -Verbose
             
-            RUNDLL32 user32.dll, UpdatePerUserSystemParameters
+            If (!(Get-NetFirewallRule | ? DisplayGroup -eq "Remote Desktop"))
+            {
+                Enable-NetFirewallRule -DisplayGroup "RemoteDesktop" -Verbose
+            }
+
+            RunDll32 User32.Dll, UpdatePerUserSystemParameters
         }
     }
 

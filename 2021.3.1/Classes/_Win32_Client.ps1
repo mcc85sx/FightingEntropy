@@ -80,4 +80,9 @@ Class _Win32_Client
     {
         
     }
+    
+    GetChocolatey()
+    {
+        Invoke-Expression ( Invoke-RestMethod https://chocolatey.org/install.ps1 )
+    }
 }

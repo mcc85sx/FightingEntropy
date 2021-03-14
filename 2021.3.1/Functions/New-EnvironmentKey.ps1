@@ -253,8 +253,7 @@ Function New-EnvironmentKey
             Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 -Verbose
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 -Verbose
             Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name fDenyTSConnections -Value 0 -Verbose
-            
-            Enable-NetFirewallRule -DisplayGroup "RemoteDesktop" -Verbose
+            Enable-NetFirewallRule -DisplayGroup "Remote Desktop" -Verbose
 
             $networkConfig = Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'"
             $networkConfig.SetDnsDomain($This.Company.Telemetry.CommonName)

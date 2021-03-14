@@ -8,9 +8,11 @@
    \\        Hi, my name is Michael Cook.                                                                          \\
    //        I'm an application developer, design artist, and system engineer.                                     // 
    \\                                                                                                              \\
-   //        In this video, I will demonstrate use of the module, FightingEntropy.                                 //
-   \\        FightingEntropy is a module for PowerShell (Windows Powershell, PowerShell 7),                        \\
-   //        and has a long list of features related to system (administration/management).                     ___//
+   //        In this video, I will demonstrate how to deploy an operating system to multiple systems by            //
+   \\        using the PowerShell Module, FightingEntropy. FightingEntropy is still in development, but            \\
+   //        has a long list of features related to system (administration/management), and this demo              //
+   \\        will showcase the New-FEDeploymentShare function/graphical user interface.                            \\
+   //                                                                                                           ___//
    \\___                                                                                                    ___//¯¯\\   
    //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
    \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯\\   
@@ -44,6 +46,9 @@
    \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
     ¯¯¯\\__[ End Introduction ]____________________________________________________________________________//¯¯¯        
         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            #>
+Set-ExecutionPolicy Bypass -Scope Process -Force
+Add-Type -AssemblyName PresentationFramework
+Import-Module FightingEntropy
 
 #  ____    ____________________________________________________________________________________________________        
 # //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
@@ -93,7 +98,7 @@ ForEach ( $Item in $AD )
 
     If ($Item.Name -in $VM.Name)
     {
-        $VM | ? Name -eq $Item.Name | Stop-VM -Verbose -Force
+        $VM | ? Name -eq $Item.Name | Stop-VM -Force -EA 0 | Remove-VM -Verbose -Force -EA 0
 
         "{0}\{1}.vhdx" -f $VHDPath,$Item.Name | % { 
 
@@ -127,29 +132,30 @@ Invoke-Expression ( Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy
 
 #  ____    ____________________________________________________________________________________________________        
 # //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
-# \\__//¯¯¯ (Step 6) [:] Create a new FE Deployment Share                                                  ___//¯¯\\   
+# \\__//¯¯¯ (Step 6) [:] Create a new FE Deployment Share using GUI                                        ___//¯¯\\   
 #  ¯¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
 
-# This function will initialize a GUI dialog with several tabs and sections for user input
-New-FEDeploymentShare # [Domain / Branding / Deployment / Imaging]
+New-FEDeploymentShare # GUI Sections - Domain, Branding, Deployment, Imaging
 
 # Domain     : DNSName,NetBIOSName,Organization,CommonName,Location,Region,Country,Postal,SiteLink, TimeZone,Branch
 # Branding   : Phone, Hours, Website, Logo, Background
 # Deployment : Path/Root, ShareName, Legacy, Description, OUName, DCAdmin, DCPassword, DCConfirm
 # Imaging    : [X_IIS_X], ImageSource, ImageSwap, LMAdmin, LMPassword, LMConfirm 
 
-# All of the fields that are populated in the GUI, are needed for the process to fully test/flush a given 
-# share if it exists, or to simply create a brand new share if it does not.
+# All of the fields in the GUI are needed for the process to fully test/flush a given share if it DOES exist...
+# ...or simply creates a *brand new share* if the input is tested and it DOES NOT.
 
-# The GUI input is tested, and if it is good... it will run through these following functions:
+# Upon clicking the start button, the GUI input is tested, and if it is good...? 
+# ...then it will run through these following functions:
 
-# New-FEImage    - Processes the ISO files in the target $ImageRoot folder.
-# New-FEShare    - Loads the MDT module, and creates a new deployment share.
-# Import-FEImage - Imports the new OS WIM files, and creates task sequences for them.
-# Update-FEShare - MDT builds new boot images, and then brands/injects/replaces them in WDS.
+# New-FEImage    ~ 10m - Processes the ISO files in the target $ImageRoot folder.
+# New-FEShare    ~ <1m - Loads the MDT module, and creates a new deployment share.
+# Import-FEImage ~ <1m - Imports the new OS WIM files, and creates task sequences for them.
+# Update-FEShare ~ 10m - MDT builds new boot images, and then brands/injects/replaces them in WDS.
 
-# At this point, target computers can boot from the network.
+# Once all of these processes complete, the server update is complete. 
+# Now, target computers can boot from the network.
 
 #  ____    ____________________________________________________________________________________________________        
 # //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    

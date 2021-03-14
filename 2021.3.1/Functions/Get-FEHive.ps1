@@ -1,13 +1,11 @@
 Function Get-FEHive
 {
     [CmdLetBinding()]Param(
+    [ValidateSet("Win32_Client","Win32_Server","RHELCentOS","UnixBSD")]
     [Parameter(Mandatory)][String]$Type,
+
+    [ValidateSet("2021.1.0","2021.1.1","2021.2.0","2021.3.0","2021.3.1")]
     [Parameter(Mandatory)][String]$Version)
-    
-    If ( $Type -notin "Win32_Client","Win32_Server","RHELCentOS","UnixBSD" )
-    {
-        Throw "Invalid type"
-    }
 
     [_Hive]::new($Type,$Version)
 }

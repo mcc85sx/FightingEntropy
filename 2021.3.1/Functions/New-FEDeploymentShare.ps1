@@ -257,6 +257,55 @@ Function New-FEDeploymentShare
     $Root.IO._Cancel.Add_Click({ $Root.IO.DialogResult = $False })
     $Root.IO._Start.Add_Click(
     {  
+        If (($Root.ShareName -in $Root.Shares.Name) -or ($Root.Path -in $Root.Shares.Path))
+        {
+            Switch([System.Windows.MessageBox]::Show("A deployment share with that (path/name) already exists, remove?","Error [!]","YesNo"))
+            {
+                Yes 
+                {
+                    If ($Root.ShareName -in $Root.Shares.Name)
+                    {
+                        Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
+                        Get-FEShare -Name $Root.ShareName | Remove-FEShare
+                    }
+
+                    ElseIf ($Root.Path -in $Root.Shares.Path)
+                    {
+                        Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
+                        Get-FEShare -Path $Root.Path | Remove-FEShare
+                    }
+                    
+                    $Root.Shares = Get-FEShare
+                    [System.Windows.MessageBox]::Show("Press start to continue","Continue [+]")
+                }
+
+                No  
+                { 
+                    Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
+                    Break 
+                }
+            }
+        }
+        
+        ElseIf (Test-Path $Root.IO._ImageSwap.Text)
+        {
+            Switch([System.Windows.MessageBox]::Show("The designated image swap path already exists, remove?","Error [!]","YesNo"))
+            {
+                Yes 
+                { 
+                    Write-Theme "Removing [!] Image swap folder $($Root.IO._ImageSwap.Text)" 10,14,15,0
+                    Remove-Item $Root.IO._ImageSwap.Text -Recurse -Force -Verbose
+                    [System.Windows.MessageBox]::Show("Press start to continue","Continue [+]")
+                }
+                
+                No  
+                {
+                    Write-Theme "Abort [!] Cannot (remove/overwrite) designated (Temp/Swap) path." 12,4,15,0
+                    Break
+                }
+            }
+        }
+        
         If (!$Root.IO._DCUsername.Text)
         {
             [System.Windows.MessageBox]::Show("Invalid Domain Username","Error [!]")
@@ -272,59 +321,9 @@ Function New-FEDeploymentShare
             [System.Windows.MessageBox]::Show("Invalid Password/Confirm","Error [!]")
         }
 
-        ElseIf (($Root.ShareName -in $Root.Shares.Name) -or ($Root.Path -in $Root.Shares.Path))
-        {
-            Switch([System.Windows.MessageBox]::Show("A deployment share with that (path/name) already exists, remove?","Error [!]","YesNo"))
-            {
-                Yes 
-                { 
-                    Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0 
-                    If ($Root.ShareName -in $Root.Shares.Name)
-                    {
-                        Write-Theme "Removing [!] Deployment Share $($Root.ShareName)" 10,14,15,0
-                        Get-FEShare -Name $Root.ShareName | Remove-FEShare
-                    }
-
-                    ElseIf ($Root.Path -in $Root.Shares.Path)
-                    {
-                        Write-Theme "Removing [!] Deployment Share $($Root.Path)" 10,14,15,0
-                        Get-FEShare -Path $Root.Path | Remove-FEShare
-                    }
-                    
-                    $Root.Shares = Get-FEShare
-                    Continue
-                }
-
-                No  
-                { 
-                    Write-Theme "Abort [!] Cannot overwrite a currently open share" 12,4,15,0
-                    Break 
-                }
-            }
-        }
-
         ElseIf (!(Test-Path $Root.IO._ImageRoot.Text))
         {
             [System.Windows.MessageBox]::Show("Invalid image source folder","Error [!]")
-        }
-
-        ElseIf (Test-Path $Root.IO._ImageSwap.Text)
-        {
-            Switch([System.Windows.MessageBox]::Show("The designated image swap path already exists, remove?","Error [!]","YesNo"))
-            {
-                Yes 
-                { 
-                    Write-Theme "Removing [!] Image swap folder $($Root.IO._ImageSwap.Text)" 10,14,15,0
-                    Remove-Item $Root.IO._ImageSwap.Text -Recurse -Force -Verbose
-                    Continue
-                }
-                
-                No  
-                {
-                    Write-Theme "Abort [!] Cannot (remove/overwrite) designated (Temp/Swap) path." 12,4,15,0
-                    Break
-                }
-            }
         }
 
         Else

@@ -84,7 +84,7 @@ $VM        = Get-VM | ? Name -in $Names
 $VMHost    = Get-VMHost
 $VHDPath   = $VMHost.VirtualHardDiskPath
 
-ForEach ( $Item in $Items )
+ForEach ( $Item in $AD )
 {
     If ($Item.Name -in $DNS.HostName)
     {

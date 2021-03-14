@@ -132,8 +132,12 @@ Invoke-Expression ( Invoke-RestMethod https://github.com/mcc85sx/FightingEntropy
 #      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
 
 # This function will initialize a GUI dialog with several tabs and sections for user input
+New-FEDeploymentShare # [Domain / Branding / Deployment / Imaging]
 
-New-FEDeploymentShare
+# Domain     : DNSName,NetBIOSName,Organization,CommonName,Location,Region,Country,Postal,SiteLink, TimeZone,Branch
+# Branding   : Phone, Hours, Website, Logo, Background
+# Deployment : Path/Root, ShareName, Legacy, Description, OUName, DCAdmin, DCPassword, DCConfirm
+# Imaging    : [X_IIS_X], ImageSource, ImageSwap, LMAdmin, LMPassword, LMConfirm 
 
 # All of the fields that are populated in the GUI, are needed for the process to fully test/flush a given 
 # share if it exists, or to simply create a brand new share if it does not.

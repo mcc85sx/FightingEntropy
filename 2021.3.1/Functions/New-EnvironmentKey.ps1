@@ -254,7 +254,13 @@ Function New-EnvironmentKey
             Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name ListviewShadow -Value 1 -Verbose
             Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name fDenyTSConnections -Value 0 -Verbose
             
-            Get-NetFirewallRule | ? DisplayGroup -eq "Remote Desktop" | Enable-NetFirewallRule -Verbose
+            Enable-NetFirewallRule -DisplayGroup "RemoteDesktop" -Verbose
+
+            $networkConfig = Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'"
+            $networkConfig.SetDnsDomain($This.Company.Telemetry.CommonName)
+            $networkConfig.SetDynamicDNSRegistration($true,$true)
+            ipconfig /registerdns
+
             RunDll32 User32.Dll, UpdatePerUserSystemParameters
         }
     }

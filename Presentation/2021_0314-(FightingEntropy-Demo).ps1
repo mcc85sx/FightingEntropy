@@ -66,6 +66,7 @@ $Share     = Get-FEShare
 If ($Share)
 {
     $Label = "$($Share.Label):"
+    Import-Module (Get-MDTModule) -Verbose
     New-PSDrive -Name $Share.Label -PSProvider MDTProvider -Root $Share.Path -Description $Share.Description | Out-Null
     Get-MDTMonitorData -Path $Label | ? Name -in $Names | Remove-MDTMonitorData -Path $Label
     Remove-PSDrive -Name $Share.Label

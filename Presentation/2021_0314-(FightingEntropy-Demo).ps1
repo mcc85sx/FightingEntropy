@@ -107,11 +107,11 @@ ForEach ( $Item in $AD )
     Remove-ADObject -Identity $Item.DistinguishedName -Recursive -Verbose -Confirm:$False
 }
 
-#  ____                                                                                                    ________    
-# //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
-# \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
-#  ¯¯¯\\__[ (Step 4) [:] Remove all existing traces of the module ]_______________________________________//¯¯¯        
-#     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+#  ____    ____________________________________________________________________________________________________        
+# //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
+# \\__//¯¯¯ (Step 4) [:] Remove all existing traces of the module                                          ___//¯¯\\   
+#  ¯¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
 
 Get-ChildItem -Path "C:\Program Files\WindowsPowerShell\Modules" | ? Name -match FightingEntropy | Remove-Item -Verbose -Recurse
 Get-ChildItem -Path "C:\ProgramData\Secure Digits Plus LLC\FightingEntropy" | ? Name -match 2021.3.1 | Remove-Item -Verbose -Recurse
@@ -153,7 +153,17 @@ New-FEDeploymentShare
 #  ¯¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
 
+# [Physical Machines] - Use PXE to boot over the network in a subnet where the MDT server is authoritative.
+# DHCP and WDS configuration will be covered at another time.
+
+# [Virtual Machines] - This launches brand new VMs and starts them
 Start-VMGroup -NamedVM $Virtual
 
-# Once the virtual machine server is online, it will be upgraded to a domain controller using the module.
-# Once one of the client systems load, initialize the service configuration utility + MadBomb + BlackViper.
+# [Manual entry] - At this point, manual entry is required as this is a "LiteTouch" distribution
+# Enter the computer name in each terminal, virtual and physical, and then allow the MDT process to complete.
+
+# Once the virtual server is online, we will upgrade it to a domain controller using the module.
+# Once one of the client systems load, initialize the service configuration utility (MadBomb122/BlackViper)
+# Once the other client system loads, initialize FENetwork -GUI
+
+# Exhibit the structure of the module

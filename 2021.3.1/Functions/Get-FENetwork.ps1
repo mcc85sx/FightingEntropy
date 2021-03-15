@@ -878,6 +878,11 @@ Function Get-FENetwork
                     }
                 }
 
+                If ( $Item.Hostname -notmatch $This.Suffix.Domain )
+                {
+                    $Item.Hostname = ("{0}.{1}" -f $Item.Hostname, $This.Suffix.Domain)
+                }
+
                 $This.NBTScan       += $Item
             }
         }

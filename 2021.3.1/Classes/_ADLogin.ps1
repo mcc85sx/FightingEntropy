@@ -74,12 +74,17 @@ Class _ADLogin
 
             Else
             {
+                If ( $This.DNSName -notmatch $This.Domain )
+                {
+                    $This.DNSName  = ("{0}.{1}" -f $This.DNSName, $This.Domain)
+                }
+                
                 $This.Credential   = [System.Management.Automation.PSCredential]::New($This.Username,$This.IO.Password.SecurePassword)
                 $This.Directory    = "LDAP://$($This.DNSName):$($This.Port)/CN=Partitions,CN=Configuration,DC=$($This.Domain.Split('.') -join ',DC=')"
 
                 Try 
                 {
-                    $This.Test     = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
+                    $This.Test                = [System.DirectoryServices.DirectoryEntry]::New($This.Directory,$This.Credential.Username,$This.Credential.GetNetworkCredential().Password)
                 }
 
                 Catch

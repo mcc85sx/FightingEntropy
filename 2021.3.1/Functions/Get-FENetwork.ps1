@@ -44,6 +44,11 @@ Function Get-FENetwork
                 [System.Windows.MessageBox]::Show("System is part of a domain","Exception")
             }
         }
+
+        [String] ToString()
+        {
+            Return $This.Domain
+        }
     }
     
     Class _VendorList # Obtains hardware vendor list to convert MacAddress to correct vendor name
@@ -153,6 +158,11 @@ Function Get-FENetwork
             $This.Name    = $This.Line[0]
             $This.ID      = $This.Line[1]
             $This.Type    = $This.Line[2]
+        }
+
+        [String] ToString()
+        {
+            Return $This.Name
         }
     }
 
@@ -423,6 +433,11 @@ Function Get-FENetwork
             $This.GetHostRange()
         }
 
+        [String] ToString()
+        {
+            Return $This.HostRange
+        }
+
         [Object[]] ScanV4()
         {
             Return @( [_V4PingSweep]::New($This.HostRange).Output | ? Status -eq + )
@@ -439,6 +454,11 @@ Function Get-FENetwork
         {
             $This.IPAddress = $Address.IPAddress
             $This.Prefix    = $Address.PrefixLength
+        }
+
+        [String] ToString()
+        {
+            Return ("{0}/{1}" -f $This.IPAddress, $This.Prefix)
         }
     }
 
@@ -505,6 +525,11 @@ Function Get-FENetwork
         {
             $This.Nbt = $Nbt
             $This.Arp = $Arp
+        }
+
+        [String] ToString()
+        {
+            Return $This.Alias
         }
     }
 
@@ -796,11 +821,10 @@ Function Get-FENetwork
 
             Else
             {                
-                $This.Hostmap = @( )
-                ForEach ( $Item in $This.Network.IPv4.ScanV4() )
+                $This.Hostmap = ForEach ( $Item in $This.Network.IPv4.ScanV4() | Select-Object -Unique )
                 {
                     $This.Network.Arp | ? IpAddress -match $Item.IpAddress | % { $_.HostName = $Item.Hostname }
-                    $This.HostMap += $Item
+                    $Item
                 }
             }
         }

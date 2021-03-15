@@ -166,7 +166,6 @@ Function Get-FEDCPromo
     {
         [Object]                              $Window
         [Object]                                  $IO
-        [Object]                              $Module
         [Object]                             $Control
         [Object]                             $HostMap
         [Object]                          $Connection
@@ -196,29 +195,21 @@ Function Get-FEDCPromo
 
         [Object]                              $Output
 
-        _FEDCPromo([Object]$Module)
+        _FEDCPromo()
         {
             $This.Window                            = Get-XamlWindow -Type FEDCPromo
             $This.IO                                = $This.Window.IO
-            $This.Module                            = $Module
-        
-            If ( !$This.Module.Role.Network)
+            $This.Control                           = Get-FENetwork
+
+            If ( !$This.Control )
             {
-                $This.Module.Role.GetNetwork()
-
-                $This.Control                       = $This.Module.Role.Network
-
-                If ( !$This.Control )
-                {
-                    Throw "No network detected"
-                }
-
-                Write-Host "Scanning [~] Detected network hosts for NetBIOS Nodes"
-                $This.Control.NetBIOSScan()
-
-                $This.HostMap                       = $This.Control.NbtScan | ? NetBIOS
+                Throw "No network detected"
             }
 
+            Write-Host "Scanning [~] Detected network hosts for NetBIOS Nodes"
+                
+            $This.Control                           | % NetBIOSScan
+            $This.HostMap                           = $This.Control.NbtScan | ? NetBIOS | ? { $_.NBT.ID -match "(1B|1C)" }
             $This.Features                          = [_ServerFeatures]::New().Output
 
             $This.IO.DataGrid.ItemsSource           = $This.Features
@@ -317,7 +308,7 @@ Function Get-FEDCPromo
 
     Write-Host "Loading Network [~] FightingEntropy Domain Controller Promotion Tool"
 
-    $UI                   = [_FEDCPromo]::New((Get-FEModule))
+    $UI                   = [_FEDCPromo]::New()
     If ($Type)
     {
         $Mode = Switch ($Type) { Forest {0} Tree {1} Child {2} Clone {3} }

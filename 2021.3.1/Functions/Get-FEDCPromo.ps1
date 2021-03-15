@@ -367,7 +367,7 @@ Function Get-FEDCPromo
 
         $DC.Window.Invoke()
 
-        If ( $UI.Connection.Target )
+        If ($DC.IO.DialogResult -eq $True -and $UI.Connection.Target -ne $Null)
         {
             $DC                         = [_ADLogin]::New($UI.Connection.Target)
 
@@ -386,7 +386,6 @@ Function Get-FEDCPromo
             $DC.IO.Ok.Add_Click(
             {
                 $DC.CheckADCredential()
-                $DC.Port                = $DC.IO.Port.Text
 
                 If ( $DC.Test.distinguishedName )
                 {

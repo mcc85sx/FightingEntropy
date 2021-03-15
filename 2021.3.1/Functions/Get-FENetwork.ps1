@@ -261,6 +261,11 @@ Function Get-FENetwork
                 $This.Hostname = ("{0}.{1}" -f $This.Hostname, $Domain)
             }
         }
+
+        [String] ToString()
+        {
+            Return $This.IPAddress
+        }
     }
 
     Class _V4PingSweep
@@ -816,6 +821,8 @@ Function Get-FENetwork
 
             $This.RefreshIPv4Scan()
             $This.RefreshNetStat()
+
+
         }
 
         RefreshNetStat()

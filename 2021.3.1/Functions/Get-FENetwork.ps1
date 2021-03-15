@@ -2,6 +2,50 @@ Function Get-FENetwork
 {
     [CmdLetBinding()]Param([Parameter()][Switch]$GUI)
 
+    Class _DNSSuffix
+    {
+        [String] $Path         = "HKLM:\System\CurrentControlSet\Services\TCPIP\Parameters"
+        [UInt32] $IsDomain     = ([WMIClass]"\\.\ROOT\CIMV2:Win32_ComputerSystem" | % GetInstances | % PartOfDomain)
+        [String] $ComputerName
+        [String] $Domain
+        [String] $NVDomain
+        [UInt32] $Sync
+
+        _DNSSuffix()
+        {
+            Get-ItemProperty $This.Path | % { 
+
+                $This.ComputerName = $_.HostName
+                $This.Domain       = $_.Domain
+                $This.NVDomain     = $_.'NV Domain'
+                $This.Sync         = $_.SyncDomainWithMembership
+            }
+        }
+
+        SetDomain([String]$Domain)
+        {
+            $This.Domain           = $Domain
+        }
+
+        SetComputerName([String]$ComputerName)
+        {
+            $This.ComputerName     = $ComputerName
+        }
+
+        SetSync()
+        {
+            If ( !$This.IsDomain )
+            {
+                "Domain","NV Domain" | % { Set-ItemProperty -Path $This.Path -Name $_ -Value $This.Domain -Verbose }
+            }
+
+            Else
+            {
+                [System.Windows.MessageBox]::Show("System is part of a domain","Exception")
+            }
+        }
+    }
+    
     Class _VendorList # Obtains hardware vendor list to convert MacAddress to correct vendor name
     {
         Hidden [Object]    $File
@@ -664,6 +708,7 @@ Function Get-FENetwork
 
     Class _Controller
     {
+        Hidden [Object]          $Suffix
         Hidden [Object]      $VendorList
         Hidden [Object]    $NbtReference
         Hidden [Object]             $Nbt
@@ -678,6 +723,7 @@ Function Get-FENetwork
         {
             Write-Host "Collecting Network Adapter Information"
 
+            $This.Suffix           = [_DnsSuffix]::New()
             $This.VendorList       = [_VendorList]::New("https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/scratch/VendorList.txt")
             $This.NBTReference     = [_NBTReference]::New().Output
             $This.Interface        = @( )

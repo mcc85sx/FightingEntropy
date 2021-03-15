@@ -199,6 +199,14 @@ Function Get-FENetwork
                 }
             }
         }
+
+        Domain([String]$Domain)
+        {
+            If ( $This.Hostname -notmatch $Domain )
+            {
+                $This.Hostname = ("{0}.{1}" -f $This.Hostname, $Domain)
+            }
+        }
     }
 
     Class _V4PingSweep
@@ -408,7 +416,7 @@ Function Get-FENetwork
         _NetInterface([Object]$Interface)
         {
             $This.Interface   = $Interface
-            $This.HostName    = Resolve-DnsName $Interface.ComputerName | ? Type -eq A | % Name | Select-Object -Unique
+            $This.HostName    = Resolve-DnsName $Interface.ComputerName | % Name | ? Length -gt 0 | Select-Object -Unique
             $This.Alias       = $Interface.InterfaceAlias
             $This.Index       = $Interface.InterfaceIndex
             $This.Description = $Interface.InterfaceDescription
@@ -644,6 +652,14 @@ Function Get-FENetwork
                 $This.NBT     = $Item.Split("`n") | ? { $_ -match "Registered" } | % { [_NbtHostObject]::New($_) }
             }
         }
+
+        Domain([String]$Domain)
+        {
+            If ( $This.Hostname -notmatch $Domain )
+            {
+                $This.Hostname = ("{0}.{1}" -f $This.Hostname,$Domain )
+            }
+        }
     }
 
     Class _Controller
@@ -733,9 +749,8 @@ Function Get-FENetwork
             }
 
             Else
-            {
-                $This.Hostmap   = @( )
-
+            {                
+                $This.Hostmap = @( )
                 ForEach ( $Item in $This.Network.IPv4.ScanV4() )
                 {
                     $This.Network.Arp | ? IpAddress -match $Item.IpAddress | % { $_.HostName = $Item.Hostname }

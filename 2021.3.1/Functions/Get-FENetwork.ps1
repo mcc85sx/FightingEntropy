@@ -265,6 +265,7 @@ Function Get-FENetwork
 
     Class _V4PingSweep
     {
+        Hidden [String]     $Domain
         [String]         $HostRange
         [String[]]       $IPAddress
         Hidden [Hashtable] $Process
@@ -554,6 +555,11 @@ Function Get-FENetwork
         {
             $This.Vendor     = $Vendor.VenID[ ( $This.MacAddress -Replace "(-|:)","" | % Substring 0 6 ) ]
         }
+
+        [String] ToString()
+        {
+            Return @( $This.Hostname )
+        }
     }
 
     Class _ArpTable
@@ -667,6 +673,11 @@ Function Get-FENetwork
             {
                 $Item.Split(":")[0]
             })
+        }
+
+        [String] ToString()
+        {
+            Return $This.Protocol
         }
     }
 
@@ -821,10 +832,15 @@ Function Get-FENetwork
 
             Else
             {                
-                $This.Hostmap = ForEach ( $Item in $This.Network.IPv4.ScanV4() | Select-Object -Unique )
+                $This.Hostmap = @( )
+                ForEach ( $Item in $This.Network.IPv4.ScanV4() )
                 {
                     $This.Network.Arp | ? IpAddress -match $Item.IpAddress | % { $_.HostName = $Item.Hostname }
-                    $Item
+                    
+                    If ( $Item.IPAddress -notin $This.Hostmap.IPAddress )
+                    {
+                        $This.Hostmap += $Item
+                    }
                 }
             }
         }

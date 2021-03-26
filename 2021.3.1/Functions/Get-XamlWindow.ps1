@@ -2188,7 +2188,7 @@ Function Get-XamlWindow # // Originally based on Dr. Weltner's work, but also Ja
     </Window.Resources>
     <Grid>
         <Grid.Background>
-            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.1.1\Graphics\background.jpg"/>
+            <ImageBrush Stretch="None" ImageSource="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.3.1\Graphics\background.jpg"/>
         </Grid.Background>
         <GroupBox Style="{StaticResource xGroupBox}" Width="380" Height="300" Margin="5" VerticalAlignment="Center">
             <Grid>

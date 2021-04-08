@@ -1,1 +1,2 @@
-
+# 2020-04-08 : Opening and shifting content to new project folder.
+#       TODO : New SQL Database to interact with XAML

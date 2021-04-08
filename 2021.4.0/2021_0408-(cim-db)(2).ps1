@@ -1,29 +1,46 @@
 Class _UID
 {
     [Object] $UID
+    [UInt32] $Index
     [Object] $Slot
-    [Object] $Date
-    [Object] $Time
     [Object] $Type
+    [Object] $Date
+    [Object] $Record
 
     _UID([Object]$UID,[UInt32]$Slot)
     {
         $This.UID    = $UID
         $This.Slot   = $Slot
-        $This.Date   = Get-Date -UFormat "%m/%d/%y"
-        $This.Time   = Get-Date -UFormat "%H:%M:%S"
         $This.Type   = @("Client","Service","Device","Issue","Inventory","Purchase","Expense")[$Slot]
+        $This.Date   = Get-Date -UFormat "(%m/%d/%Y @ %H:%M:%S)"
+    }
+
+    InsertIndex([UInt32]$Index)
+    {
+        $This.Index  = $Index
+    }
+
+    InsertRecord([Object]$Record)
+    {
+        $This.Record = $Record
     }
 }
  
-Class _Client : _UID
+Class _Client
 {
-    Hidden [UInt32]   $Rank
-    [String]   $First
-    [String]   $Last
-    [Object]   $DOB
-    [Object[]] $Phone
-    [Object[]] $Email
+    [Object]         $UID
+    [Object]       $Index
+    [Object]        $Slot
+    [Object]        $Type
+    [Object]        $Date
+
+    [UInt32]        $Rank
+    [Object]        $Name
+    [String]       $First
+    [String]        $Last
+    [Object]         $DOB
+    [Object[]]     $Phone
+    [Object[]]     $Email
 
     GetStage()
     {
@@ -54,91 +71,182 @@ Class _Client : _UID
         $This.AddEmail($Email)
     }
 
-    _Client([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot)
-    { 
+    [String] GetName()
+    {
+        Return @( "{0}, {1}" -f $This.Last, $This.First )
+    }
+
+    _Client([Object]$UID)
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 0
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+
         $This.GetStage()
     }
 }
 
-Class _Service : _UID
+Class _Service
 {
-    Hidden [UInt32]   $Rank
-    [String[]] $Description
-    [UInt32]         $Price
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
+    [Object]          $Type
+    [Object]          $Date
 
-    _Service([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) { }
+    [UInt32]          $Rank
+
+    [String]          $Name
+    [String[]] $Description
+    [Float]           $Cost
+
+    _Service([Object]$UID) 
+    { 
+        $This.UID  = $UID.UID
+        $This.Slot = 1
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
-Class _Device : _UID
+Class _Device
 {
-    Hidden [String]   $Rank
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
+    [Object]          $Type
+    [Object]          $Date
+
+    [String]          $Rank
+
     [String]        $Vendor
     [String]        $Serial
     [String]         $Model
     [Object]         $Title  
     [Object]         $Owner
 
-    _Device([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) { }
+    _Device([Object]$UID) 
+    { 
+        $This.UID  = $UID.UID
+        $This.Slot = 2
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
-Class _Issue : _UID
+Class _Issue
 {
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
+    [Object]          $Type
+    [Object]          $Date
+
     [UInt32]          $Rank
+
     [String[]] $Description
     [Object]        $Status
     [Object]         $Order
     [Object]       $Service
     [UInt32]         $Price
 
-    _Issue([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) {}
+    _Issue([Object]$UID) 
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 3
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
-Class _Inventory : _UID 
+Class _Inventory
 {
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
+    [Object]          $Type
+    [Object]          $Date
+
+    [UInt32]          $Rank
+
     [String]        $Vendor
     [String]        $Serial
     [String]         $Model
     [Object]         $Title  
-    [Object]         $Price
+    [Object]          $Cost
 
-    _Inventory([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) {}
+    _Inventory([Object]$UID) 
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 4
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
-Class _Purchase : _UID 
+Class _Purchase
 {
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
+    [Object]          $Type
+    [Object]          $Date
+
+    [UInt32]          $Rank
+
     [Object]   $Distributor
     [Object]   $DisplayName
     [String]        $Vendor
     [String]        $Serial
     [String]         $Model
     [Object]         $Title  
-    [Object]         $Price
+    [Object]          $Cost
 
-    _Purchase([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) {}
+    _Purchase([Object]$UID) 
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 5
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
-Class _Expense : _UID 
+Class _Expense
 {
-    [Object]     $Recipient
+    [Object]           $UID
+    [UInt32]         $Index
+    [Object]          $Slot
     [Object]          $Type
+    [Object]          $Date
+
+    [UInt32]          $Rank
+
+    [Object]     $Recipient
     [Object]   $DisplayName
     [Object]       $Account
-    [UInt32]         $Total
+    [UInt32]          $Cost
 
-    _Expense([Object]$UID,[UInt32]$Slot) : base([Object]$UID,[UInt32]$Slot) {}
+    _Expense([Object]$UID) 
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 6
+        $This.Type = $UID.Type
+        $This.Date = $UID.Date
+    }
 }
 
 Class _Database 
 {
-    [Object[]]       $UID
-    [Object]      $Client
-    [Object]     $Service
-    [Object]      $Device
-    [Object]       $Issue
-    [Object]   $Inventory
-    [Object]    $Purchase
-    [Object]     $Expense
-    [Object]     $Account
+    [Object[]]         $UID
+    [Object[]]      $Client
+    [Object[]]     $Service
+    [Object[]]      $Device
+    [Object[]]       $Issue
+    [Object[]]   $Inventory
+    [Object[]]    $Purchase
+    [Object[]]     $Expense
+    [Object[]]     $Account
     
     _Database()
     {
@@ -153,17 +261,22 @@ Class _Database
         $This.Account   = @( )  
     }
 
-    [Object] GetObject([UInt32]$Slot)
+    [UInt32] GetIndex()
     {
-        Return @( Switch ($Slot)
+        Return $This.UID.Count
+    }
+
+    [UInt32] GetRank([UInt32]$Slot)
+    {
+        Return @( Switch($Slot)
         {
-            0 { $This.Client     += [_Client    ]::New($This.UID,0) }
-            1 { $This.Service    += [_Service   ]::New($This.UID,1) }
-            2 { $This.Device     += [_Device    ]::New($This.UID,2) }
-            3 { $This.Issue      += [_Issue     ]::New($This.UID,3) }
-            4 { $This.Inventory  += [_Inventory ]::New($This.UID,4) } 
-            5 { $This.Purchase   += [_Purchase  ]::New($This.UID,5) }
-            6 { $This.Expense    += [_Expense   ]::New($This.UID,6) }
+            0 { $This.Client.Count    }
+            1 { $This.Service.Count   }
+            2 { $This.Device.Count    }
+            3 { $This.Issue.Count     }
+            4 { $This.Inventory.Count }
+            5 { $This.Purchase.Count  }
+            6 { $This.Account.Count   }
         })
     }
 
@@ -174,13 +287,80 @@ Class _Database
             Throw "Invalid entry"
         } 
 
-        $GUID           = New-GUID
+        $GUID           = (New-GUID | % GUID)
         $Item           = [_UID]::New($GUID,$Slot)
-        $Item.Object    = $Item.GetObject($Slot)
+        $Object         = Switch ($Slot)
+        {
+            0 { [_Client    ]::New($Item) }
+            1 { [_Service   ]::New($Item) }
+            2 { [_Device    ]::New($Item) }
+            3 { [_Issue     ]::New($Item) }
+            4 { [_Inventory ]::New($Item) } 
+            5 { [_Purchase  ]::New($Item) }
+            6 { [_Expense   ]::New($Item) }
+        }
+
+        $Object.Index             = $This.GetIndex() + 1 
+
+        Switch($Slot)
+        {
+            0 
+            {
+                $Object.Rank      = $This.GetRank(0) + 1 
+                $This.Client     += $Object 
+            }
+
+            1 
+            { 
+                $Object.Rank      = $This.GetRank(1) + 1 
+                $This.Service    += $Object 
+            }
+            
+            2 
+            { 
+                $Object.Rank      = $This.GetRank(2) + 1 
+                $This.Device     += $Object 
+            }
+
+            3 
+            { 
+                $Object.Rank      = $This.GetRank(3) + 1 
+                $This.Issue      += $Object 
+            }
+
+            4 
+            { 
+                $Object.Rank      = $This.GetRank(4) + 1 
+                $This.Inventory  += $Object 
+            }
+
+            5 
+            { 
+                $Object.Rank      = $This.GetRank(5) + 1 
+                $This.Purchase   += $Object 
+            }
+
+            6 
+            { 
+                $Object.Rank      = $This.GetRank(6) + 1 
+                $This.Expense    += $Object 
+            }
+        }
+
+        $This.UID                += $Object
     }
 }
 
 $DB               = [_Database]::New()
+
+0..1000 | % { 
+    
+    $Value = Get-Random -Minimum 0 -Maximum 6
+    
+    $DB.AddUID($Value)
+    Write-Host ("Added [+] {0}" -f $DB.UID[$_].Type)
+}
+
 $DB.AddUID(0) # Adds Client
 $DB.AddUID(1) # Adds Service
 $DB.AddUID(2) # Adds Device

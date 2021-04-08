@@ -1,2 +1,158 @@
 # 2020-04-08 : Opening and shifting content to new project folder.
 #       TODO : New SQL Database to interact with XAML
+
+Class DB 
+{
+    [Object[]] $CID
+    
+    DB()
+    {
+        $This.CID = @( )
+    }
+
+    [UInt32] GetCID()
+    {
+        Return $This.CID.Count + 1
+    }
+
+    AddCID()
+    {
+        $This.CID += [CID]::New($This.GetCid())
+    }
+
+    DeleteCID()
+    {
+
+    }
+}
+
+Class _ClientInfo
+{
+    [String]   $First
+    [String]   $Last
+    [Object]   $DOB
+    [Object[]] $Phone
+    [Object[]] $Email
+
+    GetStage()
+    {
+        $This.First   = $Null
+        $This.Last    = $Null
+        $This.DOB     = $Null
+        $This.Phone   = @( )
+        $This.Email   = @( )
+    }
+
+    AddPhone([Object]$Phone)
+    {
+        $This.Phone  += $Phone
+    }
+
+    AddEmail([Object]$Email)
+    {
+        $This.Email  += $Email
+    }
+
+    SetStage([String]$First,[String]$Last,[Object]$DOB,[Object]$Phone,[Object]$Email)
+    {
+        $This.First   = $First
+        $This.Last    = $Last
+        $This.DOB     = $DOB
+
+        $This.AddPhone($Phone)
+        $This.AddEmail($Email)
+    }
+
+    SetStage([Object]$Client)
+    {
+        $This.First   = $Client.First
+        $This.Last    = $Client.Last
+        $This.DOB     = $Client.DOB
+
+        $This.AddPhone($Client.Phone)
+        $This.AddEmail($Client.Email)
+    }
+
+    _ClientInfo([String]$First,[String]$Last,[Object]$DOB,[Object]$Phone,[Object]$Email)
+    {
+        $This.GetStage()
+        $This.SetStage($First,$Last,$DOB,$Phone,$Email)
+    }
+
+    _ClientInfo([Object]$Client)
+    {
+        $This.GetStage()
+        $This.SetStage($Client)
+    }
+}
+
+Class _CID
+{
+    [UInt32]   $CID
+    [Object]   $Name
+    [Object]   $Date
+
+    _CID([UInt32]$ID)
+    {
+        $This.CID = $ID
+    }
+}
+
+Class _SID
+{
+    [UInt32] $SID
+    [Object] $Name
+    [Object] $Date
+
+    _SID([UInt32]$ID)
+    {
+        $This.SID = $ID
+    }
+}
+
+Class _DID
+{
+    [UInt32] $DID
+    [Object] $Name
+    [Object] $Date
+
+    _DID([UInt32]$ID)
+    {
+        $This.DID = $ID
+    }
+}
+
+Class _IID
+{
+    [UInt32] $IID
+    [Object] $Name
+    [Object] $Date
+
+    _IID([UInt32]$ID)
+    {
+        $This.IID = $ID
+    }
+}
+
+Class _ID
+{
+    [ValidateSet(0,1,2,3)]
+    [UInt32] $Mode
+    [String] $Transaction
+    [Object] $Date
+    [Object] $Object
+
+    _ID([UInt32]$Mode)
+    {
+        $This.Mode        = $Mode
+        $This.Transaction = @("Customer","Service","Device","Issue")[$Mode]
+        $This.Date        = Get-Date
+        $This.Object      = Switch($Mode)
+        {
+            0 { [_CID]::New() } 
+            1 { [_SID]::New() }
+            2 { [_DID]::New() } 
+            3 { [_IID]::New() }
+        }
+    }
+}

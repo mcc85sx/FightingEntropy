@@ -1,7 +1,5 @@
-Function init.cim-db
+Function init.cim-db ([String]$Base)
 {
-    [CmdLetBinding()]Param([Parameter(Mandatory)]$Base)
-    
     Class _ClassObject
     {
         Hidden [String] $Base

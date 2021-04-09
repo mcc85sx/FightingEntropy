@@ -15,7 +15,7 @@ Class _Service
     { 
         $This.UID  = $UID.UID
         $This.Slot = 1
-        $This.Type = $UID.Type
+        $This.Type = "Service"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

@@ -26,6 +26,7 @@ Function init.cim-db ([String]$Base)
         [String]         $Index
         Hidden [Object[]] $Item
         [Object[]]       $Class
+        Hidden [Object] $Module
         _Install([String]$Base)
         {
             $This.Base    = $Base
@@ -34,22 +35,24 @@ Function init.cim-db ([String]$Base)
             $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
         }
 
-        Init()
+        BuildModule()
         {
-            $Invoke       = @( )
-
+            $This.Module = @( ) 
             $This.Class | % { 
                 
                 Write-Host ("Loading [+] {0}" -f $_.Name )
-                $Invoke += $_.Content 
+                $This.Module += $_.Content 
             }
 
-            Invoke-Expression ( $Invoke -join "`n" )
+            $This.Module = ( $This.Module -join "`n" )
         }
+
     }
 
     $DB = [_Install]::New($Base)
-    $DB.Init()
+    $DB.BuildModule()
 
-    Return @( [_DB]::New($DB) )
+    Invoke-Expression $DB.Module
+
+    [_DB]::New($DB)
 }

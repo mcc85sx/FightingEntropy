@@ -9,13 +9,18 @@ Class _Client
     [UInt32]        $Rank
     [Object]        $Name
     [String]       $First
+    [String]          $MI
     [String]        $Last
-    [Object]         $DOB
     [Object]     $Address
     [Object]        $City
     [Object]      $Region
     [Object]     $Country
     [Object]      $Postal
+    [UInt32]       $Month
+    [UInt32]         $Day
+    [UInt32]        $Year
+    [String]         $DOB
+    [Object]       $Image
     [Object[]]     $Phone
     [Object[]]     $Email
     [Object[]]    $Device

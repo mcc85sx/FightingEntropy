@@ -77,7 +77,7 @@ Class _Client
     {
         $This.UID  = $UID.UID
         $This.Slot = 0
-        $This.Type = $UID.Type
+        $This.Type = "Client"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
 

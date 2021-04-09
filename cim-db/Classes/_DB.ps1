@@ -59,6 +59,7 @@ Class _DB
         }
 
         $Item                = [_UID]::New($Slot)
+        $Item.Type           = @("Client Service Device Issue Inventory Purchase Expense Account" -Split " ")[$Slot]
         $Item.Index          = $This.GetIndex()
         $Item.Record         = Switch ($Slot)
         {

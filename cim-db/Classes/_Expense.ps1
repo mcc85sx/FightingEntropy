@@ -17,7 +17,7 @@ Class _Expense
     {
         $This.UID  = $UID.UID
         $This.Slot = 6
-        $This.Type = $UID.Type
+        $This.Type = "Expense"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

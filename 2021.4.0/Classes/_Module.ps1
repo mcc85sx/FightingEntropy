@@ -5,13 +5,13 @@ Class _Module
     [Object]               $Hive
     
     [String]               $Name = "FightingEntropy"
-    [String]            $Version = "2021.3.1"
+    [String]            $Version = "2021.4.0"
     [String]           $Provider = "Secure Digits Plus LLC"
     [String]               $Date
     [String]             $Status
     [String]               $Type
 
-    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2021.3.1"
+    [String]           $Resource = "https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/2021.4.0"
     
     [Object[]]          $Classes
     [Object[]]        $Functions

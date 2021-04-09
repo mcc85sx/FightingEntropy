@@ -18,7 +18,7 @@ Class _Device
     { 
         $This.UID  = $UID.UID
         $This.Slot = 2
-        $This.Type = $UID.Type
+        $This.Type = "Device"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

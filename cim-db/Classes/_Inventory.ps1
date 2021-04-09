@@ -18,7 +18,7 @@ Class _Inventory
     {
         $This.UID  = $UID.UID
         $This.Slot = 4
-        $This.Type = $UID.Type
+        $This.Type = "Inventory"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

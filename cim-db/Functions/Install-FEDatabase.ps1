@@ -33,7 +33,7 @@ Function Install-FEDatabase
             $This.Base    = $Base
             $This.Index   = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" -Verbose
             $This.Item    = $This.Index -Replace "\s+"," " -Split " "
-            $This.Class   = $This.Item | % { [ClassObject]::New($Base,$_) }
+            $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
         }
     }
 

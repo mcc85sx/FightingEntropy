@@ -13,7 +13,7 @@ Class _DB
     
     _DB([Object]$Init)
     {
-        $This.Meta      = $Init
+        $This.Init      = $Init
         $This.UID       = @( )
         $This.Client    = @( )
         $This.Service   = @( )

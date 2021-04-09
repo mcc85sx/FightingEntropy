@@ -122,7 +122,7 @@
     
     Class _XamlObject
     {
-        [String[]]        $Names = ("Certificate ADLogin NewAccount FENetwork FEDCPromo FEDCFound FERoot FEShare FEService MBWin10 Test" -Split " ")
+        [String[]]        $Names = ("Certificate ADLogin NewAccount FENetwork FEDCPromo FEDCFound FERoot FEShare FEService MBWin10 ClientRegistration Test" -Split " ")
         [Object]       $Glossary = [_XamlGlossary]::New().Output
         [Object]            $GFX = [_XamlGFX]::New("C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.4.0\Graphics")
         [Object]           $Xaml = @{ 

@@ -52,7 +52,7 @@ Class _DB
 
     AddUID([Object]$Slot)
     {
-        If ($Slot -notin 0..6)
+        If ($Slot -notin 0..7)
         {
             Throw "Invalid entry"
         }

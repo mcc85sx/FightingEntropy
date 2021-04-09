@@ -34,6 +34,11 @@ Function init.cim-db ([String]$Base)
             $This.Item    = $This.Index -Replace "\s+"," " -Split " "
             $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
         }
+        
+        [String] ToString()
+        {
+            Return ( "init.cim-db -> {0}" -f $This.Index )
+        }
 
         BuildModule()
         {
@@ -46,7 +51,6 @@ Function init.cim-db ([String]$Base)
 
             $This.Module = ( $This.Module -join "`n" )
         }
-
     }
 
     $DB = [_Install]::New($Base)

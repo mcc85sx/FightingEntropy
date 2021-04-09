@@ -1,5 +1,10 @@
 Function init.cim-db ([String]$Base)
-{
+{   
+    If (!$Base)
+    {
+        Throw "No base link provided"
+    }
+
     Class _ClassObject
     {
         Hidden [String] $Base
@@ -23,17 +28,28 @@ Function init.cim-db ([String]$Base)
         [Object[]]       $Class
         _Install([String]$Base)
         {
-            If (!$Base)
-            {
-                Throw "No base link provided"
-            }
-
             $This.Base    = $Base
             $This.Index   = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" -Verbose
             $This.Item    = $This.Index -Replace "\s+"," " -Split " "
             $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
         }
+
+        Init()
+        {
+            $Invoke       = @( )
+
+            $This.Class | % { 
+                
+                Write-Host ("Loading [+] {0}" -f $_.Name )
+                $Invoke += $_.Content 
+            }
+
+            Invoke-Expression ( $Invoke -join "`n" )
+        }
     }
 
-    [Install]::New($Base)
+    $DB = [_Install]::New($Base)
+    $DB.Init()
+
+    Return @( [_DB]::New($DB) )
 }

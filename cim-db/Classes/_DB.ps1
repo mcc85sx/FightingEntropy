@@ -43,6 +43,7 @@ Class _DB
             $This.Issue.Count     , 
             $This.Inventory.Count ,
             $This.Purchase.Count  ,
+            $This.Expense.Count   ,
             $This.Account.Count   
         
         )[$Slot]) - 1

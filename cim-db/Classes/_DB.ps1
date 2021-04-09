@@ -1,5 +1,6 @@
 Class _DB 
 {
+    [Object]          $Init 
     [Object[]]         $UID
     [Object[]]      $Client
     [Object[]]     $Service
@@ -10,8 +11,9 @@ Class _DB
     [Object[]]     $Expense
     [Object[]]     $Account
     
-    _DB()
+    _DB([Object]$Init)
     {
+        $This.Meta      = $Init
         $This.UID       = @( )
         $This.Client    = @( )
         $This.Service   = @( )
@@ -43,7 +45,6 @@ Class _DB
             $This.Issue.Count     , 
             $This.Inventory.Count ,
             $This.Purchase.Count  ,
-            $This.Expense.Count   ,
             $This.Account.Count   
         
         )[$Slot]) - 1
@@ -54,7 +55,7 @@ Class _DB
         If ($Slot -notin 0..6)
         {
             Throw "Invalid entry"
-        } 
+        }
 
         $Item                = [_UID]::New($Slot)
         $Item.Index          = $This.GetIndex()

@@ -2,7 +2,7 @@
 # Will be adding a XAML GUI for each section: Client, Service, Device, Issue, Inventory, Purchase, Expense...
 # ...once I have an idea on how to format all of those GUI elements.
 
-# Creating the XAML is easy. Designing it without the classes/properties first, that's where R&D comes in handy.
+# Creating the XAML is easy. Designing it without the classes/properties first, isn't.
 
 Class _UID
 {

@@ -1,4 +1,3 @@
-
 Function init.cim-db ([String]$Base)
 {   
     If (!$Base)
@@ -35,10 +34,6 @@ Function init.cim-db ([String]$Base)
             $This.Index   = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" -Verbose
             $This.Item    = $This.Index -Replace "\s+"," " -Split " "
             $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
-            $This.Xaml    = @{ 
-                
-                ClientRegistration = Invoke-WebRequest "$Base/XAML/_ClientRegistration.xaml" | % Content
-            }
         }
 
         [String] ToString()

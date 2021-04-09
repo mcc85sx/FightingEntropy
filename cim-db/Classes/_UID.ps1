@@ -12,11 +12,10 @@ Class _UID
     {
         $This.UID    = New-GUID | % GUID
         $This.Slot   = $Slot
-        $This.Type   = @("Client","Service","Device","Issue","Inventory","Purchase","Expense")[$Slot]
         $This.Date   = Get-Date -UFormat "%m/%d/%Y"
         $This.Time   = Get-Date -UFormat "%H:%M:%S"
     }
-    
+
     [String] ToString()
     {
         Return $This.Type

@@ -45,6 +45,7 @@ Class _DB
             $This.Issue.Count     , 
             $This.Inventory.Count ,
             $This.Purchase.Count  ,
+            $This.Expense.Count   ,
             $This.Account.Count   
         
         )[$Slot]) - 1
@@ -68,6 +69,7 @@ Class _DB
             4 { [_Inventory ]::New($Item) } 
             5 { [_Purchase  ]::New($Item) }
             6 { [_Expense   ]::New($Item) }
+            7 { [_Account   ]::New($Item) }
         }
 
         $Item.Record.Index   = $Item.Index
@@ -82,6 +84,7 @@ Class _DB
             4 { $This.Inventory  += $Item }
             5 { $This.Purchase   += $Item }
             6 { $This.Expense    += $Item }
+            7 { $This.Account    += $Item }
         }
 
         $This.UID            += $Item

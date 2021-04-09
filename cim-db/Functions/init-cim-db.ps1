@@ -1,4 +1,4 @@
-Function Install-FEDatabase
+Function init.cim-db
 {
     [CmdLetBinding()]Param([Parameter(Mandatory)]$Base)
     

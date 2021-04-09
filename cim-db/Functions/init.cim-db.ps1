@@ -1,3 +1,4 @@
+
 Function init.cim-db ([String]$Base)
 {   
     If (!$Base)
@@ -26,6 +27,7 @@ Function init.cim-db ([String]$Base)
         [String]         $Index
         Hidden [Object[]] $Item
         [Object[]]       $Class
+        [Object]          $Xaml
         Hidden [Object] $Module
         _Install([String]$Base)
         {
@@ -33,6 +35,10 @@ Function init.cim-db ([String]$Base)
             $This.Index   = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" -Verbose
             $This.Item    = $This.Index -Replace "\s+"," " -Split " "
             $This.Class   = $This.Item | % { [_ClassObject]::New($Base,$_) }
+            $This.Xaml    = @{ 
+                
+                ClientRegistration = Invoke-WebRequest "$Base/XAML/_ClientRegistration.xaml" | % Content
+            }
         }
 
         [String] ToString()
@@ -51,7 +57,6 @@ Function init.cim-db ([String]$Base)
 
             $This.Module = ( $This.Module -join "`n" )
         }
-
     }
 
     $DB = [_Install]::New($Base)

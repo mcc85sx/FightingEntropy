@@ -1,3 +1,9 @@
+# The following script is meant to help build an SQL database with GUID's, Date, Time, Record Type, etc
+# Will be adding a XAML GUI for each section: Client, Service, Device, Issue, Inventory, Purchase, Expense...
+# ...once I have an idea on how to format all of those GUI elements.
+
+# Creating the XAML is easy. Designing it without the classes/properties first, that's where R&D comes in handy.
+
 Class _UID
 {
     [Object] $UID
@@ -73,7 +79,7 @@ Class _Client
         $This.AddEmail($Email)
     }
 
-    [String] GetName([String]$First,[String]$Last)
+    [String] GetName()
     {
         If (!$This.First -or !$This.Last)
         {

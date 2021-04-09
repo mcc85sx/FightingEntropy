@@ -16,6 +16,11 @@ Class _UID
         $This.Date   = Get-Date -UFormat "%m/%d/%Y"
         $This.Time   = Get-Date -UFormat "%H:%M:%S"
     }
+    
+    [String] ToString()
+    {
+        Return $This.Type
+    }
 
     InsertIndex([UInt32]$Index)
     {

@@ -14,7 +14,7 @@ Class _Account
     {
         $This.UID  = $UID.UID
         $This.Slot = 7
-        $This.Type = $UID.Type
+        $This.Type = "Account"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

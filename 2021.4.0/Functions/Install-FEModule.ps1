@@ -3,7 +3,7 @@ Function Install-FEModule
     [CmdLetBinding()]
     Param(
 
-    [ValidateSet("2021.1.0","2021.1.1","2021.2.0","2021.3.0","2021.3.1")]
+    [ValidateSet("2021.1.0","2021.1.1","2021.2.0","2021.3.0","2021.3.1","2021.4.0")]
     [Parameter(Mandatory)]
     [String]$Version)
 

@@ -1,4 +1,4 @@
-Class _Database 
+Class _DB 
 {
     [Object[]]         $UID
     [Object[]]      $Client
@@ -10,7 +10,7 @@ Class _Database
     [Object[]]     $Expense
     [Object[]]     $Account
     
-    _Database()
+    _DB()
     {
         $This.UID       = @( )
         $This.Client    = @( )

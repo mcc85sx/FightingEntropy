@@ -10,7 +10,7 @@ Class _Account
 
     [Object]        $Object
 
-    _Expense([Object]$UID) 
+    _Account([Object]$UID) 
     {
         $This.UID  = $UID.UID
         $This.Slot = 6

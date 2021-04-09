@@ -13,14 +13,14 @@ Class _Purchase
     [String]        $Vendor
     [String]        $Serial
     [String]         $Model
-    [Object]         $Title  
+    [Object]         $Title
     [Object]          $Cost
 
     _Purchase([Object]$UID) 
     {
         $This.UID  = $UID.UID
         $This.Slot = 5
-        $This.Type = $UID.Type
+        $This.Type = "Purchase"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

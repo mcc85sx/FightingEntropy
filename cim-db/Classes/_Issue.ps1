@@ -18,7 +18,7 @@ Class _Issue
     {
         $This.UID  = $UID.UID
         $This.Slot = 3
-        $This.Type = $UID.Type
+        $This.Type = "Issue"
         $This.Date = $UID.Date
         $This.Time = $UID.Time
     }

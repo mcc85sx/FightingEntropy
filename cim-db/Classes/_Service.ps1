@@ -6,7 +6,7 @@ Class _Service
     [Object]          $Type
     [Object]          $Date
     [Object]          $Time
-    [UInt32]          $Rank     
+    [UInt32]          $Rank
     [String]          $Name
     [String[]] $Description
     [Float]           $Cost
@@ -44,23 +44,5 @@ Class _Service
         {
             Return $Null
         }
-    }
-
-    SetName([String]$Name)
-    {
-        If ( $Name -notin $This.Service.Name )
-        {
-            $This.Name = $Name
-        }
-    }
-
-    SetDescription([String[]]$Description)
-    {
-        $This.Description = $Description
-    }
-
-    SetCost([Object]$Cost)
-    {
-        $This.Cost        = $Cost
     }
 }

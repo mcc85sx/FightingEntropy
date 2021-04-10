@@ -9,12 +9,12 @@ Class _Issue
     [UInt32]          $Rank
 
     [Object]        $Client
-	[Object]        $Device
-	[String[]] $Description
+    [Object]        $Device
+    [String[]] $Description
     [Object]        $Status
     [Object]      $Purchase
     [Object]       $Service
-	[Object]       $Invoice
+    [Object]       $Invoice
 
     _Issue([Object]$UID) 
     {

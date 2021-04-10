@@ -8,11 +8,13 @@ Class _Issue
     [Object]          $Time
     [UInt32]          $Rank
 
-    [String[]] $Description
+    [Object]        $Client
+	[Object]        $Device
+	[String[]] $Description
     [Object]        $Status
-    [Object]         $Order
+    [Object]      $Purchase
     [Object]       $Service
-    [UInt32]         $Price
+	[Object]       $Invoice
 
     _Issue([Object]$UID) 
     {

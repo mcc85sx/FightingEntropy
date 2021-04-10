@@ -26,7 +26,10 @@ Function init.cim-db ([String]$Base)
         [String]         $Index
         Hidden [Object[]] $Item
         [Object[]]       $Class
-        [Object]          $Xaml
+        [Object]          $Xaml = @{ 
+            
+            NewClient = Invoke-RestMethod "$Base/
+        }
         Hidden [Object] $Module
         _Install([String]$Base)
         {

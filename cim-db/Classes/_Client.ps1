@@ -26,17 +26,23 @@ Class _Client
     [Object[]]    $Device
     [Object[]]   $Invoice
 
+    _Client([Object]$UID)
+    {
+        $This.UID  = $UID.UID
+        $This.Slot = 0
+        $This.Type = "Client"
+        $This.Date = $UID.Date
+        $This.Time = $UID.Time
+    }
+    
     GetStage()
     {
-        $This.First   = $Null
-        $This.Last    = $Null
-        $This.DOB     = $Null
         $This.Phone   = @( )
         $This.Email   = @( )
         $This.Device  = @( )
         $This.Invoice = @( )
     }
-
+    
     AddPhone([Object]$Phone)
     {
         $This.Phone  += $Phone
@@ -56,7 +62,7 @@ Class _Client
         $This.AddPhone($Phone)
         $This.AddEmail($Email)
     }
-
+    
     [String] GetName()
     {
         If (!$This.First -or !$This.Last)
@@ -78,16 +84,5 @@ Class _Client
     SetName([String]$First,[String]$Last)
     {
         $This.Name = $This.GetName($First,$Last)
-    }
-
-    _Client([Object]$UID)
-    {
-        $This.UID  = $UID.UID
-        $This.Slot = 0
-        $This.Type = "Client"
-        $This.Date = $UID.Date
-        $This.Time = $UID.Time
-
-        $This.GetStage()
     }
 }

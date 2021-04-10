@@ -14,8 +14,9 @@ Class _Purchase
     [String]        $Serial
     [String]         $Model
     [Object]         $Title
+    [Object]       $Invoice
     [Object]          $Cost
-
+    
     _Purchase([Object]$UID) 
     {
         $This.UID  = $UID.UID

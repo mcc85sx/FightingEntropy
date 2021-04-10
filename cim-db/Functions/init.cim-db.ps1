@@ -26,10 +26,6 @@ Function init.cim-db ([String]$Base)
         [String]         $Index
         Hidden [Object[]] $Item
         [Object[]]       $Class
-        [Object]          $Xaml = @{ 
-            
-            NewClient = Invoke-RestMethod "$Base/
-        }
         Hidden [Object] $Module
         _Install([String]$Base)
         {
@@ -57,10 +53,26 @@ Function init.cim-db ([String]$Base)
         }
     }
 
-    $DB = [_Install]::New($Base)
-    $DB.BuildModule()
+    Class cimdb
+    {
+        [Object] $Window
+        [Object]     $IO
+        [Object]     $DB
 
-    Invoke-Expression $DB.Module
+        cimdb([Object]$DB)
+        {
+            $This.Window = [_Xaml]::New()
+            $This.IO     = $This.Window.IO
+            $This.DB     = $DB
+        } 
+    }
 
-    [_DB]::New($DB)
+    $Install = [_Install]::New($Base)
+    $Install.BuildModule()
+
+    Invoke-Expression $Install.Module
+
+    $Database = [_DB]::New($Install)
+    
+    [Cimdb]::New($Database)
 }

@@ -1,6 +1,6 @@
 Class _DB 
 {
-    [Object]          $Init 
+    [Object]          $Init
     [Object[]]         $UID
     [Object[]]      $Client
     [Object[]]     $Service

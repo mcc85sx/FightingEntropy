@@ -8,9 +8,11 @@ Class _Device
     [Object]          $Time
     [String]          $Rank
 
+    [String]       $Chassis
     [String]        $Vendor
-    [String]        $Serial
     [String]         $Model
+    [String]          $Spec
+    [String]        $Serial
     [Object]         $Title  
     [Object]         $Owner
 

@@ -7,11 +7,13 @@ Class _Inventory
     [Object]          $Date
     [Object]          $Time
     [UInt32]          $Rank
-
+        
     [String]        $Vendor
     [String]        $Serial
     [String]         $Model
-    [Object]         $Title  
+    [Object]         $Title
+    [Bool]        $IsDevice
+    [Object[]]      $Device
     [Object]          $Cost
 
     _Inventory([Object]$UID) 

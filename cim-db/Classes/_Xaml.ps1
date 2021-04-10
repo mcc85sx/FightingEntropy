@@ -1,7 +1,7 @@
 Class _Xaml
 {
     Hidden [Object]        $Xaml = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Company Information Management Database [FightingEntropy]://(cim-db)" 
     Height="600" 
@@ -74,6 +74,47 @@ Class _Xaml
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
     </TabControl.Resources>
+    <TabItem>
+        <TabItem.Header>
+            <Image Width="80" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.4.0\Graphics\sdplogo.png"/>
+        </TabItem.Header>
+        <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabItem Header="Get">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="35"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Name="_GetUIDSearchType" SelectedIndex="0" BorderThickness="1">
+                            <ComboBoxItem Content="UID"/>
+                            <ComboBoxItem Content="Index"/>
+                            <ComboBoxItem Content="Date"/>
+                        </ComboBox>
+                        <TextBox Grid.Column="1" >
+
+                        </TextBox>
+                        <TextBox Grid.Column="1" Name="_GetUIDSearchFilter"/>
+                    </Grid>
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchBox">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="UID" Width="*"/>
+                            <DataGridTextColumn Header="Index" Width="*"/>
+                            <DataGridTextColumn Header="Date" Width="*"/>
+                            <DataGridTextColumn Header="Time" Width="0.25*"/>
+                            <DataGridTextColumn Header="Record" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="View"/>
+        </TabControl>
+    </TabItem>
     <TabItem Header="Client">
         <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
             <TabItem Header="Get">
@@ -94,7 +135,7 @@ Class _Xaml
                             <ComboBoxItem Content="Email Address"/>
                         </ComboBox>
                         <TextBox Grid.Column="1" >
-                            
+
                         </TextBox>
                         <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
                     </Grid>
@@ -661,13 +702,102 @@ Class _Xaml
                             <DataGridTextColumn Header="Model" Width="*"/>
                             <DataGridTextColumn Header="Specification" Width="*"/>
                             <DataGridTextColumn Header="Serial" Width="*"/>
-                            <DataGridTextColumn Header="Owner"  Width="*"/>
+                            <DataGridTextColumn Header="Title"  Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="View"/>
-            <TabItem Header="Edit"/>
+            <TabItem Header="View">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Chassis]">
+                            <ComboBox Name="_ViewDeviceChassis" SelectedIndex="8">
+                                <ComboBoxItem Content="Desktop"/>
+                                <ComboBoxItem Content="Laptop"/>
+                                <ComboBoxItem Content="Smartphone"/>
+                                <ComboBoxItem Content="Tablet"/>
+                                <ComboBoxItem Content="Console"/>
+                                <ComboBoxItem Content="Server"/>
+                                <ComboBoxItem Content="Network"/>
+                                <ComboBoxItem Content="Other"/>
+                                <ComboBoxItem Content="&lt;Select&gt;"/>
+                            </ComboBox>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="[Vendor]">
+                            <TextBox Name="_ViewDeviceVendor"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="2" Header="[Model]">
+                            <TextBox Name="_ViewDeviceModel"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="3" Header="[Specification]">
+                            <TextBox Name="_ViewDeviceSpecification"/>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Title]">
+                            <TextBox Name="_ViewDeviceTitle"/>
+                        </GroupBox>
+                    </Grid>
+                    <GroupBox Grid.Row="4" Header="[Serial]">
+                        <TextBox Name="_ViewDeviceSerial"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="6" Header="[Client]">
+                        <TextBox Name="_ViewDeviceClient"/>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Edit">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="64"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="[Chassis]">
+                        <ComboBox Name="_EditDeviceChassis">
+                            <ComboBoxItem Content="Desktop"/>
+                            <ComboBoxItem Content="Laptop"/>
+                            <ComboBoxItem Content="Smartphone"/>
+                            <ComboBoxItem Content="Tablet"/>
+                            <ComboBoxItem Content="Console"/>
+                            <ComboBoxItem Content="Server"/>
+                            <ComboBoxItem Content="Network"/>
+                            <ComboBoxItem Content="Other"/>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="[Vendor]">
+                        <TextBox Name="_EditDeviceVendor"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[Model]">
+                        <TextBox Name="_EditDeviceModel"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[Specification]">
+                        <TextBox Name="_EditDeviceSpecification"/>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
             <TabItem Header="New">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -718,7 +848,7 @@ Class _Xaml
                         <ComboBox Grid.Column="0" Name="_GetIssueSearchType" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Client"/>
                             <ComboBoxItem Content="Device"/>
-                            
+
                         </ComboBox>
                         <TextBox Grid.Column="1" >
 
@@ -789,16 +919,11 @@ Class _Xaml
     [Object]               $Node
     [Object]                 $IO
 
-    FindNames()
+    [String[]] FindNames()
     {
-        [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $This.Xaml | % Value | % {
-            
-            $Line   = $_.Split('"')[1]
-            If ( $Line -notin $This.Names )
-            {
-                $This.Names += $Line
-            }
-        }
+        $ID   = [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $This.Xaml | % Value | % { $_.Split('"')[1] }
+
+        Return ( $ID | Select-Object -Unique )
     }
 
     _Xaml()

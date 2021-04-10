@@ -789,7 +789,7 @@ Class _Xaml
     [Object]               $Node
     [Object]                 $IO
 
-    [String[]] FindNames()
+    FindNames()
     {
         [Regex]"((Name)\s*=\s*('|`")\w+('|`"))" | % Matches $This.Xaml | % Value | % {
             
@@ -797,11 +797,8 @@ Class _Xaml
             If ( $Line -notin $This.Names )
             {
                 $This.Names += $Line
-                $Line
             }
         }
-
-        Return $This.Names
     }
 
     _Xaml()

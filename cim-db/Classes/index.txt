@@ -1,1 +1,1 @@
-"UID Client Service Device Issue Inventory Purchase Expense Account DB Xaml"
+"UID Client Service Device Issue Inventory Purchase Expense Account DB"

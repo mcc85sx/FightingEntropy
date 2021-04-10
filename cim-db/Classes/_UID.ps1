@@ -18,16 +18,6 @@ Class _UID
 
     [String] ToString()
     {
-        Return $This.Type
-    }
-
-    InsertIndex([UInt32]$Index)
-    {
-        $This.Index  = $Index
-    }
-
-    InsertRecord([Object]$Record)
-    {
-        $This.Record = $Record
+        Return $This.Slot
     }
 }

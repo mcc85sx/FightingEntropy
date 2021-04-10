@@ -11,10 +11,13 @@ Class _Device
     [String]       $Chassis
     [String]        $Vendor
     [String]         $Model
-    [String]          $Spec
+    [String] $Specification
     [String]        $Serial
-    [Object]         $Title  
-    [Object]         $Owner
+    [Object]         $Title
+    [Object]        $Client
+    [Object]         $Issue
+    [Object]      $Purchase
+    [Object]       $Invoice
 
     _Device([Object]$UID) 
     { 

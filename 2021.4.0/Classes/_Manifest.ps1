@@ -32,7 +32,7 @@ Class _Manifest
                               "Install-VMGroup" | % { "$_.ps1" })
 
     [String[]]   $Control = ("Computer.png DefaultApps.xml FE{0} FE{1} MDT{0} MDT{1} PSD{0} PSD{1} header-image.png" -f "ClientMod.xml","ServerMod.xml" ) -Split " "
-    [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp" -Split " ")
+    [String[]]  $Graphics = ("background.jpg banner.png icon.ico OEMbg.jpg OEMlogo.bmp sdplogo.png" -Split " ")
 
     _Manifest([String]$Version)
     {

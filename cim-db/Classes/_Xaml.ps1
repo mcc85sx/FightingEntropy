@@ -1,7 +1,7 @@
 Class _Xaml
 {
     Hidden [Object]        $Xaml = @"
-    <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Company Information Management Database [FightingEntropy]://(cim-db)" 
     Height="600" 
@@ -784,9 +784,8 @@ Class _Xaml
 </TabControl>
 </Window>
 "@
-
-    Hidden [Object]         $XML
     [String[]]            $Names
+    Hidden [Object]         $XML
     [Object]               $Node
     [Object]                 $IO
 
@@ -802,25 +801,27 @@ Class _Xaml
             }
         }
 
-        _Xaml()
-        {           
-            [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+        Return $This.Names
+    }
 
-            $This.XML                = [XML]$This.Xaml
-            $This.Names              = $This.FindNames()
-            $This.Node               = [System.XML.XmlNodeReader]::New($This.XML)
-            $This.IO                 = [System.Windows.Markup.XAMLReader]::Load($This.Node)
+    _Xaml()
+    {           
+        [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+
+        $This.Names              = $This.FindNames()
+        $This.XML                = [XML]$This.Xaml
+        $This.Node               = [System.Xml.XmlNodeReader]::New($This.XML)
+        $This.IO                 = [System.Windows.Markup.XamlReader]::Load($This.Node)
     
-            ForEach ( $I in 0..( $This.Names.Count - 1 ) )
-            {
-                $Name                = $This.Names[$I]
-                $This.IO             | Add-Member -MemberType NoteProperty -Name $Name -Value $This.IO.FindName($Name) -Force 
-            }
+        $This.Names              | % { 
+            
+            $This.IO             | Add-Member -MemberType NoteProperty -Name $_ -Value $This.IO.FindName($_) -Force
+        
         }
+    }
 
-        Invoke()
-        {
-            $This.IO.Dispatcher.InvokeAsync({ $This.IO.ShowDialog() }).Wait()
-        }
+    Invoke()
+    {
+        $This.IO.Dispatcher.InvokeAsync{$This.IO.ShowDialog()}.Wait()
     }
 }

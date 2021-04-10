@@ -33,6 +33,8 @@ Class _Client
         $This.DOB     = $Null
         $This.Phone   = @( )
         $This.Email   = @( )
+        $This.Device  = @( )
+        $This.Invoice = @( )
     }
 
     AddPhone([Object]$Phone)

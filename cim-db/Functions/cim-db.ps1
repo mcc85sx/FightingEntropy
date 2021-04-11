@@ -562,12 +562,12 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="UID" Width="160"/>
-                                <DataGridTextColumn Header="Index" Width="60"/>
-                                <DataGridTextColumn Header="Slot" Width="40"/>
-                                <DataGridTextColumn Header="Date" Width="*"/>
-                                <DataGridTextColumn Header="Time" Width="0.25*"/>
-                                <DataGridTextColumn Header="Record" Width="*"/>
+                                <DataGridTextColumn Header="UID"    Binding='{Binding UID}'    Width="160"/>
+                                <DataGridTextColumn Header="Index"  Binding='{Binding Index}'  Width="60"/>
+                                <DataGridTextColumn Header="Slot"   Binding='{Binding Slot}'   Width="40"/>
+                                <DataGridTextColumn Header="Date"   Binding='{Binding Date}'   Width="*"/>
+                                <DataGridTextColumn Header="Time"   Binding='{Binding Time}'   Width="0.25*"/>
+                                <DataGridTextColumn Header="Record" Binding='{Binding Record}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -647,11 +647,11 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="*"/>
-                                <DataGridTextColumn Header="Last" Width="*"/>
-                                <DataGridTextColumn Header="First" Width="*"/>
-                                <DataGridTextColumn Header="MI" Width="0.25*"/>
-                                <DataGridTextColumn Header="DOB" Width="*"/>
+                                <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
+                                <DataGridTextColumn Header="Last"  Binding='{Binding Last}'  Width="*"/>
+                                <DataGridTextColumn Header="First" Binding='{Binding First}' Width="*"/>
+                                <DataGridTextColumn Header="MI"    Binding='{Binding MI}'    Width="0.25*"/>
+                                <DataGridTextColumn Header="DOB"   Binding='{Binding DOB}'   Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1114,9 +1114,9 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="*"/>
-                                <DataGridTextColumn Header="Description" Width="*"/>
-                                <DataGridTextColumn Header="Cost" Width="0.5*"/>
+                                <DataGridTextColumn Header="Name" Binding='{Binding Name}' Width="*"/>
+                                <DataGridTextColumn Header="Description" Binding='{Binding Description}' Width="*"/>
+                                <DataGridTextColumn Header="Cost" Binding='{Binding Cost}' Width="0.5*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1200,11 +1200,11 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Vendor" Width="*"/>
-                                <DataGridTextColumn Header="Model" Width="*"/>
-                                <DataGridTextColumn Header="Specification" Width="*"/>
-                                <DataGridTextColumn Header="Serial" Width="*"/>
-                                <DataGridTextColumn Header="Title"  Width="*"/>
+                                <DataGridTextColumn Header="Vendor"        Binding='{Binding Vendor}'        Width="*"/>
+                                <DataGridTextColumn Header="Model"         Binding='{Binding Model}'         Width="*"/>
+                                <DataGridTextColumn Header="Specification" Binding='{Binding Specification}' Width="*"/>
+                                <DataGridTextColumn Header="Serial"        Binding='{Binding Serial}'        Width="*"/>
+                                <DataGridTextColumn Header="Title"         Binding='{Binding Title}'         Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1432,11 +1432,12 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Vendor" Width="*"/>
-                                <DataGridTextColumn Header="Model" Width="*"/>
-                                <DataGridTextColumn Header="Specification" Width="*"/>
-                                <DataGridTextColumn Header="Serial" Width="*"/>
-                                <DataGridTextColumn Header="Owner"  Width="*"/>
+                                <DataGridTextColumn Header="Client"   Binding='{Binding Client}'   Width="*"/>
+                                <DataGridTextColumn Header="Device"   Binding='{Binding Device}'   Width="*"/>
+                                <DataGridTextColumn Header="Status"   Binding='{Binding Status}'   Width="*"/>
+                                <DataGridTextColumn Header="Purchase" Binding='{Binding Purchase}' Width="*"/>
+                                <DataGridTextColumn Header="Service"  Binding='{Binding Service}'  Width="*"/>
+                                <DataGridTextColumn Header="Invoice"  Binding='{Binding Invoice}'  Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1568,11 +1569,11 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetInventorySearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Vendor" Width="*"/>
-                                <DataGridTextColumn Header="Serial" Width="*"/>
-                                <DataGridTextColumn Header="Model" Width="*"/>
-                                <DataGridTextColumn Header="Title"  Width="2*"/>
-                                <DataGridTemplateColumn Header="Device" Width="60">
+                                <DataGridTextColumn Header="Vendor"     Binding='{Binding Vendor}'   Width="*"/>
+                                <DataGridTextColumn Header="Serial"     Binding='{Binding Serial}'   Width="*"/>
+                                <DataGridTextColumn Header="Model"      Binding='{Binding Model}'    Width="*"/>
+                                <DataGridTextColumn Header="Title"      Binding='{Binding Title}'    Width="2*"/>
+                                <DataGridTemplateColumn Header="Device" Binding='{Binding IsDevice}' Width="60">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox SelectedIndex="2">
@@ -1583,7 +1584,7 @@ Function cim-db
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Cost" Width="*"/>
+                                <DataGridTextColumn Header="Cost"  Binding='{Binding Cost}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1729,12 +1730,12 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Distributor" Width="*"/>
-                                <DataGridTextColumn Header="DisplayName" Width="*"/>
-                                <DataGridTextColumn Header="Vendor" Width="*"/>
-                                <DataGridTextColumn Header="Serial"  Width="2*"/>
-                                <DataGridTextColumn Header="Model" Width="*"/>
-                                <DataGridTemplateColumn Header="Device" Width="60">
+                                <DataGridTextColumn Header="Distributor"  Binding='{Binding Distributor}' Width="*"/>
+                                <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="*"/>
+                                <DataGridTextColumn Header="Vendor"       Binding='{Binding Vendor}'      Width="*"/>
+                                <DataGridTextColumn Header="Serial"       Binding='{Binding Serial}'      Width="2*"/>
+                                <DataGridTextColumn Header="Model"        Binding='{Binding Model}'       Width="*"/>
+                                <DataGridTemplateColumn Header="Device"   Binding='{Binding IsDevice}' Width="60">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox SelectedIndex="2">
@@ -1745,7 +1746,7 @@ Function cim-db
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Cost" Width="*"/>
+                                <DataGridTextColumn Header="Cost"  Binding='{Binding Cost}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -1927,10 +1928,10 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Recipient" Width="*"/>
-                                <DataGridTextColumn Header="DisplayName" Width="1.5*"/>
-                                <DataGridTextColumn Header="Account" Width="*"/>
-                                <DataGridTextColumn Header="Cost"  Width="0.5*"/>
+                                <DataGridTextColumn Header="Recipient"    Binding='{Binding Recipient}'   Width="*"/>
+                                <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="1.5*"/>
+                                <DataGridTextColumn Header="Account"      Binding='{Binding Account}'     Width="*"/>
+                                <DataGridTextColumn Header="Cost"         Binding='{Binding Cost}'        Width="0.5*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -2046,7 +2047,7 @@ Function cim-db
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountSearchBox">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Object" Width="*"/>
+                                <DataGridTextColumn Header="Object"  Binding='{Binding Object}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>

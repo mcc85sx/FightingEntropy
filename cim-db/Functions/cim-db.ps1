@@ -2107,10 +2107,11 @@ Function cim-db
             Return ( $ID | Select-Object -Unique )
         }
 
-        _Xaml([Object]$GFX)
+        _Xaml()
         {           
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
 
+            $GFX                     = [_GFX]::New()
             $This.Xaml               = $This.Xaml -f $GFX.Icon, $GFX.Logo
             $This.Names              = $This.FindNames()
             $This.XML                = [XML]$This.Xaml
@@ -2138,8 +2139,7 @@ Function cim-db
 
         cimdb()
         {
-            $GFX         = [_GFX]::New()
-            $This.Window = [_Xaml]::New($GFX)
+            $This.Window = [_Xaml]::New()
             $This.IO     = $This.Window.IO
             $This.DB     = [_DB]::New()
         }

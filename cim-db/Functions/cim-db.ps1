@@ -584,6 +584,15 @@ Function cim-db
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="AlternationCount" Value="2"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsTabStop" Value="True" />
+            <Setter Property="IsTextSearchEnabled" Value="True"/>
+        </Style>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="FontSize"   Value="12"/>
             <Setter Property="FontWeight" Value="Normal"/>
@@ -2159,6 +2168,5 @@ Function cim-db
     </TabControl>
 </Window>
 "@
-
     [Cimdb]::New($Xaml)
 }

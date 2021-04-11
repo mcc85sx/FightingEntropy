@@ -1,5 +1,7 @@
 Function cim-db
 {
+    Add-Type -AssemblyName PresentationFramework
+
     Class _UID
     {
         [Object] $UID

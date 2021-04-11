@@ -1,5 +1,5 @@
 Function cim-db
-{   
+{
     Class _UID
     {
         [Object] $UID
@@ -447,12 +447,23 @@ Function cim-db
             $This.Icon       = "$Root\icon.ico"
             $This.Background = "$Root\background.jpg"
 
-            Invoke-WebRequest -URI "$($This.Base)/sdplogo.png?raw=true"    -OutFile $This.Logo       -Verbose
-            Invoke-WebRequest -URI "$($This.Base)/icon.ico?raw=true"       -OutFile $This.Icon       -Verbose
-            Invoke-WebRequest -URI "$($This.Base)/background.jpg?raw=true" -OutFile $This.Background -Verbose
+            If (!(Test-Path $This.Logo))
+            {
+                Invoke-WebRequest -URI "$($This.Base)/sdplogo.png?raw=true"    -OutFile $This.Logo       -Verbose
+            }
+
+            If (!(Test-Path $This.Icon))
+            {
+                Invoke-WebRequest -URI "$($This.Base)/icon.ico?raw=true"       -OutFile $This.Icon       -Verbose
+            }
+
+            If (!(Test-Path $This.Background))
+            {
+                Invoke-WebRequest -URI "$($This.Base)/background.jpg?raw=true" -OutFile $This.Background -Verbose
+            }
         }
     }
- 
+
     Class _Xaml
     {
         Hidden [Object]        $Xaml
@@ -468,12 +479,45 @@ Function cim-db
             Return ( $ID | Select-Object -Unique )
         }
 
-        _Xaml()
+        _Xaml([String]$Xaml)
         {           
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
 
-            $GFX                     = [_GFX]::New()
-            $This.Xaml               = @"
+            $This.Xaml               = $Xaml
+            $This.Names              = $This.FindNames()
+            $This.XML                = [XML]$This.Xaml
+            $This.Node               = [System.Xml.XmlNodeReader]::New($This.XML)
+            $This.IO                 = [System.Windows.Markup.XamlReader]::Load($This.Node)
+
+            $This.Names              | % { 
+
+                $This.IO             | Add-Member -MemberType NoteProperty -Name $_ -Value $This.IO.FindName($_) -Force
+
+            }
+        }
+
+        Invoke()
+        {
+            $This.IO.Dispatcher.InvokeAsync{$This.IO.ShowDialog()}.Wait()
+        }
+    }
+
+    Class cimdb
+    {
+        [Object] $Window
+        [Object]     $IO
+        [Object]     $DB
+
+        cimdb([String]$Xaml)
+        {
+            $This.Window = [_Xaml]::New($Xaml)
+            $This.IO     = $This.Window.IO
+            $This.DB     = [_DB]::New()
+        }
+    }
+
+    $GFX  = [_Gfx]::New()
+    $Xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             Title="Company Information Management Database [FightingEntropy]://(cim-db)" 
@@ -1254,7 +1298,7 @@ Function cim-db
                                         <ComboBoxItem Content="Server"/>
                                         <ComboBoxItem Content="Network"/>
                                         <ComboBoxItem Content="Other"/>
-                                        <ComboBoxItem Content="&lt;Select&gt;"/>
+                                        <ComboBoxItem Content="-"/>
                                     </ComboBox>
                                 </GroupBox>
                                 <GroupBox Grid.Column="1" Header="[Vendor]">
@@ -1320,7 +1364,7 @@ Function cim-db
                                         <ComboBoxItem Content="Server"/>
                                         <ComboBoxItem Content="Network"/>
                                         <ComboBoxItem Content="Other"/>
-                                        <ComboBoxItem Content="&lt;Select&gt;"/>
+                                        <ComboBoxItem Content="-"/>
                                     </ComboBox>
                                 </GroupBox>
                                 <GroupBox Grid.Column="1" Header="[Vendor]">
@@ -1386,7 +1430,7 @@ Function cim-db
                                         <ComboBoxItem Content="Server"/>
                                         <ComboBoxItem Content="Network"/>
                                         <ComboBoxItem Content="Other"/>
-                                        <ComboBoxItem Content="&lt;Select&gt;"/>
+                                        <ComboBoxItem Content="-"/>
                                     </ComboBox>
                                 </GroupBox>
                                 <GroupBox Grid.Column="1" Header="[Vendor]">
@@ -2113,37 +2157,6 @@ Function cim-db
         </TabControl>
     </Window>
 "@
-            $This.Names              = $This.FindNames()
-            $This.XML                = [XML]$This.Xaml
-            $This.Node               = [System.Xml.XmlNodeReader]::New($This.XML)
-            $This.IO                 = [System.Windows.Markup.XamlReader]::Load($This.Node)
 
-            $This.Names              | % { 
-
-                $This.IO             | Add-Member -MemberType NoteProperty -Name $_ -Value $This.IO.FindName($_) -Force
-
-            }
-        }
-
-        Invoke()
-        {
-            $This.IO.Dispatcher.InvokeAsync{$This.IO.ShowDialog()}.Wait()
-        }
-    }
-
-    Class cimdb
-    {
-        [Object] $Window
-        [Object]     $IO
-        [Object]     $DB
-
-        cimdb()
-        {
-            $This.Window = [_Xaml]::New()
-            $This.IO     = $This.Window.IO
-            $This.DB     = [_DB]::New()
-        }
-    }
-
-    [Cimdb]::New()
+    [Cimdb]::New($Xaml)
 }

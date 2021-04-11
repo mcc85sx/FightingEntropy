@@ -440,7 +440,26 @@ Function cim-db
             $Item.Record.Index   = $Item.Index
             $Item.Record.Rank    = $This.GetRank($Slot)
 
+            Switch($Slot)
+            {
+                0 { $This.Client     += $Item }
+                1 { $This.Service    += $Item }
+                2 { $This.Device     += $Item }
+                3 { $This.Issue      += $Item }
+                4 { $This.Inventory  += $Item }
+                5 { $This.Purchase   += $Item }
+                6 { $This.Expense    += $Item }
+                7 { $This.Account    += $Item }
+            }
+
+            $This.UID           += $Item
+
             Return $Item
+        }
+
+        [Object] GetUID([Object]$UID)
+        {
+            Return $This.UID | ? UID -match $UID
         }
     }
 
@@ -648,6 +667,21 @@ Function cim-db
             $This.DB.Expense                         = $This.DB.UID | ? Type -eq Expense
             $This.DB.Account                         = $This.DB.UID | ? Type -eq Account
             $This.DB.Invoice                         = $This.DB.UID | ? Type -eq Invoice
+        }
+
+        RefreshAll()
+        {
+            $This.Refresh()
+
+            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
+            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
+            $This.IO._GetDeviceResult.ItemsSource    = $This.DB.Device
+            $This.IO._GetIssueResult.ItemsSource     = $This.DB.Issue
+            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
+            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
+            $This.IO._ExpenseResult.ItemsSource      = $This.DB.Expense
+            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
+            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
         }
     }
 
@@ -858,9 +892,9 @@ Function cim-db
                             </ComboBox>
                             <TextBox Grid.Column="1" >
                             </TextBox>
-                            <TextBox Grid.Column="1" Name="_GetClientResult"/>
+                            <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetClientResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
                                 <DataGridTextColumn Header="Last"  Binding='{Binding Last}'  Width="*"/>
@@ -1356,7 +1390,7 @@ Function cim-db
                             </TextBox>
                             <TextBox Grid.Column="1" Name="_GetServiceSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding='{Binding Name}' Width="*"/>
                                 <DataGridTextColumn Header="Description" Binding='{Binding Description}' Width="*"/>
@@ -1471,7 +1505,7 @@ Function cim-db
                             </ComboBox>
                             <TextBox Grid.Column="1" Name="_GetDeviceSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Vendor"        Binding='{Binding Vendor}'        Width="*"/>
                                 <DataGridTextColumn Header="Model"         Binding='{Binding Model}'         Width="*"/>
@@ -1731,7 +1765,7 @@ Function cim-db
                             <TextBox Grid.Column="1"/>
                             <TextBox Grid.Column="1" Name="_GetIssueSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Client"   Binding='{Binding Client}'   Width="*"/>
                                 <DataGridTextColumn Header="Device"   Binding='{Binding Device}'   Width="*"/>
@@ -1897,7 +1931,7 @@ Function cim-db
                             <TextBox Grid.Column="1"/>
                             <TextBox Grid.Column="1" Name="_GetInventorySearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetInventorySearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetInventoryResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Vendor"     Binding='{Binding Vendor}'   Width="*"/>
                                 <DataGridTextColumn Header="Serial"     Binding='{Binding Serial}'   Width="*"/>
@@ -2087,7 +2121,7 @@ Function cim-db
                             <TextBox Grid.Column="1"/>
                             <TextBox Grid.Column="1" Name="_GetPurchaseSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Distributor"  Binding='{Binding Distributor}' Width="*"/>
                                 <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="*"/>
@@ -2314,7 +2348,7 @@ Function cim-db
                             <TextBox Grid.Column="1"/>
                             <TextBox Grid.Column="1" Name="_GetExpenseSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Recipient"    Binding='{Binding Recipient}'   Width="*"/>
                                 <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="1.5*"/>
@@ -2462,7 +2496,7 @@ Function cim-db
                             <TextBox Grid.Column="1"/>
                             <TextBox Grid.Column="1" Name="_GetAccountSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Object"  Binding='{Binding Object}' Width="*"/>
                             </DataGrid.Columns>
@@ -2551,9 +2585,9 @@ Function cim-db
                             </ComboBox>
                             <TextBox Grid.Column="1" >
                             </TextBox>
-                            <TextBox Grid.Column="1" Name="_GetInvoiceResult"/>
+                            <TextBox Grid.Column="1" Name="_GetInvoiceSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
                                 <DataGridTextColumn Header="Phone"  Binding='{Binding Last}'  Width="*"/>
@@ -2661,15 +2695,15 @@ Function cim-db
     $Cim.IO._GetUIDRefresh.Add_Click{$Cim.RefreshUID()}
     $Cim.IO._ViewUIDRecord.Add_Click{$Cim.OpenUID()}
 
-    $Cim.IO._GetClientRefresh    | % Add_Click{$Cim.RefreshClient()}
-    $Cim.IO._GetServiceRefresh   | % Add_Click{$Cim.RefreshService()}
-    $Cim.IO._GetDeviceRefresh    | % Add_Click{$Cim.RefreshDevice()}
-    $Cim.IO._GetIssueRefresh     | % Add_Click{$Cim.RefreshIssue()}
-    $Cim.IO._GetInventoryRefresh | % Add_Click{$Cim.RefreshInventory()}
-    $Cim.IO._GetPurchaseRefresh  | % Add_Click{$Cim.RefreshPurchase()}
-    $Cim.IO._GetExpenseRefresh   | % Add_Click{$Cim.RefreshExpense()}
-    $Cim.IO._GetAccountRefresh   | % Add_Click{$Cim.RefreshAccount()}
-    $Cim.IO._GetInvoiceRefresh   | % Add_Click{$Cim.RefreshInvoice()}
+    $Cim.IO._GetClientRefresh.Add_Click{$Cim.RefreshClient()}
+    $Cim.IO._GetServiceRefresh.Add_Click{$Cim.RefreshService()}
+    $Cim.IO._GetDeviceRefresh.Add_Click{$Cim.RefreshDevice()}
+    $Cim.IO._GetIssueRefresh.Add_Click{$Cim.RefreshIssue()}
+    $Cim.IO._GetInventoryRefresh.Add_Click{$Cim.RefreshInventory()}
+    $Cim.IO._GetPurchaseRefresh.Add_Click{$Cim.RefreshPurchase()}
+    $Cim.IO._GetExpenseRefresh.Add_Click{$Cim.RefreshExpense()}
+    $Cim.IO._GetAccountRefresh.Add_Click{$Cim.RefreshAccount()}
+    $Cim.IO._GetInvoiceRefresh.Add_Click{$Cim.RefreshInvoice()}
 
     $Cim
 }

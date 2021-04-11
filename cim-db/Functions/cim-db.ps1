@@ -463,7 +463,7 @@ Function cim-db
         Width="800"
         Topmost="True" 
         ResizeMode="NoResize" 
-        Icon="{`$GFX.Icon}" 
+        Icon="{0}" 
         HorizontalAlignment="Center" 
         WindowStartupLocation="CenterScreen"
         FontFamily="Consolas">
@@ -536,7 +536,7 @@ Function cim-db
         </TabControl.Resources>
         <TabItem>
             <TabItem.Header>
-                <Image Width="80" Source="{`$GFX.Logo}"/>
+                <Image Width="80" Source="{1}"/>
             </TabItem.Header>
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
                 <TabItem Header="Get">
@@ -2110,9 +2110,7 @@ Function cim-db
         {           
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
 
-            $This.Xaml -Replace '{$GFX.Icon}',"{$($GFX.Icon)}"
-            $This.Xaml -Replace '{$GFX.Logo}',"{$($GFX.Logo)}"
-
+            $This.Xaml               = $This.Xaml -f $GFX.Icon, $GFX.Logo
             $This.Names              = $This.FindNames()
             $This.XML                = [XML]$This.Xaml
             $This.Node               = [System.Xml.XmlNodeReader]::New($This.XML)

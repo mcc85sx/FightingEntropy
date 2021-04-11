@@ -633,16 +633,17 @@ Function cim-db
                             </TextBox>
                             <TextBox Grid.Column="1" Name="_GetUIDSearchFilter"/>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchBox">
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDResult">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="UID"    Binding='{Binding UID}'    Width="160"/>
                                 <DataGridTextColumn Header="Index"  Binding='{Binding Index}'  Width="60"/>
                                 <DataGridTextColumn Header="Slot"   Binding='{Binding Slot}'   Width="40"/>
                                 <DataGridTextColumn Header="Date"   Binding='{Binding Date}'   Width="*"/>
-                                <DataGridTextColumn Header="Time"   Binding='{Binding Time}'   Width="0.25*"/>
+                                <DataGridTextColumn Header="Time"   Binding='{Binding Time}'   Width="0.5*"/>
                                 <DataGridTextColumn Header="Record" Binding='{Binding Record}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Button Grid.Row="2" Name="_GetUIDRefresh" Content="Refresh"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="View">
@@ -716,7 +717,7 @@ Function cim-db
                             </ComboBox>
                             <TextBox Grid.Column="1" >
                             </TextBox>
-                            <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
+                            <TextBox Grid.Column="1" Name="_GetClientResult"/>
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchBox">
                             <DataGrid.Columns>
@@ -727,6 +728,7 @@ Function cim-db
                                 <DataGridTextColumn Header="DOB"   Binding='{Binding DOB}'   Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Button Grid.Row="2" Name="_GetClientRefresh" Content="Refresh"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="View">
@@ -2159,10 +2161,91 @@ Function cim-db
         </TabItem>
         <TabItem Header="Invoice">
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
-                <TabItem Header="Get"/>
-                <TabItem Header="View"/>
-                <TabItem Header="Edit"/>
-                <TabItem Header="New"/>
+                <TabItem Header="Get">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_GetInvoiceSearchType" SelectedIndex="0" BorderThickness="1">
+                                <ComboBoxItem Content="Name"/>
+                                <ComboBoxItem Content="Phone Number"/>
+                                <ComboBoxItem Content="Email Address"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" >
+                            </TextBox>
+                            <TextBox Grid.Column="1" Name="_GetInvoiceResult"/>
+                        </Grid>
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceSearchBox">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
+                                <DataGridTextColumn Header="Phone"  Binding='{Binding Last}'  Width="*"/>
+                                <DataGridTextColumn Header="Email" Binding='{Binding First}' Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="2" Name="_GetInvoiceRefresh" Content="Refresh"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="View">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Name]">
+                            <TextBox Name="_ViewInvoiceName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Phone Number(s)]">
+                            <TextBox Name="_ViewInvoicePhone"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[Email Addresses(s)]">
+                            <TextBox Name="_ViewInvoiceEmail"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Edit">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Name]">
+                            <TextBox Name="_EditInvoiceName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Phone Number(s)]">
+                            <TextBox Name="_EditInvoicePhone"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[Email Addresses(s)]">
+                            <TextBox Name="_EditInvoiceEmail"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="New">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Name]">
+                            <TextBox Name="_NewInvoiceName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Phone Number(s)]">
+                            <TextBox Name="_NewInvoicePhone"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[Email Addresses(s)]">
+                            <TextBox Name="_NewInvoiceEmail"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </TabItem>
     </TabControl>

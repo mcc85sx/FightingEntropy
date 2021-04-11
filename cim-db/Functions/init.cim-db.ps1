@@ -1253,26 +1253,384 @@ Function init.cim-db ([String]$Base)
         </TabItem>
         <TabItem Header="Purchase">
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
-                <TabItem Header="Get"/>
-                <TabItem Header="View"/>
-                <TabItem Header="Edit"/>
-                <TabItem Header="New"/>
+                <TabItem Header="Get">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_GetPurchaseSearchType" SelectedIndex="0" BorderThickness="1">
+                                <ComboBoxItem Content="Distributor"/>
+                                <ComboBoxItem Content="DisplayName"/>
+                                <ComboBoxItem Content="Vendor"/>
+                                <ComboBoxItem Content="Serial"/>
+                                <ComboBoxItem Content="Model"/>
+                                <ComboBoxItem Content="Title"/>
+                                <ComboBoxItem Content="Invoice"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1" Name="_GetPurchaseSearchFilter"/>
+                        </Grid>
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseSearchBox">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Distributor" Width="*"/>
+                                <DataGridTextColumn Header="DisplayName" Width="*"/>
+                                <DataGridTextColumn Header="Vendor" Width="*"/>
+                                <DataGridTextColumn Header="Serial"  Width="2*"/>
+                                <DataGridTextColumn Header="Model" Width="*"/>
+                                <DataGridTemplateColumn Header="Device" Width="60">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox SelectedIndex="2">
+                                                <ComboBoxItem Content="N"/>
+                                                <ComboBoxItem Content="Y"/>
+                                                <ComboBoxItem Content="-"/>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Cost" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="View">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Distributor]">
+                            <TextBox Name="_ViewPurchaseDistributor"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_ViewPurchaseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Vendor]">
+                                <TextBox Name="_ViewPurchaseVendor"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Model]">
+                                <TextBox Name="_ViewPurchaseModel"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="2" Header="[Specification]">
+                                <TextBox Name="_ViewPurchaseSpecification"/>
+                            </GroupBox>
+                        </Grid>
+                        <GroupBox Grid.Row="3" Header="[Serial]">
+                            <TextBox Name="_ViewPurchaseSerial"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" Header="[Device]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" Content="Is this a Device?" HorizontalAlignment="Center" VerticalAlignment="Center" Name="_ViewPurchaseIsDevice"/>
+                                <ComboBox Grid.Column="1" Name="_ViewPurchaseDevice"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="5" Header="[Cost]">
+                            <TextBox Name="_ViewPurchaseCost"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Edit">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Distributor]">
+                            <TextBox Name="_EditPurchaseDistributor"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_EditPurchaseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Vendor]">
+                                <TextBox Name="_EditPurchaseVendor"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Model]">
+                                <TextBox Name="_EditPurchaseModel"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="2" Header="[Specification]">
+                                <TextBox Name="_EditPurchaseSpecification"/>
+                            </GroupBox>
+                        </Grid>
+                        <GroupBox Grid.Row="3" Header="[Serial]">
+                            <TextBox Name="_EditPurchaseSerial"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" Header="[Device]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" Content="Is this a Device?" HorizontalAlignment="Center" VerticalAlignment="Center" Name="_EditPurchaseIsDevice"/>
+                                <ComboBox Grid.Column="1" Name="_EditPurchaseDevice"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="5" Header="[Cost]">
+                            <TextBox Name="_EditPurchaseCost"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="New">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Distributor]">
+                            <TextBox Name="_NewPurchaseDistributor"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_NewPurchaseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Vendor]">
+                                <TextBox Name="_NewPurchaseVendor"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Model]">
+                                <TextBox Name="_NewPurchaseModel"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="2" Header="[Specification]">
+                                <TextBox Name="_NewPurchaseSpecification"/>
+                            </GroupBox>
+                        </Grid>
+                        <GroupBox Grid.Row="3" Header="[Serial]">
+                            <TextBox Name="_NewPurchaseSerial"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="4" Header="[Device]">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" Content="Is this a Device?" HorizontalAlignment="Center" VerticalAlignment="Center" Name="_NewPurchaseIsDevice"/>
+                                <ComboBox Grid.Column="1" Name="_NewPurchaseDevice"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="5" Header="[Cost]">
+                            <TextBox Name="_NewPurchaseCost"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </TabItem>
         <TabItem Header="Expense">
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
-                <TabItem Header="Get"/>
-                <TabItem Header="View"/>
-                <TabItem Header="Edit"/>
-                <TabItem Header="New"/>
+                <TabItem Header="Get">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_GetExpenseSearchType" SelectedIndex="0" BorderThickness="1">
+                                <ComboBoxItem Content="Recipient"/>
+                                <ComboBoxItem Content="DisplayName"/>
+                                <ComboBoxItem Content="Account"/>
+                                <ComboBoxItem Content="Cost"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1" Name="_GetExpenseSearchFilter"/>
+                        </Grid>
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseSearchBox">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Recipient" Width="*"/>
+                                <DataGridTextColumn Header="DisplayName" Width="1.5*"/>
+                                <DataGridTextColumn Header="Account" Width="*"/>
+                                <DataGridTextColumn Header="Cost"  Width="0.5*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="View">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Recipient]">
+                            <TextBox Name="_ViewExpenseRecipient"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_ViewExpenseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Account]">
+                                <ComboBox Name="_ViewExpenseAccount"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Cost]">
+                                <TextBox Name="_ViewExpenseCost"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Edit">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Recipient]">
+                            <TextBox Name="_EditExpenseRecipient"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_EditExpenseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Account]">
+                                <ComboBox Name="_EditExpenseAccount"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Cost]">
+                                <TextBox Name="_EditExpenseCost"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="New">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0" Header="[Recipient]">
+                            <TextBox Name="_NewExpenseRecipient"/>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="[Display Name]">
+                            <TextBox Name="_NewExpenseDisplayName"/>
+                        </GroupBox>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="[Account]">
+                                <ComboBox Name="_NewExpenseAccount"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="[Cost]">
+                                <TextBox Name="_NewExpenseCost"/>
+                            </GroupBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </TabItem>
         <TabItem Header="Account">
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
-                <TabItem Header="Get"/>
-                <TabItem Header="View"/>
-                <TabItem Header="Edit"/>
-                <TabItem Header="New"/>
+                <TabItem Header="Get">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_GetAccountSearchType" SelectedIndex="0" BorderThickness="1">
+                                <ComboBoxItem Content="Object"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1" Name="_GetAccountSearchFilter"/>
+                        </Grid>
+                        <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountSearchBox">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Object" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="View">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Object]">
+                            <ComboBox Name="_ViewAccountObject"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Edit">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Object]">
+                            <ComboBox Name="_EditAccountObject"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="New">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Object]">
+                            <ComboBox Name="_NewAccountObject"/>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </TabItem>
         <TabItem Header="Invoice">

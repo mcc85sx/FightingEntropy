@@ -417,6 +417,48 @@ Function cim-db
         }
     }
 
+    Class _GFX
+    {
+        [String] $Base = "https://github.com/mcc85sx/FightingEntropy/blob/master/Graphics"
+        [String] $Path = "$Env:ProgramData\Secure Digits Plus LLC\Graphics"
+        [String] $Logo 
+        [String] $Icon
+        [String] $Background
+
+        _GFX()
+        {
+            $Root            = ""
+
+            ForEach ( $Item in $This.Path.Split("\") )
+            {
+                $Root       += $Item
+
+                If (!(Test-Path $Root))
+                {
+                    New-Item $Root -ItemType Directory -Verbose
+                }
+
+                $Root        = "$Root\"
+            }
+
+            $Root            = $Root.TrimEnd("\")
+
+            $This.Logo       = "$Root\sdplogo.png"
+            $This.Icon       = "$Root\icon.ico"
+            $This.Background = "$Root\background.jpg"
+
+            Invoke-WebRequest -URI "$($This.Base)/sdplogo.png?raw=true"    -OutFile $This.Logo       -Verbose
+            Invoke-WebRequest -URI "$($This.Base)/icon.ico?raw=true"       -OutFile $This.Icon       -Verbose
+            Invoke-WebRequest -URI "$($This.Base)/background.jpg?raw=true" -OutFile $This.Background -Verbose
+        }
+    }
+    <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    Title="[FightingEntropy]://AD Login" 
+    Width="420" 
+    Height="280" 
+    >
+ 
     Class _Xaml
     {
         Hidden [Object]        $Xaml = @"
@@ -425,6 +467,11 @@ Function cim-db
         Title="Company Information Management Database [FightingEntropy]://(cim-db)" 
         Height="600" 
         Width="800"
+        Topmost="True" 
+        ResizeMode="NoResize" 
+        Icon="{`$GFX.Icon}" 
+        HorizontalAlignment="Center" 
+        WindowStartupLocation="CenterScreen"
         FontFamily="Consolas">
     <Window.Resources>
         <Style TargetType="TabItem">
@@ -495,7 +542,7 @@ Function cim-db
         </TabControl.Resources>
         <TabItem>
             <TabItem.Header>
-                <Image Width="80" Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\2021.4.0\Graphics\sdplogo.png"/>
+                <Image Width="80" Source="{`$GFX.Logo}"/>
             </TabItem.Header>
             <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
                 <TabItem Header="Get">
@@ -2065,9 +2112,12 @@ Function cim-db
             Return ( $ID | Select-Object -Unique )
         }
 
-        _Xaml()
+        _Xaml([Object]$GFX)
         {           
             [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+
+            $This.Xaml -Replace '{$GFX.Icon}',"{$($GFX.Icon)}"
+            $This.Xaml -Replace '{$GFX.Logo}',"{$($GFX.Logo)}"
 
             $This.Names              = $This.FindNames()
             $This.XML                = [XML]$This.Xaml
@@ -2095,6 +2145,7 @@ Function cim-db
 
         cimdb()
         {
+            $GFX         = [_GFX]::New()
             $This.Window = [_Xaml]::New()
             $This.IO     = $This.Window.IO
             $This.DB     = [_DB]::New()

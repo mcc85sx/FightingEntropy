@@ -2146,7 +2146,7 @@ Function cim-db
         cimdb()
         {
             $GFX         = [_GFX]::New()
-            $This.Window = [_Xaml]::New()
+            $This.Window = [_Xaml]::New($GFX)
             $This.IO     = $This.Window.IO
             $This.DB     = [_DB]::New()
         }

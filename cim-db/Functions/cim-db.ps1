@@ -2,6 +2,17 @@ Function cim-db
 {
     Add-Type -AssemblyName PresentationFramework
 
+    Class _DGList
+    {
+        [String] $Name
+        [Object] $Value
+        _DGList([String]$Name,[Object]$Value)
+        {
+            $This.Name  = $Name
+            $This.Value = $Value
+        }
+    }
+
     Class _UID
     {
         [Object] $UID
@@ -403,7 +414,7 @@ Function cim-db
             )[$Slot]) - 1
         }
 
-        AddUID([Object]$Slot)
+        [Object] NewUID([Object]$Slot)
         {
             If ($Slot -notin 0..8)
             {
@@ -429,20 +440,7 @@ Function cim-db
             $Item.Record.Index   = $Item.Index
             $Item.Record.Rank    = $This.GetRank($Slot)
 
-            Switch($Slot)
-            {
-                0 { $This.Client     += $Item }
-                1 { $This.Service    += $Item }
-                2 { $This.Device     += $Item }
-                3 { $This.Issue      += $Item }
-                4 { $This.Inventory  += $Item }
-                5 { $This.Purchase   += $Item }
-                6 { $This.Expense    += $Item }
-                7 { $This.Account    += $Item }
-                8 { $This.Invoice    += $Item }
-            }
-
-            $This.UID            += $Item
+            Return $Item
         }
     }
 
@@ -544,114 +542,103 @@ Function cim-db
             $This.DB     = [_DB]::New()
         }
 
+        [Object] NewUID([UInt32]$Slot)
+        {
+            Return @( $This.DB.NewUID($Slot) )
+        }
+
         RefreshUID()
         {
+            $This.Refresh()
             $This.IO._GetUIDResult.ItemsSource       = $This.DB.UID
+        }
+
+        ViewUID([String]$UID)
+        {
+            $This.IO._ViewUIDUID.Text   = $Null
+            $This.IO._ViewUIDIndex.Text = $Null
+            $This.IO._ViewUIDSlot.Text  = $Null
+            $This.IO._ViewUIDType.Text  = $Null
+            $This.IO._ViewUIDDate.Text  = $Null
+            $This.IO._ViewUIDTime.Text  = $Null
+            $This.IO._ViewUIDRecordBox.ItemsSource = $Null
+
+            $Item = $This.DB.UID | ? UID -match $This.IO._GetUIDResult.SelectedItem.UID
+            
+            If (!$Item)
+            {
+                Throw "Invalid UID"
+            }
+
+            $This.IO._ViewUIDUID.Text   = $Item.UID
+            $This.IO._ViewUIDIndex.Text = $Item.Index
+            $This.IO._ViewUIDSlot.Text  = $Item.Slot
+            $This.IO._ViewUIDType.Text  = $Item.Type
+            $This.IO._ViewUIDDate.Text  = $Item.Date
+            $This.IO._ViewUIDTime.Text  = $Item.Time
+
+            $This.IO._ViewUIDRecordBox.ItemsSource = $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % {
+
+                 [_DGList]::New($_,$Item.Record.$_)
+            }
         }
 
         RefreshClient()
         {
-            $This.RefreshUID()
-            $This.DB.Client                          = $This.DB.UID | ? Type -eq Client
-            $This.IO._GetClientResult                | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Client
-            }
+            $This.Refresh()
+            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
         }
 
         RefreshService()
         {
-            $This.RefreshUID()
-            $This.DB.Service                         = $This.DB.UID | ? Type -eq Service
-            $This.IO._GetServiceResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Service
-            }
+            $This.Refresh()
+            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
         }
 
         RefreshDevice()
         {
-            $This.RefreshUID()
-            $This.DB.Device                          = $This.DB.UID | ? Type -eq Device
-            $This.IO._GetDeviceResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Device
-            }
+            $This.Refresh()
+            $This.IO._GetDeviceResult                = $This.DB.Device
         }
 
         RefreshIssue()
         {
-            $This.RefreshUID()
-            $This.DB.Issue                           = $This.DB.UID | ? Type -eq Issue
-            $This.IO._GetIssueResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Issue
-            }
+            $This.Refresh()
+            $This.IO._GetIssueResultItemsSource      = $This.DB.Issue
         }
 
         RefreshInventory()
         {
-            $This.RefreshUID()
-            $This.DB.Inventory                       = $This.DB.UID | ? Type -eq Inventory
-            $This.IO._GetInventoryResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Inventory
-            }
+            $This.Refresh()
+            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
         }
 
         RefreshPurchase()
         {
-            $This.RefreshUID()
-            $This.DB.Purchase                        = $This.DB.UID | ? Type -eq Purchase
-            $This.IO._GetPurchaseResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Purchase
-            }
+            $This.Refresh()
+            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
         }
 
         RefreshExpense()
         {
-            $This.RefreshUID()
-            $This.DB.Expense                         = $This.DB.UID | ? Type -eq Expense
-            $This.IO._GetExpenseResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Expense
-            }
+            $This.Refresh()
+            $This.IO._GetExpenseResult.ItemsSource   = $This.DB.Expense
         }
 
         RefreshAccount()
         {
-            $This.RefreshUID()
-            $This.DB.Account                         = $This.DB.UID | ? Type -eq Account
-            $This.IO._GetAccountResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Account
-            }
+            $This.Refresh()
+            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
         }
 
         RefreshInvoice()
         {
-            $This.RefreshUID()
-            $This.DB.Invoice                         = $This.DB.UID | ? Type -eq Invoice
-            $This.IO._GetInvoiceResult               | % { 
-            
-                $_.ItemsSource                       = $Null
-                $_.ItemsSource                       = $This.DB.Invoice
-            }
+            $This.Refresh()
+            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
         }
 
-        RefreshAll()
+        Refresh()
         {
-            $This.RefreshUID()
-
             $This.DB.Client                          = $This.DB.UID | ? Type -eq Client
             $This.DB.Service                         = $This.DB.UID | ? Type -eq Service
             $This.DB.Device                          = $This.DB.UID | ? Type -eq Device
@@ -661,238 +648,7 @@ Function cim-db
             $This.DB.Expense                         = $This.DB.UID | ? Type -eq Expense
             $This.DB.Account                         = $This.DB.UID | ? Type -eq Account
             $This.DB.Invoice                         = $This.DB.UID | ? Type -eq Invoice
-
-            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
-            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
-            $This.IO._GetDeviceResult.ItemsSource    = $This.DB.Device
-            $This.IO._GetIssueResult.ItemsSource     = $This.DB.Issue
-            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
-            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
-            $This.IO._GetExpenseResult.ItemsSource   = $This.DB.Expense
-            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
-            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
         }
-
-
-
-        <#
-        ViewUID()
-        {
-            $This.IO._ViewUIDUID
-            $This.IO._ViewUIDIndex
-            $This.IO._ViewUIDSlot
-            $This.IO._ViewUIDType
-            $This.IO._ViewUIDDate
-            $This.IO._ViewUIDTime
-            $This.IO._ViewUIDRecord
-
-        _GetClientSearchType
-        _GetClientSearchFilter
-        _GetClientSearchBox
-_ViewClientLast
-_ViewClientFirst
-_ViewClientMI
-_ViewClientAddress
-_ViewClientCity
-_ViewClientRegion
-_ViewClientCountry
-_ViewClientPostal
-_ViewClientMonth
-_ViewClientDay
-_ViewClientYear
-_ViewClientGender
-_ViewClientAddPhone
-_ViewClientRemovePhone
-_ViewClientAddEmail
-_ViewClientRemoveEmail
-_ViewClientAddDevice
-_ViewClientRemoveDevice
-_ViewClientAddInvoice
-_ViewClientRemoveInvoice
-_EditClientFirst
-_EditClientMI
-_EditClientLast
-_EditClientAddress
-_EditClientCity
-_EditClientRegion
-_EditClientCountry
-_EditClientPostal
-_EditClientMonth
-_EditClientDay
-_EditClientYear
-_EditClientGender
-_EditClientAddPhone
-_EditClientRemovePhone
-_EditClientAddEmail
-_EditClientRemoveEmail
-_EditClientAddDevice
-_EditClientRemoveDevice
-_EditClientAddInvoice
-_EditClientRemoveInvoice
-_NewClientFirst
-_NewClientMI
-_NewClientLast
-_NewClientAddress
-_NewClientCity
-_NewClientRegion
-_NewClientCountry
-_NewClientPostal
-_NewClientMonth
-_NewClientDay
-_NewClientYear
-_NewClientGender
-_NewClientAddPhone
-_NewClientRemovePhone
-_NewClientAddEmail
-_NewClientRemoveEmail
-_NewClientAddDevice
-_NewClientRemoveDevice
-_NewClientAddInvoice
-_NewClientRemoveInvoice
-_GetServiceSearchType
-_GetServiceSearchFilter
-_GetServiceSearchBox
-_ViewServiceName
-_ViewServiceDescription
-_ViewServiceCost
-_EditServiceName
-_EditServiceDescription
-_EditServiceCost
-_NewServiceName
-_NewServiceDescription
-_NewServiceCost
-_GetDeviceSearchType
-_GetDeviceSearchFilter
-_GetDeviceSearchBox
-_ViewDeviceChassis
-_ViewDeviceVendor
-_ViewDeviceModel
-_ViewDeviceSpecification
-_ViewDeviceSerial
-_ViewDeviceTitle
-_ViewDeviceClient
-_ViewDeviceIssue
-_ViewDevicePurchase
-_ViewDeviceInvoice
-_EditDeviceChassis
-_EditDeviceVendor
-_EditDeviceModel
-_EditDeviceSpecification
-_EditDeviceSerial
-_EditDeviceTitle
-_EditDeviceClient
-_EditDeviceIssue
-_EditDevicePurchase
-_EditDeviceInvoice
-_NewDeviceChassis
-_NewDeviceVendor
-_NewDeviceModel
-_NewDeviceSpecification
-_NewDeviceSerial
-_NewDeviceTitle
-_NewDeviceClient
-_NewDeviceIssue
-_NewDevicePurchase
-_NewDeviceInvoice
-_GetIssueSearchType
-_GetIssueSearchFilter
-_GetIssueSearchBox
-_ViewIssueClient
-_ViewIssueDevice
-_ViewIssueDescription
-_ViewIssueStatus
-_ViewIssuePurchase
-_ViewIssueService
-_ViewIssueInvoice
-_EditIssueClient
-_EditIssueDevice
-_EditIssueDescription
-_EditIssueStatus
-_EditIssuePurchase
-_EditIssueService
-_EditIssueInvoice
-_NewIssueClient
-_NewIssueDevice
-_NewIssueDescription
-_NewIssueStatus
-_NewIssuePurchase
-_NewIssueService
-_NewIssueInvoice
-_GetInventorySearchType
-_GetInventorySearchFilter
-_GetInventorySearchBox
-_ViewInventoryVendor
-_ViewInventorySerial
-_ViewInventoryModel
-_ViewInventoryTitle
-_ViewInventoryIsDevice
-_ViewInventoryDevice
-_ViewInventoryCost
-_EditInventoryVendor
-_EditInventorySerial
-_EditInventoryModel
-_EditInventoryTitle
-_EditInventoryIsDevice
-_EditInventoryDevice
-_EditInventoryCost
-_NewInventoryVendor
-_NewInventorySerial
-_NewInventoryModel
-_NewInventoryTitle
-_NewInventoryIsDevice
-_NewInventoryDevice
-_NewInventoryCost
-_GetPurchaseSearchType
-_GetPurchaseSearchFilter
-_GetPurchaseSearchBox
-_ViewPurchaseDistributor
-_ViewPurchaseDisplayName
-_ViewPurchaseVendor
-_ViewPurchaseModel
-_ViewPurchaseSpecification
-_ViewPurchaseSerial
-_ViewPurchaseIsDevice
-_ViewPurchaseDevice
-_ViewPurchaseCost
-_EditPurchaseDistributor
-_EditPurchaseDisplayName
-_EditPurchaseVendor
-_EditPurchaseModel
-_EditPurchaseSpecification
-_EditPurchaseSerial
-_EditPurchaseIsDevice
-_EditPurchaseDevice
-_EditPurchaseCost
-_NewPurchaseDistributor
-_NewPurchaseDisplayName
-_NewPurchaseVendor
-_NewPurchaseModel
-_NewPurchaseSpecification
-_NewPurchaseSerial
-_NewPurchaseIsDevice
-_NewPurchaseDevice
-_NewPurchaseCost
-_GetExpenseSearchType
-_GetExpenseSearchFilter
-_GetExpenseSearchBox
-_ViewExpenseRecipient
-_ViewExpenseDisplayName
-_ViewExpenseAccount
-_ViewExpenseCost
-_EditExpenseRecipient
-_EditExpenseDisplayName
-_EditExpenseAccount
-_EditExpenseCost
-_NewExpenseRecipient
-_NewExpenseDisplayName
-_NewExpenseAccount
-_NewExpenseCost
-_GetAccountSearchType
-_GetAccountSearchFilter
-_GetAccountSearchBox
-_ViewAccountObject
-_EditAccountObject
-_NewAccountObject#>
     }
 
     $GFX  = [_Gfx]::New()
@@ -976,7 +732,7 @@ _NewAccountObject#>
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
     </Window.Resources>
-    <TabControl TabStripPlacement="Left" HorizontalContentAlignment="Right">
+    <TabControl TabStripPlacement="Left" HorizontalContentAlignment="Right" Name="_MainTabControl">
         <TabControl.Resources>
             <Style TargetType="GroupBox">
                 <Setter Property="Foreground" Value="Black"/>
@@ -989,7 +745,7 @@ _NewAccountObject#>
             <TabItem.Header>
                 <Image Width="80" Source="C:\ProgramData\Secure Digits Plus LLC\Graphics\sdplogo.png"/>
             </TabItem.Header>
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" >
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -1082,7 +838,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Client">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_ClientTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -1579,7 +1335,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Service">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_ServiceTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -1695,7 +1451,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Device">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_DeviceTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -1955,7 +1711,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Issue">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_IssueTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2121,7 +1877,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Inventory">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_InventoryTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2306,7 +2062,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Purchase">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_PurchaseTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2536,7 +2292,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Expense">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_ExpenseTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2687,7 +2443,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Account">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_AccountTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2775,7 +2531,7 @@ _NewAccountObject#>
             </TabControl>
         </TabItem>
         <TabItem Header="Invoice">
-            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center">
+            <TabControl TabStripPlacement="Top" HorizontalContentAlignment="Center" Name="_InvoiceTabControl">
                 <TabItem Header="Get">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -2896,18 +2652,24 @@ _NewAccountObject#>
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
-    $Cim.IO._GetUIDSearchFilter.Add_TextChanged{$Cim.GetUID()}
-
-    $Cim.IO._GetUIDRefresh.Add_Click{       $Cim.RefreshUID()}
-    $Cim.IO._GetClientRefresh.Add_Click{    $Cim.RefreshClient()}
-    $Cim.IO._GetServiceRefresh.Add_Click{   $Cim.RefreshService()}
-    $Cim.IO._GetDeviceRefresh.Add_Click{    $Cim.RefreshDevice()}
-    $Cim.IO._GetIssueRefresh.Add_Click{     $Cim.RefreshIssue()}
-    $Cim.IO._GetInventoryRefresh.Add_Click{ $Cim.RefreshInventory()}
-    $Cim.IO._GetPurchaseRefresh.Add_Click{  $Cim.RefreshPurchase()}
-    $Cim.IO._GetExpenseRefresh.Add_Click{   $Cim.RefreshExpense()}
-    $Cim.IO._GetAccountRefresh.Add_Click{   $Cim.RefreshAccount()}
-    $Cim.IO._GetInvoiceRefresh.Add_Click{   $Cim.RefreshInvoice()}
+    $Cim.IO._GetUIDSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetUIDResult.ItemsSource = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchType.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
+        Start-Sleep -Milliseconds 25
+    })
     
+    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.RefreshUID()}
+    $Cim.IO._ViewUIDRecord.Add_Click{$Cim.OpenUID()}
+
+    $Cim.IO._GetClientRefresh    | % Add_Click{$Cim.RefreshClient()}
+    $Cim.IO._GetServiceRefresh   | % Add_Click{$Cim.RefreshService()}
+    $Cim.IO._GetDeviceRefresh    | % Add_Click{$Cim.RefreshDevice()}
+    $Cim.IO._GetIssueRefresh     | % Add_Click{$Cim.RefreshIssue()}
+    $Cim.IO._GetInventoryRefresh | % Add_Click{$Cim.RefreshInventory()}
+    $Cim.IO._GetPurchaseRefresh  | % Add_Click{$Cim.RefreshPurchase()}
+    $Cim.IO._GetExpenseRefresh   | % Add_Click{$Cim.RefreshExpense()}
+    $Cim.IO._GetAccountRefresh   | % Add_Click{$Cim.RefreshAccount()}
+    $Cim.IO._GetInvoiceRefresh   | % Add_Click{$Cim.RefreshInvoice()}
+
     $Cim
 }

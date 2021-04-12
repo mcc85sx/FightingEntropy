@@ -566,10 +566,9 @@ Function cim-db
             Return @( $This.DB.NewUID($Slot) )
         }
 
-        RefreshUID()
+        [Object] GetUID([String]$UID)
         {
-            $This.Refresh()
-            $This.IO._GetUIDResult.ItemsSource       = $This.DB.UID
+            Return @( $This.DB.UID | ? UID -match $UID )
         }
 
         ViewUID([String]$UID)
@@ -582,7 +581,7 @@ Function cim-db
             $This.IO._ViewUIDTime.Text  = $Null
             $This.IO._ViewUIDRecordBox.ItemsSource = $Null
 
-            $Item = $This.DB.UID | ? UID -match $This.IO._GetUIDResult.SelectedItem.UID
+            $Item = $This.GetUID($This.IO._GetUIDResult.SelectedItem.UID)
             
             If (!$Item)
             {
@@ -596,10 +595,17 @@ Function cim-db
             $This.IO._ViewUIDDate.Text  = $Item.Date
             $This.IO._ViewUIDTime.Text  = $Item.Time
 
-            $This.IO._ViewUIDRecordBox.ItemsSource = $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % {
+            $This.IO._ViewUIDRecordBox.ItemsSource = @(
+            $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % {
 
                  [_DGList]::New($_,$Item.Record.$_)
-            }
+            })
+        }
+
+        RefreshUID()
+        {
+            $This.Refresh()
+            $This.IO._GetUIDResult.ItemsSource       = $This.DB.UID
         }
 
         RefreshClient()
@@ -617,13 +623,13 @@ Function cim-db
         RefreshDevice()
         {
             $This.Refresh()
-            $This.IO._GetDeviceResult                = $This.DB.Device
+            $This.IO._GetDeviceResult.ItemsSource     = $This.DB.Device
         }
 
         RefreshIssue()
         {
             $This.Refresh()
-            $This.IO._GetIssueResultItemsSource      = $This.DB.Issue
+            $This.IO._GetIssueResult.ItemsSource      = $This.DB.Issue
         }
 
         RefreshInventory()
@@ -2692,8 +2698,8 @@ Function cim-db
         Start-Sleep -Milliseconds 25
     })
     
-    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.RefreshUID()}
-    $Cim.IO._ViewUIDRecord.Add_Click{$Cim.OpenUID()}
+    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.RefreshAll()}
+    $Cim.IO._ViewUIDRecord.Add_Click{$Cim.ViewUID($Cim.IO._GetUIDResult.SelectedItem.UID)}
 
     $Cim.IO._GetClientRefresh.Add_Click{$Cim.RefreshClient()}
     $Cim.IO._GetServiceRefresh.Add_Click{$Cim.RefreshService()}
@@ -2707,3 +2713,5 @@ Function cim-db
 
     $Cim
 }
+
+$Cim = cim-db

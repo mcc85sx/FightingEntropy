@@ -561,6 +561,30 @@ Function cim-db
             $This.DB     = [_DB]::New()
         }
 
+        Refresh()
+        {
+            $This.DB.Client                          = $This.DB.UID | ? Type -eq Client
+            $This.DB.Service                         = $This.DB.UID | ? Type -eq Service
+            $This.DB.Device                          = $This.DB.UID | ? Type -eq Device
+            $This.DB.Issue                           = $This.DB.UID | ? Type -eq Issue
+            $This.DB.Inventory                       = $This.DB.UID | ? Type -eq Inventory
+            $This.DB.Purchase                        = $This.DB.UID | ? Type -eq Purchase
+            $This.DB.Expense                         = $This.DB.UID | ? Type -eq Expense
+            $This.DB.Account                         = $This.DB.UID | ? Type -eq Account
+            $This.DB.Invoice                         = $This.DB.UID | ? Type -eq Invoice
+
+            $This.IO._GetUIDResult.ItemsSource       = $This.DB.UID
+            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
+            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
+            $This.IO._GetDeviceResult.ItemsSource    = $This.DB.Device
+            $This.IO._GetIssueResult.ItemsSource     = $This.DB.Issue
+            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
+            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
+            $This.IO._GetExpenseResult.ItemsSource   = $This.DB.Expense
+            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
+            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
+        }
+
         [Object] NewUID([UInt32]$Slot)
         {
             Return @( $This.DB.NewUID($Slot) )
@@ -595,99 +619,7 @@ Function cim-db
             $This.IO._ViewUIDDate.Text  = $Item.Date
             $This.IO._ViewUIDTime.Text  = $Item.Time
 
-            $This.IO._ViewUIDRecordBox.ItemsSource = @(
-            $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % {
-
-                 [_DGList]::New($_,$Item.Record.$_)
-            })
-        }
-
-        RefreshUID()
-        {
-            $This.Refresh()
-            $This.IO._GetUIDResult.ItemsSource       = $This.DB.UID
-        }
-
-        RefreshClient()
-        {
-            $This.Refresh()
-            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
-        }
-
-        RefreshService()
-        {
-            $This.Refresh()
-            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
-        }
-
-        RefreshDevice()
-        {
-            $This.Refresh()
-            $This.IO._GetDeviceResult.ItemsSource     = $This.DB.Device
-        }
-
-        RefreshIssue()
-        {
-            $This.Refresh()
-            $This.IO._GetIssueResult.ItemsSource      = $This.DB.Issue
-        }
-
-        RefreshInventory()
-        {
-            $This.Refresh()
-            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
-        }
-
-        RefreshPurchase()
-        {
-            $This.Refresh()
-            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
-        }
-
-        RefreshExpense()
-        {
-            $This.Refresh()
-            $This.IO._GetExpenseResult.ItemsSource   = $This.DB.Expense
-        }
-
-        RefreshAccount()
-        {
-            $This.Refresh()
-            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
-        }
-
-        RefreshInvoice()
-        {
-            $This.Refresh()
-            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
-        }
-
-        Refresh()
-        {
-            $This.DB.Client                          = $This.DB.UID | ? Type -eq Client
-            $This.DB.Service                         = $This.DB.UID | ? Type -eq Service
-            $This.DB.Device                          = $This.DB.UID | ? Type -eq Device
-            $This.DB.Issue                           = $This.DB.UID | ? Type -eq Issue
-            $This.DB.Inventory                       = $This.DB.UID | ? Type -eq Inventory
-            $This.DB.Purchase                        = $This.DB.UID | ? Type -eq Purchase
-            $This.DB.Expense                         = $This.DB.UID | ? Type -eq Expense
-            $This.DB.Account                         = $This.DB.UID | ? Type -eq Account
-            $This.DB.Invoice                         = $This.DB.UID | ? Type -eq Invoice
-        }
-
-        RefreshAll()
-        {
-            $This.Refresh()
-
-            $This.IO._GetClientResult.ItemsSource    = $This.DB.Client
-            $This.IO._GetServiceResult.ItemsSource   = $This.DB.Service
-            $This.IO._GetDeviceResult.ItemsSource    = $This.DB.Device
-            $This.IO._GetIssueResult.ItemsSource     = $This.DB.Issue
-            $This.IO._GetInventoryResult.ItemsSource = $This.DB.Inventory
-            $This.IO._GetPurchaseResult.ItemsSource  = $This.DB.Purchase
-            $This.IO._ExpenseResult.ItemsSource      = $This.DB.Expense
-            $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
-            $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
+            $This.IO._ViewUIDRecordBox.ItemsSource = $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % { [_DGList]::New($_,$Item.Record.$_) }
         }
     }
 
@@ -2698,20 +2630,18 @@ Function cim-db
         Start-Sleep -Milliseconds 25
     })
     
-    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.RefreshAll()}
+    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.Refresh()}
     $Cim.IO._ViewUIDRecord.Add_Click{$Cim.ViewUID($Cim.IO._GetUIDResult.SelectedItem.UID)}
 
-    $Cim.IO._GetClientRefresh.Add_Click{$Cim.RefreshClient()}
-    $Cim.IO._GetServiceRefresh.Add_Click{$Cim.RefreshService()}
-    $Cim.IO._GetDeviceRefresh.Add_Click{$Cim.RefreshDevice()}
-    $Cim.IO._GetIssueRefresh.Add_Click{$Cim.RefreshIssue()}
-    $Cim.IO._GetInventoryRefresh.Add_Click{$Cim.RefreshInventory()}
-    $Cim.IO._GetPurchaseRefresh.Add_Click{$Cim.RefreshPurchase()}
-    $Cim.IO._GetExpenseRefresh.Add_Click{$Cim.RefreshExpense()}
-    $Cim.IO._GetAccountRefresh.Add_Click{$Cim.RefreshAccount()}
-    $Cim.IO._GetInvoiceRefresh.Add_Click{$Cim.RefreshInvoice()}
+    $Cim.IO._GetClientRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetServiceRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetDeviceRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetIssueRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetInventoryRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetPurchaseRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetExpenseRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetAccountRefresh.Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetInvoiceRefresh.Add_Click{$Cim.Refresh()}
 
     $Cim
 }
-
-$Cim = cim-db

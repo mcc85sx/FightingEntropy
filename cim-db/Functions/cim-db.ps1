@@ -631,6 +631,48 @@ Function cim-db
             $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
         }
 
+        Collapse()
+        {
+            $This.IO._GetUIDPanel.Visibility        = "Collapsed"
+            $This.IO._ViewUIDPanel.Visibility       = "Collapsed"
+            $This.IO._GetClientPanel.Visibility     = "Collapsed"
+            $This.IO._ViewClientPanel.Visibility    = "Collapsed"
+            $This.IO._EditClientPanel.Visibility    = "Collapsed"
+            $This.IO._NewClientPanel.Visibility     = "Collapsed"
+            $This.IO._GetServicePanel.Visibility    = "Collapsed"
+            $This.IO._ViewServicePanel.Visibility   = "Collapsed"
+            $This.IO._EditServicePanel.Visibility   = "Collapsed"
+            $This.IO._NewServicePanel.Visibility    = "Collapsed"
+            $This.IO._GetDevicePanel.Visibility     = "Collapsed"
+            $This.IO._ViewDevicePanel.Visibility    = "Collapsed"
+            $This.IO._EditDevicePanel.Visibility    = "Collapsed"
+            $This.IO._NewDevicePanel.Visibility     = "Collapsed"
+            $This.IO._GetIssuePanel.Visibility      = "Collapsed"
+            $This.IO._ViewIssuePanel.Visibility     = "Collapsed"
+            $This.IO._EditIssuePanel.Visibility     = "Collapsed"
+            $This.IO._NewIssuePanel.Visibility      = "Collapsed"
+            $This.IO._GetInventoryPanel.Visibility  = "Collapsed"
+            $This.IO._ViewInventoryPanel.Visibility = "Collapsed"
+            $This.IO._EditInventoryPanel.Visibility = "Collapsed"
+            $This.IO._NewInventoryPanel.Visibility  = "Collapsed"
+            $This.IO._GetPurchasePanel.Visibility   = "Collapsed"
+            $This.IO._ViewPurchasePanel.Visibility  = "Collapsed"
+            $This.IO._EditPurchasePanel.Visibility  = "Collapsed"
+            $This.IO._NewPurchasePanel.Visibility   = "Collapsed"
+            $This.IO._GetExpensePanel.Visibility    = "Collapsed"
+            $This.IO._ViewExpensePanel.Visibility   = "Collapsed"
+            $This.IO._EditExpensePanel.Visibility   = "Collapsed"
+            $This.IO._NewExpensePanel.Visibility    = "Collapsed"
+            $This.IO._GetAccountPanel.Visibility    = "Collapsed"
+            $This.IO._ViewAccountPanel.Visibility   = "Collapsed"
+            $This.IO._EditAccountPanel.Visibility   = "Collapsed"
+            $This.IO._NewAccountPanel.Visibility    = "Collapsed"
+            $This.IO._GetInvoicePanel.Visibility    = "Collapsed"
+            $This.IO._ViewInvoicePanel.Visibility   = "Collapsed"
+            $This.IO._EditInvoicePanel.Visibility   = "Collapsed"
+            $This.IO._NewInvoicePanel.Visibility    = "Collapsed"
+        }
+
         [Object] NewUID([UInt32]$Slot)
         {
             Return @( $This.DB.NewUID($Slot) )
@@ -3120,11 +3162,47 @@ Function cim-db
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
-    <#
-    # UID 
-    _GetUIDPanel
-    _ViewUIDPanel
+    # Main Tab Control
+    $Cim.IO._MainTabControl.Add_SelectionChanged(
+    {
+        $Cim.Collapse()
+
+        Switch($Cim.IO._MainTabControl.SelectedIndex)
+        {
+            0 { $Cim.IO._GetUIDPanel.Visibility        = "Visible" }
+            1 { $Cim.IO._GetClientPanel.Visibility     = "Visible" }
+            2 { $Cim.IO._GetServicePanel.Visibility    = "Visible" }
+            3 { $Cim.IO._GetDevicePanel.Visibility     = "Visible" }
+            4 { $Cim.IO._GetIssuePanel.Visibility      = "Visible" }
+            5 { $Cim.IO._GetInventoryPanel.Visibility  = "Visible" }
+            6 { $Cim.IO._GetPurchasePanel.Visibility   = "Visible" }
+            7 { $Cim.IO._GetExpensePanel.Visibility    = "Visible" }
+            8 { $Cim.IO._GetAccountPanel.Visibility    = "Visible" }
+            9 { $Cim.IO._GetInvoicePanel.Visibility    = "Visible" }
+        }
+    })
+
+    # UID
+    #_GetUIDPanel
+    #_ViewUIDPanel
+    $Cim.IO._GetUIDSearchFilter.Add_TextChanged{
+
+        $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchType.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
+
+        If ($Item -eq $Null) 
+        {
+            $Cim.IO._GetUIDResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetUIDResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
     
+    <#
     # Client
     _GetClientPanel
     _ViewClientPanel
@@ -3179,23 +3257,6 @@ Function cim-db
     _EditInvoicePanel
     _NewInvoicePanel
     #>
-
-    $Cim.IO._GetUIDSearchFilter.Add_TextChanged{
-
-        $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchType.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
-
-        If ($Item -eq $Null) 
-        {
-            $Cim.IO._GetUIDResult.ItemsSource = $Null
-        }
-
-        Else
-        {
-            $Cim.IO._GetUIDResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
 
     $Cim.IO._GetUIDRefresh.Add_Click{$Cim.Refresh()}
     $Cim.IO._ViewUIDRecord.Add_Click{$Cim.ViewUID($Cim.IO._GetUIDResult.SelectedItem.UID)}

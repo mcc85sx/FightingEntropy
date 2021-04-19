@@ -59,6 +59,7 @@ Function cim-db
         [UInt32]         $Day
         [UInt32]        $Year
         [String]         $DOB
+        [String]      $Gender
         [Object]       $Image
         [Object[]]     $Phone
         [Object[]]     $Email
@@ -343,7 +344,11 @@ Function cim-db
         [Object]          $Time
         [UInt32]          $Rank
 
-        [Object]        $Object
+        [UInt32]          $Mode
+        [Object]        $Client
+        [Object]     $Inventory
+        [Object]       $Service
+        [Object]      $Purchase
 
         _Invoice([Object]$UID) 
         {
@@ -680,10 +685,27 @@ Function cim-db
             $This.IO._ViewClientMonth.Text          = $Null
             $This.IO._ViewClientDay.Text            = $Null
             $This.IO._ViewClientYear.Text           = $Null
-            $This.IO._ViewClientPhone.ItemsSource   = @( )
-            $This.IO._ViewClientEmail.ItemsSource   = @( )
-            $This.IO._ViewClientDevice.ItemsSource  = @( )
-            $This.IO._ViewClientInvoice.ItemsSource = @( )
+            $This.IO._ViewClientGender.SelectedItem = 2
+
+            If ( $This.IO._ViewClientPhone.Items.Count -gt 0 )
+            {
+                $This.IO._ViewClientPhone.Items.Clear()
+            }
+
+            If ( $This.IO._ViewClientEmail.Items.Count -gt 0 )
+            {
+                $This.IO._ViewClientEmail.Items.Clear()
+            }
+
+            If ( $This.IO._ViewClientDevice.Items.Count -gt 0 )
+            {
+                $This.IO._ViewClientDevice.Items.Clear()
+            }
+
+            If ( $This.IO._ViewClientInvoice.Items.Count -gt 0 )
+            {
+                $This.IO._ViewClientInvoice.Items.Clear()
+            }
 
             $Item = $This.GetUID($UID)
             
@@ -703,12 +725,39 @@ Function cim-db
             $This.IO._ViewClientMonth.Text   = $Item.Record.Month
             $This.IO._ViewClientDay.Text     = $Item.Record.Day
             $This.IO._ViewClientYear.Text    = $Item.Record.Year
+            $This.IO._ViewClientGender.SelectedItem = $Item.Record.Gender
 
-            $This.IO._ViewClientPhone.ItemsSource   = $Item.Record.Phone
-            $This.IO._ViewClientEmail.ItemsSource   = $Item.Record.Email
-            $This.IO._ViewClientDevice.ItemsSource  = $Item.Record.Device
-            $This.IO._ViewClientInvoice.ItemsSource = $Item.Record.Invoice
+            If ( $Item.Record.Phone.Count -gt 0 )
+            {
+                ForEach ( $X in $Item.Record.Phone )
+                {
+                    $This.IO._ViewClientPhone.Items.Add($X)
+                }
+            }
 
+            If ( $Item.Record.Email.Count -gt 0 )
+            {
+                ForEach ( $X in $Item.Record.Email )
+                {
+                    $This.IO._ViewClientEmail.Items.Add($X)
+                }
+            }
+
+            If ( $Item.Record.Device.Count -gt 0 )
+            {
+                ForEach ( $X in $Item.Record.Device )
+                {
+                    $This.IO._ViewClientDevice.Items.Add($X)
+                }
+            }
+
+            If ( $Item.Record.Invoice.Count -gt 0 )
+            {
+                ForEach ( $X in $Item.Record.Invoice )
+                {
+                    $This.IO._ViewClientInvoice.Items.Add($X)
+                }
+            }
         }
 
         ViewService([Object]$UID)
@@ -3596,28 +3645,29 @@ Function cim-db
 
     $Cim.IO._NewClientAddPhone. Add_Click{
 
-        $Item = $Cim.IO._NewClientPhoneText.Text.ToString() -Replace "-",""
+        $Item   = $Cim.IO._NewClientPhoneText.Text.ToString() -Replace "-",""
+        $String = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
 
         If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
         {
             [System.Windows.MessageBox]::Show("Invalid phone number","Error")
         }
 
-        Else
-        {
-            $Item = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
-        }
-
-        If ( $Item -in $Cim.IO._NewClientPhoneList.Items )
+        ElseIf ( $String -in $Cim.IO._NewClientPhoneList.Items )
         {
             [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
         }
 
+        ElseIf ($String -in $Cim.DB.Client.Record.Phone)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
         Else
         {
-            $Cim.IO._NewClientPhoneList.Items.Add($Item)
+            $Cim.IO._NewClientPhoneList.Items.Add($String)
             $Cim.IO._NewClientPhoneList.SelectedIndex = ($Cim.IO._NewClientPhoneList.Count - 1)
-            $Cim.IO._NewClientPhoneText.Text = $Null
+            $Cim.IO._NewClientPhoneText.Text,$Item,$String = $Null
         }
     }
 
@@ -3625,9 +3675,9 @@ Function cim-db
         
         $Item = $Cim.IO._NewClientEmailText.Text
 
-        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" )
+        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
         {
-            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
+            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
         }
 
         ElseIf ( $Item -in $Cim.IO._NewClientEmailList.Items )
@@ -3635,16 +3685,35 @@ Function cim-db
             [System.Windows.MessageBox]::Show("Duplicate email address","Error")
         }
 
+        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
         Else
         {
             $Cim.IO._NewClientEmailList.Items.Add($Item)
             $Cim.IO._NewClientEmailList.SelectedIndex = ($Cim.IO._NewClientEmailList.Count - 1)
-            $Cim.IO._NewClientEmailText.Text = $Null
+            $Cim.IO._NewClientEmailText.Text,$Item = $Null
         }
     }
 
     $Cim.IO._SaveClientRecord. Add_Click{
     
+        $Name = "{0}, {1}" -f $Cim.IO._NewClientLast.Text, $Cim.IO._NewClientFirst.Text
+        
+        If ( $Cim.IO._NewClientMI.Text -eq "" )
+        {
+            $Full = $Name
+        }
+
+        If ( $Cim.IO._NewClientMI.Text -ne "" )
+        {
+            $Full = "{0} {1}." -f $Name, $Cim.IO._NewClientMI.Text.TrimEnd(".")
+        }
+
+        $DOB  = "{0:d2}/{1:d2}/{2:d4}" -f $Cim.IO._NewClientMonth.Text, $Cim.IO._NewClientDay.Text, $Cim.IO._NewClientYear.Text
+
         If ($Cim.IO._NewClientLast.Text -eq "")
         {
             [System.Windows.MessageBox]::Show("Last name missing","Error")
@@ -3653,6 +3722,11 @@ Function cim-db
         ElseIf ($Cim.IO._NewClientFirst.Text -eq "")
         {
             [System.Windows.MessageBox]::Show("First name missing","Error")
+        }
+
+        ElseIf ($Full -in $Cim.DB.Client.Record.Name -and $DOB -in $Cim.DB.Client.Record.DOB)
+        {
+            [System.Windows.MessageBox]::Show("Client account exists","Error")
         }
 
         ElseIf ($Cim.IO._NewClientAddress.Text -eq "")
@@ -3707,13 +3781,7 @@ Function cim-db
             $Item.Record.First    = $Cim.IO._NewClientFirst.Text
             $Item.Record.MI       = $Cim.IO._NewClientMI.Text
             $Item.Record.Last     = $Cim.IO._NewClientLast.Text
-            $Item.Record.Name     = "{0}, {1}" -f $Item.Record.Last, $Item.Record.First
-
-            If ( $Item.Record.MI -ne "" )
-            {
-                $Item.Record.Name = "{0} {1}." -f $Item.Record.Name, $Item.Record.MI.TrimEnd(".")
-            }
-
+            $Item.Record.Name     = $Full
             $Item.Record.Address  = $Cim.IO._NewClientAddress.Text
             $Item.Record.City     = $Cim.IO._NewClientCity.Text
             $Item.Record.Region   = $Cim.IO._NewClientRegion.Text
@@ -3722,9 +3790,28 @@ Function cim-db
             $Item.Record.Month    = $Cim.IO._NewClientMonth.Text
             $Item.Record.Day      = $Cim.IO._NewClientDay.Text
             $Item.Record.Year     = $Cim.IO._NewClientYear.Text
-            $Item.Record.DOB      = "{0}/{1}/{2}" -f $Item.Record.Month, $Item.Record.Day, $Item.Record.Year
+            $Item.Record.DOB      = $DOB
+            $Item.Record.Gender   = $Cim.IO._NewClientGender.SelectedItem.Content
             $Item.Record.Phone    = $Cim.IO._NewClientPhoneList.Items
             $Item.Record.Email    = $Cim.IO._NewClientEmailList.Items
+
+            [System.Windows.MessageBox]::Show("Client [$Name] added to database","Success")
+
+            $Cim.IO._NewClientFirst.Text   = $Null
+            $Cim.IO._NewClientMI.Text      = $Null
+            $Cim.IO._NewClientLast.Text    = $Null
+            $Cim.IO._NewClientAddress.Text = $Null
+            $Cim.IO._NewClientCity.Text    = $Null
+            $Cim.IO._NewClientRegion.Text  = $Null
+            $Cim.IO._NewClientCountry.Text = $Null
+            $Cim.IO._NewClientPostal.Text  = $Null
+            $Cim.IO._NewClientMonth.Text   = $Null
+            $Cim.IO._NewClientDay.Text     = $Null
+            $Cim.IO._NewClientYear.Text    = $Null
+            $Cim.IO._NewClientGender.SelectedIndex = 2
+
+            $Cim.IO._NewClientPhoneList.Items.Clear()
+            $Cim.IO._NewClientEmailList.Items.Clear()
         }
     }
 

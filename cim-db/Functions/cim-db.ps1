@@ -72,57 +72,11 @@ Function cim-db
             $This.Type = "Client"
             $This.Date = $UID.Date
             $This.Time = $UID.Time
-        }
-        
-        GetStage()
-        {
+
             $This.Phone   = @( )
             $This.Email   = @( )
             $This.Device  = @( )
             $This.Invoice = @( )
-        }
-        
-        AddPhone([Object]$Phone)
-        {
-            $This.Phone  += $Phone
-        }
-        
-        AddEmail([Object]$Email)
-        {
-            $This.Email  += $Email
-        }
-
-        SetStage([String]$First,[String]$Last,[Object]$DOB,[Object]$Phone,[Object]$Email)
-        {
-            $This.First   = $First
-            $This.Last    = $Last
-            $This.DOB     = $DOB
-        
-            $This.AddPhone($Phone)
-            $This.AddEmail($Email)
-        }
-        
-        [String] GetName()
-        {
-            If (!$This.First -or !$This.Last)
-            {
-                If (!$This.First) 
-                { 
-                    Throw "Missing first name" 
-                }
-
-                If (!$This.Last) 
-                {
-                    Throw "Missing last name"  
-                }
-            }
-
-            Return "{0}, {1}" -f $This.Last, $This.First
-        }
-
-        SetName([String]$First,[String]$Last)
-        {
-            $This.Name = $This.GetName($First,$Last)
         }
 
         [String] ToString()
@@ -691,7 +645,7 @@ Function cim-db
             $This.IO._ViewUIDType.Text  = $Null
             $This.IO._ViewUIDDate.Text  = $Null
             $This.IO._ViewUIDTime.Text  = $Null
-            $This.IO._ViewUIDRecordBox.ItemsSource = $Null
+            $This.IO._ViewUIDRecordBox.ItemsSource = @( )
 
             $Item = $This.GetUID($UID)
             
@@ -706,8 +660,11 @@ Function cim-db
             $This.IO._ViewUIDType.Text  = $Item.Type
             $This.IO._ViewUIDDate.Text  = $Item.Date
             $This.IO._ViewUIDTime.Text  = $Item.Time
-
-            $This.IO._ViewUIDRecordBox.ItemsSource = $Item.Record | Get-Member | ? MemberType -eq Property | % Name | % { [_DGList]::New($_,$Item.Record.$_) }
+ 
+            ForEach ( $X in $Item.Record | Get-Member | ? MemberType -eq Property | % Name ) 
+            { 
+                $This.IO._ViewUIDRecordBox.ItemsSource += [_DGList]::New($X,$Item.Record.$X) 
+            }
         }
 
         ViewClient([Object]$UID)
@@ -723,10 +680,10 @@ Function cim-db
             $This.IO._ViewClientMonth.Text          = $Null
             $This.IO._ViewClientDay.Text            = $Null
             $This.IO._ViewClientYear.Text           = $Null
-            $This.IO._ViewClientPhone.ItemsSource   = $Null
-            $This.IO._ViewClientEmail.ItemsSource   = $Null
-            $This.IO._ViewClientDevice.ItemsSource  = $Null
-            $This.IO._ViewClientInvoice.ItemsSource = $Null
+            $This.IO._ViewClientPhone.ItemsSource   = @( )
+            $This.IO._ViewClientEmail.ItemsSource   = @( )
+            $This.IO._ViewClientDevice.ItemsSource  = @( )
+            $This.IO._ViewClientInvoice.ItemsSource = @( )
 
             $Item = $This.GetUID($UID)
             
@@ -735,22 +692,23 @@ Function cim-db
                 Throw "Invalid Client UID"
             }
 
-            $This.IO._ViewClientFirst.Text   = $Item.Record.First.Text
-            $This.IO._ViewClientMI.Text      = $Item.Record.MI.Text
-            $This.IO._ViewClientLast.Text    = $Item.Record.Last.Text
-            $This.IO._ViewClientAddress.Text = $Item.Record.Address.Text
-            $This.IO._ViewClientCity.Text    = $Item.Record.City.Text
-            $This.IO._ViewClientRegion.Text  = $Item.Record.Region.Text
-            $This.IO._ViewClientCountry.Text = $Item.Record.Country.Text
-            $This.IO._ViewClientPostal.Text  = $Item.Record.Postal.Text
-            $This.IO._ViewClientMonth.Text   = $Item.Record.Month.Text
-            $This.IO._ViewClientDay.Text     = $Item.Record.Day.Text
-            $This.IO._ViewClientYear.Text    = $Item.Record.Year.Text
+            $This.IO._ViewClientFirst.Text   = $Item.Record.First
+            $This.IO._ViewClientMI.Text      = $Item.Record.MI
+            $This.IO._ViewClientLast.Text    = $Item.Record.Last
+            $This.IO._ViewClientAddress.Text = $Item.Record.Address
+            $This.IO._ViewClientCity.Text    = $Item.Record.City
+            $This.IO._ViewClientRegion.Text  = $Item.Record.Region
+            $This.IO._ViewClientCountry.Text = $Item.Record.Country
+            $This.IO._ViewClientPostal.Text  = $Item.Record.Postal
+            $This.IO._ViewClientMonth.Text   = $Item.Record.Month
+            $This.IO._ViewClientDay.Text     = $Item.Record.Day
+            $This.IO._ViewClientYear.Text    = $Item.Record.Year
 
-            $This.IO._ViewClientPhone.ItemsSource    = $Item.Record.Phone
-            $This.IO._ViewClientEmail.ItemsSource    = $Item.Record.Email
-            $This.IO._ViewClientDevice.ItemsSource   = $Item.Record.Device
-            $This.IO._ViewClientInvoice.ItemsSource  = $Item.Record.Invoice
+            $This.IO._ViewClientPhone.ItemsSource   = $Item.Record.Phone
+            $This.IO._ViewClientEmail.ItemsSource   = $Item.Record.Email
+            $This.IO._ViewClientDevice.ItemsSource  = $Item.Record.Device
+            $This.IO._ViewClientInvoice.ItemsSource = $Item.Record.Invoice
+
         }
 
         ViewService([Object]$UID)
@@ -784,7 +742,7 @@ Function cim-db
             $This.IO._ViewDevicePurchase.Text        = $Null 
             $This.IO._ViewDeviceInvoice.Text         = $Null 
 
-            $Item = $This.GetUID($This.IO._GetDeviceResult.SelectedItem.UID)
+            $Item = $This.GetUID($UID)
             
             If (!$Item)
             {
@@ -805,13 +763,13 @@ Function cim-db
 
         ViewIssue([Object]$UID)
         {
-            $This.IO._ViewIssueClient.ItemsSource    = $Null 
-            $This.IO._ViewIssueDevice.ItemsSource    = $Null 
-            $This.IO._ViewIssueDescription.Text      = $Null 
-            $This.IO._ViewIssueStatus.SelectedIndex  = -1
-            $This.IO._ViewIssuePurchase.ItemsSource  = $Null 
-            $This.IO._ViewIssueService.ItemsSource   = $Null
-            $This.IO._ViewIssueInvoice.ItemsSource   = $Null
+            $This.IO._ViewIssueClient.ItemsSource    = @( )
+            $This.IO._ViewIssueDevice.ItemsSource    = @( ) 
+            $This.IO._ViewIssueDescription.Text      = @( ) 
+            $This.IO._ViewIssueStatus.SelectedIndex  = 0
+            $This.IO._ViewIssuePurchase.ItemsSource  = @( ) 
+            $This.IO._ViewIssueService.ItemsSource   = @( )
+            $This.IO._ViewIssueInvoice.ItemsSource   = @( )
 
             $Item = $This.GetUID($UID)
             
@@ -1136,8 +1094,8 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="2" Margin="5" Name="_ViewUIDRecordBox">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Width="*"/>
-                            <DataGridTextColumn Header="Value" Width="2*"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="2*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1181,11 +1139,11 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetClientResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
-                            <DataGridTextColumn Header="Last"  Binding='{Binding Last}'  Width="*"/>
-                            <DataGridTextColumn Header="First" Binding='{Binding First}' Width="*"/>
-                            <DataGridTextColumn Header="MI"    Binding='{Binding MI}'    Width="0.25*"/>
-                            <DataGridTextColumn Header="DOB"   Binding='{Binding DOB}'   Width="*"/>
+                            <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                            <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                            <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                            <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="0.25*"/>
+                            <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -1218,13 +1176,13 @@ Function cim-db
                                 <ColumnDefinition Width="0.5*"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="[Last]">
-                                <TextBox Name="_ViewClientLast"/>
+                                <TextBox Name="_ViewClientLast" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="1" Header="[First]">
-                                <TextBox Name="_ViewClientFirst"/>
+                                <TextBox Name="_ViewClientFirst" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="2" Header="[MI]">
-                                <TextBox Name="_ViewClientMI"/>
+                                <TextBox Name="_ViewClientMI" IsEnabled="False"/>
                             </GroupBox>
                         </Grid>
                         <GroupBox Grid.Row="1" Header="[Address]">
@@ -1238,21 +1196,21 @@ Function cim-db
                                 <ColumnDefinition Width="1.5*"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="[City]">
-                                <TextBox Name="_ViewClientCity"/>
+                                <TextBox Name="_ViewClientCity" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="1" Header="[Region]">
-                                <TextBox Name="_ViewClientRegion"/>
+                                <TextBox Name="_ViewClientRegion" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="2" Header="[Country]">
-                                <TextBox Name="_ViewClientCountry"/>
+                                <TextBox Name="_ViewClientCountry" IsEnabled="False"/>
                             </GroupBox>
                             <GroupBox Grid.Column="3" Header="[Postal]">
-                                <TextBox Name="_ViewClientPostal"/>
+                                <TextBox Name="_ViewClientPostal" IsEnabled="False"/>
                             </GroupBox>
                         </Grid>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -1289,24 +1247,28 @@ Function cim-db
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_ViewClientPhone"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewClientAddPhone"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_ViewClientRemovePhone"/>
+                                    <ComboBox Grid.Column="0" Name="_ViewClientPhoneList"/>
+                                    <TextBox Grid.Column="1" Name="_ViewClientPhoneText" IsEnabled="False"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_ViewClientAddPhone"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewClientRemovePhone"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Header="[Email Address(es)]" Grid.Column="0" Grid.Row="2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_ViewClientEmail"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewClientAddEmail"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_ViewClientRemoveEmail"/>
+                                    <ComboBox Grid.Column="0" Name="_ViewClientEmailList"/>
+                                    <TextBox Grid.Column="1" Name="_ViewClientEmailText" IsEnabled="False"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_ViewClientAddEmail"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewClientRemoveEmail"/>
                                 </Grid>
                             </GroupBox>
                             <Canvas Grid.Column="1" Grid.RowSpan="3"/>
@@ -1401,7 +1363,7 @@ Function cim-db
                         </Grid>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -1438,24 +1400,28 @@ Function cim-db
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_EditClientPhone"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_EditClientAddPhone"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_EditClientRemovePhone"/>
+                                    <ComboBox Grid.Column="0" Name="_EditClientPhoneList"/>
+                                    <TextBox Grid.Column="1" Name="_EditClientPhoneText"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_EditClientAddPhone"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_EditClientRemovePhone"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Header="[Email Address(es)]" Grid.Column="0" Grid.Row="2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_EditClientEmail"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_EditClientAddEmail"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_EditClientRemoveEmail"/>
+                                    <ComboBox Grid.Column="0" Name="_EditClientEmailList"/>
+                                    <TextBox Grid.Column="1" Name="_EditClientEmailText"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_EditClientAddEmail"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_EditClientRemoveEmail"/>
                                 </Grid>
                             </GroupBox>
                             <Canvas Grid.Column="1" Grid.RowSpan="3"/>
@@ -1495,7 +1461,7 @@ Function cim-db
                     </Grid>
                     <Button Grid.Row="1" Name="_UpdateClientRecord" Content="Update"/>
                 </Grid>
-                <Grid Grid.Row="1" Name="_NewClientPanel" Visibility="Collapsed">
+                <Grid Grid.Row="1" Name="_NewClientPanel" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="35"/>
@@ -1550,7 +1516,7 @@ Function cim-db
                         </Grid>
                         <Grid Grid.Row="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -1587,24 +1553,28 @@ Function cim-db
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_NewClientPhone"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_NewClientAddPhone"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_NewClientRemovePhone"/>
+                                    <ComboBox Grid.Column="0" Name="_NewClientPhoneList"/>
+                                    <TextBox Grid.Column="1" Name="_NewClientPhoneText"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_NewClientAddPhone"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_NewClientRemovePhone"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Header="[Email Address(es)]" Grid.Column="0" Grid.Row="2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_NewClientEmail"/>
-                                    <Button Grid.Column="1" Margin="5" Content="+" Name="_NewClientAddEmail"/>
-                                    <Button Grid.Column="2" Margin="5" Content="-" Name="_NewClientRemoveEmail"/>
+                                    <ComboBox Grid.Column="0" Name="_NewClientEmailList"/>
+                                    <TextBox Grid.Column="1" Name="_NewClientEmailText"/>
+                                    <Button Grid.Column="2" Margin="5" Content="+" Name="_NewClientAddEmail"/>
+                                    <Button Grid.Column="3" Margin="5" Content="-" Name="_NewClientRemoveEmail"/>
                                 </Grid>
                             </GroupBox>
                             <Canvas Grid.Column="1" Grid.RowSpan="3"/>
@@ -1685,9 +1655,9 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding='{Binding Name}' Width="*"/>
-                            <DataGridTextColumn Header="Description" Binding='{Binding Description}' Width="*"/>
-                            <DataGridTextColumn Header="Cost" Binding='{Binding Cost}' Width="0.5*"/>
+                            <DataGridTextColumn Header="Name"        Binding='{Binding Record.Name}' Width="*"/>
+                            <DataGridTextColumn Header="Description" Binding='{Binding Record.Description}' Width="*"/>
+                            <DataGridTextColumn Header="Cost"        Binding='{Binding Record.Cost}' Width="0.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -1808,11 +1778,11 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Vendor"        Binding='{Binding Vendor}'        Width="*"/>
-                            <DataGridTextColumn Header="Model"         Binding='{Binding Model}'         Width="*"/>
-                            <DataGridTextColumn Header="Specification" Binding='{Binding Specification}' Width="*"/>
-                            <DataGridTextColumn Header="Serial"        Binding='{Binding Serial}'        Width="*"/>
-                            <DataGridTextColumn Header="Title"         Binding='{Binding Title}'         Width="*"/>
+                            <DataGridTextColumn Header="Vendor"        Binding='{Binding Record.Vendor}'        Width="*"/>
+                            <DataGridTextColumn Header="Model"         Binding='{Binding Record.Model}'         Width="*"/>
+                            <DataGridTextColumn Header="Specification" Binding='{Binding Record.Specification}' Width="*"/>
+                            <DataGridTextColumn Header="Serial"        Binding='{Binding Record.Serial}'        Width="*"/>
+                            <DataGridTextColumn Header="Title"         Binding='{Binding Record.Title}'         Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2076,12 +2046,12 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Client"   Binding='{Binding Client}'   Width="*"/>
-                            <DataGridTextColumn Header="Device"   Binding='{Binding Device}'   Width="*"/>
-                            <DataGridTextColumn Header="Status"   Binding='{Binding Status}'   Width="*"/>
-                            <DataGridTextColumn Header="Purchase" Binding='{Binding Purchase}' Width="*"/>
-                            <DataGridTextColumn Header="Service"  Binding='{Binding Service}'  Width="*"/>
-                            <DataGridTextColumn Header="Invoice"  Binding='{Binding Invoice}'  Width="*"/>
+                            <DataGridTextColumn Header="Client"   Binding='{Binding Record.Client}'   Width="*"/>
+                            <DataGridTextColumn Header="Device"   Binding='{Binding Record.Device}'   Width="*"/>
+                            <DataGridTextColumn Header="Status"   Binding='{Binding Record.Status}'   Width="*"/>
+                            <DataGridTextColumn Header="Purchase" Binding='{Binding Record.Purchase}' Width="*"/>
+                            <DataGridTextColumn Header="Service"  Binding='{Binding Record.Service}'  Width="*"/>
+                            <DataGridTextColumn Header="Invoice"  Binding='{Binding Record.Invoice}'  Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2250,14 +2220,14 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetInventoryResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Vendor"     Binding='{Binding Vendor}'   Width="*"/>
-                            <DataGridTextColumn Header="Serial"     Binding='{Binding Serial}'   Width="*"/>
-                            <DataGridTextColumn Header="Model"      Binding='{Binding Model}'    Width="*"/>
-                            <DataGridTextColumn Header="Title"      Binding='{Binding Title}'    Width="2*"/>
+                            <DataGridTextColumn Header="Vendor"     Binding='{Binding Record.Vendor}'   Width="*"/>
+                            <DataGridTextColumn Header="Serial"     Binding='{Binding Record.Serial}'   Width="*"/>
+                            <DataGridTextColumn Header="Model"      Binding='{Binding Record.Model}'    Width="*"/>
+                            <DataGridTextColumn Header="Title"      Binding='{Binding Record.Title}'    Width="2*"/>
                             <DataGridTemplateColumn Header="Device" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex='{Binding IsDevice}'>
+                                        <ComboBox SelectedIndex='{Binding Record.IsDevice}'>
                                             <ComboBoxItem Content="N"/>
                                             <ComboBoxItem Content="Y"/>
                                             <ComboBoxItem Content="-"/>
@@ -2265,7 +2235,7 @@ Function cim-db
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Cost"  Binding='{Binding Cost}' Width="*"/>
+                            <DataGridTextColumn Header="Cost"  Binding='{Binding Record.Cost}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2448,15 +2418,15 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Distributor"  Binding='{Binding Distributor}' Width="*"/>
-                            <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="*"/>
-                            <DataGridTextColumn Header="Vendor"       Binding='{Binding Vendor}'      Width="*"/>
-                            <DataGridTextColumn Header="Serial"       Binding='{Binding Serial}'      Width="2*"/>
-                            <DataGridTextColumn Header="Model"        Binding='{Binding Model}'       Width="*"/>
+                            <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Distributor}' Width="*"/>
+                            <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="*"/>
+                            <DataGridTextColumn Header="Vendor"       Binding='{Binding Record.Vendor}'      Width="*"/>
+                            <DataGridTextColumn Header="Serial"       Binding='{Binding Record.Serial}'      Width="2*"/>
+                            <DataGridTextColumn Header="Model"        Binding='{Binding Record.Model}'       Width="*"/>
                             <DataGridTemplateColumn Header="Device"   Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex='{Binding IsDevice}'>
+                                        <ComboBox SelectedIndex='{Binding Record.IsDevice}'>
                                             <ComboBoxItem Content="N"/>
                                             <ComboBoxItem Content="Y"/>
                                             <ComboBoxItem Content="-"/>
@@ -2464,7 +2434,7 @@ Function cim-db
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Cost"  Binding='{Binding Cost}' Width="*"/>
+                            <DataGridTextColumn Header="Cost"  Binding='{Binding Record.Cost}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2683,10 +2653,10 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Recipient"    Binding='{Binding Recipient}'   Width="*"/>
-                            <DataGridTextColumn Header="DisplayName"  Binding='{Binding DisplayName}' Width="1.5*"/>
-                            <DataGridTextColumn Header="Account"      Binding='{Binding Account}'     Width="*"/>
-                            <DataGridTextColumn Header="Cost"         Binding='{Binding Cost}'        Width="0.5*"/>
+                            <DataGridTextColumn Header="Recipient"    Binding='{Binding Record.Recipient}'   Width="*"/>
+                            <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="1.5*"/>
+                            <DataGridTextColumn Header="Account"      Binding='{Binding Record.Account}'     Width="*"/>
+                            <DataGridTextColumn Header="Cost"         Binding='{Binding Record.Cost}'        Width="0.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2839,7 +2809,7 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Object"  Binding='{Binding Object}' Width="*"/>
+                            <DataGridTextColumn Header="Object"  Binding='{Binding Record.Object}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -2939,10 +2909,10 @@ Function cim-db
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceResult">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
-                            <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="*"/>
-                            <DataGridTextColumn Header="Phone"  Binding='{Binding Last}'  Width="*"/>
-                            <DataGridTextColumn Header="Email" Binding='{Binding First}' Width="*"/>
+                            <DataGridTextColumn Header="Date" Binding="{Binding Record.Date}" Width="*"/>
+                            <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                            <DataGridTextColumn Header="Phone"  Binding='{Binding Record.Last}'  Width="*"/>
+                            <DataGridTextColumn Header="Email" Binding='{Binding Record.First}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <Grid Grid.Row="2">
@@ -3162,34 +3132,260 @@ Function cim-db
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
-    # Main Tab Control
-    $Cim.IO._MainTabControl.Add_SelectionChanged(
-    {
-        $Cim.Collapse()
-
-        Switch($Cim.IO._MainTabControl.SelectedIndex)
-        {
-            0 { $Cim.IO._GetUIDPanel.Visibility        = "Visible" }
-            1 { $Cim.IO._GetClientPanel.Visibility     = "Visible" }
-            2 { $Cim.IO._GetServicePanel.Visibility    = "Visible" }
-            3 { $Cim.IO._GetDevicePanel.Visibility     = "Visible" }
-            4 { $Cim.IO._GetIssuePanel.Visibility      = "Visible" }
-            5 { $Cim.IO._GetInventoryPanel.Visibility  = "Visible" }
-            6 { $Cim.IO._GetPurchasePanel.Visibility   = "Visible" }
-            7 { $Cim.IO._GetExpensePanel.Visibility    = "Visible" }
-            8 { $Cim.IO._GetAccountPanel.Visibility    = "Visible" }
-            9 { $Cim.IO._GetInvoicePanel.Visibility    = "Visible" }
-        }
-    })
+    # ------------ #
+    # Panel Access #
+    # ------------ #
 
     # UID
-    #_GetUIDPanel
-    #_ViewUIDPanel
-    $Cim.IO._GetUIDSearchFilter.Add_TextChanged{
+    $Cim.IO._GetUIDTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetUIDPanel.     Visibility = "Visible"
+    })
 
+    $Cim.IO._ViewUIDTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewUIDPanel.    Visibility = "Visible"
+    })
+
+    # Client
+    $Cim.IO._GetClientTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetClientPanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewClientTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewClientPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditClientTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditClientPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewClientTab.Add_Click(
+    {
+        $Cim.IO._GetClientPanel.  Visibility = "Collapsed"
+        $Cim.IO._ViewClientPanel. Visibility = "Collapsed"
+        $Cim.IO._EditClientPanel. Visibility = "Collapsed"
+        $Cim.IO._NewClientPanel.  Visibility = "Visible"
+    })
+
+    # Service
+    $Cim.IO._GetServiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetServicePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewServiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewServicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditServiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditServicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewServiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewServicePanel.  Visibility = "Visible"
+    })
+
+    # Device
+    $Cim.IO._GetDeviceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetDevicePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewDeviceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewDevicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditDeviceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditDevicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewDeviceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewDevicePanel.  Visibility = "Visible"
+    })
+
+    # Issue
+    $Cim.IO._GetIssueTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetIssuePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewIssueTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewIssuePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditIssueTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditIssuePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewIssueTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewIssuePanel.  Visibility = "Visible"
+    })
+
+    # Inventory
+    $Cim.IO._GetInventoryTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetInventoryPanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewInventoryTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewInventoryPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditInventoryTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditInventoryPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewInventoryTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewInventoryPanel.  Visibility = "Visible"
+    })
+    
+    # Purchase
+    $Cim.IO._GetPurchaseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetPurchasePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewPurchaseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewPurchasePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditPurchaseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditPurchasePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewPurchaseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewPurchasePanel.  Visibility = "Visible"
+    })
+
+    # Expense
+    $Cim.IO._GetExpenseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetExpensePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewExpenseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewExpensePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditExpenseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditExpensePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewExpenseTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewExpensePanel.  Visibility = "Visible"
+    })
+
+    # Account
+    $Cim.IO._GetAccountTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetAccountPanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewAccountTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewAccountPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditAccountTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditAccountPanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewAccountTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewAccountPanel.  Visibility = "Visible"
+    })
+
+    # Invoice
+    $Cim.IO._GetInvoiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._GetInvoicePanel.  Visibility = "Visible"
+    })
+
+    $Cim.IO._ViewInvoiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._ViewInvoicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._EditInvoiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._EditInvoicePanel. Visibility = "Visible"
+    })
+
+    $Cim.IO._NewInvoiceTab.Add_Click(
+    {
+        $Cim.Collapse()
+        $Cim.IO._NewInvoicePanel.  Visibility = "Visible"
+    })
+
+    # -------------- #
+    # Search Filters #
+    # -------------- # 
+
+    # UID
+    $Cim.IO.       _GetUIDSearchFilter.Add_TextChanged(
+    {
         $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchType.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
 
-        If ($Item -eq $Null) 
+        If ($Item.Count -eq 0) 
         {
             $Cim.IO._GetUIDResult.ItemsSource = $Null
         }
@@ -3200,67 +3396,175 @@ Function cim-db
         }
 
         Start-Sleep -Milliseconds 50
-    }
-    
-    <#
+    })
+
     # Client
-    _GetClientPanel
-    _ViewClientPanel
-    _EditClientPanel
-    _NewClientPanel
+    $Cim.IO.    _GetClientSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchType.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetClientResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetClientResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Service
-    _GetServicePanel
-    _ViewServicePanel
-    _EditServicePanel
-    _NewServicePanel
+    $Cim.IO.   _GetServiceSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchType.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetServiceResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetServiceResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Device
-    _GetDevicePanel
-    _ViewDevicePanel
-    _EditDevicePanel
-    _NewDevicePanel
+    $Cim.IO.    _GetDeviceSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchType.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetDeviceResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetDeviceResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Issue
-    _GetIssuePanel
-    _ViewIssuePanel
-    _EditIssuePanel
-    _NewIssuePanel
+    $Cim.IO.     _GetIssueSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchType.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetIssueResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetIssueResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Inventory
-    _GetInventoryPanel
-    _ViewInventoryPanel
-    _EditInventoryPanel
-    _NewInventoryPanel
-    
+    $Cim.IO. _GetInventorySearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchType.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetInventoryResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetInventoryResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
+
     # Purchase
-    _GetPurchasePanel
-    _ViewPurchasePanel
-    _EditPurchasePanel
-    _NewPurchasePanel
+    $Cim.IO.  _GetPurchaseSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchType.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetPurchaseResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetPurchaseResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Expense
-    _GetExpensePanel
-    _ViewExpensePanel
-    _EditExpensePanel
-    _NewExpensePanel
+    $Cim.IO.   _GetExpenseSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchType.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetExpenseResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetExpenseResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Account
-    _GetAccountPanel
-    _ViewAccountPanel
-    _EditAccountPanel
-    _NewAccountPanel
+    $Cim.IO.   _GetAccountSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchType.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
+
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetAccountResult.ItemsSource = $Null
+        }
+
+        Else
+        {
+            $Cim.IO._GetAccountResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
 
     # Invoice
-    _GetInvoicePanel
-    _ViewInvoicePanel
-    _EditInvoicePanel
-    _NewInvoicePanel
-    #>
+    $Cim.IO.   _GetInvoiceSearchFilter.Add_TextChanged(
+    {
+        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchType.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
 
-    $Cim.IO._GetUIDRefresh.Add_Click{$Cim.Refresh()}
-    $Cim.IO._ViewUIDRecord.Add_Click{$Cim.ViewUID($Cim.IO._GetUIDResult.SelectedItem.UID)}
+        If ($Item.Count -eq 0) 
+        {
+            $Cim.IO._GetInvoiceResult.ItemsSource = $Null
+        }
 
+        Else
+        {
+            $Cim.IO._GetInvoiceResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    })
+
+    # ------- #
+    # Refresh #
+    # ------- #
+
+    $Cim.IO._GetUIDRefresh.       Add_Click{$Cim.Refresh()}
     $Cim.IO._GetClientRefresh.    Add_Click{$Cim.Refresh()}
     $Cim.IO._GetServiceRefresh.   Add_Click{$Cim.Refresh()}
     $Cim.IO._GetDeviceRefresh.    Add_Click{$Cim.Refresh()}
@@ -3271,5 +3575,190 @@ Function cim-db
     $Cim.IO._GetAccountRefresh.   Add_Click{$Cim.Refresh()}
     $Cim.IO._GetInvoiceRefresh.   Add_Click{$Cim.Refresh()}
 
+    # ------------ #
+    # View Records #
+    # ------------ # 
+
+    $Cim.IO._ViewUIDRecord.       Add_Click{$Cim.       ViewUID($Cim.IO.       _GetUIDResult.SelectedItem.UID)}
+    $Cim.IO._ViewClientRecord.    Add_Click{$Cim.    ViewClient($Cim.IO.    _GetClientResult.SelectedItem.UID)}
+    $Cim.IO._ViewServiceRecord.   Add_Click{$Cim.   ViewService($Cim.IO.   _GetServiceResult.SelectedItem.UID)}
+    $Cim.IO._ViewDeviceRecord.    Add_Click{$Cim.    ViewDevice($Cim.IO.    _GetDeviceResult.SelectedItem.UID)}
+    $Cim.IO._ViewIssueRecord.     Add_Click{$Cim.     ViewIssue($Cim.IO.     _GetIssueResult.SelectedItem.UID)}
+    $Cim.IO._ViewInventoryRecord. Add_Click{$Cim. ViewInventory($Cim.IO. _GetInventoryResult.SelectedItem.UID)}
+    $Cim.IO._ViewPurchaseRecord.  Add_Click{$Cim.  ViewPurchase($Cim.IO.  _GetPurchaseResult.SelectedItem.UID)}
+    $Cim.IO._ViewExpenseRecord.   Add_Click{$Cim.   ViewExpense($Cim.IO.   _GetExpenseResult.SelectedItem.UID)}
+    $Cim.IO._ViewAccountRecord.   Add_Click{$Cim.   ViewAccount($Cim.IO.   _GetAccountResult.SelectedItem.UID)}
+    $Cim.IO._ViewInvoiceRecord.   Add_Click{$Cim.   ViewInvoice($Cim.IO.   _GetInvoiceResult.SelectedItem.UID)}
+
+    # ---------------- #
+    # Input Validation #
+    # ---------------- #
+
+    $Cim.IO._NewClientAddPhone. Add_Click{
+
+        $Item = $Cim.IO._NewClientPhoneText.Text.ToString() -Replace "-",""
+
+        If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
+        {
+            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
+        }
+
+        Else
+        {
+            $Item = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
+        }
+
+        If ( $Item -in $Cim.IO._NewClientPhoneList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientPhoneList.Items.Add($Item)
+            $Cim.IO._NewClientPhoneList.SelectedIndex = ($Cim.IO._NewClientPhoneList.Count - 1)
+            $Cim.IO._NewClientPhoneText.Text = $Null
+        }
+    }
+
+    $Cim.IO._NewClientAddEmail. Add_Click{
+        
+        $Item = $Cim.IO._NewClientEmailText.Text
+
+        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" )
+        {
+            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
+        }
+
+        ElseIf ( $Item -in $Cim.IO._NewClientEmailList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientEmailList.Items.Add($Item)
+            $Cim.IO._NewClientEmailList.SelectedIndex = ($Cim.IO._NewClientEmailList.Count - 1)
+            $Cim.IO._NewClientEmailText.Text = $Null
+        }
+    }
+
+    $Cim.IO._SaveClientRecord. Add_Click{
+    
+        If ($Cim.IO._NewClientLast.Text -eq "")
+        {
+            [System.Windows.MessageBox]::Show("Last name missing","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientFirst.Text -eq "")
+        {
+            [System.Windows.MessageBox]::Show("First name missing","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientAddress.Text -eq "")
+        {
+            [System.Windows.MessageBox]::Show("Address missing","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientCity.Text -eq "")
+        {
+            [System.Windows.MessageBox]::Show("City missing","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientPostal.Text -eq "")
+        {
+            [System.Windows.MessageBox]::Show("Zip code missing","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientMonth.Text -notin 1..12)
+        {
+            [System.Windows.MessageBox]::Show("Invalid DOB.Month","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientDay.Text -notin 1..31)
+        {
+            [System.Windows.MessageBox]::Show("Invalid DOB.Day","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientYear.Text.Length -lt 4 )
+        {
+            [System.Windows.MessageBox]::Show("Invalid DOB.Year","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientGender.SelectedIndex -notin 0..1)
+        {
+            [System.Windows.MessageBox]::Show("Invalid Gender","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientPhoneList.Items[0] -eq $Null)
+        {
+            [System.Windows.MessageBox]::Show("No phone number","Error")
+        }
+
+        ElseIf ($Cim.IO._NewClientEmailList.Items[0] -eq $Null)
+        {
+            [System.Windows.MessageBox]::Show("No email","Error")
+        }
+
+        Else
+        {
+            $Item                 = $Cim.NewUID(0)
+            $Cim.Refresh()
+            $Item.Record.First    = $Cim.IO._NewClientFirst.Text
+            $Item.Record.MI       = $Cim.IO._NewClientMI.Text
+            $Item.Record.Last     = $Cim.IO._NewClientLast.Text
+            $Item.Record.Name     = "{0}, {1}" -f $Item.Record.Last, $Item.Record.First
+
+            If ( $Item.Record.MI -ne "" )
+            {
+                $Item.Record.Name = "{0} {1}." -f $Item.Record.Name, $Item.Record.MI.TrimEnd(".")
+            }
+
+            $Item.Record.Address  = $Cim.IO._NewClientAddress.Text
+            $Item.Record.City     = $Cim.IO._NewClientCity.Text
+            $Item.Record.Region   = $Cim.IO._NewClientRegion.Text
+            $Item.Record.Country  = $Cim.IO._NewClientCountry.Text
+            $Item.Record.Postal   = $Cim.IO._NewClientPostal.Text
+            $Item.Record.Month    = $Cim.IO._NewClientMonth.Text
+            $Item.Record.Day      = $Cim.IO._NewClientDay.Text
+            $Item.Record.Year     = $Cim.IO._NewClientYear.Text
+            $Item.Record.DOB      = "{0}/{1}/{2}" -f $Item.Record.Month, $Item.Record.Day, $Item.Record.Year
+            $Item.Record.Phone    = $Cim.IO._NewClientPhoneList.Items
+            $Item.Record.Email    = $Cim.IO._NewClientEmailList.Items
+        }
+    }
+
+    # ------------- #
+    # Return Object #
+    # ------------- #
+
     $Cim
 }
+
+$Cim      = cim-db
+
+$Cim.Window.Invoke()
+
+<#
+function Add-DataGridDoubleClickEventOnRow
+{
+    param([System.Windows.Controls.DataGrid]$DG,[System.Windows.Input.MouseButtonEventHandler]$Method)
+
+	$Style = [System.Windows.Style]::New([System.Windows.Controls.DataGridRow])
+	$Style.Setters.Add([System.Windows.EventSetter]::New([System.Windows.Controls.DataGridRow]::MouseDoubleClickEvent, $Method))
+	$DG.RowStyle = $Style
+}
+
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="MouseDoubleClick" Handler="_OpenInvoice"/>
+                                </Style>
+                            </DataGrid.Resources>
+<DataGrid>
+    <DataGrid.Resources>
+        <Style TargetType="DataGridRow">
+            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+        </Style>
+    </DataGrid.Resources>
+</DataGrid>
+#>

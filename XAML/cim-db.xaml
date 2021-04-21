@@ -1,14 +1,15 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            Title="Company Information Management Database [FightingEntropy]://(cim-db)" 
-            Height="660" 
+            Title="[FightingEntropy]://(Company Information Management Database)" 
+            Height="680" 
             Width="800"
             Topmost="True" 
             ResizeMode="NoResize" 
             Icon="C:\ProgramData\Secure Digits Plus LLC\Graphics\icon.ico" 
             HorizontalAlignment="Center" 
             WindowStartupLocation="CenterScreen"
-            FontFamily="Consolas">
+            FontFamily="Consolas"
+            Background="LightYellow">
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="FontSize" Value="15"/>
@@ -16,7 +17,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Name="Border" BorderThickness="2,2,2,2" BorderBrush="Black" CornerRadius="2" Margin="2">
+                        <Border Name="Border" BorderThickness="2" BorderBrush="Black" CornerRadius="2" Margin="2">
                             <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -35,9 +36,10 @@
         </Style>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="FontWeight" Value="Heavy"/>
             <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#DFFFBA"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Style.Resources>
                 <Style TargetType="Border">
@@ -76,12 +78,13 @@
             <Setter Property="FontSize"   Value="12"/>
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
-        <Style TargetType="TabControl" x:Key="SubTabControl">
+        <Style TargetType="TabControl">
             <Setter Property="TabStripPlacement" Value="Top"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="LightYellow"/>
         </Style>
     </Window.Resources>
-    <TabControl TabStripPlacement="Left" HorizontalContentAlignment="Right" Name="_MainTabControl">
+    <TabControl TabStripPlacement="Left" HorizontalContentAlignment="Right" Name="_MainTabControl" BorderBrush="LightYellow">
         <TabControl.Resources>
             <Style TargetType="GroupBox">
                 <Setter Property="Foreground" Value="Black"/>
@@ -120,7 +123,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetUIDSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetUIDSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="UID"/>
                             <ComboBoxItem Content="Index"/>
                             <ComboBoxItem Content="Date"/>
@@ -129,7 +132,7 @@
                         </TextBox>
                         <TextBox Grid.Column="1" Name="_GetUIDSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="UID"    Binding='{Binding UID}'    Width="160"/>
                             <DataGridTextColumn Header="Index"  Binding='{Binding Index}'  Width="60"/>
@@ -139,14 +142,6 @@
                             <DataGridTextColumn Header="Record" Binding='{Binding Record}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetUIDRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewUIDRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewUIDPanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -187,7 +182,7 @@
                             <TextBox Name="_ViewUIDTime" IsEnabled="False"/>
                         </GroupBox>
                     </Grid>
-                    <DataGrid Grid.Row="2" Margin="5" Name="_ViewUIDRecordBox">
+                    <DataGrid Grid.Row="2" Margin="5" Name="_ViewUIDRecordResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="2*"/>
@@ -225,14 +220,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetClientSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetClientSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Name"/>
                             <ComboBoxItem Content="Phone Number"/>
                             <ComboBoxItem Content="Email Address"/>
                         </ComboBox>
                         <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetClientResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
                             <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
@@ -241,14 +236,6 @@
                             <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetClientRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewClientRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewClientPanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -752,28 +739,20 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetServiceSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetServiceSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Name"/>
                             <ComboBoxItem Content="Description"/>
                         </ComboBox>
 
                         <TextBox Grid.Column="1" Name="_GetServiceSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name"        Binding='{Binding Record.Name}' Width="*"/>
                             <DataGridTextColumn Header="Description" Binding='{Binding Record.Description}' Width="*"/>
                             <DataGridTextColumn Header="Cost"        Binding='{Binding Record.Cost}' Width="0.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetServiceRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewServiceRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewServicePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -875,14 +854,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetDeviceSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetDeviceSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Vendor"/>
                             <ComboBoxItem Content="Model"/>
                             <ComboBoxItem Content="Specification"/>
                         </ComboBox>
                         <TextBox Grid.Column="1" Name="_GetDeviceSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Vendor"        Binding='{Binding Record.Vendor}'        Width="*"/>
                             <DataGridTextColumn Header="Model"         Binding='{Binding Record.Model}'         Width="*"/>
@@ -891,14 +870,6 @@
                             <DataGridTextColumn Header="Title"         Binding='{Binding Record.Title}'         Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetDeviceRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewDeviceRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewDevicePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -1513,14 +1484,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetIssueSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetIssueSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Client"/>
                             <ComboBoxItem Content="Device"/>
                         </ComboBox>
                         <TextBox Grid.Column="1"/>
                         <TextBox Grid.Column="1" Name="_GetIssueSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Client"   Binding='{Binding Record.Client}'   Width="*"/>
                             <DataGridTextColumn Header="Device"   Binding='{Binding Record.Device}'   Width="*"/>
@@ -1530,14 +1501,6 @@
                             <DataGridTextColumn Header="Invoice"  Binding='{Binding Record.Invoice}'  Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetIssueRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewIssueRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewIssuePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -2095,14 +2058,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetInventorySearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetInventorySearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Client"/>
                             <ComboBoxItem Content="Device"/>
                         </ComboBox>
                         <TextBox Grid.Column="1"/>
                         <TextBox Grid.Column="1" Name="_GetInventorySearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetInventoryResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetInventorySearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Vendor"     Binding='{Binding Record.Vendor}'   Width="*"/>
                             <DataGridTextColumn Header="Serial"     Binding='{Binding Record.Serial}'   Width="*"/>
@@ -2122,14 +2085,6 @@
                             <DataGridTextColumn Header="Cost"  Binding='{Binding Record.Cost}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetInventoryRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewInventoryRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewInventoryPanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -2402,7 +2357,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetPurchaseSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetPurchaseSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Distributor"/>
                             <ComboBoxItem Content="DisplayName"/>
                             <ComboBoxItem Content="Vendor"/>
@@ -2414,7 +2369,7 @@
                         <TextBox Grid.Column="1"/>
                         <TextBox Grid.Column="1" Name="_GetPurchaseSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Distributor}' Width="*"/>
                             <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="*"/>
@@ -2435,14 +2390,6 @@
                             <DataGridTextColumn Header="Cost"  Binding='{Binding Record.Cost}' Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetPurchaseRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewPurchaseRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewPurchasePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -2724,7 +2671,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetExpenseSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetExpenseSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Recipient"/>
                             <ComboBoxItem Content="DisplayName"/>
                             <ComboBoxItem Content="Account"/>
@@ -2733,7 +2680,7 @@
                         <TextBox Grid.Column="1"/>
                         <TextBox Grid.Column="1" Name="_GetExpenseSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Recipient"    Binding='{Binding Record.Recipient}'   Width="*"/>
                             <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="1.5*"/>
@@ -2741,14 +2688,6 @@
                             <DataGridTextColumn Header="Cost"         Binding='{Binding Record.Cost}'        Width="0.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="_GetExpenseRefresh" Content="Refresh"/>
-                        <Button Grid.Column="1" Name="_ViewExpenseRecord" Content="View"/>
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1" Name="_ViewExpensePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -2872,7 +2811,7 @@
                     </Grid>
                     <Button Grid.Row="1" Name="_UpdateExpenseRecord" Content="Update"/>
                 </Grid>
-                <Grid Grid.Row="1" Name="_NewExpensePanel" Visibility="Visible">
+                <Grid Grid.Row="1" Name="_NewExpensePanel" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="35"/>
@@ -2964,13 +2903,13 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetAccountSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetAccountSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Object"/>
                         </ComboBox>
                         <TextBox Grid.Column="1"/>
                         <TextBox Grid.Column="1" Name="_GetAccountSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Object"  Binding='{Binding Record.Object}' Width="*"/>
                         </DataGrid.Columns>
@@ -3162,7 +3101,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_GetInvoiceSearchType" SelectedIndex="0" BorderThickness="1">
+                        <ComboBox Grid.Column="0" Name="_GetInvoiceSearchProperty" SelectedIndex="0" BorderThickness="1">
                             <ComboBoxItem Content="Date"/>
                             <ComboBoxItem Content="Name"/>
                             <ComboBoxItem Content="Phone Number"/>
@@ -3172,7 +3111,7 @@
                         </TextBox>
                         <TextBox Grid.Column="1" Name="_GetInvoiceSearchFilter"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceResult">
+                    <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceSearchResult">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Date" Binding="{Binding Record.Date}" Width="*"/>
                             <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>

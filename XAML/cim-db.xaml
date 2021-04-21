@@ -1,15 +1,15 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            Title="[FightingEntropy]://(Company Information Management Database)" 
-            Height="680" 
-            Width="800"
-            Topmost="True" 
-            ResizeMode="NoResize" 
-            Icon="C:\ProgramData\Secure Digits Plus LLC\Graphics\icon.ico" 
-            HorizontalAlignment="Center" 
-            WindowStartupLocation="CenterScreen"
-            FontFamily="Consolas"
-            Background="LightYellow">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="[FightingEntropy]://(Company Information Management Database)" 
+    Height="680" 
+    Width="800"
+    Topmost="True" 
+    ResizeMode="NoResize" 
+    Icon="C:\ProgramData\Secure Digits Plus LLC\Graphics\icon.ico" 
+    HorizontalAlignment="Center" 
+    WindowStartupLocation="CenterScreen"
+    FontFamily="Consolas"
+    Background="LightYellow">
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="FontSize" Value="15"/>

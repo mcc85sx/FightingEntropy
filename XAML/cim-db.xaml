@@ -2923,7 +2923,7 @@
                         <Button Grid.Column="1" Name="_ViewAccountRecord" Content="View"/>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="1" Name="_ViewAccountPanel" Visibility="Collapsed">
+                <Grid Grid.Row="1" Name="_ViewAccountPanel" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="35"/>
@@ -2943,17 +2943,13 @@
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountIsDevice" IsEnabled="False">
-                                        <ComboBoxItem Content="No"/>
-                                        <ComboBoxItem Content="Yes"/>
-                                    </ComboBox>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountDeviceSearchProperty" IsEnabled="False">
+                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountObjectSearchProperty" IsEnabled="False">
                                         <ComboBoxItem Content="UID"/>
                                         <ComboBoxItem Content="Index"/>
                                         <ComboBoxItem Content="Date"/>
                                         <ComboBoxItem Content="Rank"/>
                                     </ComboBox>
-                                    <TextBox Grid.Column="1" Name="_ViewAccountDeviceSearchFilter" IsEnabled="False"/>
+                                    <TextBox Grid.Column="1" Name="_ViewAccountObjectSearchFilter" IsEnabled="False"/>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
@@ -2962,10 +2958,10 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_ViewAccountDeviceSearchResult" IsEnabled="False"/>
-                                    <Button Grid.Column="1" Content="+" Name="_ViewAccountAddDevice" IsEnabled="False"/>
+                                    <ComboBox Grid.Column="0" Name="_ViewAccountObjectSearchResult" IsEnabled="False"/>
+                                    <Button Grid.Column="1" Content="+" Name="_ViewAccountAddObject" IsEnabled="False"/>
                                     <ComboBox Grid.Column="2" Name="_ViewAccountDeviceList"/>
-                                    <Button Grid.Column="3" Content="-" Name="_ViewAccountRemoveDevice" IsEnabled="False"/>
+                                    <Button Grid.Column="3" Content="-" Name="_ViewAccountRemoveObject" IsEnabled="False"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -2992,17 +2988,13 @@
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountIsDevice">
-                                        <ComboBoxItem Content="No"/>
-                                        <ComboBoxItem Content="Yes"/>
-                                    </ComboBox>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountDeviceSearchProperty">
+                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountObjectSearchProperty">
                                         <ComboBoxItem Content="UID"/>
                                         <ComboBoxItem Content="Index"/>
                                         <ComboBoxItem Content="Date"/>
                                         <ComboBoxItem Content="Rank"/>
                                     </ComboBox>
-                                    <TextBox Grid.Column="1" Name="_EditAccountDeviceSearchFilter"/>
+                                    <TextBox Grid.Column="1" Name="_EditAccountObjectSearchFilter"/>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
@@ -3011,10 +3003,10 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_EditAccountDeviceSearchResult"/>
-                                    <Button Grid.Column="1" Content="+" Name="_EditAccountAddDevice"/>
-                                    <ComboBox Grid.Column="2" Name="_EditAccountDeviceList"/>
-                                    <Button Grid.Column="3" Content="-" Name="_EditAccountRemoveDevice"/>
+                                    <ComboBox Grid.Column="0" Name="_EditAccountObjectSearchResult"/>
+                                    <Button Grid.Column="1" Content="+" Name="_EditAccountAddObject"/>
+                                    <ComboBox Grid.Column="2" Name="_EditAccountObjectList"/>
+                                    <Button Grid.Column="3" Content="-" Name="_EditAccountRemoveObject"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>
@@ -3041,17 +3033,13 @@
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountIsDevice">
-                                        <ComboBoxItem Content="No"/>
-                                        <ComboBoxItem Content="Yes"/>
-                                    </ComboBox>
-                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountDeviceSearchProperty">
+                                    <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountObjectSearchProperty">
                                         <ComboBoxItem Content="UID"/>
                                         <ComboBoxItem Content="Index"/>
                                         <ComboBoxItem Content="Date"/>
                                         <ComboBoxItem Content="Rank"/>
                                     </ComboBox>
-                                    <TextBox Grid.Column="1" Name="_NewAccountDeviceSearchFilter"/>
+                                    <TextBox Grid.Column="1" Name="_NewAccountObjectSearchFilter"/>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
@@ -3060,10 +3048,10 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="_NewAccountDeviceSearchResult"/>
-                                    <Button Grid.Column="1" Content="+" Name="_NewAccountAddDevice"/>
-                                    <ComboBox Grid.Column="2" Name="_NewAccountDeviceList"/>
-                                    <Button Grid.Column="3" Content="-" Name="_NewAccountRemoveDevice"/>
+                                    <ComboBox Grid.Column="0" Name="_NewAccountObjectSearchResult"/>
+                                    <Button Grid.Column="1" Content="+" Name="_NewAccountAddObject"/>
+                                    <ComboBox Grid.Column="2" Name="_NewAccountObjectList"/>
+                                    <Button Grid.Column="3" Content="-" Name="_NewAccountRemoveObject"/>
                                 </Grid>
                             </Grid>
                         </GroupBox>

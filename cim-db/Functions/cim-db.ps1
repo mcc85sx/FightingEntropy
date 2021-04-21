@@ -564,47 +564,429 @@ Function cim-db
             $This.IO._GetAccountResult.ItemsSource   = $This.DB.Account
             $This.IO._GetInvoiceResult.ItemsSource   = $This.DB.Invoice
         }
+                                
+        Clear()
+        {
+            $This.IO._EditAccountDeviceSearchFilter.Text    = $Null
+            $This.IO._EditClientAddress.Text                = $Null
+            $This.IO._EditClientCity.Text                   = $Null
+            $This.IO._EditClientCountry.Text                = $Null
+            $This.IO._EditClientDay.Text                    = $Null
+            $This.IO._EditClientDeviceText.Text             = $Null
+            $This.IO._EditClientEmailText.Text              = $Null
+            $This.IO._EditClientFirst.Text                  = $Null
+            $This.IO._EditClientInvoiceText.Text            = $Null
+            $This.IO._EditClientLast.Text                   = $Null
+            $This.IO._EditClientMI.Text                     = $Null
+            $This.IO._EditClientMonth.Text                  = $Null
+            $This.IO._EditClientPhoneText.Text              = $Null
+            $This.IO._EditClientPostal.Text                 = $Null
+            $This.IO._EditClientRegion.Text                 = $Null
+            $This.IO._EditClientYear.Text                   = $Null
+            $This.IO._EditDeviceClientSearchFilter.Text     = $Null
+            $This.IO._EditDeviceInvoiceSearchFilter.Text    = $Null
+            $This.IO._EditDeviceIssueSearchFilter.Text      = $Null
+            $This.IO._EditDeviceModel.Text                  = $Null
+            $This.IO._EditDevicePurchaseSearchFilter.Text   = $Null
+            $This.IO._EditDeviceSerial.Text                 = $Null
+            $This.IO._EditDeviceSpecification.Text          = $Null
+            $This.IO._EditDeviceTitle.Text                  = $Null
+            $This.IO._EditDeviceVendor.Text                 = $Null
+            $This.IO._EditExpenseCost.Text                  = $Null
+            $This.IO._EditExpenseDeviceSearchFilter.Text    = $Null
+            $This.IO._EditExpenseDisplayName.Text           = $Null
+            $This.IO._EditExpenseRecipient.Text             = $Null
+            $This.IO._EditInventoryCost.Text                = $Null
+            $This.IO._EditInventoryDeviceSearchFilter.Text  = $Null
+            $This.IO._EditInventoryModel.Text               = $Null
+            $This.IO._EditInventorySerial.Text              = $Null
+            $This.IO._EditInventoryTitle.Text               = $Null
+            $This.IO._EditInventoryVendor.Text              = $Null
+            $This.IO._EditInvoiceClientSearchFilter.Text    = $Null
+            $This.IO._EditInvoiceInventorySearchFilter.Text = $Null
+            $This.IO._EditInvoicePurchaseSearchFilter.Text  = $Null
+            $This.IO._EditInvoiceServiceSearchFilter.Text   = $Null
+            $This.IO._EditIssueClientSearchFilter.Text      = $Null
+            $This.IO._EditIssueDescription.Text             = $Null
+            $This.IO._EditIssueDeviceSearchFilter.Text      = $Null
+            $This.IO._EditIssueInvoiceSearchFilter.Text     = $Null
+            $This.IO._EditIssuePurchaseSearchFilter.Text    = $Null
+            $This.IO._EditPurchaseCost.Text                 = $Null
+            $This.IO._EditPurchaseDeviceSearchFilter.Text   = $Null
+            $This.IO._EditPurchaseDisplayName.Text          = $Null
+            $This.IO._EditPurchaseDistributor.Text          = $Null
+            $This.IO._EditPurchaseModel.Text                = $Null
+            $This.IO._EditPurchaseSerial.Text               = $Null
+            $This.IO._EditPurchaseSpecification.Text        = $Null
+            $This.IO._EditPurchaseVendor.Text               = $Null
+            $This.IO._EditServiceCost.Text                  = $Null
+            $This.IO._EditServiceDescription.Text           = $Null
+            $This.IO._EditServiceName.Text                  = $Null
+            $This.IO._GetAccountSearchFilter.Text           = $Null
+            $This.IO._GetClientSearchFilter.Text            = $Null
+            $This.IO._GetDeviceSearchFilter.Text            = $Null
+            $This.IO._GetExpenseSearchFilter.Text           = $Null
+            $This.IO._GetInventorySearchFilter.Text         = $Null
+            $This.IO._GetInvoiceSearchFilter.Text           = $Null
+            $This.IO._GetIssueSearchFilter.Text             = $Null
+            $This.IO._GetPurchaseSearchFilter.Text          = $Null
+            $This.IO._GetServiceSearchFilter.Text           = $Null
+            $This.IO._GetUIDSearchFilter.Text               = $Null
+            $This.IO._NewAccountDeviceSearchFilter.Text     = $Null
+            $This.IO._NewClientAddress.Text                 = $Null
+            $This.IO._NewClientCity.Text                    = $Null
+            $This.IO._NewClientCountry.Text                 = $Null
+            $This.IO._NewClientDay.Text                     = $Null
+            $This.IO._NewClientDeviceText.Text              = $Null
+            $This.IO._NewClientEmailText.Text               = $Null
+            $This.IO._NewClientFirst.Text                   = $Null
+            $This.IO._NewClientInvoiceText.Text             = $Null
+            $This.IO._NewClientLast.Text                    = $Null
+            $This.IO._NewClientMI.Text                      = $Null
+            $This.IO._NewClientMonth.Text                   = $Null
+            $This.IO._NewClientPhoneText.Text               = $Null
+            $This.IO._NewClientPostal.Text                  = $Null
+            $This.IO._NewClientRegion.Text                  = $Null
+            $This.IO._NewClientYear.Text                    = $Null
+            $This.IO._NewDeviceClientSearchFilter.Text      = $Null
+            $This.IO._NewDeviceInvoiceSearchFilter.Text     = $Null
+            $This.IO._NewDeviceIssueSearchFilter.Text       = $Null
+            $This.IO._NewDeviceModel.Text                   = $Null
+            $This.IO._NewDevicePurchaseSearchFilter.Text    = $Null
+            $This.IO._NewDeviceSerial.Text                  = $Null
+            $This.IO._NewDeviceSpecification.Text           = $Null
+            $This.IO._NewDeviceTitle.Text                   = $Null
+            $This.IO._NewDeviceVendor.Text                  = $Null
+            $This.IO._NewExpenseCost.Text                   = $Null
+            $This.IO._NewExpenseDeviceSearchFilter.Text     = $Null
+            $This.IO._NewExpenseDisplayName.Text            = $Null
+            $This.IO._NewExpenseRecipient.Text              = $Null
+            $This.IO._NewInventoryCost.Text                 = $Null
+            $This.IO._NewInventoryDeviceSearchFilter.Text   = $Null
+            $This.IO._NewInventoryModel.Text                = $Null
+            $This.IO._NewInventorySerial.Text               = $Null
+            $This.IO._NewInventoryTitle.Text                = $Null
+            $This.IO._NewInventoryVendor.Text               = $Null
+            $This.IO._NewInvoiceClientSearchFilter.Text     = $Null
+            $This.IO._NewInvoiceInventorySearchFilter.Text  = $Null
+            $This.IO._NewInvoicePurchaseSearchFilter.Text   = $Null
+            $This.IO._NewInvoiceServiceSearchFilter.Text    = $Null
+            $This.IO._NewIssueClientSearchFilter.Text       = $Null
+            $This.IO._NewIssueDescription.Text              = $Null
+            $This.IO._NewIssueDeviceSearchFilter.Text       = $Null
+            $This.IO._NewIssueInvoiceSearchFilter.Text      = $Null
+            $This.IO._NewIssuePurchaseSearchFilter.Text     = $Null
+            $This.IO._NewPurchaseCost.Text                  = $Null
+            $This.IO._NewPurchaseDeviceSearchFilter.Text    = $Null
+            $This.IO._NewPurchaseDisplayName.Text           = $Null
+            $This.IO._NewPurchaseDistributor.Text           = $Null
+            $This.IO._NewPurchaseModel.Text                 = $Null
+            $This.IO._NewPurchaseSerial.Text                = $Null
+            $This.IO._NewPurchaseSpecification.Text         = $Null
+            $This.IO._NewPurchaseVendor.Text                = $Null
+            $This.IO._NewServiceCost.Text                   = $Null
+            $This.IO._NewServiceDescription.Text            = $Null
+            $This.IO._NewServiceName.Text                   = $Null
+            $This.IO._ViewAccountDeviceSearchFilter.Text    = $Null
+            $This.IO._ViewClientAddress.Text                = $Null
+            $This.IO._ViewClientCity.Text                   = $Null
+            $This.IO._ViewClientCountry.Text                = $Null
+            $This.IO._ViewClientDay.Text                    = $Null
+            $This.IO._ViewClientDeviceText.Text             = $Null
+            $This.IO._ViewClientEmailText.Text              = $Null
+            $This.IO._ViewClientFirst.Text                  = $Null
+            $This.IO._ViewClientInvoiceText.Text            = $Null
+            $This.IO._ViewClientLast.Text                   = $Null
+            $This.IO._ViewClientMI.Text                     = $Null
+            $This.IO._ViewClientMonth.Text                  = $Null
+            $This.IO._ViewClientPhoneText.Text              = $Null
+            $This.IO._ViewClientPostal.Text                 = $Null
+            $This.IO._ViewClientRegion.Text                 = $Null
+            $This.IO._ViewClientYear.Text                   = $Null
+            $This.IO._ViewDeviceClientSearchFilter.Text     = $Null
+            $This.IO._ViewDeviceInvoiceSearchFilter.Text    = $Null
+            $This.IO._ViewDeviceIssueSearchFilter.Text      = $Null
+            $This.IO._ViewDeviceModel.Text                  = $Null
+            $This.IO._ViewDevicePurchaseSearchFilter.Text   = $Null
+            $This.IO._ViewDeviceSerial.Text                 = $Null
+            $This.IO._ViewDeviceSpecification.Text          = $Null
+            $This.IO._ViewDeviceTitle.Text                  = $Null
+            $This.IO._ViewDeviceVendor.Text                 = $Null
+            $This.IO._ViewExpenseCost.Text                  = $Null
+            $This.IO._ViewExpenseDeviceSearchFilter.Text    = $Null
+            $This.IO._ViewExpenseDisplayName.Text           = $Null
+            $This.IO._ViewExpenseRecipient.Text             = $Null
+            $This.IO._ViewInventoryCost.Text                = $Null
+            $This.IO._ViewInventoryDeviceSearchFilter.Text  = $Null
+            $This.IO._ViewInventoryModel.Text               = $Null
+            $This.IO._ViewInventorySerial.Text              = $Null
+            $This.IO._ViewInventoryTitle.Text               = $Null
+            $This.IO._ViewInventoryVendor.Text              = $Null
+            $This.IO._ViewInvoiceClientSearchFilter.Text    = $Null
+            $This.IO._ViewInvoiceInventorySearchFilter.Text = $Null
+            $This.IO._ViewInvoicePurchaseSearchFilter.Text  = $Null
+            $This.IO._ViewInvoiceServiceSearchFilter.Text   = $Null
+            $This.IO._ViewIssueClientSearchFilter.Text      = $Null
+            $This.IO._ViewIssueDescription.Text             = $Null
+            $This.IO._ViewIssueDeviceSearchFilter.Text      = $Null
+            $This.IO._ViewIssueInvoiceSearchFilter.Text     = $Null
+            $This.IO._ViewIssuePurchaseSearchFilter.Text    = $Null
+            $This.IO._ViewPurchaseCost.Text                 = $Null
+            $This.IO._ViewPurchaseDeviceSearchFilter.Text   = $Null
+            $This.IO._ViewPurchaseDisplayName.Text          = $Null
+            $This.IO._ViewPurchaseDistributor.Text          = $Null
+            $This.IO._ViewPurchaseModel.Text                = $Null
+            $This.IO._ViewPurchaseSerial.Text               = $Null
+            $This.IO._ViewPurchaseSpecification.Text        = $Null
+            $This.IO._ViewPurchaseVendor.Text               = $Null
+            $This.IO._ViewServiceCost.Text                  = $Null
+            $This.IO._ViewServiceDescription.Text           = $Null
+            $This.IO._ViewServiceName.Text                  = $Null
+            $This.IO._ViewUIDDate.Text                      = $Null
+            $This.IO._ViewUIDIndex.Text                     = $Null
+            $This.IO._ViewUIDSlot.Text                      = $Null
+            $This.IO._ViewUIDTime.Text                      = $Null
+            $This.IO._ViewUIDType.Text                      = $Null
+            $This.IO._ViewUIDUID.Text                       = $Null
+                           
+            $This.IO._EditAccountDeviceList.ItemsSource             = $Null
+            $This.IO._EditAccountDeviceSearchProperty.ItemsSource   = $Null
+            $This.IO._EditAccountDeviceSearchResult.ItemsSource     = $Null
+            $This.IO._EditAccountIsDevice.ItemsSource               = $Null
+            $This.IO._EditClientDeviceList.ItemsSource              = $Null
+            $This.IO._EditClientEmailList.ItemsSource               = $Null
+            $This.IO._EditClientGender.ItemsSource                  = $Null
+            $This.IO._EditClientInvoiceList.ItemsSource             = $Null
+            $This.IO._EditClientPhoneList.ItemsSource               = $Null
+            $This.IO._EditDeviceChassis.ItemsSource                 = $Null
+            $This.IO._EditDeviceClientList.ItemsSource              = $Null
+            $This.IO._EditDeviceClientSearchProperty.ItemsSource    = $Null
+            $This.IO._EditDeviceClientSearchResult.ItemsSource      = $Null
+            $This.IO._EditDeviceInvoiceList.ItemsSource             = $Null
+            $This.IO._EditDeviceInvoiceSearchProperty.ItemsSource   = $Null
+            $This.IO._EditDeviceInvoiceSearchResult.ItemsSource     = $Null
+            $This.IO._EditDeviceIssueList.ItemsSource               = $Null
+            $This.IO._EditDeviceIssueSearchProperty.ItemsSource     = $Null
+            $This.IO._EditDeviceIssueSearchResult.ItemsSource       = $Null
+            $This.IO._EditDevicePurchaseList.ItemsSource            = $Null
+            $This.IO._EditDevicePurchaseSearchProperty.ItemsSource  = $Null
+            $This.IO._EditDevicePurchaseSearchResult.ItemsSource    = $Null
+            $This.IO._EditExpenseDeviceList.ItemsSource             = $Null
+            $This.IO._EditExpenseDeviceSearchProperty.ItemsSource   = $Null
+            $This.IO._EditExpenseDeviceSearchResult.ItemsSource     = $Null
+            $This.IO._EditExpenseIsDevice.ItemsSource               = $Null
+            $This.IO._EditInventoryDeviceList.ItemsSource           = $Null
+            $This.IO._EditInventoryDeviceSearchProperty.ItemsSource = $Null
+            $This.IO._EditInventoryDeviceSearchResult.ItemsSource   = $Null
+            $This.IO._EditInventoryIsDevice.ItemsSource             = $Null
+            $This.IO._EditInvoiceClientList.ItemsSource             = $Null
+            $This.IO._EditInvoiceClientSearchProperty.ItemsSource   = $Null
+            $This.IO._EditInvoiceClientSearchResult.ItemsSource     = $Null
+            $This.IO._EditInvoiceInventoryList.ItemsSource          = $Null
+            $This.IO._EditInvoiceInventorySearchProperty.ItemsSource = $Null
+            $This.IO._EditInvoiceInventorySearchResult.ItemsSource   = $Null
+            $This.IO._EditInvoiceMode.ItemsSource                    = $Null
+            $This.IO._EditInvoicePurchaseList.ItemsSource            = $Null
+            $This.IO._EditInvoicePurchaseSearchProperty.ItemsSource  = $Null
+            $This.IO._EditInvoicePurchaseSearchResult.ItemsSource    = $Null
+            $This.IO._EditInvoiceServiceList.ItemsSource             = $Null
+            $This.IO._EditInvoiceServiceSearchProperty.ItemsSource   = $Null
+            $This.IO._EditInvoiceServiceSearchResult.ItemsSource     = $Null
+            $This.IO._EditIssueClientList.ItemsSource                = $Null
+            $This.IO._EditIssueClientSearchProperty.ItemsSource      = $Null
+            $This.IO._EditIssueClientSearchResult.ItemsSource        = $Null
+            $This.IO._EditIssueDeviceList.ItemsSource                = $Null
+            $This.IO._EditIssueDeviceSearchProperty.ItemsSource      = $Null
+            $This.IO._EditIssueDeviceSearchResult.ItemsSource        = $Null
+            $This.IO._EditIssueInvoiceList.ItemsSource               = $Null
+            $This.IO._EditIssueInvoiceSearchProperty.ItemsSource     = $Null
+            $This.IO._EditIssueInvoiceSearchResult.ItemsSource       = $Null
+            $This.IO._EditIssuePurchaseList.ItemsSource              = $Null
+            $This.IO._EditIssuePurchaseSearchProperty.ItemsSource    = $Null
+            $This.IO._EditIssuePurchaseSearchResult.ItemsSource      = $Null
+            $This.IO._EditIssueServiceEntry.ItemsSource              = $Null
+            $This.IO._EditIssueServiceList.ItemsSource               = $Null
+            $This.IO._EditIssueStatus.ItemsSource                    = $Null
+            $This.IO._EditPurchaseDeviceList.ItemsSource             = $Null
+            $This.IO._EditPurchaseDeviceSearchProperty.ItemsSource   = $Null
+            $This.IO._EditPurchaseDeviceSearchResult.ItemsSource     = $Null
+            $This.IO._EditPurchaseIsDevice.ItemsSource               = $Null
+            $This.IO._GetAccountSearchType.ItemsSource               = $Null
+            $This.IO._GetClientSearchType.ItemsSource                = $Null
+            $This.IO._GetDeviceSearchType.ItemsSource                = $Null
+            $This.IO._GetExpenseSearchType.ItemsSource               = $Null
+            $This.IO._GetInventorySearchType.ItemsSource             = $Null
+            $This.IO._GetInvoiceSearchType.ItemsSource               = $Null
+            $This.IO._GetIssueSearchType.ItemsSource                 = $Null
+            $This.IO._GetPurchaseSearchType.ItemsSource              = $Null
+            $This.IO._GetServiceSearchType.ItemsSource               = $Null
+            $This.IO._GetUIDSearchType.ItemsSource                   = $Null
+            $This.IO._NewAccountDeviceList.ItemsSource               = $Null
+            $This.IO._NewAccountDeviceSearchProperty.ItemsSource     = $Null
+            $This.IO._NewAccountDeviceSearchResult.ItemsSource       = $Null
+            $This.IO._NewAccountIsDevice.ItemsSource                 = $Null
+            $This.IO._NewClientDeviceList.ItemsSource                = $Null
+            $This.IO._NewClientEmailList.ItemsSource                 = $Null
+            $This.IO._NewClientGender.ItemsSource                    = $Null
+            $This.IO._NewClientInvoiceList.ItemsSource               = $Null
+            $This.IO._NewClientPhoneList.ItemsSource                 = $Null
+            $This.IO._NewDeviceChassis.ItemsSource                   = $Null
+            $This.IO._NewDeviceClientList.ItemsSource                = $Null
+            $This.IO._NewDeviceClientSearchProperty.ItemsSource      = $Null
+            $This.IO._NewDeviceClientSearchResult.ItemsSource        = $Null
+            $This.IO._NewDeviceInvoiceList.ItemsSource               = $Null
+            $This.IO._NewDeviceInvoiceSearchProperty.ItemsSource     = $Null
+            $This.IO._NewDeviceInvoiceSearchResult.ItemsSource       = $Null
+            $This.IO._NewDeviceIssueList.ItemsSource                 = $Null
+            $This.IO._NewDeviceIssueSearchProperty.ItemsSource       = $Null
+            $This.IO._NewDeviceIssueSearchResult.ItemsSource         = $Null
+            $This.IO._NewDevicePurchaseList.ItemsSource              = $Null
+            $This.IO._NewDevicePurchaseSearchProperty.ItemsSource    = $Null
+            $This.IO._NewDevicePurchaseSearchResult.ItemsSource      = $Null
+            $This.IO._NewExpenseDeviceList.ItemsSource               = $Null
+            $This.IO._NewExpenseDeviceSearchProperty.ItemsSource     = $Null
+            $This.IO._NewExpenseDeviceSearchResult.ItemsSource       = $Null
+            $This.IO._NewExpenseIsDevice.ItemsSource                 = $Null
+            $This.IO._NewInventoryDeviceList.ItemsSource             = $Null
+            $This.IO._NewInventoryDeviceSearchProperty.ItemsSource   = $Null
+            $This.IO._NewInventoryDeviceSearchResult.ItemsSource     = $Null
+            $This.IO._NewInventoryIsDevice.ItemsSource               = $Null
+            $This.IO._NewInvoiceClientList.ItemsSource               = $Null
+            $This.IO._NewInvoiceClientSearchProperty.ItemsSource     = $Null
+            $This.IO._NewInvoiceClientSearchResult.ItemsSource       = $Null
+            $This.IO._NewInvoiceInventoryList.ItemsSource            = $Null
+            $This.IO._NewInvoiceInventorySearchProperty.ItemsSource  = $Null
+            $This.IO._NewInvoiceInventorySearchResult.ItemsSource    = $Null
+            $This.IO._NewInvoiceMode.ItemsSource                     = $Null
+            $This.IO._NewInvoicePurchaseList.ItemsSource             = $Null
+            $This.IO._NewInvoicePurchaseSearchProperty.ItemsSource   = $Null
+            $This.IO._NewInvoicePurchaseSearchResult.ItemsSource     = $Null
+            $This.IO._NewInvoiceServiceList.ItemsSource              = $Null
+            $This.IO._NewInvoiceServiceSearchProperty.ItemsSource    = $Null
+            $This.IO._NewInvoiceServiceSearchResult.ItemsSource      = $Null
+            $This.IO._NewIssueClientList.ItemsSource                 = $Null
+            $This.IO._NewIssueClientSearchProperty.ItemsSource       = $Null
+            $This.IO._NewIssueClientSearchResult.ItemsSource         = $Null
+            $This.IO._NewIssueDeviceList.ItemsSource                 = $Null
+            $This.IO._NewIssueDeviceSearchProperty.ItemsSource       = $Null
+            $This.IO._NewIssueDeviceSearchResult.ItemsSource         = $Null
+            $This.IO._NewIssueInvoiceList.ItemsSource                = $Null
+            $This.IO._NewIssueInvoiceSearchProperty.ItemsSource      = $Null
+            $This.IO._NewIssueInvoiceSearchResult.ItemsSource        = $Null
+            $This.IO._NewIssuePurchaseList.ItemsSource               = $Null
+            $This.IO._NewIssuePurchaseSearchProperty.ItemsSource     = $Null
+            $This.IO._NewIssuePurchaseSearchResult.ItemsSource       = $Null
+            $This.IO._NewIssueServiceEntry.ItemsSource               = $Null
+            $This.IO._NewIssueServiceList.ItemsSource                = $Null
+            $This.IO._NewIssueStatus.ItemsSource                     = $Null
+            $This.IO._NewPurchaseDeviceList.ItemsSource              = $Null
+            $This.IO._NewPurchaseDeviceSearchProperty.ItemsSource    = $Null
+            $This.IO._NewPurchaseDeviceSearchResult.ItemsSource      = $Null
+            $This.IO._NewPurchaseIsDevice.ItemsSource                = $Null
+            $This.IO._ViewAccountDeviceList.ItemsSource              = $Null
+            $This.IO._ViewAccountDeviceSearchProperty.ItemsSource    = $Null
+            $This.IO._ViewAccountDeviceSearchResult.ItemsSource      = $Null
+            $This.IO._ViewAccountIsDevice.ItemsSource                = $Null
+            $This.IO._ViewClientDeviceList.ItemsSource               = $Null
+            $This.IO._ViewClientEmailList.ItemsSource                = $Null
+            $This.IO._ViewClientGender.ItemsSource                   = $Null
+            $This.IO._ViewClientInvoiceList.ItemsSource              = $Null
+            $This.IO._ViewClientPhoneList.ItemsSource                = $Null
+            $This.IO._ViewDeviceChassis.ItemsSource                  = $Null
+            $This.IO._ViewDeviceClientList.ItemsSource               = $Null
+            $This.IO._ViewDeviceClientSearchProperty.ItemsSource     = $Null
+            $This.IO._ViewDeviceClientSearchResult.ItemsSource       = $Null
+            $This.IO._ViewDeviceInvoiceList.ItemsSource              = $Null
+            $This.IO._ViewDeviceInvoiceSearchProperty.ItemsSource    = $Null
+            $This.IO._ViewDeviceInvoiceSearchResult.ItemsSource      = $Null
+            $This.IO._ViewDeviceIssueList.ItemsSource                = $Null
+            $This.IO._ViewDeviceIssueSearchProperty.ItemsSource      = $Null
+            $This.IO._ViewDeviceIssueSearchResult.ItemsSource        = $Null
+            $This.IO._ViewDevicePurchaseList.ItemsSource             = $Null
+            $This.IO._ViewDevicePurchaseSearchProperty.ItemsSource   = $Null
+            $This.IO._ViewDevicePurchaseSearchResult.ItemsSource     = $Null
+            $This.IO._ViewExpenseDeviceList.ItemsSource              = $Null
+            $This.IO._ViewExpenseDeviceSearchProperty.ItemsSource    = $Null
+            $This.IO._ViewExpenseDeviceSearchResult.ItemsSource      = $Null
+            $This.IO._ViewExpenseIsDevice.ItemsSource                = $Null
+            $This.IO._ViewInventoryDeviceList.ItemsSource            = $Null
+            $This.IO._ViewInventoryDeviceSearchProperty.ItemsSource  = $Null
+            $This.IO._ViewInventoryDeviceSearchResult.ItemsSource    = $Null
+            $This.IO._ViewInventoryIsDevice.ItemsSource              = $Null
+            $This.IO._ViewInvoiceClientList.ItemsSource              = $Null
+            $This.IO._ViewInvoiceClientSearchProperty.ItemsSource    = $Null
+            $This.IO._ViewInvoiceClientSearchResult.ItemsSource      = $Null
+            $This.IO._ViewInvoiceInventoryList.ItemsSource           = $Null
+            $This.IO._ViewInvoiceInventorySearchProperty.ItemsSource = $Null
+            $This.IO._ViewInvoiceInventorySearchResult.ItemsSource   = $Null
+            $This.IO._ViewInvoiceMode.ItemsSource                    = $Null
+            $This.IO._ViewInvoicePurchaseList.ItemsSource            = $Null
+            $This.IO._ViewInvoicePurchaseSearchProperty.ItemsSource  = $Null
+            $This.IO._ViewInvoicePurchaseSearchResult.ItemsSource    = $Null
+            $This.IO._ViewInvoiceServiceList.ItemsSource             = $Null
+            $This.IO._ViewInvoiceServiceSearchProperty.ItemsSource   = $Null
+            $This.IO._ViewInvoiceServiceSearchResult.ItemsSource     = $Null
+            $This.IO._ViewIssueClientList.ItemsSource                = $Null
+            $This.IO._ViewIssueClientSearchProperty.ItemsSource      = $Null
+            $This.IO._ViewIssueClientSearchResult.ItemsSource        = $Null
+            $This.IO._ViewIssueDeviceList.ItemsSource                = $Null
+            $This.IO._ViewIssueDeviceSearchProperty.ItemsSource      = $Null
+            $This.IO._ViewIssueDeviceSearchResult.ItemsSource        = $Null
+            $This.IO._ViewIssueInvoiceList.ItemsSource               = $Null
+            $This.IO._ViewIssueInvoiceSearchProperty.ItemsSource     = $Null
+            $This.IO._ViewIssueInvoiceSearchResult.ItemsSource       = $Null
+            $This.IO._ViewIssuePurchaseList.ItemsSource              = $Null
+            $This.IO._ViewIssuePurchaseSearchProperty.ItemsSource    = $Null
+            $This.IO._ViewIssuePurchaseSearchResult.ItemsSource      = $Null
+            $This.IO._ViewIssueServiceEntry.ItemsSource              = $Null
+            $This.IO._ViewIssueServiceList.ItemsSource               = $Null
+            $This.IO._ViewIssueStatus.ItemsSource                    = $Null
+            $This.IO._ViewPurchaseDeviceList.ItemsSource             = $Null
+            $This.IO._ViewPurchaseDeviceSearchProperty.ItemsSource   = $Null
+            $This.IO._ViewPurchaseDeviceSearchResult.ItemsSource     = $Null
+            $This.IO._ViewPurchaseIsDevice.ItemsSource               = $Null
+        }
 
         Collapse()
         {
-            $This.IO._GetUIDPanel.Visibility        = "Collapsed"
-            $This.IO._ViewUIDPanel.Visibility       = "Collapsed"
-            $This.IO._GetClientPanel.Visibility     = "Collapsed"
-            $This.IO._ViewClientPanel.Visibility    = "Collapsed"
-            $This.IO._EditClientPanel.Visibility    = "Collapsed"
-            $This.IO._NewClientPanel.Visibility     = "Collapsed"
-            $This.IO._GetServicePanel.Visibility    = "Collapsed"
-            $This.IO._ViewServicePanel.Visibility   = "Collapsed"
-            $This.IO._EditServicePanel.Visibility   = "Collapsed"
-            $This.IO._NewServicePanel.Visibility    = "Collapsed"
-            $This.IO._GetDevicePanel.Visibility     = "Collapsed"
-            $This.IO._ViewDevicePanel.Visibility    = "Collapsed"
-            $This.IO._EditDevicePanel.Visibility    = "Collapsed"
-            $This.IO._NewDevicePanel.Visibility     = "Collapsed"
-            $This.IO._GetIssuePanel.Visibility      = "Collapsed"
-            $This.IO._ViewIssuePanel.Visibility     = "Collapsed"
-            $This.IO._EditIssuePanel.Visibility     = "Collapsed"
-            $This.IO._NewIssuePanel.Visibility      = "Collapsed"
-            $This.IO._GetInventoryPanel.Visibility  = "Collapsed"
-            $This.IO._ViewInventoryPanel.Visibility = "Collapsed"
-            $This.IO._EditInventoryPanel.Visibility = "Collapsed"
-            $This.IO._NewInventoryPanel.Visibility  = "Collapsed"
-            $This.IO._GetPurchasePanel.Visibility   = "Collapsed"
-            $This.IO._ViewPurchasePanel.Visibility  = "Collapsed"
-            $This.IO._EditPurchasePanel.Visibility  = "Collapsed"
-            $This.IO._NewPurchasePanel.Visibility   = "Collapsed"
-            $This.IO._GetExpensePanel.Visibility    = "Collapsed"
-            $This.IO._ViewExpensePanel.Visibility   = "Collapsed"
-            $This.IO._EditExpensePanel.Visibility   = "Collapsed"
-            $This.IO._NewExpensePanel.Visibility    = "Collapsed"
-            $This.IO._GetAccountPanel.Visibility    = "Collapsed"
-            $This.IO._ViewAccountPanel.Visibility   = "Collapsed"
-            $This.IO._EditAccountPanel.Visibility   = "Collapsed"
-            $This.IO._NewAccountPanel.Visibility    = "Collapsed"
-            $This.IO._GetInvoicePanel.Visibility    = "Collapsed"
-            $This.IO._ViewInvoicePanel.Visibility   = "Collapsed"
-            $This.IO._EditInvoicePanel.Visibility   = "Collapsed"
-            $This.IO._NewInvoicePanel.Visibility    = "Collapsed"
+            $This.IO._GetUIDPanel.Visibility                = "Collapsed"
+            $This.IO._ViewUIDPanel.Visibility               = "Collapsed"
+            $This.IO._GetClientPanel.Visibility             = "Collapsed"
+            $This.IO._ViewClientPanel.Visibility            = "Collapsed"
+            $This.IO._EditClientPanel.Visibility            = "Collapsed"
+            $This.IO._NewClientPanel.Visibility             = "Collapsed"
+            $This.IO._GetServicePanel.Visibility            = "Collapsed"
+            $This.IO._ViewServicePanel.Visibility           = "Collapsed"
+            $This.IO._EditServicePanel.Visibility           = "Collapsed"
+            $This.IO._NewServicePanel.Visibility            = "Collapsed"
+            $This.IO._GetDevicePanel.Visibility             = "Collapsed"
+            $This.IO._ViewDevicePanel.Visibility            = "Collapsed"
+            $This.IO._EditDevicePanel.Visibility            = "Collapsed"
+            $This.IO._NewDevicePanel.Visibility             = "Collapsed"
+            $This.IO._GetIssuePanel.Visibility              = "Collapsed"
+            $This.IO._ViewIssuePanel.Visibility             = "Collapsed"
+            $This.IO._EditIssuePanel.Visibility             = "Collapsed"
+            $This.IO._NewIssuePanel.Visibility              = "Collapsed"
+            $This.IO._GetInventoryPanel.Visibility          = "Collapsed"
+            $This.IO._ViewInventoryPanel.Visibility         = "Collapsed"
+            $This.IO._EditInventoryPanel.Visibility         = "Collapsed"
+            $This.IO._NewInventoryPanel.Visibility          = "Collapsed"
+            $This.IO._GetPurchasePanel.Visibility           = "Collapsed"
+            $This.IO._ViewPurchasePanel.Visibility          = "Collapsed"
+            $This.IO._EditPurchasePanel.Visibility          = "Collapsed"
+            $This.IO._NewPurchasePanel.Visibility           = "Collapsed"
+            $This.IO._GetExpensePanel.Visibility            = "Collapsed"
+            $This.IO._ViewExpensePanel.Visibility           = "Collapsed"
+            $This.IO._EditExpensePanel.Visibility           = "Collapsed"
+            $This.IO._NewExpensePanel.Visibility            = "Collapsed"
+            $This.IO._GetAccountPanel.Visibility            = "Collapsed"
+            $This.IO._ViewAccountPanel.Visibility           = "Collapsed"
+            $This.IO._EditAccountPanel.Visibility           = "Collapsed"
+            $This.IO._NewAccountPanel.Visibility            = "Collapsed"
+            $This.IO._GetInvoicePanel.Visibility            = "Collapsed"
+            $This.IO._ViewInvoicePanel.Visibility           = "Collapsed"
+            $This.IO._EditInvoicePanel.Visibility           = "Collapsed"
+            $This.IO._NewInvoicePanel.Visibility            = "Collapsed"
         }
 
         [Object] NewUID([UInt32]$Slot)
@@ -643,7 +1025,7 @@ Function cim-db
  
             ForEach ( $X in $Item.Record | Get-Member | ? MemberType -eq Property | % Name ) 
             { 
-                $This.IO._ViewUIDRecordBox.ItemsSource += [_DGList]::New($X,$Item.Record.$X) 
+                $This.IO._ViewUIDRecordBox.ItemsSource += [_DGList]::New($X,$Item.Record.$X)
             }
         }
 
@@ -736,9 +1118,7 @@ Function cim-db
 
         ViewService([Object]$UID)
         {
-            $This.IO._ViewServiceName.Text           = $Null
-            $This.IO._ViewServiceDescription.Text    = $Null
-            $This.IO._ViewServiceCost.Text           = $Null
+            $This.Clear()
 
             $Item = $This.GetUID($UID)
             
@@ -754,16 +1134,7 @@ Function cim-db
 
         ViewDevice([Object]$UID)
         {
-            $This.IO._ViewDeviceChassis.Text         = $Null 
-            $This.IO._ViewDeviceVendor.Text          = $Null 
-            $This.IO._ViewDeviceModel.Text           = $Null 
-            $This.IO._ViewDeviceSpecification.Text   = $Null 
-            $This.IO._ViewDeviceSerial.Text          = $Null 
-            $This.IO._ViewDeviceTitle.Text           = $Null 
-            $This.IO._ViewDeviceClient.Text          = $Null 
-            $This.IO._ViewDeviceIssue.Text           = $Null 
-            $This.IO._ViewDevicePurchase.Text        = $Null 
-            $This.IO._ViewDeviceInvoice.Text         = $Null 
+            $This.Clear()
 
             $Item = $This.GetUID($UID)
             
@@ -4582,428 +4953,246 @@ Function cim-db
     # ---------------- #
 
     # UID
-    $Cim.IO._GetUIDTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetUIDPanel.     Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewUIDTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewUIDPanel.    Visibility = "Visible"
-    })
+    $Cim.IO._GetUIDTab.        Add_Click{ $Cim.Collapse(); $Cim.IO._GetUIDPanel.        Visibility = "Visible" }
+    $Cim.IO._ViewUIDTab.       Add_Click{ $Cim.Collapse(); $Cim.IO._ViewUIDPanel.       Visibility = "Visible" }
 
     # Client
-    $Cim.IO._GetClientTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetClientPanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewClientTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewClientPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditClientTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditClientPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewClientTab.Add_Click(
-    {
-        $Cim.IO._GetClientPanel.  Visibility = "Collapsed"
-        $Cim.IO._ViewClientPanel. Visibility = "Collapsed"
-        $Cim.IO._EditClientPanel. Visibility = "Collapsed"
-        $Cim.IO._NewClientPanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetClientTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._GetClientPanel.     Visibility = "Visible" }
+    $Cim.IO._ViewClientTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._ViewClientPanel.    Visibility = "Visible" }
+    $Cim.IO._EditClientTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._EditClientPanel.    Visibility = "Visible" }
+    $Cim.IO._NewClientTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._NewClientPanel.     Visibility = "Visible" }
 
     # Service
-    $Cim.IO._GetServiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetServicePanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewServiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewServicePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditServiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditServicePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewServiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewServicePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetServiceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._GetServicePanel.    Visibility = "Visible" }
+    $Cim.IO._ViewServiceTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._ViewServicePanel.   Visibility = "Visible" }
+    $Cim.IO._EditServiceTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._EditServicePanel.   Visibility = "Visible" }
+    $Cim.IO._NewServiceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._NewServicePanel.    Visibility = "Visible" }
 
     # Device
-    $Cim.IO._GetDeviceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetDevicePanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewDeviceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewDevicePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditDeviceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditDevicePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewDeviceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewDevicePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetDeviceTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._GetDevicePanel.     Visibility = "Visible" }
+    $Cim.IO._ViewDeviceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._ViewDevicePanel.    Visibility = "Visible" }
+    $Cim.IO._EditDeviceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._EditDevicePanel.    Visibility = "Visible" }
+    $Cim.IO._NewDeviceTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._NewDevicePanel.     Visibility = "Visible" }
 
     # Issue
-    $Cim.IO._GetIssueTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetIssuePanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewIssueTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewIssuePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditIssueTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditIssuePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewIssueTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewIssuePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetIssueTab.      Add_Click{ $Cim.Collapse(); $Cim.IO._GetIssuePanel.      Visibility = "Visible" }
+    $Cim.IO._ViewIssueTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._ViewIssuePanel.     Visibility = "Visible" }
+    $Cim.IO._EditIssueTab.     Add_Click{ $Cim.Collapse(); $Cim.IO._EditIssuePanel.     Visibility = "Visible" }
+    $Cim.IO._NewIssueTab.      Add_Click{ $Cim.Collapse(); $Cim.IO._NewIssuePanel.      Visibility = "Visible" }
 
     # Inventory
-    $Cim.IO._GetInventoryTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetInventoryPanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewInventoryTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewInventoryPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditInventoryTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditInventoryPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewInventoryTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewInventoryPanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetInventoryTab.  Add_Click{ $Cim.Collapse(); $Cim.IO._GetInventoryPanel.  Visibility = "Visible" }
+    $Cim.IO._ViewInventoryTab. Add_Click{ $Cim.Collapse(); $Cim.IO._ViewInventoryPanel. Visibility = "Visible" }
+    $Cim.IO._EditInventoryTab. Add_Click{ $Cim.Collapse(); $Cim.IO._EditInventoryPanel. Visibility = "Visible" }
+    $Cim.IO._NewInventoryTab.  Add_Click{ $Cim.Collapse(); $Cim.IO._NewInventoryPanel.  Visibility = "Visible" }
     
     # Purchase
-    $Cim.IO._GetPurchaseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetPurchasePanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewPurchaseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewPurchasePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditPurchaseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditPurchasePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewPurchaseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewPurchasePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetPurchaseTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._GetPurchasePanel.   Visibility = "Visible" }
+    $Cim.IO._ViewPurchaseTab.  Add_Click{ $Cim.Collapse(); $Cim.IO._ViewPurchasePanel.  Visibility = "Visible" }
+    $Cim.IO._EditPurchaseTab.  Add_Click{ $Cim.Collapse(); $Cim.IO._EditPurchasePanel.  Visibility = "Visible" }
+    $Cim.IO._NewPurchaseTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._NewPurchasePanel.   Visibility = "Visible" }
 
     # Expense
-    $Cim.IO._GetExpenseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetExpensePanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewExpenseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewExpensePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditExpenseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditExpensePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewExpenseTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewExpensePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetExpenseTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._GetExpensePanel.    Visibility = "Visible" }
+    $Cim.IO._ViewExpenseTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._ViewExpensePanel.   Visibility = "Visible" }
+    $Cim.IO._EditExpenseTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._EditExpensePanel.   Visibility = "Visible" }
+    $Cim.IO._NewExpenseTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._NewExpensePanel.    Visibility = "Visible" }
 
     # Account
-    $Cim.IO._GetAccountTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetAccountPanel.  Visibility = "Visible"
-    })
-
-    $Cim.IO._ViewAccountTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewAccountPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._EditAccountTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditAccountPanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewAccountTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewAccountPanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetAccountTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._GetAccountPanel.    Visibility = "Visible" }
+    $Cim.IO._ViewAccountTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._ViewAccountPanel.   Visibility = "Visible" }
+    $Cim.IO._EditAccountTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._EditAccountPanel.   Visibility = "Visible" }
+    $Cim.IO._NewAccountTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._NewAccountPanel.    Visibility = "Visible" }
 
     # Invoice
-    $Cim.IO._GetInvoiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._GetInvoicePanel.  Visibility = "Visible"
-    })
+    $Cim.IO._GetInvoiceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._GetInvoicePanel.    Visibility = "Visible" }
+    $Cim.IO._ViewInvoiceTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._ViewInvoicePanel.   Visibility = "Visible" }
+    $Cim.IO._EditInvoiceTab.   Add_Click{ $Cim.Collapse(); $Cim.IO._EditInvoicePanel.   Visibility = "Visible" }
+    $Cim.IO._NewInvoiceTab.    Add_Click{ $Cim.Collapse(); $Cim.IO._NewInvoicePanel.    Visibility = "Visible" }
 
-    $Cim.IO._ViewInvoiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._ViewInvoicePanel. Visibility = "Visible"
-    })
+    # ------------------ #
+    # Get/Search Filters #
+    # ------------------ # 
 
-    $Cim.IO._EditInvoiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._EditInvoicePanel. Visibility = "Visible"
-    })
-
-    $Cim.IO._NewInvoiceTab.Add_Click(
-    {
-        $Cim.Collapse()
-        $Cim.IO._NewInvoicePanel.  Visibility = "Visible"
-    })
-
-    # -------------- #
-    # Search Filters #
-    # -------------- # 
-
-    # UID
+    # UID #
     $Cim.IO.       _GetUIDSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetUIDResult.ItemsSource = $Null
+        $Cim.IO._GetUIDSearchResult.ItemsSource = $Null
         
-        $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchType.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
+        $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchProperty.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
 
         If ($Item)
         {
-            $Cim.IO._GetUIDResult.ItemsSource = $Item
+            $Cim.IO._GetUIDSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Client
+    # Client #
     $Cim.IO.    _GetClientSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetClientResult.ItemsSource = $Null
+        $Cim.IO._GetClientSearchResult.ItemsSource = $Null
         
-        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchType.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
+        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetClientResult.ItemsSource = $Item
+            $Cim.IO._GetClientSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Service
+    # Service #
     $Cim.IO.   _GetServiceSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetServiceResult.ItemsSource = $Null
+        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchType.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
+        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
 
         If ($Item)
         {
-            $Cim.IO._GetServiceResult.ItemsSource = $Item
+            $Cim.IO._GetServiceSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Device
+    # Device #
     $Cim.IO.    _GetDeviceSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetDeviceResult.ItemsSource = $Null
+        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchType.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
+        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetDeviceResult.ItemsSource = $Item
+            $Cim.IO._GetDeviceSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Issue
+    # Issue #
     $Cim.IO.     _GetIssueSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetIssueResult.ItemsSource = $Null
+        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchType.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
+        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
 
         If ($Item)
         {
-            $Cim.IO._GetIssueResult.ItemsSource = $Item
+            $Cim.IO._GetIssueSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Inventory
+    # Inventory #
     $Cim.IO. _GetInventorySearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetInventoryResult.ItemsSource = $Null
+        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchType.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
+        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetInventoryResult.ItemsSource = $Item
+            $Cim.IO._GetInventorySearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Purchase
+    # Purchase #
     $Cim.IO.  _GetPurchaseSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetPurchaseResult.ItemsSource = $Null
+        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchType.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
+        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetPurchaseResult.ItemsSource = $Item
+            $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Expense
+    # Expense #
     $Cim.IO.   _GetExpenseSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetExpenseResult.ItemsSource = $Null
+        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchType.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
+        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetExpenseResult.ItemsSource = $Item
+            $Cim.IO._GetExpenseSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Account
+    # Account #
     $Cim.IO.   _GetAccountSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetAccountResult.ItemsSource = $Null
+        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchType.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
+        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetAccountResult.ItemsSource = $Item
+            $Cim.IO._GetAccountSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # Invoice
+    # Invoice #
     $Cim.IO.   _GetInvoiceSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetInvoiceResult.ItemsSource = $Null
+        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
 
-        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchType.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
+        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
 
         If ($Item) 
         {
-            $Cim.IO._GetInvoiceResult.ItemsSource = $Item
+            $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Item
         }
 
         Start-Sleep -Milliseconds 50
     })
 
-    # ------- #
-    # Refresh #
-    # ------- #
+    # ----------- #
+    # Get/Refresh #
+    # ----------- #
 
-    $Cim.IO._GetUIDRefresh.       Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetClientRefresh.    Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetServiceRefresh.   Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetDeviceRefresh.    Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetIssueRefresh.     Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetInventoryRefresh. Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetPurchaseRefresh.  Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetExpenseRefresh.   Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetAccountRefresh.   Add_Click{$Cim.Refresh()}
-    $Cim.IO._GetInvoiceRefresh.   Add_Click{$Cim.Refresh()}
+    $Cim.IO._GetUIDRefresh.       Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetClientRefresh.    Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetServiceRefresh.   Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetDeviceRefresh.    Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetIssueRefresh.     Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetInventoryRefresh. Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetPurchaseRefresh.  Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetExpenseRefresh.   Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetAccountRefresh.   Add_Click{ $Cim.Refresh() }
+    $Cim.IO._GetInvoiceRefresh.   Add_Click{ $Cim.Refresh() }
 
     # ------------ #
     # View Records #
     # ------------ # 
 
-    $Cim.IO._ViewUIDRecord.       Add_Click{$Cim.       ViewUID($Cim.IO.       _GetUIDResult.SelectedItem.UID)}
-    $Cim.IO._ViewClientRecord.    Add_Click{$Cim.    ViewClient($Cim.IO.    _GetClientResult.SelectedItem.UID)}
-    $Cim.IO._ViewServiceRecord.   Add_Click{$Cim.   ViewService($Cim.IO.   _GetServiceResult.SelectedItem.UID)}
-    $Cim.IO._ViewDeviceRecord.    Add_Click{$Cim.    ViewDevice($Cim.IO.    _GetDeviceResult.SelectedItem.UID)}
-    $Cim.IO._ViewIssueRecord.     Add_Click{$Cim.     ViewIssue($Cim.IO.     _GetIssueResult.SelectedItem.UID)}
-    $Cim.IO._ViewInventoryRecord. Add_Click{$Cim. ViewInventory($Cim.IO. _GetInventoryResult.SelectedItem.UID)}
-    $Cim.IO._ViewPurchaseRecord.  Add_Click{$Cim.  ViewPurchase($Cim.IO.  _GetPurchaseResult.SelectedItem.UID)}
-    $Cim.IO._ViewExpenseRecord.   Add_Click{$Cim.   ViewExpense($Cim.IO.   _GetExpenseResult.SelectedItem.UID)}
-    $Cim.IO._ViewAccountRecord.   Add_Click{$Cim.   ViewAccount($Cim.IO.   _GetAccountResult.SelectedItem.UID)}
-    $Cim.IO._ViewInvoiceRecord.   Add_Click{$Cim.   ViewInvoice($Cim.IO.   _GetInvoiceResult.SelectedItem.UID)}
+    $Cim.IO._ViewUIDRecord.       Add_Click{ $Cim.       ViewUID($Cim.IO.       _GetUIDResult.SelectedItem.UID)}
+    $Cim.IO._ViewClientRecord.    Add_Click{ $Cim.    ViewClient($Cim.IO.    _GetClientResult.SelectedItem.UID)}
+    $Cim.IO._ViewServiceRecord.   Add_Click{ $Cim.   ViewService($Cim.IO.   _GetServiceResult.SelectedItem.UID)}
+    $Cim.IO._ViewDeviceRecord.    Add_Click{ $Cim.    ViewDevice($Cim.IO.    _GetDeviceResult.SelectedItem.UID)}
+    $Cim.IO._ViewIssueRecord.     Add_Click{ $Cim.     ViewIssue($Cim.IO.     _GetIssueResult.SelectedItem.UID)}
+    $Cim.IO._ViewInventoryRecord. Add_Click{ $Cim. ViewInventory($Cim.IO. _GetInventoryResult.SelectedItem.UID)}
+    $Cim.IO._ViewPurchaseRecord.  Add_Click{ $Cim.  ViewPurchase($Cim.IO.  _GetPurchaseResult.SelectedItem.UID)}
+    $Cim.IO._ViewExpenseRecord.   Add_Click{ $Cim.   ViewExpense($Cim.IO.   _GetExpenseResult.SelectedItem.UID)}
+    $Cim.IO._ViewAccountRecord.   Add_Click{ $Cim.   ViewAccount($Cim.IO.   _GetAccountResult.SelectedItem.UID)}
+    $Cim.IO._ViewInvoiceRecord.   Add_Click{ $Cim.   ViewInvoice($Cim.IO.   _GetInvoiceResult.SelectedItem.UID)}
 
     # ---------------- #
     # Input Validation #
@@ -5038,6 +5227,24 @@ Function cim-db
         }
     }
 
+    $Cim.IO._NewClientRemovePhone.Add_Click{
+
+        If ( $Cim.IO._NewClientPhoneList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No phone number to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._NewClientPhoneList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another phone number before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientPhoneList.Items.Remove($Cim.IO._NewClientPhoneList.SelectedItem)
+        }
+    }
+
     $Cim.IO._NewClientAddEmail. Add_Click{
         
         $Item = $Cim.IO._NewClientEmailText.Text
@@ -5062,6 +5269,24 @@ Function cim-db
             $Cim.IO._NewClientEmailList.Items.Add($Item)
             $Cim.IO._NewClientEmailList.SelectedIndex = ($Cim.IO._NewClientEmailList.Count - 1)
             $Cim.IO._NewClientEmailText.Text,$Item = $Null
+        }
+    }
+
+    $Cim.IO._NewClientRemoveEmail.Add_Click{
+        
+        If ( $Cim.IO._NewClientEmailList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No email address to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._NewClientEmailList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientEmailList.Items.Remove($Cim.IO._NewClientEmailList.SelectedItem)
         }
     }
 

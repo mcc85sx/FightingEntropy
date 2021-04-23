@@ -4877,13 +4877,13 @@ Function cim-db
     # UID Panel #
     # --------- #
 
-    $Cim.IO._GetUIDTab.        Add_Click{ 
+    $Cim.IO._GetUIDTab.Add_Click{ 
     
         $Cim.GetTab(0)
         $Cim.IO._GetUIDSearchResult.ItemsSource = $Null
     }
 
-    $Cim.IO._ViewUIDTab.       Add_Click{
+    $Cim.IO._ViewUIDTab.Add_Click{
     
         $Cim.Collapse()
         $Cim.IO._ViewUIDPanel.Visibility = "Visible" 
@@ -4929,12 +4929,13 @@ Function cim-db
         $Cim.GetTab(1)
         $Cim.IO._GetClientSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveClientTab.IsEnabled           = 0
     }
 
     $Cim.IO._ViewClientTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewClientPanel.Visibility = "Visible"
+        $Cim.IO._ViewClientPanel.Visibility        = "Visible"
         $Cim.Refresh()
         $Cim.ViewClient($Cim.IO._GetClientSearchResult.SelectedItem.UID)
     }
@@ -4942,22 +4943,25 @@ Function cim-db
     $Cim.IO._EditClientTab.Add_Click{ 
 
         $Cim.Collapse()
-        $Cim.IO._EditClientPanel.Visibility = "Visible"
+        $Cim.IO._EditClientPanel.Visibility        = "Visible"
         $Cim.Refresh()
         $Cim.EditClient($Cim.IO._GetClientSearchResult.SelectedItem.UID) 
-        $Cim.IO._ViewClientTab.IsEnabled    = 0
+        $Cim.IO._ViewClientTab.IsEnabled           = 0
+        $Cim.IO._SaveClientTab.IsEnabled           = 1
     }
 
     $Cim.IO._NewClientTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewClientPanel.Visibility = "Visible"
+        $Cim.IO._NewClientPanel.Visibility         = "Visible"
         $Cim.Refresh()
         $Cim.IO._GetClientSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveClientTab.IsEnabled           = 1
     }
 
-    $Cim.IO._ViewClientTab.IsEnabled = 0
-    $Cim.IO._EditClientTab.IsEnabled = 0
+    $Cim.IO._ViewClientTab.IsEnabled               = 0
+    $Cim.IO._EditClientTab.IsEnabled               = 0
+    $Cim.IO._SaveClientTab.IsEnabled               = 0
 
     $Cim.IO._GetClientSearchResult.Add_SelectionChanged{
 
@@ -4997,48 +5001,52 @@ Function cim-db
         $Cim.GetTab(2)
         $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveServiceTab.IsEnabled           = 0
     }
 
     $Cim.IO._ViewServiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewServicePanel.Visibility = "Visible"
+        $Cim.IO._ViewServicePanel.Visibility        = "Visible"
         $Cim.Refresh()
         $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewServiceTab.IsEnabled    = 0
     }
 
     $Cim.IO._EditServiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditServicePanel.Visibility = "Visible" 
+        $Cim.IO._EditServicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
-        $Cim.EditService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)        
+        $Cim.EditService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewServiceTab.IsEnabled           = 0
+        $Cim.IO._SaveServiceTab.IsEnabled           = 1
     }
 
     $Cim.IO._NewServiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewServicePanel.Visibility = "Visible"
+        $Cim.IO._NewServicePanel.Visibility         = "Visible"
         $Cim.Refresh()
         $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveServiceTab.IsEnabled           = 1
     }
 
-    $Cim.IO._ViewServiceTab.IsEnabled = 0
-    $Cim.IO._EditServiceTab.IsEnabled = 0
+    $Cim.IO._ViewServiceTab.IsEnabled               = 0
+    $Cim.IO._EditServiceTab.IsEnabled               = 0
+    $Cim.IO._SaveServiceTab.IsEnabled               = 0
 
     $Cim.IO._GetServiceSearchResult.Add_SelectionChanged{
 
         If ($Cim.IO._GetServiceSearchResult.SelectedIndex -eq -1)
         {
-            $Cim.IO._ViewServiceTab.IsEnabled = 0
-            $Cim.IO._EditServiceTab.IsEnabled = 0
+            $Cim.IO._ViewServiceTab.IsEnabled       = 0
+            $Cim.IO._EditServiceTab.IsEnabled       = 0
         }
 
         ElseIf ($Cim.IO._GetServiceSearchResult.SelectedIndex -ne -1)
         {
-            $Cim.IO._ViewServiceTab.IsEnabled = 1
-            $Cim.IO._EditServiceTab.IsEnabled = 1
+            $Cim.IO._ViewServiceTab.IsEnabled       = 1
+            $Cim.IO._EditServiceTab.IsEnabled       = 1
         }
     }
 
@@ -5065,12 +5073,13 @@ Function cim-db
         $Cim.GetTab(3)
         $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 0
     }
 
     $Cim.IO._ViewDeviceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewDevicePanel.Visibility = "Visible" 
+        $Cim.IO._ViewDevicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
     }
@@ -5078,41 +5087,44 @@ Function cim-db
     $Cim.IO._EditDeviceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditDevicePanel.Visibility = "Visible" 
+        $Cim.IO._EditDevicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.EditDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewDeviceTab.IsEnabled    = 0
+        $Cim.IO._ViewDeviceTab.IsEnabled           = 0
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
     }
 
     $Cim.IO._NewDeviceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewDevicePanel.Visibility  = "Visible"
+        $Cim.IO._NewDevicePanel.Visibility         = "Visible"
         $Cim.Refresh()
         $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
     }
 
-    $Cim.IO._ViewDeviceTab.IsEnabled = 0
-    $Cim.IO._EditDeviceTab.IsEnabled = 0
+    $Cim.IO._ViewDeviceTab.IsEnabled               = 0
+    $Cim.IO._EditDeviceTab.IsEnabled               = 0
+    $Cim.IO._SaveDeviceTab.IsEnabled               = 0
 
     $Cim.IO._GetDeviceSearchResult.Add_SelectionChanged{
 
         If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -eq -1)
         {
-            $Cim.IO._ViewDeviceTab.IsEnabled = 0
-            $Cim.IO._EditDeviceTab.IsEnabled = 0
+            $Cim.IO._ViewDeviceTab.IsEnabled       = 0
+            $Cim.IO._EditDeviceTab.IsEnabled       = 0
         }
 
         If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -ne -1)
         {
-            $Cim.IO._ViewDeviceTab.IsEnabled = 1
-            $Cim.IO._EditDeviceTab.IsEnabled = 1
+            $Cim.IO._ViewDeviceTab.IsEnabled       = 1
+            $Cim.IO._EditDeviceTab.IsEnabled       = 1
         }
     }
 
     $Cim.IO._GetDeviceSearchFilter.Add_TextChanged{
 
-        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+        $Cim.IO._GetDeviceSearchResult.ItemsSource     = $Null
 
         $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
 
@@ -5131,14 +5143,15 @@ Function cim-db
     $Cim.IO._GetIssueTab.Add_Click{ 
     
         $Cim.GetTab(4)
-        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveIssueTab.IsEnabled               = 0
     }
 
     $Cim.IO._ViewIssueTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewIssuePanel.Visibility = "Visible" 
+        $Cim.IO._ViewIssuePanel.Visibility            = "Visible" 
         $Cim.Refresh()
         $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)    
     }
@@ -5146,41 +5159,44 @@ Function cim-db
     $Cim.IO._EditIssueTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditIssuePanel.Visibility = "Visible"
+        $Cim.IO._EditIssuePanel.Visibility            = "Visible"
         $Cim.Refresh()
         $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewIssueTab.IsEnabled    = 0
+        $Cim.IO._ViewIssueTab.IsEnabled               = 0
+        $Cim.IO._SaveIssueTab.IsEnabled               = 1
     }
 
     $Cim.IO._NewIssueTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewIssuePanel.Visibility = "Visible" 
+        $Cim.IO._NewIssuePanel.Visibility             = "Visible" 
         $Cim.Refresh()
-        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
+        $Cim.IO._SaveIssueTab.IsEnabled               = 1
     }
 
-    $Cim.IO._ViewIssueTab.IsEnabled = 0
-    $Cim.IO._EditIssueTab.IsEnabled = 0
+    $Cim.IO._ViewIssueTab.IsEnabled                   = 0
+    $Cim.IO._EditIssueTab.IsEnabled                   = 0
+    $Cim.IO._SaveIssueTab.IsEnabled                   = 0
 
     $Cim.IO._GetIssueSearchResult.Add_SelectionChanged{
     
         If ($Cim.IO._GetIssueSearchResult.SelectedIndex -eq -1)
         {
-            $Cim.IO._ViewIssueTab.IsEnabled = 0
-            $Cim.IO._EditIssueTab.IsEnabled = 0
+            $Cim.IO._ViewIssueTab.IsEnabled           = 0
+            $Cim.IO._EditIssueTab.IsEnabled           = 0
         }
 
         ElseIf ($Cim.IO._GetIssueSearchResult.SelectedIndex -ne -1)
         {
-            $Cim.IO._ViewIssueTab.IsEnabled = 1
-            $Cim.IO._EditIssueTab.IsEnabled = 1
+            $Cim.IO._ViewIssueTab.IsEnabled           = 1
+            $Cim.IO._EditIssueTab.IsEnabled           = 1
         }
     }
 
     $Cim.IO._GetIssueSearchFilter.Add_TextChanged{
 
-        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
 
         $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
 
@@ -5201,35 +5217,39 @@ Function cim-db
         $Cim.GetTab(5) 
         $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveInventoryTab.IsEnabled           = 0
     }
 
-    $Cim.IO._ViewInventoryTab. Add_Click{ 
+    $Cim.IO._ViewInventoryTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewInventoryPanel.Visibility = "Visible" 
+        $Cim.IO._ViewInventoryPanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)    
     }
 
-    $Cim.IO._EditInventoryTab. Add_Click{ 
+    $Cim.IO._EditInventoryTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditInventoryPanel. Visibility = "Visible" 
+        $Cim.IO._EditInventoryPanel. Visibility       = "Visible" 
         $Cim.Refresh()
         $Cim.EditInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
-        $Cim.IO._ViewInventoryTab.IsEnabled    = 0
+        $Cim.IO._ViewInventoryTab.IsEnabled           = 0
+        $Cim.IO._SavePurchaseTab.IsEnabled            = 1
     }
 
-    $Cim.IO._NewInventoryTab.  Add_Click{ 
+    $Cim.IO._NewInventoryTab.Add_Click{ 
     
         $Cim.Collapse()
         $Cim.IO._NewInventoryPanel.Visibility = "Visible" 
         $Cim.Refresh()
         $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+        $Cim.IO._SaveInventoryTab.IsEnabled           = 1
     }
 
-    $Cim.IO._ViewInventoryTab.IsEnabled = 0
-    $Cim.IO._EditInventoryTab.IsEnabled = 0
+    $Cim.IO._ViewInventoryTab.IsEnabled               = 0
+    $Cim.IO._EditInventoryTab.IsEnabled               = 0
+    $Cim.IO._SaveInventoryTab.IsEnabled               = 0
 
     $Cim.IO._GetInventorySearchResult.Add_SelectionChanged{
 
@@ -5269,12 +5289,13 @@ Function cim-db
         $Cim.GetTab(6) 
         $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
     }
 
     $Cim.IO._ViewPurchaseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewPurchasePanel.Visibility = "Visible" 
+        $Cim.IO._ViewPurchasePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)    
     }
@@ -5282,22 +5303,25 @@ Function cim-db
     $Cim.IO._EditPurchaseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditPurchasePanel.Visibility = "Visible" 
+        $Cim.IO._EditPurchasePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.EditPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewPurchaseTab.IsEnabled    = 0
+        $Cim.IO._ViewPurchaseTab.IsEnabled           = 0
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 1
     }
 
-    $Cim.IO._NewPurchaseTab.   Add_Click{ 
+    $Cim.IO._NewPurchaseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewPurchasePanel.Visibility = "Visible" 
+        $Cim.IO._NewPurchasePanel.Visibility         = "Visible" 
         $Cim.Refresh()
         $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
     }
 
-    $Cim.IO._ViewPurchaseTab.IsEnabled = 0
-    $Cim.IO._EditPurchaseTab.IsEnabled = 0
+    $Cim.IO._ViewPurchaseTab.IsEnabled                = 0
+    $Cim.IO._EditPurchaseTab.IsEnabled                = 0
+    $Cim.IO._SavePurchaseTab.IsEnabled                = 0
 
     $Cim.IO._GetPurchaseSearchResult.Add_SelectionChanged{
 
@@ -5337,12 +5361,13 @@ Function cim-db
         $Cim.GetTab(7) 
         $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 0
     }
 
     $Cim.IO._ViewExpenseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewExpensePanel.Visibility = "Visible" 
+        $Cim.IO._ViewExpensePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
     }
@@ -5350,35 +5375,38 @@ Function cim-db
     $Cim.IO._EditExpenseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditExpensePanel.Visibility = "Visible" 
+        $Cim.IO._EditExpensePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.EditExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewExpenseTab.IsEnabled    = 0
+        $Cim.IO._ViewExpenseTab.IsEnabled           = 0
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
     }
 
     $Cim.IO._NewExpenseTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewExpensePanel.Visibility = "Visible" 
+        $Cim.IO._NewExpensePanel.Visibility         = "Visible" 
         $Cim.Refresh()
         $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
     }
 
-    $Cim.IO._ViewExpenseTab.IsEnabled = 0
-    $Cim.IO._EditExpenseTab.IsEnabled = 0
+    $Cim.IO._ViewExpenseTab.IsEnabled                 = 0
+    $Cim.IO._EditExpenseTab.IsEnabled                 = 0
+    $Cim.IO._SaveExpenseTab.IsEnabled                 = 0
 
     $Cim.IO._GetExpenseSearchResult.Add_SelectionChanged{
 
         If ($Cim.IO._GetExpenseSearchResult.SelectedIndex -eq -1)
         {
-            $Cim.IO._ViewExpenseTab.IsEnabled = 0
-            $Cim.IO._EditExpenseTab.IsEnabled = 0
+            $Cim.IO._ViewExpenseTab.IsEnabled       = 0
+            $Cim.IO._EditExpenseTab.IsEnabled       = 0
         }
 
         ElseIf ($Cim.IO._GetExpenseSearchResult.SelectedIndex -ne -1)
         {
-            $Cim.IO._ViewExpenseTab.IsEnabled = 1
-            $Cim.IO._EditExpenseTab.IsEnabled = 1
+            $Cim.IO._ViewExpenseTab.IsEnabled       = 1
+            $Cim.IO._EditExpenseTab.IsEnabled       = 1
         }
     }
 
@@ -5404,7 +5432,8 @@ Function cim-db
     
         $Cim.GetTab(8)
         $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-        $Cim.Refresh()    
+        $Cim.Refresh()
+        $Cim.IO._SaveAccountTab.IsEnabled    = 0 
     }
 
     $Cim.IO._ViewAccountTab.Add_Click{ 
@@ -5418,10 +5447,11 @@ Function cim-db
     $Cim.IO._EditAccountTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditAccountPanel.Visibility = "Visible"
+        $Cim.IO._EditAccountPanel.Visibility          = "Visible"
         $Cim.Refresh()
         $Cim.EditAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewAccountTab.IsEnabled    = 0
+        $Cim.IO._ViewAccountTab.IsEnabled             = 0
+        $Cim.IO._SaveAccountTab.IsEnabled             = 1
     }
 
     $Cim.IO._NewAccountTab.Add_Click{ 
@@ -5430,10 +5460,12 @@ Function cim-db
         $Cim.IO._NewAccountPanel.Visibility = "Visible" 
         $Cim.Refresh()
         $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveAccountTab.IsEnabled    = 1
     }
 
-    $Cim.IO._ViewAccountTab.IsEnabled = 0
-    $Cim.IO._EditAccountTab.IsEnabled = 0
+    $Cim.IO._ViewAccountTab.IsEnabled                 = 0
+    $Cim.IO._EditAccountTab.IsEnabled                 = 0
+    $Cim.IO._SaveAccountTab.IsEnabled                 = 0
 
     $Cim.IO._GetAccountSearchResult.Add_SelectionChanged{
 
@@ -5473,12 +5505,13 @@ Function cim-db
         $Cim.GetTab(9) 
         $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
         $Cim.Refresh()
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
     }
 
     $Cim.IO._ViewInvoiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._ViewInvoicePanel.Visibility = "Visible" 
+        $Cim.IO._ViewInvoicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
     }
@@ -5486,22 +5519,25 @@ Function cim-db
     $Cim.IO._EditInvoiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._EditInvoicePanel.Visibility = "Visible" 
+        $Cim.IO._EditInvoicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
         $Cim.EditInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewInvoiceTab.IsEnabled    = 0
+        $Cim.IO._ViewInvoiceTab.IsEnabled           = 0
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
     }
 
     $Cim.IO._NewInvoiceTab.Add_Click{ 
     
         $Cim.Collapse()
-        $Cim.IO._NewInvoicePanel.Visibility = "Visible"
+        $Cim.IO._NewInvoicePanel.Visibility         = "Visible"
         $Cim.Refresh()
         $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
     }
     
-    $Cim.IO._ViewInvoiceTab.IsEnabled = 0
-    $Cim.IO._EditInvoiceTab.IsEnabled = 0
+    $Cim.IO._ViewInvoiceTab.IsEnabled                = 0
+    $Cim.IO._EditInvoiceTab.IsEnabled                = 0
+    $Cim.IO._SaveInvoiceTab.IsEnabled                = 0
 
     $Cim.IO._GetInvoiceSearchResult.Add_SelectionChanged{
 

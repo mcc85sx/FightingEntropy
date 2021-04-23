@@ -881,6 +881,70 @@ Function cim-db
             $This.IO._ViewUIDTime.Text                       = $Null
             $This.IO._ViewUIDType.Text                       = $Null
             $This.IO._ViewUIDUID.Text                        = $Null
+            
+            $This.IO._ViewClientPhoneList.ItemsSource        = $Null
+            $This.IO._ViewClientEmailList.ItemsSource        = $Null
+            $This.IO._ViewClientDeviceList.ItemsSource       = $Null
+            $This.IO._ViewClientInvoiceList.ItemsSource      = $Null
+            $This.IO._EditClientPhoneList.ItemsSource        = $Null
+            $This.IO._EditClientEmailList.ItemsSource        = $Null
+            $This.IO._EditClientDeviceList.ItemsSource       = $Null
+            $This.IO._EditClientInvoiceList.ItemsSource      = $Null
+            $This.IO._NewClientPhoneList.ItemsSource         = $Null
+            $This.IO._NewClientEmailList.ItemsSource         = $Null
+            $This.IO._NewClientDeviceList.ItemsSource        = $Null
+            $This.IO._NewClientInvoiceList.ItemsSource       = $Null
+            $This.IO._ViewDeviceClientList.ItemsSource       = $Null
+            $This.IO._ViewDeviceIssueList.ItemsSource        = $Null
+            $This.IO._ViewDevicePurchaseList.ItemsSource     = $Null
+            $This.IO._ViewDeviceInvoiceList.ItemsSource      = $Null
+            $This.IO._EditDeviceClientList.ItemsSource       = $Null
+            $This.IO._EditDeviceIssueList.ItemsSource        = $Null
+            $This.IO._EditDevicePurchaseList.ItemsSource     = $Null
+            $This.IO._EditDeviceInvoiceList.ItemsSource      = $Null
+            $This.IO._NewDeviceClientList.ItemsSource        = $Null
+            $This.IO._NewDeviceIssueList.ItemsSource         = $Null
+            $This.IO._NewDevicePurchaseList.ItemsSource      = $Null
+            $This.IO._NewDeviceInvoiceList.ItemsSource       = $Null
+            $This.IO._ViewIssueClientList.ItemsSource        = $Null
+            $This.IO._ViewIssueDeviceList.ItemsSource        = $Null
+            $This.IO._ViewIssuePurchaseList.ItemsSource      = $Null
+            $This.IO._ViewIssueServiceList.ItemsSource       = $Null
+            $This.IO._ViewIssueInvoiceList.ItemsSource       = $Null
+            $This.IO._EditIssueClientList.ItemsSource        = $Null
+            $This.IO._EditIssueDeviceList.ItemsSource        = $Null
+            $This.IO._EditIssuePurchaseList.ItemsSource      = $Null
+            $This.IO._EditIssueServiceList.ItemsSource       = $Null
+            $This.IO._EditIssueInvoiceList.ItemsSource       = $Null
+            $This.IO._NewIssueClientList.ItemsSource         = $Null
+            $This.IO._NewIssueDeviceList.ItemsSource         = $Null
+            $This.IO._NewIssuePurchaseList.ItemsSource       = $Null
+            $This.IO._NewIssueServiceList.ItemsSource        = $Null
+            $This.IO._NewIssueInvoiceList.ItemsSource        = $Null
+            $This.IO._ViewInventoryDeviceList.ItemsSource    = $Null
+            $This.IO._EditInventoryDeviceList.ItemsSource    = $Null
+            $This.IO._NewInventoryDeviceList.ItemsSource     = $Null
+            $This.IO._ViewPurchaseDeviceList.ItemsSource     = $Null
+            $This.IO._EditPurchaseDeviceList.ItemsSource     = $Null
+            $This.IO._NewPurchaseDeviceList.ItemsSource      = $Null
+            $This.IO._ViewExpenseDeviceList.ItemsSource      = $Null
+            $This.IO._EditExpenseDeviceList.ItemsSource      = $Null
+            $This.IO._NewExpenseDeviceList.ItemsSource       = $Null
+            $This.IO._ViewAccountDeviceList.ItemsSource      = $Null
+            $This.IO._EditAccountObjectList.ItemsSource      = $Null
+            $This.IO._NewAccountObjectList.ItemsSource       = $Null
+            $This.IO._ViewInvoiceClientList.ItemsSource      = $Null
+            $This.IO._ViewInvoiceInventoryList.ItemsSource   = $Null
+            $This.IO._ViewInvoiceServiceList.ItemsSource     = $Null
+            $This.IO._ViewInvoicePurchaseList.ItemsSource    = $Null
+            $This.IO._EditInvoiceClientList.ItemsSource      = $Null
+            $This.IO._EditInvoiceInventoryList.ItemsSource   = $Null
+            $This.IO._EditInvoiceServiceList.ItemsSource     = $Null
+            $This.IO._EditInvoicePurchaseList.ItemsSource    = $Null
+            $This.IO._NewInvoiceClientList.ItemsSource       = $Null
+            $This.IO._NewInvoiceInventoryList.ItemsSource    = $Null
+            $This.IO._NewInvoiceServiceList.ItemsSource      = $Null
+            $This.IO._NewInvoicePurchaseList.ItemsSource     = $Null
         }
 
         [Object] NewUID([UInt32]$Slot)
@@ -911,10 +975,15 @@ Function cim-db
             $This.IO._ViewUIDDate.Text  = $Item.Date
             $This.IO._ViewUIDTime.Text  = $Item.Time
  
+            $Collect = @( )
+
             ForEach ( $Object in $Item.Record | Get-Member | ? MemberType -eq Property | % Name )
             {
-                $This.IO._ViewUIDRecordResult.ItemsSource += [_DGList]::New($Object,$Item.Record.$Object)
+                
+                $Collect += [_DGList]::New($Object,$Item.Record.$Object)
             }
+
+            $This.IO._ViewUIDRecordResult.ItemsSource = $Collect
         }
 
         ViewClient([Object]$UID)
@@ -991,11 +1060,6 @@ Function cim-db
         EditClient([Object]$UID)
         {
             $This.Clear()
-
-            $This.IO._EditClientPhoneList.ItemsSource    = $Null
-            $This.IO._EditClientEmailList.ItemsSource    = $Null
-            $This.IO._EditClientDeviceList.ItemsSource   = $Null
-            $This.IO._EditClientInvoiceList.ItemsSource  = $Null
 
             $Item                                    = $This.GetUID($UID)
             
@@ -1094,11 +1158,6 @@ Function cim-db
         {
             $This.Clear()
 
-            $This.IO._ViewDeviceClientList.ItemsSource   = $Null 
-            $This.IO._ViewDeviceIssueList.ItemsSource    = $Null
-            $This.IO._ViewDevicePurchaseList.ItemsSource = $Null
-            $This.IO._ViewDeviceInvoiceList.ItemsSource  = $Null
-
             $Item                                        = $This.GetUID($UID)
             
             If (!$Item)
@@ -1158,10 +1217,6 @@ Function cim-db
         EditDevice([Object]$UID)
         {
             $This.Clear()
-            $This.IO._EditDeviceClientList.ItemsSource   = $Null 
-            $This.IO._EditDeviceIssueList.ItemsSource    = $Null
-            $This.IO._EditDevicePurchaseList.ItemsSource = $Null
-            $This.IO._EditDeviceInvoiceList.ItemsSource  = $Null
 
             $Item                                     = $This.GetUID($UID)
             
@@ -1221,13 +1276,8 @@ Function cim-db
 
         ViewIssue([Object]$UID)
         {
-            $This.IO._ViewIssueClientList.ItemsSource     = $Null
-            $This.IO._ViewIssueDeviceList.ItemsSource     = $Null
-            $This.IO._ViewIssueDescription.Text           = $Null
+            $This.Clear()
             $This.IO._ViewIssueStatus.SelectedIndex       = 0
-            $This.IO._ViewIssuePurchaseList.ItemsSource   = $Null
-            $This.IO._ViewIssueServiceList.ItemsSource    = $Null
-            $This.IO._ViewIssueInvoiceList.ItemsSource    = $Null
 
             $Item                                         = $This.GetUID($UID)
             
@@ -1289,7 +1339,6 @@ Function cim-db
         {
             $This.Clear()
             $This.IO._ViewInventoryIsDevice.IsChecked     = $False
-            $This.IO._ViewInventoryDeviceList.ItemsSource = $Null
 
             $Item = $This.GetUID($UID)
             
@@ -1321,7 +1370,6 @@ Function cim-db
             $This.Clear()
 
             $This.IO._EditInventoryIsDevice.IsChecked  = $False
-            $This.IO._EditInventoryDevice.ItemsSource  = $Null
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1352,7 +1400,6 @@ Function cim-db
             $This.Clear()
 
             $This.IO._ViewPurchaseIsDevice.IsChecked   = $Null
-            $This.IO._ViewPurchaseDevice.ItemsSource   = $Null
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1386,7 +1433,6 @@ Function cim-db
             $This.Clear()
 
             $This.IO._EditPurchaseIsDevice.IsChecked     = $Null
-            $This.IO._EditPurchaseDeviceList.ItemsSource = $Null
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1419,8 +1465,6 @@ Function cim-db
         {
             $This.Clear()
 
-            $This.IO._ViewExpenseAccountList.ItemsSource   = $Null
-
             $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
@@ -1446,8 +1490,6 @@ Function cim-db
         EditExpense([Object]$UID)
         {
             $This.Clear()
-
-            $This.IO._EditExpenseAccount.ItemsSource   = $Null
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1475,8 +1517,6 @@ Function cim-db
         {
             $This.Clear()
 
-            $This.IO._ViewAccountObjectList.ItemsSource    = $Null 
-
             $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
@@ -1497,8 +1537,6 @@ Function cim-db
         EditAccount([Object]$UID)
         {
             $This.Clear()
-
-            $This.IO._EditAccountObjectList.ItemsSource    = $Null 
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1522,10 +1560,6 @@ Function cim-db
             $This.Clear()
 
             $This.IO._ViewInvoiceMode.SelectedIndex    = 0 
-            $This.IO._ViewInvoiceClientList.ItemsSource    = $Null
-            $This.IO._ViewInvoiceInventoryList.ItemsSource = $Null
-            $This.IO._ViewInvoiceServiceList.ItemsSource   = $Null
-            $This.IO._ViewInvoicePurchaseList.ItemsSource  = $Null
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1579,10 +1613,6 @@ Function cim-db
             $This.Clear()
 
             $This.IO._EditInvoiceMode.SelectedIndex    = 0 
-            $This.IO._EditInvoiceClientList.ItemsSource    = $Null
-            $This.IO._EditInvoiceInventoryList.ItemsSource = $Null
-            $This.IO._EditInvoiceServiceList.ItemsSource   = $Null
-            $This.IO._EditInvoicePurchaseList.ItemsSource  = $Null
 
             $Item                                      = $This.GetUID($UID)
             

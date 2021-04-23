@@ -893,46 +893,6 @@ Function cim-db
             Return @( $This.DB.UID | ? UID -match $UID )
         }
 
-        ClientAddPhone()
-        {
-
-        }
-
-        ClientRemovePhone()
-        {
-            
-        }
-
-        ClientAddEmail()
-        {
-
-        }
-
-        ClientRemoveEmail()
-        {
-
-        }
-
-        ClientAddDevice()
-        {
-            
-        }
-
-        ClientRemoveDevice()
-        {
-            
-        }
-
-        ClientAddInvoice()
-        {
-            
-        }
-
-        ClientRemoveInvoice()
-        {
-            
-        }
-
         ViewUID([String]$UID)
         {
             $This.Clear()
@@ -951,16 +911,9 @@ Function cim-db
             $This.IO._ViewUIDDate.Text  = $Item.Date
             $This.IO._ViewUIDTime.Text  = $Item.Time
  
-            ForEach ( $Obj in $Item.Record | Get-Member | ? MemberType -eq Property | % Name )
+            ForEach ( $Object in $Item.Record | Get-Member | ? MemberType -eq Property | % Name )
             {
-                $Object = $Item.Record.$Obj
-
-                If ( $Object.Count -gt 1 )
-                {
-                    $Object = $Object -join ", "
-                }
-
-                $This.IO._ViewUIDRecordResult.ItemsSource += [_DGList]::New($Obj,$Object)
+                $This.IO._ViewUIDRecordResult.ItemsSource += [_DGList]::New($Object,$Item.Record.$Object)
             }
         }
 
@@ -968,77 +921,69 @@ Function cim-db
         {
             $This.Clear()
 
-            $This.IO._ViewClientGender.SelectedItem = 2
+            $This.IO._ViewClientGender.SelectedItem  = 2
+            $This.IO._ViewClientPhoneList.ItemsSource    = $Null
+            $This.IO._ViewClientEmailList.ItemsSource    = $Null
+            $This.IO._ViewClientDeviceList.ItemsSource   = $Null
+            $This.IO._ViewClientInvoiceList.ItemsSource  = $Null
 
-            If ( $This.IO._ViewClientPhoneList.Items.Count -gt 0 )
-            {
-                $This.IO._ViewClientPhone.Items.Clear()
-            }
-
-            If ( $This.IO._ViewClientEmailList.Items.Count -gt 0 )
-            {
-                $This.IO._ViewClientEmail.Items.Clear()
-            }
-
-            If ( $This.IO._ViewClientDevice.Items.Count -gt 0 )
-            {
-                $This.IO._ViewClientDevice.Items.Clear()
-            }
-
-            If ( $This.IO._ViewClientInvoice.Items.Count -gt 0 )
-            {
-                $This.IO._ViewClientInvoice.Items.Clear()
-            }
-
-            $Item = $This.GetUID($UID)
+            $Item                                    = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Client UID"
             }
 
-            $This.IO._ViewClientFirst.Text   = $Item.Record.First
-            $This.IO._ViewClientMI.Text      = $Item.Record.MI
-            $This.IO._ViewClientLast.Text    = $Item.Record.Last
-            $This.IO._ViewClientAddress.Text = $Item.Record.Address
-            $This.IO._ViewClientCity.Text    = $Item.Record.City
-            $This.IO._ViewClientRegion.Text  = $Item.Record.Region
-            $This.IO._ViewClientCountry.Text = $Item.Record.Country
-            $This.IO._ViewClientPostal.Text  = $Item.Record.Postal
-            $This.IO._ViewClientMonth.Text   = $Item.Record.Month
-            $This.IO._ViewClientDay.Text     = $Item.Record.Day
-            $This.IO._ViewClientYear.Text    = $Item.Record.Year
+            $This.IO._ViewClientFirst.Text           = $Item.Record.First
+            $This.IO._ViewClientMI.Text              = $Item.Record.MI
+            $This.IO._ViewClientLast.Text            = $Item.Record.Last
+            $This.IO._ViewClientAddress.Text         = $Item.Record.Address
+            $This.IO._ViewClientCity.Text            = $Item.Record.City
+            $This.IO._ViewClientRegion.Text          = $Item.Record.Region
+            $This.IO._ViewClientCountry.Text         = $Item.Record.Country
+            $This.IO._ViewClientPostal.Text          = $Item.Record.Postal
+            $This.IO._ViewClientMonth.Text           = $Item.Record.Month
+            $This.IO._ViewClientDay.Text             = $Item.Record.Day
+            $This.IO._ViewClientYear.Text            = $Item.Record.Year
 
             $This.IO._ViewClientGender.SelectedIndex = Switch ($Item.Record.Gender)
             {
                 Male {0} Female {1} - {2}
             }
 
-            $This.IO._ViewClientPhoneList | % { 
-            
-                $_.ItemsSource            = $Item.Record.Phone
-                $_.SelectedIndex          = ($_.Items.Count - 1)   
-            }
-
-            $This.IO._ViewClientEmailList | % { 
-            
-                $_.ItemsSource            = $Item.Record.Email
-                $_.SelectedIndex          = ($_.Items.Count - 1)   
-            }
-
-            $This.IO._ViewClientDevice    | % { 
-            
-                If ( $_.Items.Count -gt 0 )
-                {
-                    $_.ItemsSource        = $Item.Record.Device
+            ForEach ( $ListItem in $Item.Record.Phone )
+            { 
+                $This.IO._ViewClientPhoneList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
                 }
             }
 
-            $This.IO._ViewClientInvoice   | % { 
+            ForEach ( $ListItem in $Item.Record.Email )
+            { 
+                $This.IO._ViewClientEmailList        | % { 
             
-                If ( $_.Items.Count -gt 0 )
-                {
-                    $_.ItemsSource        = $Item.Record.Invoice
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)   
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._ViewClientDeviceList       | % { 
+            
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Invoice )
+            { 
+                $This.IO._ViewClientInvoiceList      | % { 
+            
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1 )
                 }
             }
         }
@@ -1047,130 +992,118 @@ Function cim-db
         {
             $This.Clear()
 
-            If ( $This.IO._EditClientPhoneList.Items.Count -gt 0 )
-            {
-                $This.IO._EditClientPhone.Items.Clear()
-            }
+            $This.IO._EditClientPhoneList.ItemsSource    = $Null
+            $This.IO._EditClientEmailList.ItemsSource    = $Null
+            $This.IO._EditClientDeviceList.ItemsSource   = $Null
+            $This.IO._EditClientInvoiceList.ItemsSource  = $Null
 
-            If ( $This.IO._EditClientEmailList.Items.Count -gt 0 )
-            {
-                $This.IO._EditClientEmail.Items.Clear()
-            }
-
-            If ( $This.IO._EditClientDevice.Items.Count -gt 0 )
-            {
-                $This.IO._EditClientDevice.Items.Clear()
-            }
-
-            If ( $This.IO._EditClientInvoice.Items.Count -gt 0 )
-            {
-                $This.IO._EditClientInvoice.Items.Clear()
-            }
-
-            $Item = $This.GetUID($UID)
+            $Item                                    = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Client UID"
             }
 
-            $This.IO._EditClientGender.SelectedItem = Switch ($Item.Record.Gender)
-            {
-                Male {0} Female {1} - {2}
-            }
-
-            $This.IO._EditClientFirst.Text   = $Item.Record.First
-            $This.IO._EditClientMI.Text      = $Item.Record.MI
-            $This.IO._EditClientLast.Text    = $Item.Record.Last
-            $This.IO._EditClientAddress.Text = $Item.Record.Address
-            $This.IO._EditClientCity.Text    = $Item.Record.City
-            $This.IO._EditClientRegion.Text  = $Item.Record.Region
-            $This.IO._EditClientCountry.Text = $Item.Record.Country
-            $This.IO._EditClientPostal.Text  = $Item.Record.Postal
-            $This.IO._EditClientMonth.Text   = $Item.Record.Month
-            $This.IO._EditClientDay.Text     = $Item.Record.Day
-            $This.IO._EditClientYear.Text    = $Item.Record.Year
+            $This.IO._EditClientFirst.Text           = $Item.Record.First
+            $This.IO._EditClientMI.Text              = $Item.Record.MI
+            $This.IO._EditClientLast.Text            = $Item.Record.Last
+            $This.IO._EditClientAddress.Text         = $Item.Record.Address
+            $This.IO._EditClientCity.Text            = $Item.Record.City
+            $This.IO._EditClientRegion.Text          = $Item.Record.Region
+            $This.IO._EditClientCountry.Text         = $Item.Record.Country
+            $This.IO._EditClientPostal.Text          = $Item.Record.Postal
+            $This.IO._EditClientMonth.Text           = $Item.Record.Month
+            $This.IO._EditClientDay.Text             = $Item.Record.Day
+            $This.IO._EditClientYear.Text            = $Item.Record.Year
 
             $This.IO._EditClientGender.SelectedIndex = Switch ($Item.Record.Gender)
             {
                 Male {0} Female {1} - {2}
             }
 
-            $This.IO._EditClientPhoneList | % { 
-            
-                $_.ItemsSource            = $Item.Record.Phone
-                $_.SelectedIndex          = ($_.Items.Count - 1)   
-            }
-
-            $This.IO._EditClientEmailList | % { 
-            
-                $_.ItemsSource            = $Item.Record.Email
-                $_.SelectedIndex          = ($_.Items.Count - 1)   
-            }
-
-            $This.IO._EditClientDevice    | % { 
-            
-                If ( $_.Items.Count -gt 0 )
-                {
-                    $_.ItemsSource        = $Item.Record.Device
+            ForEach ( $ListItem in $Item.Record.Phone )
+            { 
+                $This.IO._EditClientPhoneList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
                 }
             }
 
-            $This.IO._EditClientInvoice   | % {
+            ForEach ( $ListItem in $Item.Record.Email )
+            { 
+                $This.IO._EditClientEmailList        | % { 
             
-                If ( $_.Items.Count -gt 0 )
-                {
-                    $_.ItemsSource        = $Item.Record.Invoice
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)   
                 }
             }
-        }
 
-        SaveClient()
-        {
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._EditClientDeviceList       | % { 
             
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Invoice )
+            { 
+                $This.IO._EditClientInvoiceList      | % { 
+            
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1 )
+                }
+            }
         }
 
         ViewService([Object]$UID)
         {
             $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $Item                                        = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Service UID"
             }
 
-            $This.IO._ViewServiceName.Text           = $Item.Record.Name
-            $This.IO._ViewServiceDescription.Text    = $Item.Record.Description
-            $This.IO._ViewServiceCost.Text           = $Item.Record.Cost
+            $This.IO._ViewServiceName.Text               = $Item.Record.Name
+            $This.IO._ViewServiceDescription.Text        = $Item.Record.Description
+            $This.IO._ViewServiceCost.Text               = $Item.Record.Cost
         }
 
         EditService([Object]$UID)
         {
             $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $Item                                        = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Service UID"
             }
 
-            $This.IO._EditServiceName.Text           = $Item.Record.Name
-            $This.IO._EditServiceDescription.Text    = $Item.Record.Description
-            $This.IO._EditServiceCost.Text           = $Item.Record.Cost
+            $This.IO._EditServiceName.Text               = $Item.Record.Name
+            $This.IO._EditServiceDescription.Text        = $Item.Record.Description
+            $This.IO._EditServiceCost.Text               = $Item.Record.Cost
         }
 
         ViewDevice([Object]$UID)
         {
             $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $This.IO._ViewDeviceClientList.ItemsSource   = $Null 
+            $This.IO._ViewDeviceIssueList.ItemsSource    = $Null
+            $This.IO._ViewDevicePurchaseList.ItemsSource = $Null
+            $This.IO._ViewDeviceInvoiceList.ItemsSource  = $Null
+
+            $Item                                        = $This.GetUID($UID)
             
             If (!$Item)
             {
-                Throw "Invalid Service UID"
+                Throw "Invalid Device UID"
             }
 
             $This.IO._ViewDeviceChassis.SelectedIndex = Switch($Item.Record.Chassis)
@@ -1184,21 +1117,57 @@ Function cim-db
             $This.IO._ViewDeviceSpecification.Text   = $Item.Record.Specification
             $This.IO._ViewDeviceSerial.Text          = $Item.Record.Serial
             $This.IO._ViewDeviceTitle.Text           = $Item.Record.Title
-            $This.IO._ViewDeviceClientList.ItemsSource   = $Item.Record.Client
-            $This.IO._ViewDeviceIssueList.ItemsSource    = $Item.Record.Issue
-            $This.IO._ViewDevicePurchaseList.ItemsSource = $Item.Record.Purchase
-            $This.IO._ViewDeviceInvoiceList.ItemsSource  = $Item.Record.Invoice
+
+            ForEach ( $ListItem in $Item.Record.Client )
+            { 
+                $This.IO._ViewDeviceClientList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Issue )
+            { 
+                $This.IO._ViewDeviceIssueList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Purchase )
+            { 
+                $This.IO._ViewDevicePurchaseList     | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Invoice )
+            { 
+                $This.IO._ViewDeviceInvoiceList      | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                 = ($_.Items.Count - 1)
+                }
+            }
         }
 
         EditDevice([Object]$UID)
         {
             $This.Clear()
+            $This.IO._EditDeviceClientList.ItemsSource   = $Null 
+            $This.IO._EditDeviceIssueList.ItemsSource    = $Null
+            $This.IO._EditDevicePurchaseList.ItemsSource = $Null
+            $This.IO._EditDeviceInvoiceList.ItemsSource  = $Null
 
-            $Item = $This.GetUID($UID)
+            $Item                                     = $This.GetUID($UID)
             
             If (!$Item)
             {
-                Throw "Invalid Service UID"
+                Throw "Invalid Device UID"
             }
 
             $This.IO._EditDeviceChassis.SelectedIndex = Switch($Item.Record.Chassis)
@@ -1207,52 +1176,120 @@ Function cim-db
                 Server     {5} Network    {6} Other      {7} -          {8}
             }
 
-            $This.IO._EditDeviceVendor.Text          = $Item.Record.Vendor
-            $This.IO._EditDeviceModel.Text           = $Item.Record.Model
-            $This.IO._EditDeviceSpecification.Text   = $Item.Record.Specification
-            $This.IO._EditDeviceSerial.Text          = $Item.Record.Serial
-            $This.IO._EditDeviceTitle.Text           = $Item.Record.Title
-            $This.IO._EditDeviceClientList.ItemsSource   = $Item.Record.Client
-            $This.IO._EditDeviceIssueList.ItemsSource    = $Item.Record.Issue
-            $This.IO._EditDevicePurchaseList.ItemsSource = $Item.Record.Purchase
-            $This.IO._EditDeviceInvoiceList.ItemsSource  = $Item.Record.Invoice
+            $This.IO._EditDeviceVendor.Text           = $Item.Record.Vendor
+            $This.IO._EditDeviceModel.Text            = $Item.Record.Model
+            $This.IO._EditDeviceSpecification.Text    = $Item.Record.Specification
+            $This.IO._EditDeviceSerial.Text           = $Item.Record.Serial
+            $This.IO._EditDeviceTitle.Text            = $Item.Record.Title
+
+            ForEach ( $ListItem in $Item.Record.Client )
+            { 
+                $This.IO._EditDeviceClientList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                  = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Issue )
+            { 
+                $This.IO._EditDeviceIssueList             | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                      = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Purchase )
+            { 
+                $This.IO._EditDevicePurchaseList          | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                      = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Invoice )
+            { 
+                $This.IO._EditDeviceInvoiceList           | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                      = ($_.Items.Count - 1)
+                }
+            }
         }
 
         ViewIssue([Object]$UID)
         {
-            $This.IO._ViewIssueClient.ItemsSource    = @( )
-            $This.IO._ViewIssueDevice.ItemsSource    = @( ) 
-            $This.IO._ViewIssueDescription.Text      = @( ) 
-            $This.IO._ViewIssueStatus.SelectedIndex  = 0
-            $This.IO._ViewIssuePurchase.ItemsSource  = @( ) 
-            $This.IO._ViewIssueService.ItemsSource   = @( )
-            $This.IO._ViewIssueInvoice.ItemsSource   = @( )
+            $This.IO._ViewIssueClientList.ItemsSource     = $Null
+            $This.IO._ViewIssueDeviceList.ItemsSource     = $Null
+            $This.IO._ViewIssueDescription.Text           = $Null
+            $This.IO._ViewIssueStatus.SelectedIndex       = 0
+            $This.IO._ViewIssuePurchaseList.ItemsSource   = $Null
+            $This.IO._ViewIssueServiceList.ItemsSource    = $Null
+            $This.IO._ViewIssueInvoiceList.ItemsSource    = $Null
 
-            $Item = $This.GetUID($UID)
+            $Item                                         = $This.GetUID($UID)
             
             If (!$Item)
             {
-                Throw "Invalid Service UID"
+                Throw "Invalid Issue UID"
             }
 
-            $This.IO._ViewIssueClient.ItemsSource    = $Item.Record.Client
-            $This.IO._ViewIssueDevice.ItemsSource    = $Item.Record.Device
-            $This.IO._ViewIssueDescription.Text      = $Item.Record.Description
-            $This.IO._ViewIssueStatus.SelectedIndex  = $Item.Record.Status
-            $This.IO._ViewIssuePurchase.ItemsSource  = $Item.Record.Purchase
-            $This.IO._ViewIssueService.ItemsSource   = $Item.Record.Service
-            $This.IO._ViewIssueInvoice.ItemsSource   = $Item.Record.Invoice
+            $This.IO._ViewIssueDescription.Text           = $Item.Record.Description
+            $This.IO._ViewIssueStatus.SelectedIndex       = $Item.Record.Status
+
+            ForEach ( $ListItem in $Item.Record.Client )
+            { 
+                $This.IO._ViewIssueClientList             | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._ViewIssueDeviceList          | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Purchase )
+            { 
+                $This.IO._ViewIssuePurchaseList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Service )
+            { 
+                $This.IO._ViewIssueServiceList         | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Invoice )
+            { 
+                $This.IO._ViewIssueInvoiceList         | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
         }
 
         ViewInventory([Object]$UID)
         {
-            $This.IO._ViewInventoryVendor.Text        = $Null 
-            $This.IO._ViewInventorySerial.Text        = $Null 
-            $This.IO._ViewInventoryModel.Text         = $Null 
-            $This.IO._ViewInventoryTitle.Text         = $Null
-            $This.IO._ViewInventoryIsDevice.IsChecked = $False
-            $This.IO._ViewInventoryDevice.ItemsSource = $Null
-            $This.IO._ViewInventoryCost.Text          = $Null
+            $This.Clear()
+            $This.IO._ViewInventoryIsDevice.IsChecked     = $False
+            $This.IO._ViewInventoryDeviceList.ItemsSource = $Null
 
             $Item = $This.GetUID($UID)
             
@@ -1261,88 +1298,236 @@ Function cim-db
                 Throw "Invalid Inventory UID"
             }
 
-            $This.IO._ViewInventoryVendor.Text        = $Item.Record.Vendor
-            $This.IO._ViewInventorySerial.Text        = $Item.Record.Serial
-            $This.IO._ViewInventoryModel.Text         = $Item.Record.Model
-            $This.IO._ViewInventoryTitle.Text         = $Item.Record.Title
-            $This.IO._ViewInventoryIsDevice.IsChecked = $Item.Record.IsDevice
-            $This.IO._ViewInventoryDevice.ItemsSource = $Item.Record.Device
-            $This.IO._ViewInventoryCost.Text          = $Item.Record.Cost
+            $This.IO._ViewInventoryVendor.Text         = $Item.Record.Vendor
+            $This.IO._ViewInventorySerial.Text         = $Item.Record.Serial
+            $This.IO._ViewInventoryModel.Text          = $Item.Record.Model
+            $This.IO._ViewInventoryTitle.Text          = $Item.Record.Title
+            $This.IO._ViewInventoryIsDevice.IsChecked  = $Item.Record.IsDevice
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._ViewInventoryDeviceList      | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            $This.IO._ViewInventoryCost.Text           = $Item.Record.Cost
+        }
+
+        EditInventory([Object]$UID)
+        {
+            $This.Clear()
+
+            $This.IO._EditInventoryIsDevice.IsChecked  = $False
+            $This.IO._EditInventoryDevice.ItemsSource  = $Null
+
+            $Item                                      = $This.GetUID($UID)
+            
+            If (!$Item)
+            {
+                Throw "Invalid Inventory UID"
+            }
+
+            $This.IO._EditInventoryVendor.Text         = $Item.Record.Vendor
+            $This.IO._EditInventorySerial.Text         = $Item.Record.Serial
+            $This.IO._EditInventoryModel.Text          = $Item.Record.Model
+            $This.IO._EditInventoryTitle.Text          = $Item.Record.Title
+            $This.IO._EditInventoryIsDevice.IsChecked  = $Item.Record.IsDevice
+            $This.IO._EditInventoryCost.Text           = $Item.Record.Cost
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._EditInventoryDeviceList      | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
         }
 
         ViewPurchase([Object]$UID)
         {
-            $This.IO._ViewPurchaseDistributor.Text   = $Null 
-            $This.IO._ViewPurchaseDisplayName.Text   = $Null 
-            $This.IO._ViewPurchaseVendor.Text        = $Null 
-            $This.IO._ViewPurchaseModel.Text         = $Null
-            $This.IO._ViewPurchaseSpecification.Text = $Null
-            $This.IO._ViewPurchaseSerial.Text        = $Null
-            $This.IO._ViewPurchaseIsDevice.IsChecked = $Null
-            $This.IO._ViewPurchaseDevice.ItemsSource = $Null
-            $This.IO._ViewPurchaseCost.Text          = $Null
+            $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $This.IO._ViewPurchaseIsDevice.IsChecked   = $Null
+            $This.IO._ViewPurchaseDevice.ItemsSource   = $Null
+
+            $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Purchase UID"
             }
 
-            $This.IO._ViewPurchaseDistributor.Text   = $Item.Record.Distributor
-            $This.IO._ViewPurchaseDisplayName.Text   = $Item.Record.DisplayName
-            $This.IO._ViewPurchaseVendor.Text        = $Item.Record.Vendor
-            $This.IO._ViewPurchaseModel.Text         = $Item.Record.Model
-            $This.IO._ViewPurchaseSpecification.Text = $Item.Record.Specification
-            $This.IO._ViewPurchaseSerial.Text        = $Item.Record.Serial
-            $This.IO._ViewPurchaseIsDevice.IsChecked = $Item.Record.IsDevice
-            $This.IO._ViewPurchaseDevice.ItemsSource = $Item.Record.Device
-            $This.IO._ViewPurchaseCost.Text          = $Item.Record.Cost
+            $This.IO._ViewPurchaseDistributor.Text     = $Item.Record.Distributor
+            $This.IO._ViewPurchaseDisplayName.Text     = $Item.Record.DisplayName
+            $This.IO._ViewPurchaseVendor.Text          = $Item.Record.Vendor
+            $This.IO._ViewPurchaseModel.Text           = $Item.Record.Model
+            $This.IO._ViewPurchaseSpecification.Text   = $Item.Record.Specification
+            $This.IO._ViewPurchaseSerial.Text          = $Item.Record.Serial
+            $This.IO._ViewPurchaseIsDevice.IsChecked   = $Item.Record.IsDevice
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._ViewPurchaseDeviceList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            $This.IO._ViewPurchaseCost.Text            = $Item.Record.Cost
+        }
+
+        EditPurchase([Object]$UID)
+        {
+            $This.Clear()
+
+            $This.IO._EditPurchaseIsDevice.IsChecked     = $Null
+            $This.IO._EditPurchaseDeviceList.ItemsSource = $Null
+
+            $Item                                      = $This.GetUID($UID)
+            
+            If (!$Item)
+            {
+                Throw "Invalid Purchase UID"
+            }
+
+            $This.IO._EditPurchaseDistributor.Text     = $Item.Record.Distributor
+            $This.IO._EditPurchaseDisplayName.Text     = $Item.Record.DisplayName
+            $This.IO._EditPurchaseVendor.Text          = $Item.Record.Vendor
+            $This.IO._EditPurchaseModel.Text           = $Item.Record.Model
+            $This.IO._EditPurchaseSpecification.Text   = $Item.Record.Specification
+            $This.IO._EditPurchaseSerial.Text          = $Item.Record.Serial
+            $This.IO._EditPurchaseIsDevice.IsChecked   = $Item.Record.IsDevice
+
+            ForEach ( $ListItem in $Item.Record.Device )
+            { 
+                $This.IO._EditPurchaseDeviceList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            $This.IO._EditPurchaseCost.Text            = $Item.Record.Cost
         }
 
         ViewExpense([Object]$UID)
         {
-            $This.IO._ViewExpenseRecipient.Text       = $Null 
-            $This.IO._ViewExpenseDisplayName.Text     = $Null
-            $This.IO._ViewExpenseAccount.ItemsSource  = $Null
-            $This.IO._ViewExpenseCost.Text            = $Null
+            $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $This.IO._ViewExpenseAccountList.ItemsSource   = $Null
+
+            $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Expense UID"
             }
 
-            $This.IO._ViewExpenseRecipient.Text       = $Item.Record.Recipient
-            $This.IO._ViewExpenseDisplayName.Text     = $Item.Record.DisplayName
-            $This.IO._ViewExpenseAccount.ItemsSource  = $Item.Record.Account
-            $This.IO._ViewExpenseCost.Text            = $Item.Record.Cost
+            $This.IO._ViewExpenseRecipient.Text        = $Item.Record.Recipient
+            $This.IO._ViewExpenseDisplayName.Text      = $Item.Record.DisplayName
+
+            ForEach ( $ListItem in $Item.Record.Account )
+            { 
+                $This.IO._ViewExpenseAccountList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            $This.IO._ViewExpenseCost.Text             = $Item.Record.Cost
+        }
+
+        EditExpense([Object]$UID)
+        {
+            $This.Clear()
+
+            $This.IO._EditExpenseAccount.ItemsSource   = $Null
+
+            $Item                                      = $This.GetUID($UID)
+            
+            If (!$Item)
+            {
+                Throw "Invalid Expense UID"
+            }
+
+            $This.IO._EditExpenseRecipient.Text        = $Item.Record.Recipient
+            $This.IO._EditExpenseDisplayName.Text      = $Item.Record.DisplayName
+
+            ForEach ( $ListItem in $Item.Record.Account )
+            { 
+                $This.IO._EditExpenseAccountList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            $This.IO._EditExpenseCost.Text             = $Item.Record.Cost
         }
 
         ViewAccount([Object]$UID)
         {
-            $This.IO._ViewAccountObject.ItemsSource   = $Null 
+            $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $This.IO._ViewAccountObjectList.ItemsSource    = $Null 
+
+            $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
             {
                 Throw "Invalid Account UID"
             }
 
-            $This.IO._ViewAccountObject.ItemsSource   = $Item.Record.Object
+            ForEach ( $ListItem in $Item.Record.Object )
+            { 
+                $This.IO._ViewAccountObjectList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+        }
+
+        EditAccount([Object]$UID)
+        {
+            $This.Clear()
+
+            $This.IO._EditAccountObjectList.ItemsSource    = $Null 
+
+            $Item                                      = $This.GetUID($UID)
+            
+            If (!$Item)
+            {
+                Throw "Invalid Account UID"
+            }
+
+            ForEach ( $ListItem in $Item.Record.Object )
+            { 
+                $This.IO._EditAccountObjectList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
         }
 
         ViewInvoice([Object]$UID)
         {
-            $This.IO._ViewInvoiceMode.SelectedIndex    = 0 
-            $This.IO._ViewInvoiceClient.ItemsSource    = $Null
-            $This.IO._ViewInvoiceInventory.ItemsSource = $Null
-            $This.IO._ViewInvoiceService.ItemsSource   = $Null
-            $This.IO._ViewInvoicePurchase.ItemsSource  = $Null
+            $This.Clear()
 
-            $Item = $This.GetUID($UID)
+            $This.IO._ViewInvoiceMode.SelectedIndex    = 0 
+            $This.IO._ViewInvoiceClientList.ItemsSource    = $Null
+            $This.IO._ViewInvoiceInventoryList.ItemsSource = $Null
+            $This.IO._ViewInvoiceServiceList.ItemsSource   = $Null
+            $This.IO._ViewInvoicePurchaseList.ItemsSource  = $Null
+
+            $Item                                      = $This.GetUID($UID)
             
             If (!$Item)
             {
@@ -1351,10 +1536,99 @@ Function cim-db
 
             $This.IO._ViewExpenseRecipient.Text        = $Item.Record.Recipient
             $This.IO._ViewInvoiceMode.SelectedIndex    = $Item.Record.Mode
-            $This.IO._ViewInvoiceClient.ItemsSource    = $Item.Record.Client
-            $This.IO._ViewInvoiceInventory.ItemsSource = $Item.Record.Inventory
-            $This.IO._ViewInvoiceService.ItemsSource   = $Item.Record.Service
-            $This.IO._ViewInvoicePurchase.ItemsSource  = $Item.Record.Purchase
+
+            ForEach ( $ListItem in $Item.Record.Client )
+            { 
+                $This.IO._ViewInvoiceClientList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Inventory )
+            { 
+                $This.IO._ViewInvoiceInventoryList     | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Service )
+            { 
+                $This.IO._ViewInvoiceServiceList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Purchase )
+            { 
+                $This.IO._ViewInvoicePurchaseList      | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+        }
+
+        EditInvoice([Object]$UID)
+        {
+            $This.Clear()
+
+            $This.IO._EditInvoiceMode.SelectedIndex    = 0 
+            $This.IO._EditInvoiceClientList.ItemsSource    = $Null
+            $This.IO._EditInvoiceInventoryList.ItemsSource = $Null
+            $This.IO._EditInvoiceServiceList.ItemsSource   = $Null
+            $This.IO._EditInvoicePurchaseList.ItemsSource  = $Null
+
+            $Item                                      = $This.GetUID($UID)
+            
+            If (!$Item)
+            {
+                Throw "Invalid Inventory UID"
+            }
+
+            $This.IO._EditExpenseRecipient.Text        = $Item.Record.Recipient
+            $This.IO._EditInvoiceMode.SelectedIndex    = $Item.Record.Mode
+
+            ForEach ( $ListItem in $Item.Record.Client )
+            { 
+                $This.IO._EditInvoiceClientList        | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Inventory )
+            { 
+                $This.IO._EditInvoiceInventoryList     | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Service )
+            { 
+                $This.IO._EditInvoiceServiceList       | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
+
+            ForEach ( $ListItem in $Item.Record.Purchase )
+            { 
+                $This.IO._EditInvoicePurchaseList      | % { 
+                
+                    $_.Items.Add($ListItem)
+                    $_.SelectedIndex                   = ($_.Items.Count - 1)
+                }
+            }
         }
     }
 
@@ -4891,7 +5165,7 @@ Function cim-db
         $Cim.ViewUID($Cim.IO._GetUIDSearchResult.SelectedItem.UID)
     }
 
-    $Cim.IO._ViewUIDTab.IsEnabled = 0
+    $Cim.IO._ViewUIDTab.IsEnabled                  = 0
 
     $Cim.IO._GetUIDSearchResult.Add_SelectionChanged{
 
@@ -4906,7 +5180,15 @@ Function cim-db
         }
     }
 
-    $Cim.IO. _GetUIDSearchFilter.Add_TextChanged{
+    $Cim.IO._GetUIDSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewUIDPanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewUID($Cim.IO._GetUIDSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetUIDSearchFilter.Add_TextChanged{
 
         $Cim.IO._GetUIDSearchResult.ItemsSource = $Null
         
@@ -4957,802 +5239,6 @@ Function cim-db
         $Cim.Refresh()
         $Cim.IO._GetClientSearchResult.ItemsSource = $Null
         $Cim.IO._SaveClientTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewClientTab.IsEnabled               = 0
-    $Cim.IO._EditClientTab.IsEnabled               = 0
-    $Cim.IO._SaveClientTab.IsEnabled               = 0
-
-    $Cim.IO._GetClientSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetClientSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewClientTab.IsEnabled = 0
-            $Cim.IO._EditClientTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetClientSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewClientTab.IsEnabled = 1
-            $Cim.IO._EditClientTab.IsEnabled = 1
-        }
-    }
-
-    $Cim.IO._GetClientSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetClientSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetClientSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ------------- #
-    # Service Panel #
-    # ------------- #
-
-    $Cim.IO._GetServiceTab.Add_Click{ 
-    
-        $Cim.GetTab(2)
-        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveServiceTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewServiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewServicePanel.Visibility        = "Visible"
-        $Cim.Refresh()
-        $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
-    }
-
-    $Cim.IO._EditServiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditServicePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewServiceTab.IsEnabled           = 0
-        $Cim.IO._SaveServiceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._NewServiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewServicePanel.Visibility         = "Visible"
-        $Cim.Refresh()
-        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
-        $Cim.IO._SaveServiceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewServiceTab.IsEnabled               = 0
-    $Cim.IO._EditServiceTab.IsEnabled               = 0
-    $Cim.IO._SaveServiceTab.IsEnabled               = 0
-
-    $Cim.IO._GetServiceSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetServiceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewServiceTab.IsEnabled       = 0
-            $Cim.IO._EditServiceTab.IsEnabled       = 0
-        }
-
-        ElseIf ($Cim.IO._GetServiceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewServiceTab.IsEnabled       = 1
-            $Cim.IO._EditServiceTab.IsEnabled       = 1
-        }
-    }
-
-    $Cim.IO._GetServiceSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
-
-        If ($Item)
-        {
-            $Cim.IO._GetServiceSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ------------ #
-    # Device Panel #
-    # ------------ #
-
-    $Cim.IO._GetDeviceTab.Add_Click{ 
-    
-        $Cim.GetTab(3)
-        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveDeviceTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewDeviceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewDevicePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
-    }
-
-    $Cim.IO._EditDeviceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditDevicePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewDeviceTab.IsEnabled           = 0
-        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._NewDeviceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewDevicePanel.Visibility         = "Visible"
-        $Cim.Refresh()
-        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
-        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewDeviceTab.IsEnabled               = 0
-    $Cim.IO._EditDeviceTab.IsEnabled               = 0
-    $Cim.IO._SaveDeviceTab.IsEnabled               = 0
-
-    $Cim.IO._GetDeviceSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewDeviceTab.IsEnabled       = 0
-            $Cim.IO._EditDeviceTab.IsEnabled       = 0
-        }
-
-        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewDeviceTab.IsEnabled       = 1
-            $Cim.IO._EditDeviceTab.IsEnabled       = 1
-        }
-    }
-
-    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetDeviceSearchResult.ItemsSource     = $Null
-
-        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetDeviceSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ----------- #
-    # Issue Panel #
-    # ----------- #
-
-    $Cim.IO._GetIssueTab.Add_Click{ 
-    
-        $Cim.GetTab(4)
-        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveIssueTab.IsEnabled               = 0
-    }
-
-    $Cim.IO._ViewIssueTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewIssuePanel.Visibility            = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)    
-    }
-    
-    $Cim.IO._EditIssueTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditIssuePanel.Visibility            = "Visible"
-        $Cim.Refresh()
-        $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewIssueTab.IsEnabled               = 0
-        $Cim.IO._SaveIssueTab.IsEnabled               = 1
-    }
-
-    $Cim.IO._NewIssueTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewIssuePanel.Visibility             = "Visible" 
-        $Cim.Refresh()
-        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
-        $Cim.IO._SaveIssueTab.IsEnabled               = 1
-    }
-
-    $Cim.IO._ViewIssueTab.IsEnabled                   = 0
-    $Cim.IO._EditIssueTab.IsEnabled                   = 0
-    $Cim.IO._SaveIssueTab.IsEnabled                   = 0
-
-    $Cim.IO._GetIssueSearchResult.Add_SelectionChanged{
-    
-        If ($Cim.IO._GetIssueSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewIssueTab.IsEnabled           = 0
-            $Cim.IO._EditIssueTab.IsEnabled           = 0
-        }
-
-        ElseIf ($Cim.IO._GetIssueSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewIssueTab.IsEnabled           = 1
-            $Cim.IO._EditIssueTab.IsEnabled           = 1
-        }
-    }
-
-    $Cim.IO._GetIssueSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
-
-        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
-
-        If ($Item)
-        {
-            $Cim.IO._GetIssueSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # --------------- #
-    # Inventory Panel #
-    # --------------- #
-
-    $Cim.IO._GetInventoryTab.Add_Click{ 
-    
-        $Cim.GetTab(5) 
-        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveInventoryTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewInventoryTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewInventoryPanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)    
-    }
-
-    $Cim.IO._EditInventoryTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditInventoryPanel. Visibility       = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
-        $Cim.IO._ViewInventoryTab.IsEnabled           = 0
-        $Cim.IO._SavePurchaseTab.IsEnabled            = 1
-    }
-
-    $Cim.IO._NewInventoryTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewInventoryPanel.Visibility = "Visible" 
-        $Cim.Refresh()
-        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
-        $Cim.IO._SaveInventoryTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewInventoryTab.IsEnabled               = 0
-    $Cim.IO._EditInventoryTab.IsEnabled               = 0
-    $Cim.IO._SaveInventoryTab.IsEnabled               = 0
-
-    $Cim.IO._GetInventorySearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetInventorySearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewInventoryTab.IsEnabled = 0
-            $Cim.IO._EditInventoryTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetInventorySearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewInventoryTab.IsEnabled = 1
-            $Cim.IO._EditInventoryTab.IsEnabled = 1
-        }
-    }
-
-    $Cim.IO._GetInventorySearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
-
-        If ($Item)
-        {
-            $Cim.IO._GetInventorySearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-    
-    # -------------- #
-    # Purchase Panel #
-    # -------------- #
-
-    $Cim.IO._GetPurchaseTab.Add_Click{ 
-    
-        $Cim.GetTab(6) 
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewPurchaseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewPurchasePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)    
-    }
-
-    $Cim.IO._EditPurchaseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditPurchasePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewPurchaseTab.IsEnabled           = 0
-        $Cim.IO._SavePurchaseTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._NewPurchaseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewPurchasePanel.Visibility         = "Visible" 
-        $Cim.Refresh()
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
-        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewPurchaseTab.IsEnabled                = 0
-    $Cim.IO._EditPurchaseTab.IsEnabled                = 0
-    $Cim.IO._SavePurchaseTab.IsEnabled                = 0
-
-    $Cim.IO._GetPurchaseSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewPurchaseTab.IsEnabled = 0
-            $Cim.IO._EditPurchaseTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewPurchaseTab.IsEnabled = 1
-            $Cim.IO._EditPurchaseTab.IsEnabled = 1
-        }
-    }
-
-    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ------------- #
-    # Expense Panel #
-    # ------------- #
-
-    $Cim.IO._GetExpenseTab.Add_Click{ 
-    
-        $Cim.GetTab(7) 
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveExpenseTab.IsEnabled           = 0
-    }
-
-    $Cim.IO._ViewExpenseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewExpensePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
-    }
-
-    $Cim.IO._EditExpenseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditExpensePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewExpenseTab.IsEnabled           = 0
-        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._NewExpenseTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewExpensePanel.Visibility         = "Visible" 
-        $Cim.Refresh()
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
-        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewExpenseTab.IsEnabled                 = 0
-    $Cim.IO._EditExpenseTab.IsEnabled                 = 0
-    $Cim.IO._SaveExpenseTab.IsEnabled                 = 0
-
-    $Cim.IO._GetExpenseSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetExpenseSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewExpenseTab.IsEnabled       = 0
-            $Cim.IO._EditExpenseTab.IsEnabled       = 0
-        }
-
-        ElseIf ($Cim.IO._GetExpenseSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewExpenseTab.IsEnabled       = 1
-            $Cim.IO._EditExpenseTab.IsEnabled       = 1
-        }
-    }
-
-    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetExpenseSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ------------- #
-    # Account Panel #
-    # ------------- #
-
-    $Cim.IO._GetAccountTab.Add_Click{ 
-    
-        $Cim.GetTab(8)
-        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveAccountTab.IsEnabled    = 0 
-    }
-
-    $Cim.IO._ViewAccountTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewAccountPanel.Visibility = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
-    }
-
-    $Cim.IO._EditAccountTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditAccountPanel.Visibility          = "Visible"
-        $Cim.Refresh()
-        $Cim.EditAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewAccountTab.IsEnabled             = 0
-        $Cim.IO._SaveAccountTab.IsEnabled             = 1
-    }
-
-    $Cim.IO._NewAccountTab.Add_Click{ 
-        
-        $Cim.Collapse()
-        $Cim.IO._NewAccountPanel.Visibility = "Visible" 
-        $Cim.Refresh()
-        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-        $Cim.IO._SaveAccountTab.IsEnabled    = 1
-    }
-
-    $Cim.IO._ViewAccountTab.IsEnabled                 = 0
-    $Cim.IO._EditAccountTab.IsEnabled                 = 0
-    $Cim.IO._SaveAccountTab.IsEnabled                 = 0
-
-    $Cim.IO._GetAccountSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewAccountTab.IsEnabled = 0
-            $Cim.IO._EditAccountTab.IsEnabled = 0
-        }
-
-        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewAccountTab.IsEnabled = 1
-            $Cim.IO._EditAccountTab.IsEnabled = 1
-        }
-    }
-
-    $Cim.IO._GetAccountSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetAccountSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ------------- #
-    # Invoice Panel #
-    # ------------- #
-
-    $Cim.IO._GetInvoiceTab.Add_Click{ 
-    
-        $Cim.GetTab(9) 
-        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
-        $Cim.Refresh()
-        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._ViewInvoiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._ViewInvoicePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
-    }
-
-    $Cim.IO._EditInvoiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._EditInvoicePanel.Visibility        = "Visible" 
-        $Cim.Refresh()
-        $Cim.EditInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewInvoiceTab.IsEnabled           = 0
-        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
-    }
-
-    $Cim.IO._NewInvoiceTab.Add_Click{ 
-    
-        $Cim.Collapse()
-        $Cim.IO._NewInvoicePanel.Visibility         = "Visible"
-        $Cim.Refresh()
-        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
-        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
-    }
-    
-    $Cim.IO._ViewInvoiceTab.IsEnabled                = 0
-    $Cim.IO._EditInvoiceTab.IsEnabled                = 0
-    $Cim.IO._SaveInvoiceTab.IsEnabled                = 0
-
-    $Cim.IO._GetInvoiceSearchResult.Add_SelectionChanged{
-
-        If ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewInvoiceTab.IsEnabled = 0
-            $Cim.IO._EditInvoiceTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewInvoiceTab.IsEnabled = 1
-            $Cim.IO._EditInvoiceTab.IsEnabled = 1
-        }
-    }
-
-    $Cim.IO._GetInvoiceSearchFilter.Add_TextChanged{
-
-        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
-
-        If ($Item) 
-        {
-            $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Item
-        }
-
-        Start-Sleep -Milliseconds 50
-    }
-
-    # ---------------- #
-    # Input Validation #
-    # ---------------- #
-
-    # Client
-    $Cim.IO._NewClientAddPhone.Add_Click{
-
-        $Item   = $Cim.IO._NewClientPhoneText.Text.ToString() -Replace "-",""
-        $String = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
-
-        If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
-        {
-            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
-        }
-
-        ElseIf ( $String -in $Cim.IO._NewClientPhoneList.Items )
-        {
-            [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
-        }
-
-        ElseIf ($String -in $Cim.DB.Client.Record.Phone)
-        {
-            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._NewClientPhoneList.Items.Add($String)
-            $Cim.IO._NewClientPhoneList.SelectedIndex = ($Cim.IO._NewClientPhoneList.Count - 1)
-            $Cim.IO._NewClientPhoneText.Text,$Item,$String = $Null
-        }
-    }
-
-    $Cim.IO._EditClientAddPhone.Add_Click{
-
-        $Item   = $Cim.IO._EditClientPhoneText.Text.ToString() -Replace "-",""
-        $String = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
-
-        If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
-        {
-            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
-        }
-
-        ElseIf ( $String -in $Cim.IO._EditClientPhoneList.Items )
-        {
-            [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
-        }
-
-        ElseIf ($String -in $Cim.DB.Client.Record.Phone)
-        {
-            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._EditClientPhoneList.Items.Add($String)
-            $Cim.IO._EditClientPhoneList.SelectedIndex = ($Cim.IO._EditClientPhoneList.Count - 1)
-            $Cim.IO._EditClientPhoneText.Text,$Item,$String = $Null
-        }
-    }
-
-    $Cim.IO._NewClientRemovePhone.Add_Click{
-
-        If ( $Cim.IO._NewClientPhoneList.Items.Count -eq 0)
-        {
-            [System.Windows.MessageBox]::Show("No phone number to remove","Error")
-        }
-
-        ElseIf( $Cim.IO._NewClientPhoneList.Items.Count -eq 1)
-        {
-            [System.Windows.MessageBox]::Show("Add another phone number before removing","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._NewClientPhoneList.Items.Remove($Cim.IO._NewClientPhoneList.SelectedItem)
-        }
-    }
-
-    $Cim.IO._EditClientRemovePhone.Add_Click{
-
-        If ( $Cim.IO._EditClientPhoneList.Items.Count -eq 0)
-        {
-            [System.Windows.MessageBox]::Show("No phone number to remove","Error")
-        }
-
-        ElseIf( $Cim.IO._EditClientPhoneList.Items.Count -eq 1)
-        {
-            [System.Windows.MessageBox]::Show("Add another phone number before removing","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._EditClientPhoneList.Items.Remove($Cim.IO._EditClientPhoneList.SelectedItem)
-        }
-    }
-
-    $Cim.IO._NewClientAddEmail.Add_Click{
-        
-        $Item = $Cim.IO._NewClientEmailText.Text
-
-        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
-        {
-            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
-        }
-
-        ElseIf ( $Item -in $Cim.IO._NewClientEmailList.Items )
-        {
-            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
-        }
-
-        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
-        {
-            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._NewClientEmailList.Items.Add($Item)
-            $Cim.IO._NewClientEmailList.SelectedIndex = ($Cim.IO._NewClientEmailList.Count - 1)
-            $Cim.IO._NewClientEmailText.Text,$Item = $Null
-        }
-    }
-
-    $Cim.IO._EditClientAddEmail.Add_Click{
-        
-        $Item = $Cim.IO._EditClientEmailText.Text
-
-        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
-        {
-            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
-        }
-
-        ElseIf ( $Item -in $Cim.IO._EditClientEmailList.Items )
-        {
-            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
-        }
-
-        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
-        {
-            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._EditClientEmailList.Items.Add($Item)
-            $Cim.IO._EditClientEmailList.SelectedIndex = ($Cim.IO._EditClientEmailList.Count - 1)
-            $Cim.IO._EditClientEmailText.Text,$Item = $Null
-        }
-    }
-
-    $Cim.IO._NewClientRemoveEmail.Add_Click{
-        
-        If ( $Cim.IO._NewClientEmailList.Items.Count -eq 0)
-        {
-            [System.Windows.MessageBox]::Show("No email address to remove","Error")
-        }
-
-        ElseIf( $Cim.IO._NewClientEmailList.Items.Count -eq 1)
-        {
-            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._NewClientEmailList.Items.Remove($Cim.IO._NewClientEmailList.SelectedItem)
-        }
-    }
-
-    $Cim.IO._EditClientRemoveEmail.Add_Click{
-        
-        If ( $Cim.IO._EditClientEmailList.Items.Count -eq 0)
-        {
-            [System.Windows.MessageBox]::Show("No email address to remove","Error")
-        }
-
-        ElseIf( $Cim.IO._EditClientEmailList.Items.Count -eq 1)
-        {
-            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
-        }
-
-        Else
-        {
-            $Cim.IO._EditClientEmailList.Items.Remove($Cim.IO._EditClientEmailList.SelectedItem)
-        }
     }
 
     $Cim.IO._SaveClientTab.Add_Click{
@@ -5869,8 +5355,8 @@ Function cim-db
                 $Cim.IO._NewClientYear.Text    = $Null
                 $Cim.IO._NewClientGender.SelectedIndex = 2
 
-                $Cim.IO._NewClientPhoneList.Items.Clear()
-                $Cim.IO._NewClientEmailList.Items.Clear()
+                $Cim.IO._NewClientPhoneList.ItemsSource = $Null
+                $Cim.IO._NewClientEmailList.ItemsSource = $Null
             }
         }
 
@@ -5986,153 +5472,1060 @@ Function cim-db
                 $Cim.IO._EditClientYear.Text    = $Null
                 $Cim.IO._EditClientGender.SelectedIndex = 2
 
-                $Cim.IO._EditClientPhoneList.Items.Clear()
-                $Cim.IO._EditClientEmailList.Items.Clear()
+                $Cim.IO._EditClientPhoneList.ItemsSource = $Null
+                $Cim.IO._EditClientEmailList.ItemsSource = $Null
             }
         }
     }
 
-    # Service
-    $Cim.IO._SaveServiceTab. Add_Click{
-        
-        If ( $Cim.IO._NewServiceName.Text -eq "" )
+    $Cim.IO._ViewClientTab.IsEnabled               = 0
+    $Cim.IO._EditClientTab.IsEnabled               = 0
+    $Cim.IO._SaveClientTab.IsEnabled               = 0
+
+    $Cim.IO._GetClientSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetClientSearchResult.SelectedIndex -eq -1)
         {
-            [System.Windows.MessageBox]::Show("Invalid service name","Error")
+            $Cim.IO._ViewClientTab.IsEnabled = 0
+            $Cim.IO._EditClientTab.IsEnabled = 0
         }
 
-        ElseIf ( $Cim.IO._NewServiceCost.Text -eq "" )
+        ElseIf ($Cim.IO._GetClientSearchResult.SelectedIndex -ne -1)
         {
-            [System.Windows.MessageBox]::Show("Service cost undefined","Error")
-        }
-
-        ElseIf ( $Cim.IO._NewServiceName.Text -in $Cim.DB.Service.Record.Name )
-        {
-            [System.Windows.MessageBox]::Show("Service exists","Error")
-        }
-
-        Else
-        {
-            $Item                    = $Cim.NewUID(1)
-            $Cim.Refresh()
-            $Item.Record.Name        = $Cim.IO._NewServiceName.Text
-            $Item.Record.Description = $Cim.IO._NewServiceDescription.Text
-            $Item.Record.Cost        = "{0:C}" -f [UInt32]$Cim.IO._NewServiceCost.Text
-
-            [System.Windows.MessageBox]::Show("Service [$($Item.Record.Name)] added to database","Success")
-
-            $Cim.IO._NewServiceName.Text        = $Null
-            $Cim.IO._NewServiceDescription.Text = $Null
-            $Cim.IO._NewServiceCost.Text        = $Null
+            $Cim.IO._ViewClientTab.IsEnabled = 1
+            $Cim.IO._EditClientTab.IsEnabled = 1
         }
     }
 
-    # Device
+    $Cim.IO._GetClientSearchFilter.Add_TextChanged{
 
-    $Cim.IO._NewDeviceAddClient.Add_Click{
+        $Cim.IO._GetClientSearchResult.ItemsSource = $Null
         
-        If ( $Cim.IO._NewDeviceClientText.Text -eq "" )
+        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
+
+        If ($Item) 
         {
-            [System.Windows.MessageBox]::Show("No Client ID listed","Error")
+            $Cim.IO._GetClientSearchResult.ItemsSource = $Item
         }
 
-        ElseIf( $Cim.IO._NewDeviceClientList.Items.Count -eq 1 )
+        Start-Sleep -Milliseconds 50
+    }
+
+    $Cim.IO._EditClientAddPhone.Add_Click{
+
+        $Item   = $Cim.IO._EditClientPhoneText.Text.ToString() -Replace "-",""
+        $String = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
+
+        If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
         {
-            [System.Windows.MessageBox]::Show("Client already registered to this device","Error")
+            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
+        }
+
+        ElseIf ( $String -in $Cim.IO._EditClientPhoneList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
+        }
+
+        ElseIf ($String -in $Cim.DB.Client.Record.Phone)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
         }
 
         Else
         {
-            $Item = $Cim.DB.Client | ? UID -match UID
-            $Cim.IO._NewDeviceClientList.Items.Add($Item)
+            $Cim.IO._EditClientPhoneList.Items.Add($String)
+            $Cim.IO._EditClientPhoneList.SelectedIndex = ($Cim.IO._EditClientPhoneList.Count - 1)
+            $Cim.IO._EditClientPhoneText.Text,$Item,$String = $Null
         }
+    }
+
+    $Cim.IO._EditClientRemovePhone.Add_Click{
+
+        If ( $Cim.IO._EditClientPhoneList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No phone number to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._EditClientPhoneList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another phone number before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientPhoneList.Items.Remove($Cim.IO._EditClientPhoneList.SelectedItem)
+        }
+    }
+
+    $Cim.IO._EditClientAddEmail.Add_Click{
+        
+        $Item = $Cim.IO._EditClientEmailText.Text
+
+        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
+        {
+            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
+        }
+
+        ElseIf ( $Item -in $Cim.IO._EditClientEmailList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
+        }
+
+        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientEmailList.Items.Add($Item)
+            $Cim.IO._EditClientEmailList.SelectedIndex = ($Cim.IO._EditClientEmailList.Count - 1)
+            $Cim.IO._EditClientEmailText.Text,$Item = $Null
+        }
+    }
+
+    $Cim.IO._EditClientRemoveEmail.Add_Click{
+        
+        If ( $Cim.IO._EditClientEmailList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No email address to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._EditClientEmailList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientEmailList.Items.Remove($Cim.IO._EditClientEmailList.SelectedItem)
+        }
+    }
+
+    $Cim.IO._NewClientAddPhone.Add_Click{
+
+        $Item   = $Cim.IO._NewClientPhoneText.Text.ToString() -Replace "-",""
+        $String = "{0}{1}{2}-{3}{4}{5}-{6}{7}{8}{9}" -f $Item[0..9]
+
+        If ( $Item.Length -ne 10 -or $Item -notmatch "(\d{10})" )
+        {
+            [System.Windows.MessageBox]::Show("Invalid phone number","Error")
+        }
+
+        ElseIf ( $String -in $Cim.IO._NewClientPhoneList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate phone number","Error")
+        }
+
+        ElseIf ($String -in $Cim.DB.Client.Record.Phone)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientPhoneList.Items.Add($String)
+            $Cim.IO._NewClientPhoneList.SelectedIndex = ($Cim.IO._NewClientPhoneList.Count - 1)
+            $Cim.IO._NewClientPhoneText.Text,$Item,$String = $Null
+        }
+    }
+
+    $Cim.IO._NewClientRemovePhone.Add_Click{
+
+        If ( $Cim.IO._NewClientPhoneList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No phone number to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._NewClientPhoneList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another phone number before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientPhoneList.Items.Remove($Cim.IO._NewClientPhoneList.SelectedItem)
+        }
+    }
+
+    $Cim.IO._NewClientAddEmail.Add_Click{
+        
+        $Item = $Cim.IO._NewClientEmailText.Text
+
+        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
+        {
+            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
+        }
+
+        ElseIf ( $Item -in $Cim.IO._NewClientEmailList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
+        }
+
+        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientEmailList.Items.Add($Item)
+            $Cim.IO._NewClientEmailList.SelectedIndex = ($Cim.IO._NewClientEmailList.Count - 1)
+            $Cim.IO._NewClientEmailText.Text,$Item = $Null
+        }
+    }
+
+    $Cim.IO._NewClientRemoveEmail.Add_Click{
+        
+        If ( $Cim.IO._NewClientEmailList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No email address to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._NewClientEmailList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientEmailList.Items.Remove($Cim.IO._NewClientEmailList.SelectedItem)
+        }
+    }
+
+    # ------------- #
+    # Service Panel #
+    # ------------- #
+
+    $Cim.IO._GetServiceTab.Add_Click{ 
+    
+        $Cim.GetTab(2)
+        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveServiceTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewServiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewServicePanel.Visibility        = "Visible"
+        $Cim.Refresh()
+        $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._EditServiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditServicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewServiceTab.IsEnabled           = 0
+        $Cim.IO._SaveServiceTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._NewServiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewServicePanel.Visibility         = "Visible"
+        $Cim.Refresh()
+        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveServiceTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._SaveServiceTab.Add_Click{
+        
+        If ( $Cim.IO._GetServiceSearchResult.SelectedIndex -eq -1)
+        {
+            If ( $Cim.IO._NewServiceName.Text -eq "" )
+            {
+                [System.Windows.MessageBox]::Show("Invalid service name","Error")
+            }
+
+            ElseIf ( $Cim.IO._NewServiceCost.Text -eq "" )
+            {
+                [System.Windows.MessageBox]::Show("Service cost undefined","Error")
+            }
+
+            ElseIf ( $Cim.IO._NewServiceName.Text -in $Cim.DB.Service.Record.Name )
+            {
+                [System.Windows.MessageBox]::Show("Service exists","Error")
+            }
+
+            Else
+            {
+                $Item                    = $Cim.NewUID(1)
+                $Cim.Refresh()
+                $Item.Record.Name        = $Cim.IO._NewServiceName.Text
+                $Item.Record.Description = $Cim.IO._NewServiceDescription.Text
+                $Item.Record.Cost        = "{0:C}" -f [UInt32]$Cim.IO._NewServiceCost.Text
+
+                [System.Windows.MessageBox]::Show("Service [$($Item.Record.Name)] added to database","Success")
+
+                $Cim.IO._NewServiceName.Text        = $Null
+                $Cim.IO._NewServiceDescription.Text = $Null
+                $Cim.IO._NewServiceCost.Text        = $Null
+            }
+        }
+
+        If ( $Cim.IO._GetServiceSearchResult.SelectedIndex -ne -1)
+        {
+            If ( $Cim.IO._EditServiceName.Text -eq "" )
+            {
+                [System.Windows.MessageBox]::Show("Invalid service name","Error")
+            }
+
+            ElseIf ( $Cim.IO._EditServiceCost.Text -eq "" )
+            {
+                [System.Windows.MessageBox]::Show("Service cost undefined","Error")
+            }
+
+            ElseIf ( $Cim.IO._EditServiceName.Text -in $Cim.DB.Service.Record.Name )
+            {
+                [System.Windows.MessageBox]::Show("Service exists","Error")
+            }
+
+            Else
+            {
+                $Item                    = $Cim.NewUID(1)
+                $Cim.Refresh()
+                $Item.Record.Name        = $Cim.IO._EditServiceName.Text
+                $Item.Record.Description = $Cim.IO._EditServiceDescription.Text
+                $Item.Record.Cost        = "{0:C}" -f [UInt32]$Cim.IO._EditServiceCost.Text
+
+                [System.Windows.MessageBox]::Show("Service [$($Item.Record.Name)] added to database","Success")
+
+                $Cim.IO._EditServiceName.Text        = $Null
+                $Cim.IO._EditServiceDescription.Text = $Null
+                $Cim.IO._EditServiceCost.Text        = $Null
+            }
+        }
+    }
+
+    $Cim.IO._ViewServiceTab.IsEnabled               = 0
+    $Cim.IO._EditServiceTab.IsEnabled               = 0
+    $Cim.IO._SaveServiceTab.IsEnabled               = 0
+
+    $Cim.IO._GetServiceSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetServiceSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewServiceTab.IsEnabled       = 0
+            $Cim.IO._EditServiceTab.IsEnabled       = 0
+        }
+
+        ElseIf ($Cim.IO._GetServiceSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewServiceTab.IsEnabled       = 1
+            $Cim.IO._EditServiceTab.IsEnabled       = 1
+        }
+    }
+
+    $Cim.IO._GetServiceSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewServicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetServiceSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
+
+        If ($Item)
+        {
+            $Cim.IO._GetServiceSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # ------------ #
+    # Device Panel #
+    # ------------ #
+
+    $Cim.IO._GetDeviceTab.Add_Click{ 
+    
+        $Cim.GetTab(3)
+        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewDeviceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewDevicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._EditDeviceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditDevicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewDeviceTab.IsEnabled           = 0
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._NewDeviceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewDevicePanel.Visibility         = "Visible"
+        $Cim.Refresh()
+        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveDeviceTab.IsEnabled           = 1
     }
 
     $Cim.IO._SaveDeviceTab.Add_Click{
         
-        If ($Cim.IO._NewDeviceChassis.SelectedIndex -eq 8)
+        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -eq -1)
         {
-            [System.Windows.MessageBox]::Show("Select a valid chassis type","Error")
+            If ($Cim.IO._NewDeviceChassis.SelectedIndex -eq 8)
+            {
+                [System.Windows.MessageBox]::Show("Select a valid chassis type","Error")
+            }
+
+            ElseIf($Cim.IO._NewDeviceVendor.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a vendor","Error")
+            }
+
+            ElseIf($Cim.IO._NewDeviceModel.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a model","Error")
+            }
+
+            ElseIf($Cim.IO._NewDeviceSpecification.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a model specification OR enter N/A","Error")
+            }
+
+            ElseIf($Cim.IO._NewDeviceSerial.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a serial number","Error")
+            }
+
+            Else
+            {
+                $Item                          = $Cim.NewUID(2)
+                $Cim.Refresh()
+                $Item.Record.Chassis           = $Cim.IO._NewDeviceChassis.SelectedIndex
+                $Item.Record.Vendor            = $Cim.IO._NewDeviceVendor.Text
+                $Item.Record.Specification     = $Cim.IO._NewDeviceSpecification.Text
+                $Item.Record.Serial            = $Cim.IO._NewDeviceSerial.Text
+                $Item.Record.Model             = $Cim.IO._NewDeviceModel.Text
+                $Item.Record.Title             = $Cim.IO._NewDeviceTitle.Text
+                $Item.Record.Client            = $Cim.IO._NewDeviceClientList.Items
+                $Item.Record.Issue             = $Cim.IO._NewDeviceIssueList.Items
+                $Item.Record.Purchase          = $Cim.IO._NewDevicePurchaseList.Items
+                $Item.Record.Invoice           = $Cim.IO._NewDeviceInvoiceList.Items
+
+                [System.Windows.MessageBox]::Show("Device [$($Item.Record.Title)] added to database","Success")
+
+                $Cim.IO._NewDeviceChassis.SelectedIndex = 8
+                $Cim.IO._NewDeviceVendor.Text           = $Null
+                $Cim.IO._NewDeviceSpecification.Text    = $Null
+                $Cim.IO._NewDeviceSerial.Text           = $Null
+                $Cim.IO._NewDeviceModel.Text            = $Null
+                $Cim.IO._NewDeviceTitle.Text            = $Null
+                $Cim.IO._NewDeviceClientList.ItemsSource    = $Null
+                $Cim.IO._NewDeviceIssueList.ItemsSource     = $Null
+                $Cim.IO._NewDevicePurchaseList.ItemsSource  = $Null
+                $Cim.IO._NewDeviceInvoiceList.ItemsSource   = $Null
+
+                $Cim.GetTab(3)
+                $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+                $Cim.Refresh()
+            }
         }
 
-        ElseIf($Cim.IO._NewDeviceVendor.Text -eq "")
-        {
-            [System.Windows.MessageBox]::Show("Must enter a vendor","Error")
-        }
+        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -ne -1)
+        {        
+            If ($Cim.IO._EditDeviceChassis.SelectedIndex -eq 8)
+            {
+                [System.Windows.MessageBox]::Show("Select a valid chassis type","Error")
+            }
 
-        ElseIf($Cim.IO._NewDeviceModel.Text -eq "")
-        {
-            [System.Windows.MessageBox]::Show("Must enter a model","Error")
-        }
+            ElseIf($Cim.IO._EditDeviceVendor.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a vendor","Error")
+            }
 
-        ElseIf($Cim.IO._NewDeviceSpecification.Text -eq "")
-        {
-            [System.Windows.MessageBox]::Show("Must enter a model specification OR enter N/A","Error")
-        }
+            ElseIf($Cim.IO._EditDeviceModel.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a model","Error")
+            }
 
-        ElseIf($Cim.IO._NewDeviceSerial.Text -eq "")
-        {
-            [System.Windows.MessageBox]::Show("Must enter a serial number","Error")
-        }
+            ElseIf($Cim.IO._EditDeviceSpecification.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a model specification OR enter N/A","Error")
+            }
 
-        Else
-        {
-            $Item                          = $Cim.NewUID(2)
-            $Cim.Refresh()
-            $Item.Record.Chassis           = $Cim.IO._NewDeviceChassis.SelectedIndex
-            $Item.Record.Vendor            = $Cim.IO._NewDeviceVendor.Text
-            $Item.Record.Specification     = $Cim.IO._NewDeviceSpecification.Text
-            $Item.Record.Serial            = $Cim.IO._NewDeviceSerial.Text
-            $Item.Record.Model             = $Cim.IO._NewDeviceModel.Text
-            $Item.Record.Title             = $Cim.IO._NewDeviceTitle.Text
-            $Item.Record.Client            = $Cim.IO._NewDeviceClient.Items
-            $Item.Record.Issue             = $Cim.IO._NewDeviceIssue.Items
-            $Item.Record.Purchase          = $Cim.IO._NewDevicePurchase.Items
-            $Item.Record.Invoice           = $Cim.IO._NewDeviceInvoice.Items
+            ElseIf($Cim.IO._EditDeviceSerial.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Must enter a serial number","Error")
+            }
 
-            [System.Windows.MessageBox]::Show("Device [$($Item.Record.Title)] added to database","Success")
+            Else
+            {
+                $Item                          = $Cim.NewUID(2)
+                $Cim.Refresh()
+                $Item.Record.Chassis           = $Cim.IO._EditDeviceChassis.SelectedIndex
+                $Item.Record.Vendor            = $Cim.IO._EditDeviceVendor.Text
+                $Item.Record.Specification     = $Cim.IO._EditDeviceSpecification.Text
+                $Item.Record.Serial            = $Cim.IO._EditDeviceSerial.Text
+                $Item.Record.Model             = $Cim.IO._EditDeviceModel.Text
+                $Item.Record.Title             = $Cim.IO._EditDeviceTitle.Text
+                $Item.Record.Client            = $Cim.IO._EditDeviceClientList.Items
+                $Item.Record.Issue             = $Cim.IO._EditDeviceIssueList.Items
+                $Item.Record.Purchase          = $Cim.IO._EditDevicePurchaseList.Items
+                $Item.Record.Invoice           = $Cim.IO._EditDeviceInvoiceList.Items
 
-            $Cim.IO._NewDeviceChassis.SelectedIndex = 8
-            $Cim.IO._NewDeviceVendor.Text           = $Null
-            $Cim.IO._NewDeviceSpecification.Text    = $Null
-            $Cim.IO._NewDeviceSerial.Text           = $Null
-            $Cim.IO._NewDeviceModel.Text            = $Null
-            $Cim.IO._NewDeviceTitle.Text            = $Null
-            $Cim.IO._NewDeviceClient.Items.Clear()
-            $Cim.IO._NewDeviceIssue.Items.Clear()
-            $Cim.IO._NewDevicePurchase.Items.Clear()
-            $Cim.IO._NewDeviceInvoice.Items.Clear()
+                [System.Windows.MessageBox]::Show("Device [$($Item.Record.Title)] added to database","Success")
+
+                $Cim.IO._EditDeviceChassis.SelectedIndex = 8
+                $Cim.IO._EditDeviceVendor.Text           = $Null
+                $Cim.IO._EditDeviceSpecification.Text    = $Null
+                $Cim.IO._EditDeviceSerial.Text           = $Null
+                $Cim.IO._EditDeviceModel.Text            = $Null
+                $Cim.IO._EditDeviceTitle.Text            = $Null
+                $Cim.IO._NewDeviceClientList.ItemsSource     = $Null
+                $Cim.IO._NewDeviceIssueList.ItemsSource      = $Null
+                $Cim.IO._NewDevicePurchaseList.ItemsSource   = $Null
+                $Cim.IO._NewDeviceInvoiceList.ItemsSource    = $Null
+
+                $Cim.GetTab(3)
+                $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+                $Cim.Refresh()
+            }
         }
     }
 
-    <# Issue
-    $Cim.IO._SaveIssueRecord.Add_Click{
-        
-        If ($Cim.IO._NewIssueDescription -eq "" )
+    $Cim.IO._ViewDeviceTab.IsEnabled               = 0
+    $Cim.IO._EditDeviceTab.IsEnabled               = 0
+    $Cim.IO._SaveDeviceTab.IsEnabled               = 0
+
+    $Cim.IO._GetDeviceSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -eq -1)
         {
-            [System.Windows.MessageBox]::Show("Issue description missing","Error")
+            $Cim.IO._ViewDeviceTab.IsEnabled       = 0
+            $Cim.IO._EditDeviceTab.IsEnabled       = 0
         }
 
-        If ($Cim.IO._New
-        $Item = $Cim.NewUID(3)
+        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewDeviceTab.IsEnabled       = 1
+            $Cim.IO._EditDeviceTab.IsEnabled       = 1
+        }
+    }
+
+    $Cim.IO._GetDeviceSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewDevicePanel.Visibility        = "Visible" 
         $Cim.Refresh()
-        $Cim.IO._NewIssueClient           = $Cim.IO._NewIssue
-        $Cim.IO._NewIssueDevice           = $Cim.IO._NewIssue
-        $Cim.IO._NewIssueDescription      = $Cim.IO._NewIssue
-        $Cim.IO._NewIssueStatus           = $Cim.IO._NewIssue
-        $Cim.IO._NewIssuePurchase         = $Cim.IO._NewIssue
-        $Cim.IO._NewIssueService          = $Cim.IO._NewIssue
-        $Cim.IO._NewIssueInvoice          = $Cim.IO._NewIssue
+        $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetDeviceSearchResult.ItemsSource     = $Null
+
+        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
+
+        If ($Item) 
+        {
+            $Cim.IO._GetDeviceSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # ----------- #
+    # Issue Panel #
+    # ----------- #
+
+    $Cim.IO._GetIssueTab.Add_Click{ 
+    
+        $Cim.GetTab(4)
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveIssueTab.IsEnabled               = 0
+    }
+
+    $Cim.IO._ViewIssueTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewIssuePanel.Visibility            = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)    
+    }
+    
+    $Cim.IO._EditIssueTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditIssuePanel.Visibility            = "Visible"
+        $Cim.Refresh()
+        $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewIssueTab.IsEnabled               = 0
+        $Cim.IO._SaveIssueTab.IsEnabled               = 1
+    }
+
+    $Cim.IO._NewIssueTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewIssuePanel.Visibility             = "Visible" 
+        $Cim.Refresh()
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
+        $Cim.IO._SaveIssueTab.IsEnabled               = 1
+    }
+
+    $Cim.IO._ViewIssueTab.IsEnabled                   = 0
+    $Cim.IO._EditIssueTab.IsEnabled                   = 0
+    $Cim.IO._SaveIssueTab.IsEnabled                   = 0
+
+    $Cim.IO._GetIssueSearchResult.Add_SelectionChanged{
+    
+        If ($Cim.IO._GetIssueSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewIssueTab.IsEnabled           = 0
+            $Cim.IO._EditIssueTab.IsEnabled           = 0
+        }
+
+        ElseIf ($Cim.IO._GetIssueSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewIssueTab.IsEnabled           = 1
+            $Cim.IO._EditIssueTab.IsEnabled           = 1
+        }
+    }
+
+    $Cim.IO._GetIssueSearchResult.Add_MouseDoubleClick{
         
+        $Cim.Collapse()
+        $Cim.IO._ViewIssuePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetIssueSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
+
+        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
+
+        If ($Item)
+        {
+            $Cim.IO._GetIssueSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # --------------- #
+    # Inventory Panel #
+    # --------------- #
+
+    $Cim.IO._GetInventoryTab.Add_Click{ 
+    
+        $Cim.GetTab(5) 
+        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveInventoryTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewInventoryTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewInventoryPanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)    
+    }
+
+    $Cim.IO._EditInventoryTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditInventoryPanel. Visibility       = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
+        $Cim.IO._ViewInventoryTab.IsEnabled           = 0
+        $Cim.IO._SavePurchaseTab.IsEnabled            = 1
+    }
+
+    $Cim.IO._NewInventoryTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewInventoryPanel.Visibility = "Visible" 
+        $Cim.Refresh()
+        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+        $Cim.IO._SaveInventoryTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._ViewInventoryTab.IsEnabled               = 0
+    $Cim.IO._EditInventoryTab.IsEnabled               = 0
+    $Cim.IO._SaveInventoryTab.IsEnabled               = 0
+
+    $Cim.IO._GetInventorySearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetInventorySearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewInventoryTab.IsEnabled = 0
+            $Cim.IO._EditInventoryTab.IsEnabled = 0
+        }
+
+        ElseIf ($Cim.IO._GetInventorySearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewInventoryTab.IsEnabled = 1
+            $Cim.IO._EditInventoryTab.IsEnabled = 1
+        }
+    }
+
+    $Cim.IO._GetInventorySearchResult.Add_MouseDoubleClick{
         
-        $Cim.IO._NewIssue
-        $Cim.IO._NewIssue
-        $Cim.IO._NewIssue
-        $Cim.IO._NewIssue
-        $Cim.IO._NewIssue
-        $Cim.IO._NewIssue
-        #>
+        $Cim.Collapse()
+        $Cim.IO._ViewInventoryPanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetInventorySearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
+
+        If ($Item)
+        {
+            $Cim.IO._GetInventorySearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+    
+    # -------------- #
+    # Purchase Panel #
+    # -------------- #
+
+    $Cim.IO._GetPurchaseTab.Add_Click{ 
+    
+        $Cim.GetTab(6) 
+        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewPurchaseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewPurchasePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)    
+    }
+
+    $Cim.IO._EditPurchaseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditPurchasePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewPurchaseTab.IsEnabled           = 0
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._NewPurchaseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewPurchasePanel.Visibility         = "Visible" 
+        $Cim.Refresh()
+        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+        $Cim.IO._SavePurchaseTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewPurchaseTab.IsEnabled                = 0
+    $Cim.IO._EditPurchaseTab.IsEnabled                = 0
+    $Cim.IO._SavePurchaseTab.IsEnabled                = 0
+
+    $Cim.IO._GetPurchaseSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewPurchaseTab.IsEnabled = 0
+            $Cim.IO._EditPurchaseTab.IsEnabled = 0
+        }
+
+        ElseIf ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewPurchaseTab.IsEnabled = 1
+            $Cim.IO._EditPurchaseTab.IsEnabled = 1
+        }
+    }
+
+    $Cim.IO._GetPurchaseSearchResult.Add_MouseDoubleClick{
         
-    #}
+        $Cim.Collapse()
+        $Cim.IO._ViewPurchasePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
+
+        If ($Item) 
+        {
+            $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # ------------- #
+    # Expense Panel #
+    # ------------- #
+
+    $Cim.IO._GetExpenseTab.Add_Click{ 
+    
+        $Cim.GetTab(7) 
+        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 0
+    }
+
+    $Cim.IO._ViewExpenseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewExpensePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._EditExpenseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditExpensePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewExpenseTab.IsEnabled           = 0
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._NewExpenseTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewExpensePanel.Visibility         = "Visible" 
+        $Cim.Refresh()
+        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveExpenseTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._ViewExpenseTab.IsEnabled                 = 0
+    $Cim.IO._EditExpenseTab.IsEnabled                 = 0
+    $Cim.IO._SaveExpenseTab.IsEnabled                 = 0
+
+    $Cim.IO._GetExpenseSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetExpenseSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewExpenseTab.IsEnabled       = 0
+            $Cim.IO._EditExpenseTab.IsEnabled       = 0
+        }
+
+        ElseIf ($Cim.IO._GetExpenseSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewExpenseTab.IsEnabled       = 1
+            $Cim.IO._EditExpenseTab.IsEnabled       = 1
+        }
+    }
+
+    $Cim.IO._GetExpenseSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewExpensePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
+
+        If ($Item) 
+        {
+            $Cim.IO._GetExpenseSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # ------------- #
+    # Account Panel #
+    # ------------- #
+
+    $Cim.IO._GetAccountTab.Add_Click{ 
+    
+        $Cim.GetTab(8)
+        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveAccountTab.IsEnabled    = 0 
+    }
+
+    $Cim.IO._ViewAccountTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewAccountPanel.Visibility = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._EditAccountTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditAccountPanel.Visibility          = "Visible"
+        $Cim.Refresh()
+        $Cim.EditAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewAccountTab.IsEnabled             = 0
+        $Cim.IO._SaveAccountTab.IsEnabled             = 1
+    }
+
+    $Cim.IO._NewAccountTab.Add_Click{ 
+        
+        $Cim.Collapse()
+        $Cim.IO._NewAccountPanel.Visibility = "Visible" 
+        $Cim.Refresh()
+        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveAccountTab.IsEnabled    = 1
+    }
+
+    $Cim.IO._ViewAccountTab.IsEnabled                 = 0
+    $Cim.IO._EditAccountTab.IsEnabled                 = 0
+    $Cim.IO._SaveAccountTab.IsEnabled                 = 0
+
+    $Cim.IO._GetAccountSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewAccountTab.IsEnabled = 0
+            $Cim.IO._EditAccountTab.IsEnabled = 0
+        }
+
+        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewAccountTab.IsEnabled = 1
+            $Cim.IO._EditAccountTab.IsEnabled = 1
+        }
+    }
+
+    $Cim.IO._GetAccountSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewAccountPanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetAccountSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
+
+        If ($Item) 
+        {
+            $Cim.IO._GetAccountSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+
+    # ------------- #
+    # Invoice Panel #
+    # ------------- #
+
+    $Cim.IO._GetInvoiceTab.Add_Click{ 
+    
+        $Cim.GetTab(9) 
+        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
+        $Cim.Refresh()
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._ViewInvoiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._ViewInvoicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._EditInvoiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._EditInvoicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.EditInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
+        $Cim.IO._ViewInvoiceTab.IsEnabled           = 0
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
+    }
+
+    $Cim.IO._NewInvoiceTab.Add_Click{ 
+    
+        $Cim.Collapse()
+        $Cim.IO._NewInvoicePanel.Visibility         = "Visible"
+        $Cim.Refresh()
+        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
+        $Cim.IO._SaveInvoiceTab.IsEnabled           = 1
+    }
+    
+    $Cim.IO._ViewInvoiceTab.IsEnabled                = 0
+    $Cim.IO._EditInvoiceTab.IsEnabled                = 0
+    $Cim.IO._SaveInvoiceTab.IsEnabled                = 0
+
+    $Cim.IO._GetInvoiceSearchResult.Add_SelectionChanged{
+
+        If ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -eq -1)
+        {
+            $Cim.IO._ViewInvoiceTab.IsEnabled = 0
+            $Cim.IO._EditInvoiceTab.IsEnabled = 0
+        }
+
+        ElseIf ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -ne -1)
+        {
+            $Cim.IO._ViewInvoiceTab.IsEnabled = 1
+            $Cim.IO._EditInvoiceTab.IsEnabled = 1
+        }
+    }
+
+    $Cim.IO._GetInvoiceSearchResult.Add_MouseDoubleClick{
+        
+        $Cim.Collapse()
+        $Cim.IO._ViewInvoicePanel.Visibility        = "Visible" 
+        $Cim.Refresh()
+        $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
+    }
+
+    $Cim.IO._GetInvoiceSearchFilter.Add_TextChanged{
+
+        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
+
+        If ($Item) 
+        {
+            $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Item
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
 
     # ------------- #
     # Return Object #
@@ -6144,27 +6537,3 @@ Function cim-db
 $Cim      = cim-db
 
 $Cim.Window.Invoke()
-
-<#
-function Add-DataGridDoubleClickEventOnRow
-{
-    param([System.Windows.Controls.DataGrid]$DG,[System.Windows.Input.MouseButtonEventHandler]$Method)
-
-	$Style = [System.Windows.Style]::New([System.Windows.Controls.DataGridRow])
-	$Style.Setters.Add([System.Windows.EventSetter]::New([System.Windows.Controls.DataGridRow]::MouseDoubleClickEvent, $Method))
-	$DG.RowStyle = $Style
-}
-
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="MouseDoubleClick" Handler="_OpenInvoice"/>
-                                </Style>
-                            </DataGrid.Resources>
-<DataGrid>
-    <DataGrid.Resources>
-        <Style TargetType="DataGridRow">
-            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
-        </Style>
-    </DataGrid.Resources>
-</DataGrid>
-#>

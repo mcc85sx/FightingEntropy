@@ -816,9 +816,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -829,7 +828,6 @@
                         <ComboBoxItem Content="Name"/>
                         <ComboBoxItem Content="Description"/>
                     </ComboBox>
-
                     <TextBox Grid.Column="1" Name="_GetServiceSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceSearchResult">
@@ -842,72 +840,51 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Name]">
-                        <TextBox Name="_ViewServiceName" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Description]">
-                        <TextBox Name="_ViewServiceDescription" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Cost]">
-                        <TextBox Name="_ViewServiceCost" IsEnabled="False"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_EditServiceRecord" Content="Edit"/>
+                <GroupBox Grid.Row="0" Header="[Name]">
+                    <TextBox Name="_ViewServiceName" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Description]">
+                    <TextBox Name="_ViewServiceDescription" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Cost]">
+                    <TextBox Name="_ViewServiceCost" IsEnabled="False"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Name]">
-                        <TextBox Name="_EditServiceName"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Description]">
-                        <TextBox Name="_EditServiceDescription"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Cost]">
-                        <TextBox Name="_EditServiceCost"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_UpdateServiceRecord" Content="Update"/>
+                <GroupBox Grid.Row="0" Header="[Name]">
+                    <TextBox Name="_EditServiceName"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Description]">
+                    <TextBox Name="_EditServiceDescription"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Cost]">
+                    <TextBox Name="_EditServiceCost"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Name]">
-                        <TextBox Name="_NewServiceName"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Description]">
-                        <TextBox Name="_NewServiceDescription"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Cost]">
-                        <TextBox Name="_NewServiceCost"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SaveServiceRecord" Content="Save"/>
+                <GroupBox Grid.Row="0" Header="[Name]">
+                    <TextBox Name="_NewServiceName"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Description]">
+                    <TextBox Name="_NewServiceDescription"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Cost]">
+                    <TextBox Name="_NewServiceCost"/>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_DevicePanel" Visibility="Collapsed">
@@ -1539,9 +1516,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -1568,360 +1544,341 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox Name="_ViewIssueStatus" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Description]">
-                            <TextBox Name="_ViewIssueDescription" IsEnabled="False"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="1" Header="[Client]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewIssueClientSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewIssueAddClient" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewIssueClientList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveClient" IsEnabled="False"/>
-                            </Grid>
-                        </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Status]">
+                        <ComboBox Name="_ViewIssueStatus" IsEnabled="False"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewIssueDeviceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewIssueAddDevice" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewIssueDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveDevice" IsEnabled="False"/>
-                            </Grid>
-                        </Grid>
+                    <GroupBox Grid.Column="1" Header="[Description]">
+                        <TextBox Name="_ViewIssueDescription" IsEnabled="False"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Purchase]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewIssuePurchaseSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewIssueAddPurchase" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewIssuePurchaseList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewIssueRemovePurchase" IsEnabled="False"/>
-                            </Grid>
+                </Grid>
+                <GroupBox Grid.Row="1" Header="[Client]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewIssueClientSearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Service]">
-                        <Grid>
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueServiceEntry" IsEnabled="False"/>
-                            <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewIssueAddService" IsEnabled="False"/>
-                            <ComboBox Grid.Column="2" Name="_ViewIssueServiceList"/>
-                            <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewIssueRemoveService" IsEnabled="False"/>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddClient" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewIssueClientList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveClient" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Invoice]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewIssueInvoiceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewIssueAddInvoice" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewIssueInvoiceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveInvoice" IsEnabled="False"/>
-                            </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewIssueDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_EditIssueRecord" Content="Edit"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddDevice" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewIssueDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveDevice" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Purchase]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewIssuePurchaseSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddPurchase" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewIssuePurchaseList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemovePurchase" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Service]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Name="_ViewIssueServiceEntry" IsEnabled="False"/>
+                        <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewIssueAddService" IsEnabled="False"/>
+                        <ComboBox Grid.Column="2" Name="_ViewIssueServiceList"/>
+                        <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewIssueRemoveService" IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Invoice]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewIssueInvoiceSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddInvoice" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewIssueInvoiceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveInvoice" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox Name="_EditIssueStatus"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Description]">
-                            <TextBox Name="_EditIssueDescription"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="1" Header="[Client]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditIssueClientSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueClientSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditIssueAddClient"/>
-                                <ComboBox Grid.Column="2" Name="_EditIssueClientList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveClient"/>
-                            </Grid>
-                        </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Status]">
+                        <ComboBox Name="_EditIssueStatus"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditIssueDeviceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditIssueAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_EditIssueDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveDevice"/>
-                            </Grid>
-                        </Grid>
+                    <GroupBox Grid.Column="1" Header="[Description]">
+                        <TextBox Name="_EditIssueDescription"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Purchase]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditIssuePurchaseSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditIssueAddPurchase"/>
-                                <ComboBox Grid.Column="2" Name="_EditIssuePurchaseList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditIssueRemovePurchase"/>
-                            </Grid>
+                </Grid>
+                <GroupBox Grid.Row="1" Header="[Client]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditIssueClientSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Service]">
-                        <Grid>
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueServiceEntry"/>
-                            <Button Grid.Column="1" Margin="5" Content="+" Name="_EditIssueAddService"/>
-                            <ComboBox Grid.Column="2" Name="_EditIssueServiceList"/>
-                            <Button Grid.Column="3" Margin="5" Content="-" Name="_EditIssueRemoveService"/>
+                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddClient"/>
+                            <ComboBox Grid.Column="2" Name="_EditIssueClientList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveClient"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Invoice]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditIssueInvoiceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditIssueAddInvoice"/>
-                                <ComboBox Grid.Column="2" Name="_EditIssueInvoiceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveInvoice"/>
-                            </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditIssueDeviceSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_UpdateIssueRecord" Content="Update"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddDevice"/>
+                            <ComboBox Grid.Column="2" Name="_EditIssueDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveDevice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Purchase]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditIssuePurchaseSearchFilter"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddPurchase"/>
+                            <ComboBox Grid.Column="2" Name="_EditIssuePurchaseList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemovePurchase"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Service]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Name="_EditIssueServiceEntry"/>
+                        <Button Grid.Column="1" Margin="5" Content="+" Name="_EditIssueAddService"/>
+                        <ComboBox Grid.Column="2" Name="_EditIssueServiceList"/>
+                        <Button Grid.Column="3" Margin="5" Content="-" Name="_EditIssueRemoveService"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Invoice]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditIssueInvoiceSearchFilter"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddInvoice"/>
+                            <ComboBox Grid.Column="2" Name="_EditIssueInvoiceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveInvoice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewIssuePanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="105"/>
@@ -2055,41 +2012,39 @@
                             <Button Grid.Column="3" Margin="5" Content="-" Name="_NewIssueRemoveService"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Invoice]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewIssueInvoiceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewIssueAddInvoice"/>
-                                <ComboBox Grid.Column="2" Name="_NewIssueInvoiceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewIssueRemoveInvoice"/>
-                            </Grid>
+                <GroupBox Grid.Row="5" Header="[Invoice]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_NewIssueInvoiceSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SaveIssueRecord" Content="Save"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_NewIssueAddInvoice"/>
+                            <ComboBox Grid.Column="2" Name="_NewIssueInvoiceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_NewIssueRemoveInvoice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_InventoryPanel" Visibility="Collapsed">
@@ -2113,9 +2068,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetInventoryPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -2152,170 +2106,151 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewInventoryPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Vendor]">
-                            <TextBox Name="_ViewInventoryVendor" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Model]">
-                            <TextBox Name="_ViewInventoryModel" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Serial]">
-                            <TextBox Name="_ViewInventorySerial" IsEnabled="False"/>
-                        </GroupBox>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Title]">
-                            <TextBox Name="_ViewInventoryTitle" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Cost]">
-                            <TextBox Name="_ViewInventoryCost" IsEnabled="False"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="2" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="1" Name="_ViewInventoryIsDevice" IsEnabled="False">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" Name="_ViewInventoryDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_ViewInventoryDeviceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewInventoryDeviceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewInventoryAddDevice" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewInventoryDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewInventoryRemoveDevice" IsEnabled="False"/>
-                            </Grid>
-                        </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Vendor]">
+                        <TextBox Name="_ViewInventoryVendor" IsEnabled="False"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="[Model]">
+                        <TextBox Name="_ViewInventoryModel" IsEnabled="False"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="2" Header="[Serial]">
+                        <TextBox Name="_ViewInventorySerial" IsEnabled="False"/>
                     </GroupBox>
                 </Grid>
-                <Button Grid.Row="1" Name="_EditInventoryRecord" Content="Edit"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Title]">
+                        <TextBox Name="_ViewInventoryTitle" IsEnabled="False"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="[Cost]">
+                        <TextBox Name="_ViewInventoryCost" IsEnabled="False"/>
+                    </GroupBox>
+                </Grid>
+                <GroupBox Grid.Row="2" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="1" Name="_ViewInventoryIsDevice" IsEnabled="False">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_ViewInventoryDeviceSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="2" Name="_ViewInventoryDeviceSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInventoryDeviceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewInventoryAddDevice" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewInventoryDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewInventoryRemoveDevice" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditInventoryPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Vendor]">
-                            <TextBox Name="_EditInventoryVendor"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Model]">
-                            <TextBox Name="_EditInventoryModel"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Serial]">
-                            <TextBox Name="_EditInventorySerial"/>
-                        </GroupBox>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Title]">
-                            <TextBox Name="_EditInventoryTitle"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Cost]">
-                            <TextBox Name="_EditInventoryCost"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="2" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="1" Name="_EditInventoryIsDevice">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" Name="_EditInventoryDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_EditInventoryDeviceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditInventoryDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditInventoryAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_EditInventoryDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditInventoryRemoveDevice"/>
-                            </Grid>
-                        </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Vendor]">
+                        <TextBox Name="_EditInventoryVendor"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="[Model]">
+                        <TextBox Name="_EditInventoryModel"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="2" Header="[Serial]">
+                        <TextBox Name="_EditInventorySerial"/>
                     </GroupBox>
                 </Grid>
-                <Button Grid.Row="1" Name="_UpdateInventoryRecord" Content="Edit"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Title]">
+                        <TextBox Name="_EditInventoryTitle"/>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="[Cost]">
+                        <TextBox Name="_EditInventoryCost"/>
+                    </GroupBox>
+                </Grid>
+                <GroupBox Grid.Row="2" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="1" Name="_EditInventoryIsDevice">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_EditInventoryDeviceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="2" Name="_EditInventoryDeviceSearchFilter"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditInventoryDeviceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditInventoryAddDevice"/>
+                            <ComboBox Grid.Column="2" Name="_EditInventoryDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditInventoryRemoveDevice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewInventoryPanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
@@ -2349,46 +2284,44 @@
                             <TextBox Name="_NewInventoryCost"/>
                         </GroupBox>
                     </Grid>
-                    <GroupBox Grid.Row="2" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="1" Name="_NewInventoryIsDevice">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" Name="_NewInventoryDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_NewInventoryDeviceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewInventoryDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewInventoryAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_NewInventoryDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewInventoryRemoveDevice"/>
-                            </Grid>
+                <GroupBox Grid.Row="2" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="1" Name="_NewInventoryIsDevice">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_NewInventoryDeviceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="2" Name="_NewInventoryDeviceSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SaveInventoryRecord" Content="Save"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_NewInventoryDeviceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_NewInventoryAddDevice"/>
+                            <ComboBox Grid.Column="2" Name="_NewInventoryDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_NewInventoryRemoveDevice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_PurchasePanel" Visibility="Collapsed">
@@ -2412,9 +2345,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -2457,176 +2389,157 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Distributor]">
-                        <TextBox Name="_ViewPurchaseDistributor" IsEnabled="False"/>
+                <GroupBox Grid.Row="0" Header="[Distributor]">
+                    <TextBox Name="_ViewPurchaseDistributor" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Display Name]">
+                    <TextBox Name="_ViewPurchaseDisplayName" IsEnabled="False"/>
+                </GroupBox>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Vendor]">
+                        <TextBox Name="_ViewPurchaseVendor" IsEnabled="False"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Display Name]">
-                        <TextBox Name="_ViewPurchaseDisplayName" IsEnabled="False"/>
+                    <GroupBox Grid.Column="1" Header="[Model]">
+                        <TextBox Name="_ViewPurchaseModel" IsEnabled="False"/>
                     </GroupBox>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Vendor]">
-                            <TextBox Name="_ViewPurchaseVendor" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Model]">
-                            <TextBox Name="_ViewPurchaseModel" IsEnabled="False"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Specification]">
-                            <TextBox Name="_ViewPurchaseSpecification" IsEnabled="False"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="3" Header="[Serial]">
-                        <TextBox Name="_ViewPurchaseSerial" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="1" Name="_ViewPurchaseIsDevice" IsEnabled="False">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" Name="_ViewPurchaseDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_ViewPurchaseDeviceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewPurchaseDeviceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewPurchaseAddDevice" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewPurchaseDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewPurchaseRemoveDevice" IsEnabled="False"/>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Cost]">
-                        <TextBox Name="_ViewPurchaseCost" IsEnabled="False"/>
+                    <GroupBox Grid.Column="2" Header="[Specification]">
+                        <TextBox Name="_ViewPurchaseSpecification" IsEnabled="False"/>
                     </GroupBox>
                 </Grid>
-                <Button Grid.Row="1" Name="_EditPurchaseRecord" Content="Edit"/>
+                <GroupBox Grid.Row="3" Header="[Serial]">
+                    <TextBox Name="_ViewPurchaseSerial" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="1" Name="_ViewPurchaseIsDevice" IsEnabled="False">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_ViewPurchaseDeviceSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="2" Name="_ViewPurchaseDeviceSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewPurchaseDeviceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewPurchaseAddDevice" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewPurchaseDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewPurchaseRemoveDevice" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Cost]">
+                    <TextBox Name="_ViewPurchaseCost" IsEnabled="False"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Distributor]">
-                        <TextBox Name="_EditPurchaseDistributor"/>
+                <GroupBox Grid.Row="0" Header="[Distributor]">
+                    <TextBox Name="_EditPurchaseDistributor"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Display Name]">
+                    <TextBox Name="_EditPurchaseDisplayName"/>
+                </GroupBox>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Vendor]">
+                        <TextBox Name="_EditPurchaseVendor"/>
                     </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Display Name]">
-                        <TextBox Name="_EditPurchaseDisplayName"/>
+                    <GroupBox Grid.Column="1" Header="[Model]">
+                        <TextBox Name="_EditPurchaseModel"/>
                     </GroupBox>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Vendor]">
-                            <TextBox Name="_EditPurchaseVendor"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Model]">
-                            <TextBox Name="_EditPurchaseModel"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Specification]">
-                            <TextBox Name="_EditPurchaseSpecification"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="3" Header="[Serial]">
-                        <TextBox Name="_EditPurchaseSerial"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Device]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="1" Name="_EditPurchaseIsDevice">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" Name="_EditPurchaseDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_EditPurchaseDeviceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditPurchaseDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditPurchaseAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_EditPurchaseDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditPurchaseRemoveDevice"/>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Cost]">
-                        <TextBox Name="_EditPurchaseCost"/>
+                    <GroupBox Grid.Column="2" Header="[Specification]">
+                        <TextBox Name="_EditPurchaseSpecification"/>
                     </GroupBox>
                 </Grid>
-                <Button Grid.Row="1" Name="_UpdatePurchaseRecord" Content="Update"/>
+                <GroupBox Grid.Row="3" Header="[Serial]">
+                    <TextBox Name="_EditPurchaseSerial"/>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Device]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="1" Name="_EditPurchaseIsDevice">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_EditPurchaseDeviceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="2" Name="_EditPurchaseDeviceSearchFilter"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditPurchaseDeviceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditPurchaseAddDevice"/>
+                            <ComboBox Grid.Column="2" Name="_EditPurchaseDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditPurchaseRemoveDevice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Cost]">
+                    <TextBox Name="_EditPurchaseCost"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewPurchasePanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
@@ -2698,11 +2611,9 @@
                             </Grid>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="5" Header="[Cost]">
-                        <TextBox Name="_NewPurchaseCost"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SavePurchaseRecord" Content="Save"/>
+                <GroupBox Grid.Row="5" Header="[Cost]">
+                    <TextBox Name="_NewPurchaseCost"/>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_ExpensePanel" Visibility="Collapsed">
@@ -2726,9 +2637,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetExpensePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -2755,132 +2665,113 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewExpensePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Recipient]">
-                        <TextBox Name="_ViewExpenseRecipient" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Display Name]">
-                        <TextBox Name="_ViewExpenseDisplayName" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Account]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewExpenseIsDevice" IsEnabled="False">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewExpenseDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewExpenseDeviceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewExpenseDeviceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewExpenseAddDevice" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewExpenseDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewExpenseRemoveDevice" IsEnabled="False"/>
-                            </Grid>
+                <GroupBox Grid.Row="0" Header="[Recipient]">
+                    <TextBox Name="_ViewExpenseRecipient" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Display Name]">
+                    <TextBox Name="_ViewExpenseDisplayName" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Account]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewExpenseIsDevice" IsEnabled="False">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewExpenseDeviceSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewExpenseDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Cost]">
-                        <TextBox Name="_ViewExpenseCost" IsEnabled="False"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_EditExpenseRecord" Content="Edit"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewExpenseDeviceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewExpenseAddDevice" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewExpenseDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewExpenseRemoveDevice" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Cost]">
+                    <TextBox Name="_ViewExpenseCost" IsEnabled="False"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditExpensePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Recipient]">
-                        <TextBox Name="_EditExpenseRecipient"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Display Name]">
-                        <TextBox Name="_EditExpenseDisplayName"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Account]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseIsDevice">
-                                    <ComboBoxItem Content="No"/>
-                                    <ComboBoxItem Content="Yes"/>
-                                </ComboBox>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditExpenseDeviceSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditExpenseDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditExpenseAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_EditExpenseDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditExpenseRemoveDevice"/>
-                            </Grid>
+                <GroupBox Grid.Row="0" Header="[Recipient]">
+                    <TextBox Name="_EditExpenseRecipient"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Display Name]">
+                    <TextBox Name="_EditExpenseDisplayName"/>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Account]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseIsDevice">
+                                <ComboBoxItem Content="No"/>
+                                <ComboBoxItem Content="Yes"/>
+                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseDeviceSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditExpenseDeviceSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Cost]">
-                        <TextBox Name="_EditExpenseCost"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_UpdateExpenseRecord" Content="Update"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditExpenseDeviceSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditExpenseAddDevice"/>
+                            <ComboBox Grid.Column="2" Name="_EditExpenseDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditExpenseRemoveDevice"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Cost]">
+                    <TextBox Name="_EditExpenseCost"/>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewExpensePanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
@@ -2930,11 +2821,9 @@
                             </Grid>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Cost]">
-                        <TextBox Name="_NewExpenseCost"/>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SaveExpenseRecord" Content="Save"/>
+                <GroupBox Grid.Row="3" Header="[Cost]">
+                    <TextBox Name="_NewExpenseCost"/>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_AccountPanel" Visibility="Collapsed">
@@ -2958,9 +2847,8 @@
             </Grid>
             <Grid Grid.Row="1" Name="_GetAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -2989,138 +2877,117 @@
             </Grid>
             <Grid Grid.Row="1" Name="_ViewAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Column="0" Header="[Object]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountObjectSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewAccountObjectSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewAccountObjectSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewAccountAddObject" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewAccountDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewAccountRemoveObject" IsEnabled="False"/>
-                            </Grid>
+                <GroupBox Grid.Column="0" Header="[Object]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountObjectSearchProperty" IsEnabled="False">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_ViewAccountObjectSearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_EditAccountRecord" Content="Edit"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewAccountObjectSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewAccountAddObject" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewAccountDeviceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewAccountRemoveObject" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Column="0" Header="[Object]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountObjectSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_EditAccountObjectSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_EditAccountObjectSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_EditAccountAddObject"/>
-                                <ComboBox Grid.Column="2" Name="_EditAccountObjectList"/>
-                                <Button Grid.Column="3" Content="-" Name="_EditAccountRemoveObject"/>
-                            </Grid>
+                <GroupBox Grid.Column="0" Header="[Object]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountObjectSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_EditAccountObjectSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_UpdateAccountRecord" Content="Update"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_EditAccountObjectSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_EditAccountAddObject"/>
+                            <ComboBox Grid.Column="2" Name="_EditAccountObjectList"/>
+                            <Button Grid.Column="3" Content="-" Name="_EditAccountRemoveObject"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_NewAccountPanel" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="105"/>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Column="0" Header="[Object]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountObjectSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewAccountObjectSearchFilter"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewAccountObjectSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewAccountAddObject"/>
-                                <ComboBox Grid.Column="2" Name="_NewAccountObjectList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewAccountRemoveObject"/>
-                            </Grid>
+                <GroupBox Grid.Column="0" Header="[Object]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountObjectSearchProperty">
+                                <ComboBoxItem Content="UID"/>
+                                <ComboBoxItem Content="Index"/>
+                                <ComboBoxItem Content="Date"/>
+                                <ComboBoxItem Content="Rank"/>
+                            </ComboBox>
+                            <TextBox Grid.Column="1" Name="_NewAccountObjectSearchFilter"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_SaveAccountRecord" Content="Save"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_NewAccountObjectSearchResult"/>
+                            <Button Grid.Column="1" Content="+" Name="_NewAccountAddObject"/>
+                            <ComboBox Grid.Column="2" Name="_NewAccountObjectList"/>
+                            <Button Grid.Column="3" Content="-" Name="_NewAccountRemoveObject"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Collapsed">

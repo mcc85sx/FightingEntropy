@@ -2827,12 +2827,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceClientSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -2860,12 +2855,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceInventorySearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -2893,12 +2883,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceServiceSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -2926,12 +2911,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoicePurchaseSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -2978,12 +2958,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3011,12 +2986,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceInventorySearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3044,12 +3014,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceServiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3077,12 +3042,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoicePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3129,12 +3089,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3162,12 +3117,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceInventorySearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3195,12 +3145,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceServiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3228,12 +3173,7 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoicePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">

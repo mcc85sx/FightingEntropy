@@ -1,0 +1,2205 @@
+00501	Holtsville	Suffolk
+00544	Holtsville	Suffolk
+06390	Fishers Island	Suffolk
+10001	New York	New York
+10002	New York	New York
+10003	New York	New York
+10004	New York	New York
+10005	New York	New York
+10006	New York	New York
+10007	New York	New York
+10008	New York	New York
+10009	New York	New York
+10010	New York	New York
+10011	New York	New York
+10012	New York	New York
+10013	New York	New York
+10014	New York	New York
+10015	New York	New York
+10016	New York	New York
+10017	New York	New York
+10018	New York	New York
+10019	New York	New York
+10020	New York	New York
+10021	New York	New York
+10022	New York	New York
+10023	New York	New York
+10024	New York	New York
+10025	New York	New York
+10026	New York	New York
+10027	New York	New York
+10028	New York	New York
+10029	New York	New York
+10030	New York	New York
+10031	New York	New York
+10032	New York	New York
+10033	New York	New York
+10034	New York	New York
+10035	New York	New York
+10036	New York	New York
+10037	New York	New York
+10038	New York	New York
+10039	New York	New York
+10040	New York	New York
+10041	New York	New York
+10043	New York	New York
+10044	New York	New York
+10045	New York	New York
+10046	New York	New York
+10047	New York	New York
+10048	New York	New York
+10055	New York	New York
+10060	New York	New York
+10069	New York	New York
+10072	New York	New York
+10079	New York	New York
+10080	New York	New York
+10081	New York	New York
+10082	New York	New York
+10087	New York	New York
+10090	New York	New York
+10094	New York	New York
+10095	New York	New York
+10096	New York	New York
+10098	New York	New York
+10099	New York	New York
+10101	New York	New York
+10102	New York	New York
+10103	New York	New York
+10104	New York	New York
+10105	New York	New York
+10106	New York	New York
+10107	New York	New York
+10108	New York	New York
+10109	New York	New York
+10110	New York	New York
+10111	New York	New York
+10112	New York	New York
+10113	New York	New York
+10114	New York	New York
+10115	New York	New York
+10116	New York	New York
+10117	New York	New York
+10118	New York	New York
+10119	New York	New York
+10120	New York	New York
+10121	New York	New York
+10122	New York	New York
+10123	New York	New York
+10124	New York	New York
+10125	New York	New York
+10126	New York	New York
+10128	New York	New York
+10129	New York	New York
+10130	New York	New York
+10131	New York	New York
+10132	New York	New York
+10133	New York	New York
+10138	New York	New York
+10149	New York	New York
+10150	New York	New York
+10151	New York	New York
+10152	New York	New York
+10153	New York	New York
+10154	New York	New York
+10155	New York	New York
+10156	New York	New York
+10157	New York	New York
+10158	New York	New York
+10159	New York	New York
+10160	New York	New York
+10161	New York	New York
+10162	New York	New York
+10163	New York	New York
+10164	New York	New York
+10165	New York	New York
+10166	New York	New York
+10167	New York	New York
+10168	New York	New York
+10169	New York	New York
+10170	New York	New York
+10171	New York	New York
+10172	New York	New York
+10173	New York	New York
+10174	New York	New York
+10175	New York	New York
+10176	New York	New York
+10177	New York	New York
+10178	New York	New York
+10179	New York	New York
+10184	New York	New York
+10185	New York	New York
+10196	New York	New York
+10197	New York	New York
+10199	New York	New York
+10203	New York	New York
+10211	New York	New York
+10212	New York	New York
+10213	New York	New York
+10242	New York	New York
+10249	New York	New York
+10256	New York	New York
+10257	New York	New York
+10258	New York	New York
+10259	New York	New York
+10260	New York	New York
+10261	New York	New York
+10265	New York	New York
+10268	New York	New York
+10269	New York	New York
+10270	New York	New York
+10271	New York	New York
+10272	New York	New York
+10273	New York	New York
+10274	New York	New York
+10275	New York	New York
+10276	New York	New York
+10277	New York	New York
+10278	New York	New York
+10279	New York	New York
+10280	New York	New York
+10281	New York	New York
+10282	New York	New York
+10285	New York	New York
+10286	New York	New York
+10292	New York	New York
+10301	Staten Island	Richmond
+10302	Staten Island	Richmond
+10303	Staten Island	Richmond
+10304	Staten Island	Richmond
+10305	Staten Island	Richmond
+10306	Staten Island	Richmond
+10307	Staten Island	Richmond
+10308	Staten Island	Richmond
+10309	Staten Island	Richmond
+10310	Staten Island	Richmond
+10311	Staten Island	Richmond
+10312	Staten Island	Richmond
+10313	Staten Island	Richmond
+10314	Staten Island	Richmond
+10451	Bronx	Bronx
+10452	Bronx	Bronx
+10453	Bronx	Bronx
+10454	Bronx	Bronx
+10455	Bronx	Bronx
+10456	Bronx	Bronx
+10457	Bronx	Bronx
+10458	Bronx	Bronx
+10459	Bronx	Bronx
+10460	Bronx	Bronx
+10461	Bronx	Bronx
+10462	Bronx	Bronx
+10463	Bronx	Bronx
+10464	Bronx	Bronx
+10465	Bronx	Bronx
+10466	Bronx	Bronx
+10467	Bronx	Bronx
+10468	Bronx	Bronx
+10469	Bronx	Bronx
+10470	Bronx	Bronx
+10471	Bronx	Bronx
+10472	Bronx	Bronx
+10473	Bronx	Bronx
+10474	Bronx	Bronx
+10475	Bronx	Bronx
+10499	Bronx	Bronx
+10501	Amawalk	Westchester
+10502	Ardsley	Westchester
+10503	Ardsley On Hudson	Westchester
+10504	Armonk	Westchester
+10505	Baldwin Place	Westchester
+10506	Bedford	Westchester
+10507	Bedford Hills	Westchester
+10509	Brewster	Putnam
+10510	Briarcliff Manor	Westchester
+10511	Buchanan	Westchester
+10512	Carmel	Putnam
+10514	Chappaqua	Westchester
+10516	Cold Spring	Putnam
+10517	Crompond	Westchester
+10518	Cross River	Westchester
+10519	Croton Falls	Westchester
+10520	Croton On Hudson	Westchester
+10521	Croton On Hudson	Westchester
+10522	Dobbs Ferry	Westchester
+10523	Elmsford	Westchester
+10524	Garrison	Putnam
+10526	Goldens Bridge	Westchester
+10527	Granite Springs	Westchester
+10528	Harrison	Westchester
+10530	Hartsdale	Westchester
+10532	Hawthorne	Westchester
+10533	Irvington	Westchester
+10535	Jefferson Valley	Westchester
+10536	Katonah	Westchester
+10537	Lake Peekskill	Putnam
+10538	Larchmont	Westchester
+10540	Lincolndale	Westchester
+10541	Mahopac	Putnam
+10542	Mahopac Falls	Putnam
+10543	Mamaroneck	Westchester
+10545	Maryknoll	Westchester
+10546	Millwood	Westchester
+10547	Mohegan Lake	Westchester
+10548	Montrose	Westchester
+10549	Mount Kisco	Westchester
+10550	Mount Vernon	Westchester
+10551	Mount Vernon	Westchester
+10552	Mount Vernon	Westchester
+10553	Mount Vernon	Westchester
+10557	Mount Vernon	Westchester
+10558	Mount Vernon	Westchester
+10560	North Salem	Westchester
+10562	Ossining	Westchester
+10566	Peekskill	Westchester
+10567	Cortlandt Manor	Westchester
+10570	Pleasantville	Westchester
+10571	Pleasantville	Westchester
+10572	Pleasantville	Westchester
+10573	Port Chester	Westchester
+10576	Pound Ridge	Westchester
+10577	Purchase	Westchester
+10578	Purdys	Westchester
+10579	Putnam Valley	Putnam
+10580	Rye	Westchester
+10583	Scarsdale	Westchester
+10587	Shenorock	Westchester
+10588	Shrub Oak	Westchester
+10589	Somers	Westchester
+10590	South Salem	Westchester
+10591	Tarrytown	Westchester
+10594	Thornwood	Westchester
+10595	Valhalla	Westchester
+10596	Verplanck	Westchester
+10597	Waccabuc	Westchester
+10598	Yorktown Heights	Westchester
+10601	White Plains	Westchester
+10602	White Plains	Westchester
+10603	White Plains	Westchester
+10604	West Harrison	Westchester
+10605	White Plains	Westchester
+10606	White Plains	Westchester
+10607	White Plains	Westchester
+10610	White Plains	Westchester
+10701	Yonkers	Westchester
+10702	Yonkers	Westchester
+10703	Yonkers	Westchester
+10704	Yonkers	Westchester
+10705	Yonkers	Westchester
+10706	Hastings On Hudson	Westchester
+10707	Tuckahoe	Westchester
+10708	Bronxville	Westchester
+10709	Eastchester	Westchester
+10710	Yonkers	Westchester
+10801	New Rochelle	Westchester
+10802	New Rochelle	Westchester
+10803	Pelham	Westchester
+10804	New Rochelle	Westchester
+10805	New Rochelle	Westchester
+10901	Suffern	Rockland
+10910	Arden	Orange
+10911	Bear Mountain	Rockland
+10912	Bellvale	Orange
+10913	Blauvelt	Rockland
+10914	Blooming Grove	Orange
+10915	Bullville	Orange
+10916	Campbell Hall	Orange
+10917	Central Valley	Orange
+10918	Chester	Orange
+10919	Circleville	Orange
+10920	Congers	Rockland
+10921	Florida	Orange
+10922	Fort Montgomery	Orange
+10923	Garnerville	Rockland
+10924	Goshen	Orange
+10925	Greenwood Lake	Orange
+10926	Harriman	Orange
+10927	Haverstraw	Rockland
+10928	Highland Falls	Orange
+10930	Highland Mills	Orange
+10931	Hillburn	Rockland
+10932	Howells	Orange
+10933	Johnson	Orange
+10940	Middletown	Orange
+10941	Middletown	Orange
+10943	Middletown	Orange
+10949	Monroe	Orange
+10950	Monroe	Orange
+10952	Monsey	Rockland
+10953	Mountainville	Orange
+10954	Nanuet	Rockland
+10956	New City	Rockland
+10958	New Hampton	Orange
+10959	New Milford	Orange
+10960	Nyack	Rockland
+10962	Orangeburg	Rockland
+10963	Otisville	Orange
+10964	Palisades	Rockland
+10965	Pearl River	Rockland
+10968	Piermont	Rockland
+10969	Pine Island	Orange
+10970	Pomona	Rockland
+10973	Slate Hill	Orange
+10974	Sloatsburg	Rockland
+10975	Southfields	Orange
+10976	Sparkill	Rockland
+10977	Spring Valley	Rockland
+10979	Sterling Forest	Orange
+10980	Stony Point	Rockland
+10981	Sugar Loaf	Orange
+10982	Tallman	Rockland
+10983	Tappan	Rockland
+10984	Thiells	Rockland
+10985	Thompson Ridge	Orange
+10986	Tomkins Cove	Rockland
+10987	Tuxedo Park	Orange
+10988	Unionville	Orange
+10989	Valley Cottage	Rockland
+10990	Warwick	Orange
+10992	Washingtonville	Orange
+10993	West Haverstraw	Rockland
+10994	West Nyack	Rockland
+10996	West Point	Orange
+10997	West Point	Orange
+10998	Westtown	Orange
+11001	Floral Park	Nassau
+11002	Floral Park	Nassau
+11003	Elmont	Nassau
+11004	Glen Oaks	Queens
+11005	Floral Park	Queens
+11010	Franklin Square	Nassau
+11020	Great Neck	Nassau
+11021	Great Neck	Nassau
+11022	Great Neck	Nassau
+11023	Great Neck	Nassau
+11024	Great Neck	Nassau
+11025	Great Neck	Nassau
+11026	Great Neck	Nassau
+11027	Great Neck	Nassau
+11030	Manhasset	Nassau
+11040	New Hyde Park	Nassau
+11041	New Hyde Park	Nassau
+11042	New Hyde Park	Nassau
+11043	New Hyde Park	Nassau
+11044	New Hyde Park	Nassau
+11050	Port Washington	Nassau
+11051	Port Washington	Nassau
+11052	Port Washington	Nassau
+11053	Port Washington	Nassau
+11054	Port Washington	Nassau
+11055	Port Washington	Nassau
+11096	Inwood	Nassau
+11099	New Hyde Park	Nassau
+11101	Long Island City	Queens
+11102	Astoria	Queens
+11103	Astoria	Queens
+11104	Sunnyside	Queens
+11105	Astoria	Queens
+11106	Astoria	Queens
+11109	Long Island City	Queens
+11120	Long Island City	Queens
+11201	Brooklyn	Kings
+11202	Brooklyn	Kings
+11203	Brooklyn	Kings
+11204	Brooklyn	Kings
+11205	Brooklyn	Kings
+11206	Brooklyn	Kings
+11207	Brooklyn	Kings
+11208	Brooklyn	Kings
+11209	Brooklyn	Kings
+11210	Brooklyn	Kings
+11211	Brooklyn	Kings
+11212	Brooklyn	Kings
+11213	Brooklyn	Kings
+11214	Brooklyn	Kings
+11215	Brooklyn	Kings
+11216	Brooklyn	Kings
+11217	Brooklyn	Kings
+11218	Brooklyn	Kings
+11219	Brooklyn	Kings
+11220	Brooklyn	Kings
+11221	Brooklyn	Kings
+11222	Brooklyn	Kings
+11223	Brooklyn	Kings
+11224	Brooklyn	Kings
+11225	Brooklyn	Kings
+11226	Brooklyn	Kings
+11228	Brooklyn	Kings
+11229	Brooklyn	Kings
+11230	Brooklyn	Kings
+11231	Brooklyn	Kings
+11232	Brooklyn	Kings
+11233	Brooklyn	Kings
+11234	Brooklyn	Kings
+11235	Brooklyn	Kings
+11236	Brooklyn	Kings
+11237	Brooklyn	Kings
+11238	Brooklyn	Kings
+11239	Brooklyn	Kings
+11240	Brooklyn	Kings
+11241	Brooklyn	Kings
+11242	Brooklyn	Kings
+11243	Brooklyn	Kings
+11244	Brooklyn	Kings
+11245	Brooklyn	Kings
+11247	Brooklyn	Kings
+11248	Brooklyn	Kings
+11249	Brooklyn	Kings
+11251	Brooklyn	Kings
+11252	Brooklyn	Kings
+11254	Brooklyn	Kings
+11255	Brooklyn	Kings
+11256	Brooklyn	Kings
+11351	Flushing	Queens
+11352	Flushing	Queens
+11354	Flushing	Queens
+11355	Flushing	Queens
+11356	College Point	Queens
+11357	Whitestone	Queens
+11358	Flushing	Queens
+11359	Bayside	Queens
+11360	Bayside	Queens
+11361	Bayside	Queens
+11362	Little Neck	Queens
+11363	Little Neck	Queens
+11364	Oakland Gardens	Queens
+11365	Fresh Meadows	Queens
+11366	Fresh Meadows	Queens
+11367	Flushing	Queens
+11368	Corona	Queens
+11369	East Elmhurst	Queens
+11370	East Elmhurst	Queens
+11371	Flushing	Queens
+11372	Jackson Heights	Queens
+11373	Elmhurst	Queens
+11374	Rego Park	Queens
+11375	Forest Hills	Queens
+11377	Woodside	Queens
+11378	Maspeth	Queens
+11379	Middle Village	Queens
+11380	Elmhurst	Queens
+11381	Flushing	Queens
+11385	Ridgewood	Queens
+11386	Ridgewood	Queens
+11390	Flushing	Queens
+11405	Jamaica	Queens
+11411	Cambria Heights	Queens
+11412	Saint Albans	Queens
+11413	Springfield Gardens	Queens
+11414	Howard Beach	Queens
+11415	Kew Gardens	Queens
+11416	Ozone Park	Queens
+11417	Ozone Park	Queens
+11418	Richmond Hill	Queens
+11419	South Richmond Hill	Queens
+11420	South Ozone Park	Queens
+11421	Woodhaven	Queens
+11422	Rosedale	Queens
+11423	Hollis	Queens
+11424	Jamaica	Queens
+11425	Jamaica	Queens
+11426	Bellerose	Queens
+11427	Queens Village	Queens
+11428	Queens Village	Queens
+11429	Queens Village	Queens
+11430	Jamaica	Queens
+11431	Jamaica	Queens
+11432	Jamaica	Queens
+11433	Jamaica	Queens
+11434	Jamaica	Queens
+11435	Jamaica	Queens
+11436	Jamaica	Queens
+11439	Jamaica	Queens
+11451	Jamaica	Queens
+11499	Jamaica	Queens
+11501	Mineola	Nassau
+11507	Albertson	Nassau
+11509	Atlantic Beach	Nassau
+11510	Baldwin	Nassau
+11514	Carle Place	Nassau
+11516	Cedarhurst	Nassau
+11518	East Rockaway	Nassau
+11520	Freeport	Nassau
+11530	Garden City	Nassau
+11531	Garden City	Nassau
+11535	Garden City	Nassau
+11536	Garden City	Nassau
+11542	Glen Cove	Nassau
+11545	Glen Head	Nassau
+11547	Glenwood Landing	Nassau
+11548	Greenvale	Nassau
+11549	Hempstead	Nassau
+11550	Hempstead	Nassau
+11551	Hempstead	Nassau
+11552	West Hempstead	Nassau
+11553	Uniondale	Nassau
+11554	East Meadow	Nassau
+11555	Uniondale	Nassau
+11556	Uniondale	Nassau
+11557	Hewlett	Nassau
+11558	Island Park	Nassau
+11559	Lawrence	Nassau
+11560	Locust Valley	Nassau
+11561	Long Beach	Nassau
+11563	Lynbrook	Nassau
+11565	Malverne	Nassau
+11566	Merrick	Nassau
+11568	Old Westbury	Nassau
+11569	Point Lookout	Nassau
+11570	Rockville Centre	Nassau
+11571	Rockville Centre	Nassau
+11572	Oceanside	Nassau
+11575	Roosevelt	Nassau
+11576	Roslyn	Nassau
+11577	Roslyn Heights	Nassau
+11579	Sea Cliff	Nassau
+11580	Valley Stream	Nassau
+11581	Valley Stream	Nassau
+11582	Valley Stream	Nassau
+11590	Westbury	Nassau
+11592	Rockville Centre	Nassau
+11594	Westbury	Nassau
+11595	Westbury	Nassau
+11596	Williston Park	Nassau
+11597	Westbury	Nassau
+11598	Woodmere	Nassau
+11599	Garden City	Nassau
+11690	Far Rockaway	Queens
+11691	Far Rockaway	Queens
+11692	Arverne	Queens
+11693	Far Rockaway	Queens
+11694	Rockaway Park	Queens
+11695	Far Rockaway	Queens
+11697	Breezy Point	Queens
+11701	Amityville	Suffolk
+11702	Babylon	Suffolk
+11703	North Babylon	Suffolk
+11704	West Babylon	Suffolk
+11705	Bayport	Suffolk
+11706	Bay Shore	Suffolk
+11707	West Babylon	Suffolk
+11708	Amityville	Suffolk
+11709	Bayville	Nassau
+11710	Bellmore	Nassau
+11713	Bellport	Suffolk
+11714	Bethpage	Nassau
+11715	Blue Point	Suffolk
+11716	Bohemia	Suffolk
+11717	Brentwood	Suffolk
+11718	Brightwaters	Suffolk
+11719	Brookhaven	Suffolk
+11720	Centereach	Suffolk
+11721	Centerport	Suffolk
+11722	Central Islip	Suffolk
+11724	Cold Spring Harbor	Suffolk
+11725	Commack	Suffolk
+11726	Copiague	Suffolk
+11727	Coram	Suffolk
+11729	Deer Park	Suffolk
+11730	East Islip	Suffolk
+11731	East Northport	Suffolk
+11732	East Norwich	Nassau
+11733	East Setauket	Suffolk
+11735	Farmingdale	Nassau
+11736	Farmingdale	Nassau
+11737	Farmingdale	Nassau
+11738	Farmingville	Suffolk
+11739	Great River	Suffolk
+11740	Greenlawn	Suffolk
+11741	Holbrook	Suffolk
+11742	Holtsville	Suffolk
+11743	Huntington	Suffolk
+11746	Huntington Station	Suffolk
+11747	Melville	Suffolk
+11749	Islandia	Suffolk
+11750	Huntington Station	Suffolk
+11751	Islip	Suffolk
+11752	Islip Terrace	Suffolk
+11753	Jericho	Nassau
+11754	Kings Park	Suffolk
+11755	Lake Grove	Suffolk
+11756	Levittown	Nassau
+11757	Lindenhurst	Suffolk
+11758	Massapequa	Nassau
+11760	Islandia	Suffolk
+11762	Massapequa Park	Nassau
+11763	Medford	Suffolk
+11764	Miller Place	Suffolk
+11765	Mill Neck	Nassau
+11766	Mount Sinai	Suffolk
+11767	Nesconset	Suffolk
+11768	Northport	Suffolk
+11769	Oakdale	Suffolk
+11770	Ocean Beach	Suffolk
+11771	Oyster Bay	Nassau
+11772	Patchogue	Suffolk
+11773	Syosset	Nassau
+11774	Farmingdale	Nassau
+11775	Melville	Suffolk
+11776	Port Jefferson Station	Suffolk
+11777	Port Jefferson	Suffolk
+11778	Rocky Point	Suffolk
+11779	Ronkonkoma	Suffolk
+11780	Saint James	Suffolk
+11782	Sayville	Suffolk
+11783	Seaford	Nassau
+11784	Selden	Suffolk
+11786	Shoreham	Suffolk
+11787	Smithtown	Suffolk
+11788	Hauppauge	Suffolk
+11789	Sound Beach	Suffolk
+11790	Stony Brook	Suffolk
+11791	Syosset	Nassau
+11792	Wading River	Suffolk
+11793	Wantagh	Nassau
+11794	Stony Brook	Suffolk
+11795	West Islip	Suffolk
+11796	West Sayville	Suffolk
+11797	Woodbury	Nassau
+11798	Wyandanch	Suffolk
+11801	Hicksville	Nassau
+11802	Hicksville	Nassau
+11803	Plainview	Nassau
+11804	Old Bethpage	Nassau
+11815	Hicksville	Nassau
+11819	Hicksville	Nassau
+11853	Jericho	Nassau
+11854	Hicksville	Nassau
+11855	Hicksville	Nassau
+11901	Riverhead	Suffolk
+11930	Amagansett	Suffolk
+11931	Aquebogue	Suffolk
+11932	Bridgehampton	Suffolk
+11933	Calverton	Suffolk
+11934	Center Moriches	Suffolk
+11935	Cutchogue	Suffolk
+11937	East Hampton	Suffolk
+11939	East Marion	Suffolk
+11940	East Moriches	Suffolk
+11941	Eastport	Suffolk
+11942	East Quogue	Suffolk
+11944	Greenport	Suffolk
+11946	Hampton Bays	Suffolk
+11947	Jamesport	Suffolk
+11948	Laurel	Suffolk
+11949	Manorville	Suffolk
+11950	Mastic	Suffolk
+11951	Mastic Beach	Suffolk
+11952	Mattituck	Suffolk
+11953	Middle Island	Suffolk
+11954	Montauk	Suffolk
+11955	Moriches	Suffolk
+11956	New Suffolk	Suffolk
+11957	Orient	Suffolk
+11958	Peconic	Suffolk
+11959	Quogue	Suffolk
+11960	Remsenburg	Suffolk
+11961	Ridge	Suffolk
+11962	Sagaponack	Suffolk
+11963	Sag Harbor	Suffolk
+11964	Shelter Island	Suffolk
+11965	Shelter Island Heights	Suffolk
+11967	Shirley	Suffolk
+11968	Southampton	Suffolk
+11969	Southampton	Suffolk
+11970	South Jamesport	Suffolk
+11971	Southold	Suffolk
+11972	Speonk	Suffolk
+11973	Upton	Suffolk
+11975	Wainscott	Suffolk
+11976	Water Mill	Suffolk
+11977	Westhampton	Suffolk
+11978	Westhampton Beach	Suffolk
+11980	Yaphank	Suffolk
+12007	Alcove	Albany
+12008	Alplaus	Schenectady
+12009	Altamont	Albany
+12010	Amsterdam	Montgomery
+12015	Athens	Greene
+12016	Auriesville	Montgomery
+12017	Austerlitz	Columbia
+12018	Averill Park	Rensselaer
+12019	Ballston Lake	Saratoga
+12020	Ballston Spa	Saratoga
+12022	Berlin	Rensselaer
+12023	Berne	Albany
+12024	Brainard	Rensselaer
+12025	Broadalbin	Fulton
+12027	Burnt Hills	Saratoga
+12028	Buskirk	Rensselaer
+12029	Canaan	Columbia
+12031	Carlisle	Schoharie
+12032	Caroga Lake	Fulton
+12033	Castleton On Hudson	Rensselaer
+12035	Central Bridge	Schoharie
+12036	Charlotteville	Schoharie
+12037	Chatham	Columbia
+12040	Cherry Plain	Rensselaer
+12041	Clarksville	Albany
+12042	Climax	Greene
+12043	Cobleskill	Schoharie
+12045	Coeymans	Albany
+12046	Coeymans Hollow	Albany
+12047	Cohoes	Albany
+12050	Columbiaville	Columbia
+12051	Coxsackie	Greene
+12052	Cropseyville	Rensselaer
+12053	Delanson	Schenectady
+12054	Delmar	Albany
+12055	Dormansville	Albany
+12056	Duanesburg	Schenectady
+12057	Eagle Bridge	Rensselaer
+12058	Earlton	Greene
+12059	East Berne	Albany
+12060	East Chatham	Columbia
+12061	East Greenbush	Rensselaer
+12062	East Nassau	Rensselaer
+12063	East Schodack	Rensselaer
+12064	East Worcester	Otsego
+12065	Clifton Park	Saratoga
+12066	Esperance	Montgomery
+12067	Feura Bush	Albany
+12068	Fonda	Montgomery
+12069	Fort Hunter	Montgomery
+12070	Fort Johnson	Montgomery
+12071	Fultonham	Schoharie
+12072	Fultonville	Montgomery
+12073	Gallupville	Schoharie
+12074	Galway	Saratoga
+12075	Ghent	Columbia
+12076	Gilboa	Schoharie
+12077	Glenmont	Albany
+12078	Gloversville	Fulton
+12082	Grafton	Rensselaer
+12083	Greenville	Greene
+12084	Guilderland	Albany
+12085	Guilderland Center	Albany
+12086	Hagaman	Montgomery
+12087	Hannacroix	Greene
+12089	Hoosick	Rensselaer
+12090	Hoosick Falls	Rensselaer
+12092	Howes Cave	Schoharie
+12093	Jefferson	Schoharie
+12094	Johnsonville	Rensselaer
+12095	Johnstown	Fulton
+12106	Kinderhook	Columbia
+12107	Knox	Albany
+12108	Lake Pleasant	Hamilton
+12110	Latham	Albany
+12115	Malden Bridge	Columbia
+12116	Maryland	Otsego
+12117	Mayfield	Fulton
+12118	Mechanicville	Saratoga
+12120	Medusa	Albany
+12121	Melrose	Rensselaer
+12122	Middleburgh	Schoharie
+12123	Nassau	Rensselaer
+12124	New Baltimore	Greene
+12125	New Lebanon	Columbia
+12128	Newtonville	Albany
+12130	Niverville	Columbia
+12131	North Blenheim	Schoharie
+12132	North Chatham	Columbia
+12133	North Hoosick	Rensselaer
+12134	Northville	Fulton
+12136	Old Chatham	Columbia
+12137	Pattersonville	Schenectady
+12138	Petersburg	Rensselaer
+12139	Piseco	Hamilton
+12140	Poestenkill	Rensselaer
+12141	Quaker Street	Schenectady
+12143	Ravena	Albany
+12144	Rensselaer	Rensselaer
+12147	Rensselaerville	Albany
+12148	Rexford	Saratoga
+12149	Richmondville	Schoharie
+12150	Rotterdam Junction	Schenectady
+12151	Round Lake	Saratoga
+12153	Sand Lake	Rensselaer
+12154	Schaghticoke	Rensselaer
+12155	Schenevus	Otsego
+12156	Schodack Landing	Rensselaer
+12157	Schoharie	Schoharie
+12158	Selkirk	Albany
+12159	Slingerlands	Albany
+12160	Sloansville	Schoharie
+12161	South Bethlehem	Albany
+12164	Speculator	Hamilton
+12165	Spencertown	Columbia
+12166	Sprakers	Montgomery
+12167	Stamford	Delaware
+12168	Stephentown	Rensselaer
+12169	Stephentown	Rensselaer
+12170	Stillwater	Saratoga
+12172	Stottville	Columbia
+12173	Stuyvesant	Columbia
+12174	Stuyvesant Falls	Columbia
+12175	Summit	Schoharie
+12176	Surprise	Greene
+12177	Tribes Hill	Montgomery
+12180	Troy	Rensselaer
+12181	Troy	Rensselaer
+12182	Troy	Rensselaer
+12183	Troy	Albany
+12184	Valatie	Columbia
+12185	Valley Falls	Rensselaer
+12186	Voorheesville	Albany
+12187	Warnerville	Schoharie
+12188	Waterford	Saratoga
+12189	Watervliet	Albany
+12190	Wells	Hamilton
+12192	West Coxsackie	Greene
+12193	Westerlo	Albany
+12194	West Fulton	Schoharie
+12195	West Lebanon	Columbia
+12196	West Sand Lake	Rensselaer
+12197	Worcester	Otsego
+12198	Wynantskill	Rensselaer
+12201	Albany	Albany
+12202	Albany	Albany
+12203	Albany	Albany
+12204	Albany	Albany
+12205	Albany	Albany
+12206	Albany	Albany
+12207	Albany	Albany
+12208	Albany	Albany
+12209	Albany	Albany
+12210	Albany	Albany
+12211	Albany	Albany
+12212	Albany	Albany
+12214	Albany	Albany
+12220	Albany	Albany
+12222	Albany	Albany
+12223	Albany	Albany
+12224	Albany	Albany
+12225	Albany	Albany
+12226	Albany	Albany
+12227	Albany	Albany
+12228	Albany	Albany
+12229	Albany	Albany
+12230	Albany	Albany
+12231	Albany	Albany
+12232	Albany	Albany
+12233	Albany	Albany
+12234	Albany	Albany
+12235	Albany	Albany
+12236	Albany	Albany
+12237	Albany	Albany
+12238	Albany	Albany
+12239	Albany	Albany
+12240	Albany	Albany
+12241	Albany	Albany
+12242	Albany	Albany
+12243	Albany	Albany
+12244	Albany	Albany
+12245	Albany	Albany
+12246	Albany	Albany
+12247	Albany	Albany
+12248	Albany	Albany
+12249	Albany	Albany
+12250	Albany	Albany
+12252	Albany	Albany
+12255	Albany	Albany
+12256	Albany	Albany
+12257	Albany	Albany
+12260	Albany	Albany
+12261	Albany	Albany
+12288	Albany	Albany
+12301	Schenectady	Schenectady
+12302	Schenectady	Schenectady
+12303	Schenectady	Schenectady
+12304	Schenectady	Schenectady
+12305	Schenectady	Schenectady
+12306	Schenectady	Schenectady
+12307	Schenectady	Schenectady
+12308	Schenectady	Schenectady
+12309	Schenectady	Schenectady
+12325	Schenectady	Schenectady
+12345	Schenectady	Schenectady
+12401	Kingston	Ulster
+12402	Kingston	Ulster
+12404	Accord	Ulster
+12405	Acra	Greene
+12406	Arkville	Delaware
+12407	Ashland	Greene
+12409	Bearsville	Ulster
+12410	Big Indian	Ulster
+12411	Bloomington	Ulster
+12412	Boiceville	Ulster
+12413	Cairo	Greene
+12414	Catskill	Greene
+12416	Chichester	Ulster
+12417	Connelly	Ulster
+12418	Cornwallville	Greene
+12419	Cottekill	Ulster
+12420	Cragsmoor	Ulster
+12421	Denver	Delaware
+12422	Durham	Greene
+12423	East Durham	Greene
+12424	East Jewett	Greene
+12427	Elka Park	Greene
+12428	Ellenville	Ulster
+12429	Esopus	Ulster
+12430	Fleischmanns	Delaware
+12431	Freehold	Greene
+12432	Glasco	Ulster
+12433	Glenford	Ulster
+12434	Grand Gorge	Delaware
+12435	Greenfield Park	Ulster
+12436	Haines Falls	Greene
+12438	Halcottsville	Delaware
+12439	Hensonville	Greene
+12440	High Falls	Ulster
+12441	Highmount	Ulster
+12442	Hunter	Greene
+12443	Hurley	Ulster
+12444	Jewett	Greene
+12446	Kerhonkson	Ulster
+12448	Lake Hill	Ulster
+12449	Lake Katrine	Ulster
+12450	Lanesville	Greene
+12451	Leeds	Greene
+12452	Lexington	Greene
+12453	Malden On Hudson	Ulster
+12454	Maplecrest	Greene
+12455	Margaretville	Delaware
+12456	Mount Marion	Ulster
+12457	Mount Tremper	Ulster
+12458	Napanoch	Ulster
+12459	New Kingston	Delaware
+12460	Oak Hill	Greene
+12461	Olivebridge	Ulster
+12463	Palenville	Greene
+12464	Phoenicia	Ulster
+12465	Pine Hill	Ulster
+12466	Port Ewen	Ulster
+12468	Prattsville	Greene
+12469	Preston Hollow	Albany
+12470	Purling	Greene
+12471	Rifton	Ulster
+12472	Rosendale	Ulster
+12473	Round Top	Greene
+12474	Roxbury	Delaware
+12475	Ruby	Ulster
+12477	Saugerties	Ulster
+12480	Shandaken	Ulster
+12481	Shokan	Ulster
+12482	South Cairo	Greene
+12483	Spring Glen	Ulster
+12484	Stone Ridge	Ulster
+12485	Tannersville	Greene
+12486	Tillson	Ulster
+12487	Ulster Park	Ulster
+12489	Wawarsing	Ulster
+12490	West Camp	Ulster
+12491	West Hurley	Ulster
+12492	West Kill	Greene
+12493	West Park	Ulster
+12494	West Shokan	Ulster
+12495	Willow	Ulster
+12496	Windham	Greene
+12498	Woodstock	Ulster
+12501	Amenia	Dutchess
+12502	Ancram	Columbia
+12503	Ancramdale	Columbia
+12504	Annandale On Hudson	Dutchess
+12506	Bangall	Dutchess
+12507	Barrytown	Dutchess
+12508	Beacon	Dutchess
+12510	Billings	Dutchess
+12511	Castle Point	Dutchess
+12512	Chelsea	Dutchess
+12513	Claverack	Columbia
+12514	Clinton Corners	Dutchess
+12515	Clintondale	Ulster
+12516	Copake	Columbia
+12517	Copake Falls	Columbia
+12518	Cornwall	Orange
+12520	Cornwall On Hudson	Orange
+12521	Craryville	Columbia
+12522	Dover Plains	Dutchess
+12523	Elizaville	Columbia
+12524	Fishkill	Dutchess
+12525	Gardiner	Ulster
+12526	Germantown	Columbia
+12527	Glenham	Dutchess
+12528	Highland	Ulster
+12529	Hillsdale	Columbia
+12530	Hollowville	Columbia
+12531	Holmes	Dutchess
+12533	Hopewell Junction	Dutchess
+12534	Hudson	Columbia
+12537	Hughsonville	Dutchess
+12538	Hyde Park	Dutchess
+12540	Lagrangeville	Dutchess
+12541	Livingston	Columbia
+12542	Marlboro	Ulster
+12543	Maybrook	Orange
+12544	Mellenville	Columbia
+12545	Millbrook	Dutchess
+12546	Millerton	Dutchess
+12547	Milton	Ulster
+12548	Modena	Ulster
+12549	Montgomery	Orange
+12550	Newburgh	Orange
+12551	Newburgh	Orange
+12552	Newburgh	Orange
+12553	New Windsor	Orange
+12555	Newburgh	Orange
+12561	New Paltz	Ulster
+12563	Patterson	Putnam
+12564	Pawling	Dutchess
+12565	Philmont	Columbia
+12566	Pine Bush	Orange
+12567	Pine Plains	Dutchess
+12568	Plattekill	Ulster
+12569	Pleasant Valley	Dutchess
+12570	Poughquag	Dutchess
+12571	Red Hook	Dutchess
+12572	Rhinebeck	Dutchess
+12574	Rhinecliff	Dutchess
+12575	Rock Tavern	Orange
+12577	Salisbury Mills	Orange
+12578	Salt Point	Dutchess
+12580	Staatsburg	Dutchess
+12581	Stanfordville	Dutchess
+12582	Stormville	Dutchess
+12583	Tivoli	Dutchess
+12584	Vails Gate	Orange
+12585	Verbank	Dutchess
+12586	Walden	Orange
+12588	Walker Valley	Ulster
+12589	Wallkill	Ulster
+12590	Wappingers Falls	Dutchess
+12592	Wassaic	Dutchess
+12593	West Copake	Columbia
+12594	Wingdale	Dutchess
+12601	Poughkeepsie	Dutchess
+12602	Poughkeepsie	Dutchess
+12603	Poughkeepsie	Dutchess
+12604	Poughkeepsie	Dutchess
+12701	Monticello	Sullivan
+12719	Barryville	Sullivan
+12720	Bethel	Sullivan
+12721	Bloomingburg	Sullivan
+12722	Burlingham	Sullivan
+12723	Callicoon	Sullivan
+12724	Callicoon Center	Sullivan
+12725	Claryville	Sullivan
+12726	Cochecton	Sullivan
+12727	Cochecton Center	Sullivan
+12729	Cuddebackville	Orange
+12732	Eldred	Sullivan
+12733	Fallsburg	Sullivan
+12734	Ferndale	Sullivan
+12736	Fremont Center	Sullivan
+12737	Glen Spey	Sullivan
+12738	Glen Wild	Sullivan
+12740	Grahamsville	Sullivan
+12741	Hankins	Sullivan
+12742	Harris	Sullivan
+12743	Highland Lake	Sullivan
+12745	Hortonville	Sullivan
+12746	Huguenot	Orange
+12747	Hurleyville	Sullivan
+12748	Jeffersonville	Sullivan
+12749	Kauneonga Lake	Sullivan
+12750	Kenoza Lake	Sullivan
+12751	Kiamesha Lake	Sullivan
+12752	Lake Huntington	Sullivan
+12754	Liberty	Sullivan
+12758	Livingston Manor	Sullivan
+12759	Loch Sheldrake	Sullivan
+12760	Long Eddy	Sullivan
+12762	Mongaup Valley	Sullivan
+12763	Mountain Dale	Sullivan
+12764	Narrowsburg	Sullivan
+12765	Neversink	Sullivan
+12766	North Branch	Sullivan
+12767	Obernburg	Sullivan
+12768	Parksville	Sullivan
+12769	Phillipsport	Sullivan
+12770	Pond Eddy	Sullivan
+12771	Port Jervis	Orange
+12775	Rock Hill	Sullivan
+12776	Roscoe	Sullivan
+12777	Forestburgh	Sullivan
+12778	Smallwood	Sullivan
+12779	South Fallsburg	Sullivan
+12780	Sparrow Bush	Orange
+12781	Summitville	Sullivan
+12783	Swan Lake	Sullivan
+12784	Thompsonville	Sullivan
+12785	Westbrookville	Sullivan
+12786	White Lake	Sullivan
+12787	White Sulphur Springs	Sullivan
+12788	Woodbourne	Sullivan
+12789	Woodridge	Sullivan
+12790	Wurtsboro	Sullivan
+12791	Youngsville	Sullivan
+12792	Yulan	Sullivan
+12801	Glens Falls	Warren
+12803	South Glens Falls	Saratoga
+12804	Queensbury	Warren
+12808	Adirondack	Warren
+12809	Argyle	Washington
+12810	Athol	Warren
+12811	Bakers Mills	Warren
+12812	Blue Mountain Lake	Hamilton
+12814	Bolton Landing	Warren
+12815	Brant Lake	Warren
+12816	Cambridge	Washington
+12817	Chestertown	Warren
+12819	Clemons	Washington
+12820	Cleverdale	Warren
+12821	Comstock	Washington
+12822	Corinth	Saratoga
+12823	Cossayuna	Washington
+12824	Diamond Point	Warren
+12827	Fort Ann	Washington
+12828	Fort Edward	Washington
+12831	Gansevoort	Saratoga
+12832	Granville	Washington
+12833	Greenfield Center	Saratoga
+12834	Greenwich	Washington
+12835	Hadley	Saratoga
+12836	Hague	Warren
+12837	Hampton	Washington
+12838	Hartford	Washington
+12839	Hudson Falls	Washington
+12841	Huletts Landing	Washington
+12842	Indian Lake	Hamilton
+12843	Johnsburg	Warren
+12844	Kattskill Bay	Warren
+12845	Lake George	Warren
+12846	Lake Luzerne	Warren
+12847	Long Lake	Hamilton
+12848	Middle Falls	Washington
+12849	Middle Granville	Washington
+12850	Middle Grove	Saratoga
+12851	Minerva	Essex
+12852	Newcomb	Essex
+12853	North Creek	Warren
+12854	North Granville	Washington
+12855	North Hudson	Essex
+12856	North River	Warren
+12857	Olmstedville	Essex
+12858	Paradox	Essex
+12859	Porter Corners	Saratoga
+12860	Pottersville	Warren
+12861	Putnam Station	Washington
+12862	Riparius	Warren
+12863	Rock City Falls	Saratoga
+12864	Sabael	Hamilton
+12865	Salem	Washington
+12866	Saratoga Springs	Saratoga
+12870	Schroon Lake	Essex
+12871	Schuylerville	Saratoga
+12872	Severance	Essex
+12873	Shushan	Washington
+12874	Silver Bay	Warren
+12878	Stony Creek	Warren
+12879	Newcomb	Essex
+12883	Ticonderoga	Essex
+12884	Victory Mills	Saratoga
+12885	Warrensburg	Warren
+12886	Wevertown	Warren
+12887	Whitehall	Washington
+12901	Plattsburgh	Clinton
+12903	Plattsburgh	Clinton
+12910	Altona	Clinton
+12911	Keeseville	Clinton
+12912	Au Sable Forks	Clinton
+12913	Bloomingdale	Essex
+12914	Bombay	Franklin
+12915	Brainardsville	Franklin
+12916	Brushton	Franklin
+12917	Burke	Franklin
+12918	Cadyville	Clinton
+12919	Champlain	Clinton
+12920	Chateaugay	Franklin
+12921	Chazy	Clinton
+12922	Childwold	Saint Lawrence
+12923	Churubusco	Clinton
+12924	Keeseville	Clinton
+12926	Constable	Franklin
+12927	Cranberry Lake	Saint Lawrence
+12928	Crown Point	Essex
+12929	Dannemora	Clinton
+12930	Dickinson Center	Franklin
+12932	Elizabethtown	Essex
+12933	Ellenburg	Clinton
+12934	Ellenburg Center	Clinton
+12935	Ellenburg Depot	Clinton
+12936	Essex	Essex
+12937	Fort Covington	Franklin
+12939	Gabriels	Franklin
+12941	Jay	Essex
+12942	Keene	Essex
+12943	Keene Valley	Essex
+12944	Keeseville	Clinton
+12945	Lake Clear	Franklin
+12946	Lake Placid	Essex
+12949	Lawrenceville	Saint Lawrence
+12950	Lewis	Essex
+12952	Lyon Mountain	Clinton
+12953	Malone	Franklin
+12955	Lyon Mountain	Clinton
+12956	Mineville	Essex
+12957	Moira	Franklin
+12958	Mooers	Clinton
+12959	Mooers Forks	Clinton
+12960	Moriah	Essex
+12961	Moriah Center	Essex
+12962	Morrisonville	Clinton
+12964	New Russia	Essex
+12965	Nicholville	Saint Lawrence
+12966	North Bangor	Franklin
+12967	North Lawrence	Saint Lawrence
+12969	Owls Head	Franklin
+12970	Paul Smiths	Franklin
+12972	Peru	Clinton
+12973	Piercefield	Saint Lawrence
+12974	Port Henry	Essex
+12975	Port Kent	Essex
+12976	Rainbow Lake	Franklin
+12977	Ray Brook	Essex
+12978	Redford	Clinton
+12979	Rouses Point	Clinton
+12980	Saint Regis Falls	Franklin
+12981	Saranac	Clinton
+12983	Saranac Lake	Franklin
+12985	Schuyler Falls	Clinton
+12986	Tupper Lake	Franklin
+12987	Upper Jay	Essex
+12989	Vermontville	Franklin
+12992	West Chazy	Clinton
+12993	Westport	Essex
+12995	Whippleville	Franklin
+12996	Willsboro	Essex
+12997	Wilmington	Essex
+12998	Witherbee	Essex
+13020	Apulia Station	Onondaga
+13021	Auburn	Cayuga
+13022	Auburn	Cayuga
+13024	Auburn	Cayuga
+13026	Aurora	Cayuga
+13027	Baldwinsville	Onondaga
+13028	Bernhards Bay	Oswego
+13029	Brewerton	Onondaga
+13030	Bridgeport	Onondaga
+13031	Camillus	Onondaga
+13032	Canastota	Madison
+13033	Cato	Cayuga
+13034	Cayuga	Cayuga
+13035	Cazenovia	Madison
+13036	Central Square	Oswego
+13037	Chittenango	Madison
+13039	Cicero	Onondaga
+13040	Cincinnatus	Cortland
+13041	Clay	Onondaga
+13042	Cleveland	Oswego
+13043	Clockville	Madison
+13044	Constantia	Oswego
+13045	Cortland	Cortland
+13051	Delphi Falls	Onondaga
+13052	De Ruyter	Madison
+13053	Dryden	Tompkins
+13054	Durhamville	Oneida
+13056	East Homer	Cortland
+13057	East Syracuse	Onondaga
+13060	Elbridge	Onondaga
+13061	Erieville	Madison
+13062	Etna	Tompkins
+13063	Fabius	Onondaga
+13064	Fair Haven	Cayuga
+13065	Fayette	Seneca
+13066	Fayetteville	Onondaga
+13068	Freeville	Tompkins
+13069	Fulton	Oswego
+13071	Genoa	Cayuga
+13072	Georgetown	Madison
+13073	Groton	Tompkins
+13074	Hannibal	Oswego
+13076	Hastings	Oswego
+13077	Homer	Cortland
+13078	Jamesville	Onondaga
+13080	Jordan	Onondaga
+13081	King Ferry	Cayuga
+13082	Kirkville	Onondaga
+13083	Lacona	Oswego
+13084	La Fayette	Onondaga
+13087	Little York	Cortland
+13088	Liverpool	Onondaga
+13089	Liverpool	Onondaga
+13090	Liverpool	Onondaga
+13092	Locke	Tompkins
+13093	Lycoming	Oswego
+13101	Mc Graw	Cortland
+13102	Mc Lean	Tompkins
+13103	Mallory	Oswego
+13104	Manlius	Onondaga
+13107	Maple View	Oswego
+13108	Marcellus	Onondaga
+13110	Marietta	Onondaga
+13111	Martville	Cayuga
+13112	Memphis	Onondaga
+13113	Meridian	Cayuga
+13114	Mexico	Oswego
+13115	Minetto	Oswego
+13116	Minoa	Onondaga
+13117	Montezuma	Cayuga
+13118	Moravia	Cayuga
+13119	Mottville	Onondaga
+13120	Nedrow	Onondaga
+13121	New Haven	Oswego
+13122	New Woodstock	Madison
+13123	North Bay	Oneida
+13124	North Pitcher	Chenango
+13126	Oswego	Oswego
+13131	Parish	Oswego
+13132	Pennellville	Oswego
+13134	Peterboro	Madison
+13135	Phoenix	Oswego
+13136	Pitcher	Chenango
+13137	Plainville	Onondaga
+13138	Pompey	Onondaga
+13139	Poplar Ridge	Cayuga
+13140	Port Byron	Cayuga
+13141	Preble	Cortland
+13142	Pulaski	Oswego
+13143	Red Creek	Wayne
+13144	Richland	Oswego
+13145	Sandy Creek	Oswego
+13146	Savannah	Wayne
+13147	Scipio Center	Cayuga
+13148	Seneca Falls	Seneca
+13152	Skaneateles	Onondaga
+13153	Skaneateles Falls	Onondaga
+13154	South Butler	Wayne
+13155	South Otselic	Chenango
+13156	Sterling	Cayuga
+13157	Sylvan Beach	Oneida
+13158	Truxton	Cortland
+13159	Tully	Onondaga
+13160	Union Springs	Cayuga
+13162	Verona Beach	Oneida
+13163	Wampsville	Madison
+13164	Warners	Onondaga
+13165	Waterloo	Seneca
+13166	Weedsport	Cayuga
+13167	West Monroe	Oswego
+13201	Syracuse	Onondaga
+13202	Syracuse	Onondaga
+13203	Syracuse	Onondaga
+13204	Syracuse	Onondaga
+13205	Syracuse	Onondaga
+13206	Syracuse	Onondaga
+13207	Syracuse	Onondaga
+13208	Syracuse	Onondaga
+13209	Syracuse	Onondaga
+13210	Syracuse	Onondaga
+13211	Syracuse	Onondaga
+13212	Syracuse	Onondaga
+13214	Syracuse	Onondaga
+13215	Syracuse	Onondaga
+13217	Syracuse	Onondaga
+13218	Syracuse	Onondaga
+13219	Syracuse	Onondaga
+13220	Syracuse	Onondaga
+13221	Syracuse	Onondaga
+13224	Syracuse	Onondaga
+13225	Syracuse	Onondaga
+13235	Syracuse	Onondaga
+13244	Syracuse	Onondaga
+13250	Syracuse	Onondaga
+13251	Syracuse	Onondaga
+13252	Syracuse	Onondaga
+13261	Syracuse	Onondaga
+13290	Syracuse	Onondaga
+13301	Alder Creek	Oneida
+13302	Altmar	Oswego
+13303	Ava	Oneida
+13304	Barneveld	Oneida
+13305	Beaver Falls	Lewis
+13308	Blossvale	Oneida
+13309	Boonville	Oneida
+13310	Bouckville	Madison
+13312	Brantingham	Lewis
+13313	Bridgewater	Oneida
+13314	Brookfield	Madison
+13315	Burlington Flats	Otsego
+13316	Camden	Oneida
+13317	Canajoharie	Montgomery
+13318	Cassville	Oneida
+13319	Chadwicks	Oneida
+13320	Cherry Valley	Montgomery
+13321	Clark Mills	Oneida
+13322	Clayville	Oneida
+13323	Clinton	Oneida
+13324	Cold Brook	Herkimer
+13325	Constableville	Lewis
+13326	Cooperstown	Otsego
+13327	Croghan	Lewis
+13328	Deansboro	Oneida
+13329	Dolgeville	Herkimer
+13331	Eagle Bay	Herkimer
+13332	Earlville	Chenango
+13333	East Springfield	Otsego
+13334	Eaton	Madison
+13335	Edmeston	Otsego
+13337	Fly Creek	Otsego
+13338	Forestport	Oneida
+13339	Fort Plain	Montgomery
+13340	Frankfort	Herkimer
+13341	Franklin Springs	Oneida
+13342	Garrattsville	Otsego
+13343	Glenfield	Lewis
+13345	Greig	Lewis
+13346	Hamilton	Madison
+13348	Hartwick	Otsego
+13350	Herkimer	Herkimer
+13352	Hinckley	Oneida
+13353	Hoffmeister	Hamilton
+13354	Holland Patent	Oneida
+13355	Hubbardsville	Madison
+13357	Ilion	Herkimer
+13360	Inlet	Hamilton
+13361	Jordanville	Herkimer
+13362	Knoxboro	Oneida
+13363	Lee Center	Oneida
+13364	Leonardsville	Madison
+13365	Little Falls	Herkimer
+13367	Lowville	Lewis
+13368	Lyons Falls	Lewis
+13401	Mc Connellsville	Oneida
+13402	Madison	Madison
+13403	Marcy	Oneida
+13404	Martinsburg	Lewis
+13406	Middleville	Herkimer
+13407	Mohawk	Herkimer
+13408	Morrisville	Madison
+13409	Munnsville	Madison
+13410	Nelliston	Montgomery
+13411	New Berlin	Chenango
+13413	New Hartford	Oneida
+13415	New Lisbon	Otsego
+13416	Newport	Herkimer
+13417	New York Mills	Oneida
+13418	North Brookfield	Madison
+13420	Old Forge	Herkimer
+13421	Oneida	Madison
+13424	Oriskany	Oneida
+13425	Oriskany Falls	Oneida
+13426	Orwell	Oswego
+13428	Palatine Bridge	Montgomery
+13431	Poland	Herkimer
+13433	Port Leyden	Lewis
+13435	Prospect	Oneida
+13436	Raquette Lake	Hamilton
+13437	Redfield	Oswego
+13438	Remsen	Oneida
+13439	Richfield Springs	Otsego
+13440	Rome	Oneida
+13441	Rome	Oneida
+13442	Rome	Oneida
+13449	Rome	Oneida
+13450	Roseboom	Otsego
+13452	Saint Johnsville	Montgomery
+13454	Salisbury Center	Herkimer
+13455	Sangerfield	Oneida
+13456	Sauquoit	Oneida
+13457	Schuyler Lake	Otsego
+13459	Sharon Springs	Schoharie
+13460	Sherburne	Chenango
+13461	Sherrill	Oneida
+13464	Smyrna	Chenango
+13465	Solsville	Madison
+13468	Springfield Center	Otsego
+13469	Stittville	Oneida
+13470	Stratford	Fulton
+13471	Taberg	Oneida
+13472	Thendara	Herkimer
+13473	Turin	Lewis
+13475	Van Hornesville	Herkimer
+13476	Vernon	Oneida
+13477	Vernon Center	Oneida
+13478	Verona	Oneida
+13479	Washington Mills	Oneida
+13480	Waterville	Oneida
+13482	West Burlington	Otsego
+13483	Westdale	Oneida
+13484	West Eaton	Madison
+13485	West Edmeston	Madison
+13486	Westernville	Oneida
+13488	Westford	Otsego
+13489	West Leyden	Lewis
+13490	Westmoreland	Oneida
+13491	West Winfield	Herkimer
+13492	Whitesboro	Oneida
+13493	Williamstown	Oswego
+13494	Woodgate	Oneida
+13495	Yorkville	Oneida
+13501	Utica	Oneida
+13502	Utica	Oneida
+13503	Utica	Oneida
+13504	Utica	Oneida
+13505	Utica	Oneida
+13599	Utica	Oneida
+13601	Watertown	Jefferson
+13602	Fort Drum	Jefferson
+13603	Watertown	Jefferson
+13605	Adams	Jefferson
+13606	Adams Center	Jefferson
+13607	Alexandria Bay	Jefferson
+13608	Antwerp	Jefferson
+13611	Belleville	Jefferson
+13612	Black River	Jefferson
+13613	Brasher Falls	Saint Lawrence
+13614	Brier Hill	Saint Lawrence
+13615	Brownville	Jefferson
+13616	Calcium	Jefferson
+13617	Canton	Saint Lawrence
+13618	Cape Vincent	Jefferson
+13619	Carthage	Jefferson
+13620	Castorland	Lewis
+13621	Chase Mills	Saint Lawrence
+13622	Chaumont	Jefferson
+13623	Chippewa Bay	Saint Lawrence
+13624	Clayton	Jefferson
+13625	Colton	Saint Lawrence
+13626	Copenhagen	Lewis
+13627	Deer River	Lewis
+13628	Deferiet	Jefferson
+13630	De Kalb Junction	Saint Lawrence
+13631	Denmark	Lewis
+13632	Depauville	Jefferson
+13633	De Peyster	Saint Lawrence
+13634	Dexter	Jefferson
+13635	Edwards	Saint Lawrence
+13636	Ellisburg	Jefferson
+13637	Evans Mills	Jefferson
+13638	Felts Mills	Jefferson
+13639	Fine	Saint Lawrence
+13640	Wellesley Island	Jefferson
+13641	Fishers Landing	Jefferson
+13642	Gouverneur	Saint Lawrence
+13643	Great Bend	Jefferson
+13645	Hailesboro	Saint Lawrence
+13646	Hammond	Saint Lawrence
+13647	Hannawa Falls	Saint Lawrence
+13648	Harrisville	Lewis
+13649	Helena	Saint Lawrence
+13650	Henderson	Jefferson
+13651	Henderson Harbor	Jefferson
+13652	Hermon	Saint Lawrence
+13654	Heuvelton	Saint Lawrence
+13655	Hogansburg	Franklin
+13656	La Fargeville	Jefferson
+13657	Limerick	Jefferson
+13658	Lisbon	Saint Lawrence
+13659	Lorraine	Jefferson
+13660	Madrid	Saint Lawrence
+13661	Mannsville	Jefferson
+13662	Massena	Saint Lawrence
+13664	Morristown	Saint Lawrence
+13665	Natural Bridge	Jefferson
+13666	Newton Falls	Saint Lawrence
+13667	Norfolk	Saint Lawrence
+13668	Norwood	Saint Lawrence
+13669	Ogdensburg	Saint Lawrence
+13670	Oswegatchie	Saint Lawrence
+13671	Oxbow	Jefferson
+13672	Parishville	Saint Lawrence
+13673	Philadelphia	Jefferson
+13674	Pierrepont Manor	Jefferson
+13675	Plessis	Jefferson
+13676	Potsdam	Saint Lawrence
+13677	Pyrites	Saint Lawrence
+13678	Raymondville	Saint Lawrence
+13679	Redwood	Jefferson
+13680	Rensselaer Falls	Saint Lawrence
+13681	Richville	Saint Lawrence
+13682	Rodman	Jefferson
+13683	Rooseveltown	Saint Lawrence
+13684	Russell	Saint Lawrence
+13685	Sackets Harbor	Jefferson
+13687	South Colton	Saint Lawrence
+13690	Star Lake	Saint Lawrence
+13691	Theresa	Jefferson
+13692	Thousand Island Park	Jefferson
+13693	Three Mile Bay	Jefferson
+13694	Waddington	Saint Lawrence
+13695	Wanakena	Saint Lawrence
+13696	West Stockholm	Saint Lawrence
+13697	Winthrop	Saint Lawrence
+13699	Potsdam	Saint Lawrence
+13730	Afton	Chenango
+13731	Andes	Delaware
+13732	Apalachin	Tioga
+13733	Bainbridge	Chenango
+13734	Barton	Tioga
+13736	Berkshire	Tioga
+13737	Bible School Park	Broome
+13738	Blodgett Mills	Cortland
+13739	Bloomville	Delaware
+13740	Bovina Center	Delaware
+13743	Candor	Tioga
+13744	Castle Creek	Broome
+13745	Chenango Bridge	Broome
+13746	Chenango Forks	Broome
+13747	Colliersville	Otsego
+13748	Conklin	Broome
+13749	Corbettsville	Broome
+13750	Davenport	Delaware
+13751	Davenport Center	Delaware
+13752	Delancey	Delaware
+13753	Delhi	Delaware
+13754	Deposit	Broome
+13755	Downsville	Delaware
+13756	East Branch	Delaware
+13757	East Meredith	Delaware
+13758	East Pharsalia	Chenango
+13760	Endicott	Broome
+13761	Endicott	Broome
+13762	Endwell	Broome
+13763	Endicott	Broome
+13774	Fishs Eddy	Delaware
+13775	Franklin	Delaware
+13776	Gilbertsville	Otsego
+13777	Glen Aubrey	Broome
+13778	Greene	Chenango
+13780	Guilford	Chenango
+13782	Hamden	Delaware
+13783	Hancock	Delaware
+13784	Harford	Cortland
+13786	Harpersfield	Delaware
+13787	Harpursville	Broome
+13788	Hobart	Delaware
+13790	Johnson City	Broome
+13794	Killawog	Broome
+13795	Kirkwood	Broome
+13796	Laurens	Otsego
+13797	Lisle	Broome
+13801	Mc Donough	Chenango
+13802	Maine	Broome
+13803	Marathon	Cortland
+13804	Masonville	Delaware
+13806	Meridale	Delaware
+13807	Milford	Otsego
+13808	Morris	Otsego
+13809	Mount Upton	Chenango
+13810	Mount Vision	Otsego
+13811	Newark Valley	Tioga
+13812	Nichols	Tioga
+13813	Nineveh	Broome
+13814	North Norwich	Chenango
+13815	Norwich	Chenango
+13820	Oneonta	Otsego
+13825	Otego	Otsego
+13826	Ouaquaga	Broome
+13827	Owego	Tioga
+13830	Oxford	Chenango
+13832	Plymouth	Chenango
+13833	Port Crane	Broome
+13834	Portlandville	Otsego
+13835	Richford	Tioga
+13837	Shinhopple	Delaware
+13838	Sidney	Delaware
+13839	Sidney Center	Delaware
+13840	Smithboro	Tioga
+13841	Smithville Flats	Chenango
+13842	South Kortright	Delaware
+13843	South New Berlin	Chenango
+13844	South Plymouth	Chenango
+13845	Tioga Center	Tioga
+13846	Treadwell	Delaware
+13847	Trout Creek	Delaware
+13848	Tunnel	Broome
+13849	Unadilla	Otsego
+13850	Vestal	Broome
+13851	Vestal	Broome
+13856	Walton	Delaware
+13859	Wells Bridge	Otsego
+13860	West Davenport	Delaware
+13861	West Oneonta	Otsego
+13862	Whitney Point	Broome
+13863	Willet	Cortland
+13864	Willseyville	Tioga
+13865	Windsor	Broome
+13901	Binghamton	Broome
+13902	Binghamton	Broome
+13903	Binghamton	Broome
+13904	Binghamton	Broome
+13905	Binghamton	Broome
+14001	Akron	Erie
+14004	Alden	Erie
+14005	Alexander	Genesee
+14006	Angola	Erie
+14008	Appleton	Niagara
+14009	Arcade	Wyoming
+14010	Athol Springs	Erie
+14011	Attica	Wyoming
+14012	Barker	Niagara
+14013	Basom	Genesee
+14020	Batavia	Genesee
+14021	Batavia	Genesee
+14024	Bliss	Wyoming
+14025	Boston	Erie
+14026	Bowmansville	Erie
+14027	Brant	Erie
+14028	Burt	Niagara
+14029	Centerville	Allegany
+14030	Chaffee	Erie
+14031	Clarence	Erie
+14032	Clarence Center	Erie
+14033	Colden	Erie
+14034	Collins	Erie
+14035	Collins Center	Erie
+14036	Corfu	Genesee
+14037	Cowlesville	Wyoming
+14038	Crittenden	Erie
+14039	Dale	Wyoming
+14040	Darien Center	Genesee
+14041	Dayton	Cattaraugus
+14042	Delevan	Cattaraugus
+14043	Depew	Erie
+14047	Derby	Erie
+14048	Dunkirk	Chautauqua
+14051	East Amherst	Erie
+14052	East Aurora	Erie
+14054	East Bethany	Genesee
+14055	East Concord	Erie
+14056	East Pembroke	Genesee
+14057	Eden	Erie
+14058	Elba	Genesee
+14059	Elma	Erie
+14060	Farmersville Station	Cattaraugus
+14061	Farnham	Erie
+14062	Forestville	Chautauqua
+14063	Fredonia	Chautauqua
+14065	Freedom	Cattaraugus
+14066	Gainesville	Wyoming
+14067	Gasport	Niagara
+14068	Getzville	Erie
+14069	Glenwood	Erie
+14070	Gowanda	Cattaraugus
+14072	Grand Island	Erie
+14075	Hamburg	Erie
+14080	Holland	Erie
+14081	Irving	Chautauqua
+14082	Java Center	Wyoming
+14083	Java Village	Wyoming
+14085	Lake View	Erie
+14086	Lancaster	Erie
+14091	Lawtons	Erie
+14092	Lewiston	Niagara
+14094	Lockport	Niagara
+14095	Lockport	Niagara
+14098	Lyndonville	Orleans
+14101	Machias	Cattaraugus
+14102	Marilla	Erie
+14103	Medina	Orleans
+14105	Middleport	Niagara
+14107	Model City	Niagara
+14108	Newfane	Niagara
+14109	Niagara University	Niagara
+14110	North Boston	Erie
+14111	North Collins	Erie
+14112	North Evans	Erie
+14113	North Java	Wyoming
+14120	North Tonawanda	Niagara
+14125	Oakfield	Genesee
+14126	Olcott	Niagara
+14127	Orchard Park	Erie
+14129	Perrysburg	Cattaraugus
+14130	Pike	Wyoming
+14131	Ransomville	Niagara
+14132	Sanborn	Niagara
+14133	Sandusky	Cattaraugus
+14134	Sardinia	Erie
+14135	Sheridan	Chautauqua
+14136	Silver Creek	Chautauqua
+14138	South Dayton	Cattaraugus
+14139	South Wales	Erie
+14140	Spring Brook	Erie
+14141	Springville	Erie
+14143	Stafford	Genesee
+14144	Stella Niagara	Niagara
+14145	Strykersville	Wyoming
+14150	Tonawanda	Erie
+14151	Tonawanda	Erie
+14166	Van Buren Point	Chautauqua
+14167	Varysburg	Wyoming
+14168	Versailles	Cattaraugus
+14169	Wales Center	Erie
+14170	West Falls	Erie
+14171	West Valley	Cattaraugus
+14172	Wilson	Niagara
+14173	Yorkshire	Cattaraugus
+14174	Youngstown	Niagara
+14201	Buffalo	Erie
+14202	Buffalo	Erie
+14203	Buffalo	Erie
+14204	Buffalo	Erie
+14205	Buffalo	Erie
+14206	Buffalo	Erie
+14207	Buffalo	Erie
+14208	Buffalo	Erie
+14209	Buffalo	Erie
+14210	Buffalo	Erie
+14211	Buffalo	Erie
+14212	Buffalo	Erie
+14213	Buffalo	Erie
+14214	Buffalo	Erie
+14215	Buffalo	Erie
+14216	Buffalo	Erie
+14217	Buffalo	Erie
+14218	Buffalo	Erie
+14219	Buffalo	Erie
+14220	Buffalo	Erie
+14221	Buffalo	Erie
+14222	Buffalo	Erie
+14223	Buffalo	Erie
+14224	Buffalo	Erie
+14225	Buffalo	Erie
+14226	Buffalo	Erie
+14227	Buffalo	Erie
+14228	Buffalo	Erie
+14231	Buffalo	Erie
+14233	Buffalo	Erie
+14240	Buffalo	Erie
+14241	Buffalo	Erie
+14260	Buffalo	Erie
+14261	Buffalo	Erie
+14263	Buffalo	Erie
+14264	Buffalo	Erie
+14265	Buffalo	Erie
+14267	Buffalo	Erie
+14269	Buffalo	Erie
+14270	Buffalo	Erie
+14272	Buffalo	Erie
+14273	Buffalo	Erie
+14276	Buffalo	Erie
+14280	Buffalo	Erie
+14301	Niagara Falls	Niagara
+14302	Niagara Falls	Niagara
+14303	Niagara Falls	Niagara
+14304	Niagara Falls	Niagara
+14305	Niagara Falls	Niagara
+14410	Adams Basin	Monroe
+14411	Albion	Orleans
+14413	Alton	Wayne
+14414	Avon	Livingston
+14415	Bellona	Yates
+14416	Bergen	Genesee
+14418	Branchport	Yates
+14420	Brockport	Monroe
+14422	Byron	Genesee
+14423	Caledonia	Livingston
+14424	Canandaigua	Ontario
+14425	Farmington	Ontario
+14427	Castile	Wyoming
+14428	Churchville	Monroe
+14429	Clarendon	Orleans
+14430	Clarkson	Monroe
+14432	Clifton Springs	Ontario
+14433	Clyde	Wayne
+14435	Conesus	Livingston
+14437	Dansville	Livingston
+14441	Dresden	Yates
+14443	East Bloomfield	Ontario
+14445	East Rochester	Monroe
+14449	East Williamson	Wayne
+14450	Fairport	Monroe
+14452	Fancher	Orleans
+14453	Fishers	Ontario
+14454	Geneseo	Livingston
+14456	Geneva	Ontario
+14461	Gorham	Ontario
+14462	Groveland	Livingston
+14463	Hall	Ontario
+14464	Hamlin	Monroe
+14466	Hemlock	Livingston
+14467	Henrietta	Monroe
+14468	Hilton	Monroe
+14469	Bloomfield	Ontario
+14470	Holley	Orleans
+14471	Honeoye	Ontario
+14472	Honeoye Falls	Monroe
+14475	Ionia	Ontario
+14476	Kendall	Orleans
+14477	Kent	Orleans
+14478	Keuka Park	Yates
+14479	Knowlesville	Orleans
+14480	Lakeville	Livingston
+14481	Leicester	Livingston
+14482	Le Roy	Genesee
+14485	Lima	Livingston
+14486	Linwood	Genesee
+14487	Livonia	Livingston
+14488	Livonia Center	Livingston
+14489	Lyons	Wayne
+14502	Macedon	Wayne
+14504	Manchester	Ontario
+14505	Marion	Wayne
+14506	Mendon	Monroe
+14507	Middlesex	Yates
+14508	Morton	Monroe
+14510	Mount Morris	Livingston
+14511	Mumford	Monroe
+14512	Naples	Ontario
+14513	Newark	Wayne
+14514	North Chili	Monroe
+14515	North Greece	Monroe
+14516	North Rose	Wayne
+14517	Nunda	Livingston
+14518	Oaks Corners	Ontario
+14519	Ontario	Wayne
+14520	Ontario Center	Wayne
+14521	Ovid	Seneca
+14522	Palmyra	Wayne
+14525	Pavilion	Genesee
+14526	Penfield	Monroe
+14527	Penn Yan	Yates
+14529	Perkinsville	Steuben
+14530	Perry	Wyoming
+14532	Phelps	Ontario
+14533	Piffard	Livingston
+14534	Pittsford	Monroe
+14536	Portageville	Wyoming
+14537	Port Gibson	Ontario
+14538	Pultneyville	Wayne
+14539	Retsof	Livingston
+14541	Romulus	Seneca
+14542	Rose	Wayne
+14543	Rush	Monroe
+14544	Rushville	Yates
+14545	Scottsburg	Livingston
+14546	Scottsville	Monroe
+14547	Seneca Castle	Ontario
+14548	Shortsville	Ontario
+14549	Silver Lake	Wyoming
+14550	Silver Springs	Wyoming
+14551	Sodus	Wayne
+14555	Sodus Point	Wayne
+14556	Sonyea	Livingston
+14557	South Byron	Genesee
+14558	South Lima	Livingston
+14559	Spencerport	Monroe
+14560	Springwater	Livingston
+14561	Stanley	Ontario
+14563	Union Hill	Wayne
+14564	Victor	Ontario
+14568	Walworth	Wayne
+14569	Warsaw	Wyoming
+14571	Waterport	Orleans
+14572	Wayland	Steuben
+14580	Webster	Monroe
+14585	West Bloomfield	Ontario
+14586	West Henrietta	Monroe
+14588	Willard	Seneca
+14589	Williamson	Wayne
+14590	Wolcott	Wayne
+14591	Wyoming	Wyoming
+14592	York	Livingston
+14602	Rochester	Monroe
+14603	Rochester	Monroe
+14604	Rochester	Monroe
+14605	Rochester	Monroe
+14606	Rochester	Monroe
+14607	Rochester	Monroe
+14608	Rochester	Monroe
+14609	Rochester	Monroe
+14610	Rochester	Monroe
+14611	Rochester	Monroe
+14612	Rochester	Monroe
+14613	Rochester	Monroe
+14614	Rochester	Monroe
+14615	Rochester	Monroe
+14616	Rochester	Monroe
+14617	Rochester	Monroe
+14618	Rochester	Monroe
+14619	Rochester	Monroe
+14620	Rochester	Monroe
+14621	Rochester	Monroe
+14622	Rochester	Monroe
+14623	Rochester	Monroe
+14624	Rochester	Monroe
+14625	Rochester	Monroe
+14626	Rochester	Monroe
+14627	Rochester	Monroe
+14638	Rochester	Monroe
+14639	Rochester	Monroe
+14642	Rochester	Monroe
+14643	Rochester	Monroe
+14644	Rochester	Monroe
+14645	Rochester	Monroe
+14646	Rochester	Monroe
+14647	Rochester	Monroe
+14649	Rochester	Monroe
+14650	Rochester	Monroe
+14651	Rochester	Monroe
+14652	Rochester	Monroe
+14653	Rochester	Monroe
+14664	Rochester	Monroe
+14673	Rochester	Monroe
+14683	Rochester	Monroe
+14692	Rochester	Monroe
+14694	Rochester	Monroe
+14701	Jamestown	Chautauqua
+14702	Jamestown	Chautauqua
+14706	Allegany	Cattaraugus
+14707	Allentown	Allegany
+14708	Alma	Allegany
+14709	Angelica	Allegany
+14710	Ashville	Chautauqua
+14711	Belfast	Allegany
+14712	Bemus Point	Chautauqua
+14714	Black Creek	Allegany
+14715	Bolivar	Allegany
+14716	Brocton	Chautauqua
+14717	Caneadea	Allegany
+14718	Cassadaga	Chautauqua
+14719	Cattaraugus	Cattaraugus
+14720	Celoron	Chautauqua
+14721	Ceres	Allegany
+14722	Chautauqua	Chautauqua
+14723	Cherry Creek	Chautauqua
+14724	Clymer	Chautauqua
+14726	Conewango Valley	Cattaraugus
+14727	Cuba	Allegany
+14728	Dewittville	Chautauqua
+14729	East Otto	Cattaraugus
+14730	East Randolph	Cattaraugus
+14731	Ellicottville	Cattaraugus
+14732	Ellington	Chautauqua
+14733	Falconer	Chautauqua
+14735	Fillmore	Allegany
+14736	Findley Lake	Chautauqua
+14737	Franklinville	Cattaraugus
+14738	Frewsburg	Chautauqua
+14739	Friendship	Allegany
+14740	Gerry	Chautauqua
+14741	Great Valley	Cattaraugus
+14742	Greenhurst	Chautauqua
+14743	Hinsdale	Cattaraugus
+14744	Houghton	Allegany
+14745	Hume	Allegany
+14747	Kennedy	Chautauqua
+14748	Kill Buck	Cattaraugus
+14750	Lakewood	Chautauqua
+14751	Leon	Cattaraugus
+14752	Lily Dale	Chautauqua
+14753	Limestone	Cattaraugus
+14754	Little Genesee	Allegany
+14755	Little Valley	Cattaraugus
+14756	Maple Springs	Chautauqua
+14757	Mayville	Chautauqua
+14758	Niobe	Chautauqua
+14760	Olean	Cattaraugus
+14766	Otto	Cattaraugus
+14767	Panama	Chautauqua
+14769	Portland	Chautauqua
+14770	Portville	Cattaraugus
+14772	Randolph	Cattaraugus
+14774	Richburg	Allegany
+14775	Ripley	Chautauqua
+14777	Rushford	Allegany
+14778	Saint Bonaventure	Cattaraugus
+14779	Salamanca	Cattaraugus
+14781	Sherman	Chautauqua
+14782	Sinclairville	Chautauqua
+14783	Steamburg	Cattaraugus
+14784	Stockton	Chautauqua
+14785	Stow	Chautauqua
+14786	West Clarksville	Allegany
+14787	Westfield	Chautauqua
+14788	Westons Mills	Cattaraugus
+14801	Addison	Steuben
+14802	Alfred	Allegany
+14803	Alfred Station	Allegany
+14804	Almond	Allegany
+14805	Alpine	Schuyler
+14806	Andover	Allegany
+14807	Arkport	Steuben
+14808	Atlanta	Steuben
+14809	Avoca	Steuben
+14810	Bath	Steuben
+14812	Beaver Dams	Schuyler
+14813	Belmont	Allegany
+14814	Big Flats	Chemung
+14815	Bradford	Schuyler
+14816	Breesport	Chemung
+14817	Brooktondale	Tompkins
+14818	Burdett	Schuyler
+14819	Cameron	Steuben
+14820	Cameron Mills	Steuben
+14821	Campbell	Steuben
+14822	Canaseraga	Allegany
+14823	Canisteo	Steuben
+14824	Cayuta	Schuyler
+14825	Chemung	Chemung
+14826	Cohocton	Steuben
+14827	Coopers Plains	Steuben
+14830	Corning	Steuben
+14831	Corning	Steuben
+14836	Dalton	Livingston
+14837	Dundee	Yates
+14838	Erin	Chemung
+14839	Greenwood	Steuben
+14840	Hammondsport	Steuben
+14841	Hector	Schuyler
+14842	Himrod	Yates
+14843	Hornell	Steuben
+14845	Horseheads	Chemung
+14846	Hunt	Livingston
+14847	Interlaken	Seneca
+14850	Ithaca	Tompkins
+14851	Ithaca	Tompkins
+14852	Ithaca	Tompkins
+14853	Ithaca	Tompkins
+14854	Jacksonville	Tompkins
+14855	Jasper	Steuben
+14856	Kanona	Steuben
+14857	Lakemont	Yates
+14858	Lindley	Steuben
+14859	Lockwood	Tioga
+14860	Lodi	Seneca
+14861	Lowman	Chemung
+14863	Mecklenburg	Schuyler
+14864	Millport	Chemung
+14865	Montour Falls	Schuyler
+14867	Newfield	Tompkins
+14869	Odessa	Schuyler
+14870	Painted Post	Steuben
+14871	Pine City	Chemung
+14872	Pine Valley	Chemung
+14873	Prattsburgh	Steuben
+14874	Pulteney	Steuben
+14876	Reading Center	Schuyler
+14877	Rexville	Steuben
+14878	Rock Stream	Schuyler
+14879	Savona	Steuben
+14880	Scio	Allegany
+14881	Slaterville Springs	Tompkins
+14882	Lansing	Tompkins
+14883	Spencer	Tioga
+14884	Swain	Allegany
+14885	Troupsburg	Steuben
+14886	Trumansburg	Tompkins
+14887	Tyrone	Schuyler
+14889	Van Etten	Chemung
+14891	Watkins Glen	Schuyler
+14892	Waverly	Tioga
+14893	Wayne	Schuyler
+14894	Wellsburg	Chemung
+14895	Wellsville	Allegany
+14897	Whitesville	Allegany
+14898	Woodhull	Steuben
+14901	Elmira	Chemung
+14902	Elmira	Chemung
+14903	Elmira	Chemung
+14904	Elmira	Chemung
+14905	Elmira	Chemung
+14925	Elmira	Chemung

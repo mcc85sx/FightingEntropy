@@ -529,132 +529,47 @@ Function cim-db
         }
     }
 
+    Class _Template
+    {
+        [String[]] $UID
+        [String[]] $Client
+        [String[]] $Service
+        [String[]] $Device
+        [String[]] $Issue
+        [String[]] $Inventory
+        [String[]] $Purchase
+        [String[]] $Expense
+        [String[]] $Account
+        [String[]] $Invoice
+
+        _Template()
+        {
+            $This.UID          = @("UID","Index","Date","Rank")
+            $This.Client       = @($This.UID; "Name", "DOB", "Phone", "Email")
+            $This.Service      = @($This.UID; "Name", "Description")
+            $This.Device       = @($This.UID; "Vendor", "Model", "Specification", "Serial", "Title")
+            $This.Issue        = @($This.UID; "Status","Description","Client","Device","Purchase","Service","Invoice")
+            $This.Inventory    = @($This.UID; "Vendor","Model","Serial","Title","Cost","IsDevice","Device")
+            $This.Purchase     = @($This.UID; "Distributor","DisplayName","Vendor","Serial","Model","IsDevice","Device","Cost")
+            $This.Expense      = @($This.UID; "Recipient","DisplayName","Account","Cost")
+            $This.Account      = @($This.UID; "Object")
+            $This.Invoice      = @($This.UID; "Client","Inventory","Service","Purchase")
+        }
+    }
+
     Class cimdb
     {
         [Object]  $Window
         [Object]      $IO
+        [Object]    $Temp
         [Object]      $DB
 
         cimdb([String]$Xaml)
         {
             $This.Window                                    = [_Xaml]::New($Xaml)
             $This.IO                                        = $This.Window.IO
+            $This.Temp                                      = [_Template]::New()
             $This.DB                                        = [_DB]::New()
-        }
-
-        Refresh()
-        {
-            $This.DB.Client                                 = $This.DB.UID | ? Type -eq Client
-            $This.DB.Service                                = $This.DB.UID | ? Type -eq Service
-            $This.DB.Device                                 = $This.DB.UID | ? Type -eq Device
-            $This.DB.Issue                                  = $This.DB.UID | ? Type -eq Issue
-            $This.DB.Inventory                              = $This.DB.UID | ? Type -eq Inventory
-            $This.DB.Purchase                               = $This.DB.UID | ? Type -eq Purchase
-            $This.DB.Expense                                = $This.DB.UID | ? Type -eq Expense
-            $This.DB.Account                                = $This.DB.UID | ? Type -eq Account
-            $This.DB.Invoice                                = $This.DB.UID | ? Type -eq Invoice
-
-            $This.IO._GetUIDSearchResult.ItemsSource        = $This.DB.UID
-            $This.IO._GetClientSearchResult.ItemsSource     = $This.DB.Client
-            $This.IO._GetServiceSearchResult.ItemsSource    = $This.DB.Service
-            $This.IO._GetDeviceSearchResult.ItemsSource     = $This.DB.Device
-            $This.IO._GetIssueSearchResult.ItemsSource      = $This.DB.Issue
-            $This.IO._GetInventorySearchResult.ItemsSource  = $This.DB.Inventory
-            $This.IO._GetPurchaseSearchResult.ItemsSource   = $This.DB.Purchase
-            $This.IO._GetExpenseSearchResult.ItemsSource    = $This.DB.Expense
-            $This.IO._GetAccountSearchResult.ItemsSource    = $This.DB.Account
-            $This.IO._GetInvoiceSearchResult.ItemsSource    = $This.DB.Invoice
-        }
-
-        SelectedStyle([String]$Control)
-        {
-            $This.IO."$Control`Panel".Visibility            = "Visible"
-            $This.IO."$Control`Tab".Background              = "#4444FF"
-            $This.IO."$Control`Tab".Foreground              = "#FFFFFF" 
-            $This.IO."$Control`Tab".BorderBrush             = "#000000"
-        }
-
-        MainTab([UInt32]$Slot)
-        {
-            $This.IO._UIDPanel.Visibility                   = "Collapsed"
-            $This.IO._ClientPanel.Visibility                = "Collapsed"
-            $This.IO._ServicePanel.Visibility               = "Collapsed"
-            $This.IO._DevicePanel.Visibility                = "Collapsed"
-            $This.IO._IssuePanel.Visibility                 = "Collapsed"
-            $This.IO._InventoryPanel.Visibility             = "Collapsed"
-            $This.IO._PurchasePanel.Visibility              = "Collapsed"
-            $This.IO._ExpensePanel.Visibility               = "Collapsed"
-            $This.IO._AccountPanel.Visibility               = "Collapsed"
-            $This.IO._InvoicePanel.Visibility               = "Collapsed"
-
-            $This.IO._UIDTab.Background                     = "#DFFFBA"
-            $This.IO._ClientTab.Background                  = "#DFFFBA"
-            $This.IO._ServiceTab.Background                 = "#DFFFBA"
-            $This.IO._DeviceTab.Background                  = "#DFFFBA"
-            $This.IO._IssueTab.Background                   = "#DFFFBA"
-            $This.IO._InventoryTab.Background               = "#DFFFBA"
-            $This.IO._PurchaseTab.Background                = "#DFFFBA"
-            $This.IO._ExpenseTab.Background                 = "#DFFFBA"
-            $This.IO._AccountTab.Background                 = "#DFFFBA"
-            $This.IO._InvoiceTab.Background                 = "#DFFFBA"
-
-            $This.IO._UIDTab.Foreground                     = "#000000"
-            $This.IO._ClientTab.Foreground                  = "#000000"
-            $This.IO._ServiceTab.Foreground                 = "#000000"
-            $This.IO._DeviceTab.Foreground                  = "#000000"
-            $This.IO._IssueTab.Foreground                   = "#000000"
-            $This.IO._InventoryTab.Foreground               = "#000000"
-            $This.IO._PurchaseTab.Foreground                = "#000000"
-            $This.IO._ExpenseTab.Foreground                 = "#000000"
-            $This.IO._AccountTab.Foreground                 = "#000000"
-            $This.IO._InvoiceTab.Foreground                 = "#000000"
-            
-            $This.IO._UIDTab.BorderBrush                    = "#000000"
-            $This.IO._ClientTab.BorderBrush                 = "#000000"
-            $This.IO._ServiceTab.BorderBrush                = "#000000"
-            $This.IO._DeviceTab.BorderBrush                 = "#000000"
-            $This.IO._IssueTab.BorderBrush                  = "#000000"
-            $This.IO._InventoryTab.BorderBrush              = "#000000"
-            $This.IO._PurchaseTab.BorderBrush               = "#000000"
-            $This.IO._ExpenseTab.BorderBrush                = "#000000"
-            $This.IO._AccountTab.BorderBrush                = "#000000"
-            $This.IO._InvoiceTab.BorderBrush                = "#000000"
-
-            Switch($Slot)
-            {
-                0 { $This.SelectedStyle(       "_UID") }
-                1 { $This.SelectedStyle(    "_Client") }
-                2 { $This.SelectedStyle(   "_Service") }
-                3 { $This.SelectedStyle(    "_Device") }
-                4 { $This.SelectedStyle(     "_Issue") }
-                5 { $This.SelectedStyle( "_Inventory") }
-                6 { $This.SelectedStyle(  "_Purchase") }
-                7 { $This.SelectedStyle(   "_Expense") }     
-                8 { $This.SelectedStyle(   "_Account") }
-                9 { $This.SelectedStyle(   "_Invoice") }
-            }
-        }
-
-        GetTab([UInt32]$Slot)
-        {
-            $This.Collapse()
-            $This.Clear()
-
-            Switch($Slot)
-            {
-                0 { $This.IO.       _GetUIDPanel.Visibility = "Visible" }
-                1 { $This.IO.    _GetClientPanel.Visibility = "Visible" }
-                2 { $This.IO.   _GetServicePanel.Visibility = "Visible" }
-                3 { $This.IO.    _GetDevicePanel.Visibility = "Visible" }
-                4 { $This.IO.     _GetIssuePanel.Visibility = "Visible" }
-                5 { $This.IO. _GetInventoryPanel.Visibility = "Visible" }
-                6 { $This.IO.  _GetPurchasePanel.Visibility = "Visible" }
-                7 { $This.IO.   _GetExpensePanel.Visibility = "Visible" }
-                8 { $This.IO.   _GetAccountPanel.Visibility = "Visible" }
-                9 { $This.IO.   _GetInvoicePanel.Visibility = "Visible" }
-            }
-
-            $This.Refresh()
         }
 
         Collapse()
@@ -946,6 +861,255 @@ Function cim-db
             $This.IO._NewInvoiceInventoryList.ItemsSource    = $Null
             $This.IO._NewInvoiceServiceList.ItemsSource      = $Null
             $This.IO._NewInvoicePurchaseList.ItemsSource     = $Null
+        }
+
+        Refresh()
+        {
+            $This.DB.Client                                 = $This.DB.UID | ? Type -eq Client
+            $This.DB.Service                                = $This.DB.UID | ? Type -eq Service
+            $This.DB.Device                                 = $This.DB.UID | ? Type -eq Device
+            $This.DB.Issue                                  = $This.DB.UID | ? Type -eq Issue
+            $This.DB.Inventory                              = $This.DB.UID | ? Type -eq Inventory
+            $This.DB.Purchase                               = $This.DB.UID | ? Type -eq Purchase
+            $This.DB.Expense                                = $This.DB.UID | ? Type -eq Expense
+            $This.DB.Account                                = $This.DB.UID | ? Type -eq Account
+            $This.DB.Invoice                                = $This.DB.UID | ? Type -eq Invoice
+
+            $This.IO._GetUIDSearchResult.ItemsSource        = $This.DB.UID
+            $This.IO._GetClientSearchResult.ItemsSource     = $This.DB.Client
+            $This.IO._GetServiceSearchResult.ItemsSource    = $This.DB.Service
+            $This.IO._GetDeviceSearchResult.ItemsSource     = $This.DB.Device
+            $This.IO._GetIssueSearchResult.ItemsSource      = $This.DB.Issue
+            $This.IO._GetInventorySearchResult.ItemsSource  = $This.DB.Inventory
+            $This.IO._GetPurchaseSearchResult.ItemsSource   = $This.DB.Purchase
+            $This.IO._GetExpenseSearchResult.ItemsSource    = $This.DB.Expense
+            $This.IO._GetAccountSearchResult.ItemsSource    = $This.DB.Account
+            $This.IO._GetInvoiceSearchResult.ItemsSource    = $This.DB.Invoice
+        }
+
+        SelectedStyle([String]$Control)
+        {
+            $This.IO."$Control`Panel".Visibility            = "Visible"
+            $This.IO."$Control`Tab".Background              = "#4444FF"
+            $This.IO."$Control`Tab".Foreground              = "#FFFFFF" 
+            $This.IO."$Control`Tab".BorderBrush             = "#000000"
+        }
+
+        MainTab([UInt32]$Slot)
+        {
+            $This.IO._UIDPanel.Visibility                   = "Collapsed"
+            $This.IO._ClientPanel.Visibility                = "Collapsed"
+            $This.IO._ServicePanel.Visibility               = "Collapsed"
+            $This.IO._DevicePanel.Visibility                = "Collapsed"
+            $This.IO._IssuePanel.Visibility                 = "Collapsed"
+            $This.IO._InventoryPanel.Visibility             = "Collapsed"
+            $This.IO._PurchasePanel.Visibility              = "Collapsed"
+            $This.IO._ExpensePanel.Visibility               = "Collapsed"
+            $This.IO._AccountPanel.Visibility               = "Collapsed"
+            $This.IO._InvoicePanel.Visibility               = "Collapsed"
+
+            $This.IO._UIDTab.Background                     = "#DFFFBA"
+            $This.IO._ClientTab.Background                  = "#DFFFBA"
+            $This.IO._ServiceTab.Background                 = "#DFFFBA"
+            $This.IO._DeviceTab.Background                  = "#DFFFBA"
+            $This.IO._IssueTab.Background                   = "#DFFFBA"
+            $This.IO._InventoryTab.Background               = "#DFFFBA"
+            $This.IO._PurchaseTab.Background                = "#DFFFBA"
+            $This.IO._ExpenseTab.Background                 = "#DFFFBA"
+            $This.IO._AccountTab.Background                 = "#DFFFBA"
+            $This.IO._InvoiceTab.Background                 = "#DFFFBA"
+
+            $This.IO._UIDTab.Foreground                     = "#000000"
+            $This.IO._ClientTab.Foreground                  = "#000000"
+            $This.IO._ServiceTab.Foreground                 = "#000000"
+            $This.IO._DeviceTab.Foreground                  = "#000000"
+            $This.IO._IssueTab.Foreground                   = "#000000"
+            $This.IO._InventoryTab.Foreground               = "#000000"
+            $This.IO._PurchaseTab.Foreground                = "#000000"
+            $This.IO._ExpenseTab.Foreground                 = "#000000"
+            $This.IO._AccountTab.Foreground                 = "#000000"
+            $This.IO._InvoiceTab.Foreground                 = "#000000"
+            
+            $This.IO._UIDTab.BorderBrush                    = "#000000"
+            $This.IO._ClientTab.BorderBrush                 = "#000000"
+            $This.IO._ServiceTab.BorderBrush                = "#000000"
+            $This.IO._DeviceTab.BorderBrush                 = "#000000"
+            $This.IO._IssueTab.BorderBrush                  = "#000000"
+            $This.IO._InventoryTab.BorderBrush              = "#000000"
+            $This.IO._PurchaseTab.BorderBrush               = "#000000"
+            $This.IO._ExpenseTab.BorderBrush                = "#000000"
+            $This.IO._AccountTab.BorderBrush                = "#000000"
+            $This.IO._InvoiceTab.BorderBrush                = "#000000"
+
+            Switch($Slot)
+            {
+                0 { $This.SelectedStyle(       "_UID") }
+                1 { $This.SelectedStyle(    "_Client") }
+                2 { $This.SelectedStyle(   "_Service") }
+                3 { $This.SelectedStyle(    "_Device") }
+                4 { $This.SelectedStyle(     "_Issue") }
+                5 { $This.SelectedStyle( "_Inventory") }
+                6 { $This.SelectedStyle(  "_Purchase") }
+                7 { $This.SelectedStyle(   "_Expense") }     
+                8 { $This.SelectedStyle(   "_Account") }
+                9 { $This.SelectedStyle(   "_Invoice") }
+            }
+        }
+
+        GetTab([UInt32]$Slot)
+        {
+            $This.Collapse()
+            $This.Clear()
+
+            Switch($Slot)
+            {
+                0 { $This.IO.       _GetUIDPanel.Visibility = "Visible" }
+                1 { $This.IO.    _GetClientPanel.Visibility = "Visible" }
+                2 { $This.IO.   _GetServicePanel.Visibility = "Visible" }
+                3 { $This.IO.    _GetDevicePanel.Visibility = "Visible" }
+                4 { $This.IO.     _GetIssuePanel.Visibility = "Visible" }
+                5 { $This.IO. _GetInventoryPanel.Visibility = "Visible" }
+                6 { $This.IO.  _GetPurchasePanel.Visibility = "Visible" }
+                7 { $This.IO.   _GetExpensePanel.Visibility = "Visible" }
+                8 { $This.IO.   _GetAccountPanel.Visibility = "Visible" }
+                9 { $This.IO.   _GetInvoicePanel.Visibility = "Visible" }
+            }
+
+            $This.Refresh()
+        }
+
+        SearchProperty()
+        {
+            $This.IO._GetUIDSearchProperty.ItemsSource                  = $This.Temp.UID
+            $This.IO._GetClientSearchProperty.ItemsSource               = $This.Temp.Client
+            $This.IO._ViewClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._ViewClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._EditClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._EditClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._NewClientDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._NewClientInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._GetServiceSearchProperty.ItemsSource              = $This.Temp.Service
+            $This.IO._GetDeviceSearchProperty.ItemsSource               = $This.Temp.Device
+            $This.IO._ViewDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._ViewDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
+            $This.IO._ViewDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+            $This.IO._ViewDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._EditDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._EditDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
+            $This.IO._EditDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+            $This.IO._EditDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._NewDeviceClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._NewDeviceIssueSearchProperty.ItemsSource          = $This.Temp.Issue
+            $This.IO._NewDevicePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._NewDeviceInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._GetIssueSearchProperty.ItemsSource                = $This.Temp.Issue
+            $This.IO._ViewIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._ViewIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._ViewIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._ViewIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._EditIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._EditIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._EditIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._EditIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._NewIssueClientSearchProperty.ItemsSource          = $This.Temp.Client
+            $This.IO._NewIssueDeviceSearchProperty.ItemsSource          = $This.Temp.Device
+            $This.IO._NewIssuePurchaseSearchProperty.ItemsSource        = $This.Temp.Purchase
+            $This.IO._NewIssueInvoiceSearchProperty.ItemsSource         = $This.Temp.Invoice
+            $This.IO._GetInventorySearchProperty.ItemsSource            = $This.Temp.Inventory
+            $This.IO._ViewInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
+            $This.IO._EditInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
+            $This.IO._NewInventoryDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._GetPurchaseSearchProperty.ItemsSource             = $This.Temp.Purchase
+            $This.IO._ViewPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._EditPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._NewPurchaseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._GetExpenseSearchProperty.ItemsSource              = $This.Temp.Expense
+            $This.IO._ViewExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._EditExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._NewExpenseDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._GetAccountSearchProperty.ItemsSource              = $This.Temp.Account
+            $This.IO._ViewAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
+            $This.IO._EditAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
+            $This.IO._NewAccountObjectSearchProperty.ItemsSource        = $This.Temp.Object
+            $This.IO._GetInvoiceSearchProperty.ItemsSource              = $This.Temp.Invoice
+            $This.IO._ViewInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
+            $This.IO._ViewInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
+            $This.IO._ViewInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
+            $This.IO._ViewInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
+            $This.IO._EditInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
+            $This.IO._EditInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
+            $This.IO._EditInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
+            $This.IO._EditInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
+            $This.IO._NewInvoiceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._NewInvoiceInventorySearchProperty.ItemsSource     = $This.Temp.Inventory
+            $This.IO._NewInvoiceServiceSearchProperty.ItemsSource       = $This.Temp.Service
+            $This.IO._NewInvoicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+
+            $This.IO._GetUIDSearchProperty.SelectedIndex                = 0
+            $This.IO._GetClientSearchProperty.SelectedIndex             = 0
+            $This.IO._ViewClientDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._ViewClientInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditClientDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._EditClientInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewClientDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._NewClientInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetServiceSearchProperty.SelectedIndex            = 0
+            $This.IO._GetDeviceSearchProperty.SelectedIndex             = 0
+            $This.IO._ViewDeviceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._ViewDeviceIssueSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewDevicePurchaseSearchProperty.SelectedIndex    = 0
+            $This.IO._ViewDeviceInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditDeviceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._EditDeviceIssueSearchProperty.SelectedIndex       = 0
+            $This.IO._EditDevicePurchaseSearchProperty.SelectedIndex    = 0
+            $This.IO._EditDeviceInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewDeviceClientSearchProperty.SelectedIndex       = 0
+            $This.IO._NewDeviceIssueSearchProperty.SelectedIndex        = 0
+            $This.IO._NewDevicePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._NewDeviceInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetIssueSearchProperty.SelectedIndex              = 0
+            $This.IO._ViewIssueClientSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewIssueDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewIssuePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._ViewIssueInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._EditIssueClientSearchProperty.SelectedIndex       = 0
+            $This.IO._EditIssueDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._EditIssuePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._EditIssueInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._NewIssueClientSearchProperty.SelectedIndex        = 0
+            $This.IO._NewIssueDeviceSearchProperty.SelectedIndex        = 0
+            $This.IO._NewIssuePurchaseSearchProperty.SelectedIndex      = 0
+            $This.IO._NewIssueInvoiceSearchProperty.SelectedIndex       = 0
+            $This.IO._GetInventorySearchProperty.SelectedIndex          = 0
+            $This.IO._ViewInventoryDeviceSearchProperty.SelectedIndex   = 0
+            $This.IO._EditInventoryDeviceSearchProperty.SelectedIndex   = 0
+            $This.IO._NewInventoryDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._GetPurchaseSearchProperty.SelectedIndex           = 0
+            $This.IO._ViewPurchaseDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._EditPurchaseDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._NewPurchaseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._GetExpenseSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewExpenseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditExpenseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewExpenseDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetAccountSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewAccountObjectSearchProperty.SelectedIndex     = 0
+            $This.IO._EditAccountObjectSearchProperty.SelectedIndex     = 0
+            $This.IO._NewAccountObjectSearchProperty.SelectedIndex      = 0
+            $This.IO._GetInvoiceSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewInvoiceClientSearchProperty.SelectedIndex     = 0
+            $This.IO._ViewInvoiceInventorySearchProperty.SelectedIndex  = 0
+            $This.IO._ViewInvoiceServiceSearchProperty.SelectedIndex    = 0
+            $This.IO._ViewInvoicePurchaseSearchProperty.SelectedIndex   = 0
+            $This.IO._EditInvoiceClientSearchProperty.SelectedIndex     = 0
+            $This.IO._EditInvoiceInventorySearchProperty.SelectedIndex  = 0
+            $This.IO._EditInvoiceServiceSearchProperty.SelectedIndex    = 0
+            $This.IO._EditInvoicePurchaseSearchProperty.SelectedIndex   = 0
+            $This.IO._NewInvoiceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._NewInvoiceInventorySearchProperty.SelectedIndex   = 0
+            $This.IO._NewInvoiceServiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewInvoicePurchaseSearchProperty.SelectedIndex    = 0
+
         }
 
         [Object] NewUID([UInt32]$Slot)
@@ -1839,13 +2003,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetUIDSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="UID"/>
-                        <ComboBoxItem Content="Index"/>
-                        <ComboBoxItem Content="Date"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1" >
-                    </TextBox>
+                    <ComboBox Grid.Column="0" Name="_GetUIDSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetUIDSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchResult">
@@ -1934,11 +2092,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetClientSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Name"/>
-                        <ComboBoxItem Content="Phone Number"/>
-                        <ComboBoxItem Content="Email Address"/>
-                    </ComboBox>
+                    <ComboBox Grid.Column="0" Name="_GetClientSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchResult">
@@ -2065,13 +2219,8 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewClientDeviceSearchFilter" IsEnabled="False"/>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientDeviceSearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewClientDeviceSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -2098,12 +2247,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientInvoiceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientInvoiceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewClientInvoiceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2235,12 +2379,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientDeviceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditClientDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2268,12 +2407,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditClientInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2405,12 +2539,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewClientDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewClientDeviceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewClientDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2438,12 +2567,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewClientInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewClientInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewClientInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2491,10 +2615,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetServiceSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Name"/>
-                        <ComboBoxItem Content="Description"/>
-                    </ComboBox>
+                    <ComboBox Grid.Column="0" Name="_GetServiceSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetServiceSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetServiceSearchResult">
@@ -2583,11 +2704,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetDeviceSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Vendor"/>
-                        <ComboBoxItem Content="Model"/>
-                        <ComboBoxItem Content="Specification"/>
-                    </ComboBox>
+                    <ComboBox Grid.Column="0" Name="_GetDeviceSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetDeviceSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetDeviceSearchResult">
@@ -2662,15 +2779,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewDeviceClientSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                                <ComboBoxItem Content="Name"/>
-                                <ComboBoxItem Content="Phone"/>
-                                <ComboBoxItem Content="Email"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewDeviceClientSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewDeviceClientSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2698,12 +2807,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewDeviceIssueSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewDeviceIssueSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewDeviceIssueSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2731,12 +2835,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewDevicePurchaseSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewDevicePurchaseSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewDevicePurchaseSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2764,12 +2863,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewDeviceInvoiceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewDeviceInvoiceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewDeviceInvoiceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2849,15 +2943,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditDeviceClientSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                                <ComboBoxItem Content="Name"/>
-                                <ComboBoxItem Content="Phone"/>
-                                <ComboBoxItem Content="Email"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditDeviceClientSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditDeviceClientSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2885,12 +2971,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditDeviceIssueSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditDeviceIssueSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditDeviceIssueSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2918,12 +2999,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditDevicePurchaseSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditDevicePurchaseSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditDevicePurchaseSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -2951,12 +3027,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditDeviceInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditDeviceInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditDeviceInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3036,15 +3107,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewDeviceClientSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                                <ComboBoxItem Content="Name"/>
-                                <ComboBoxItem Content="Phone"/>
-                                <ComboBoxItem Content="Email"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewDeviceClientSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewDeviceClientSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3072,12 +3135,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewDeviceIssueSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewDeviceIssueSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewDeviceIssueSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3105,12 +3163,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewDevicePurchaseSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewDevicePurchaseSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewDevicePurchaseSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3138,12 +3191,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewDeviceInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewDeviceInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewDeviceInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3191,11 +3239,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetIssueSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Client"/>
-                        <ComboBoxItem Content="Device"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetIssueSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetIssueSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetIssueSearchResult">
@@ -3241,12 +3285,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewIssueClientSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3274,12 +3313,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewIssueDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3307,12 +3341,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewIssuePurchaseSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3354,12 +3383,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewIssueInvoiceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3409,12 +3433,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditIssueClientSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3442,12 +3461,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditIssueDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3475,12 +3489,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditIssuePurchaseSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3522,12 +3531,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditIssueInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3577,12 +3581,7 @@ Function cim-db
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" Name="_NewIssueClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewIssueClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -3610,13 +3609,8 @@ Function cim-db
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewIssueDeviceSearchFilter"/>
+                            <ComboBox Grid.Column="0" Name="_NewIssueDeviceSearchProperty"/>
+                            <TextBox Grid.Column="1" Name="_NewIssueDeviceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -3643,13 +3637,8 @@ Function cim-db
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssuePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewIssuePurchaseSearchFilter"/>
+                            <ComboBox Grid.Column="0" Name="_NewIssuePurchaseSearchProperty"/>
+                            <TextBox Grid.Column="1" Name="_NewIssuePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -3690,12 +3679,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewIssueInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3743,11 +3727,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetInventorySearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Client"/>
-                        <ComboBoxItem Content="Device"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetInventorySearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetInventorySearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetInventorySearchResult">
@@ -3821,12 +3801,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="1" Name="_ViewInventoryDeviceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_ViewInventoryDeviceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="2" Name="_ViewInventoryDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3894,12 +3869,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="1" Name="_EditInventoryDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_EditInventoryDeviceSearchProperty"/>
                             <TextBox Grid.Column="2" Name="_EditInventoryDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -3967,12 +3937,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="1" Name="_NewInventoryDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_NewInventoryDeviceSearchProperty"/>
                             <TextBox Grid.Column="2" Name="_NewInventoryDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4020,16 +3985,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetPurchaseSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Distributor"/>
-                        <ComboBoxItem Content="DisplayName"/>
-                        <ComboBoxItem Content="Vendor"/>
-                        <ComboBoxItem Content="Serial"/>
-                        <ComboBoxItem Content="Model"/>
-                        <ComboBoxItem Content="Title"/>
-                        <ComboBoxItem Content="Invoice"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetPurchaseSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetPurchaseSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetPurchaseSearchResult">
@@ -4104,12 +4060,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="1" Name="_ViewPurchaseDeviceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_ViewPurchaseDeviceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="2" Name="_ViewPurchaseDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4180,12 +4131,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="1" Name="_EditPurchaseDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Name="_EditPurchaseDeviceSearchProperty"/>
                             <TextBox Grid.Column="2" Name="_EditPurchaseDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4256,13 +4202,8 @@ Function cim-db
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="1" SelectedIndex="0" Name="_NewPurchaseDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="2" Name="_NewPurchaseDeviceSearchFilter"/>
+                            <ComboBox Grid.Column="1" Name="_NewPurchaseDeviceSearchProperty"/>
+                            <TextBox Grid.Column="2" Name="_NewPurchaseDeviceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -4312,13 +4253,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetExpenseSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Recipient"/>
-                        <ComboBoxItem Content="DisplayName"/>
-                        <ComboBoxItem Content="Account"/>
-                        <ComboBoxItem Content="Cost"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetExpenseSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetExpenseSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetExpenseSearchResult">
@@ -4358,12 +4293,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewExpenseDeviceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewExpenseDeviceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewExpenseDeviceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4412,12 +4342,7 @@ Function cim-db
                                 <ComboBoxItem Content="No"/>
                                 <ComboBoxItem Content="Yes"/>
                             </ComboBox>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditExpenseDeviceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditExpenseDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4466,13 +4391,8 @@ Function cim-db
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewExpenseDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewExpenseDeviceSearchFilter"/>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewExpenseDeviceSearchProperty"/>
+                            <TextBox Grid.Column="1" Name="_NewExpenseDeviceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -4522,10 +4442,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetAccountSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Object"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetAccountSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetAccountSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetAccountSearchResult">
@@ -4549,12 +4466,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewAccountObjectSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_ViewAccountObjectSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewAccountObjectSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4587,12 +4499,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditAccountObjectSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_EditAccountObjectSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditAccountObjectSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4625,12 +4532,7 @@ Function cim-db
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewAccountObjectSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" Name="_NewAccountObjectSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_NewAccountObjectSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -4678,14 +4580,7 @@ Function cim-db
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetInvoiceSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Date"/>
-                        <ComboBoxItem Content="Name"/>
-                        <ComboBoxItem Content="Phone Number"/>
-                        <ComboBoxItem Content="Email Address"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1" >
-                    </TextBox>
+                    <ComboBox Grid.Column="0" Name="_GetInvoiceSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetInvoiceSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetInvoiceSearchResult">
@@ -4724,12 +4619,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceClientSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4757,12 +4647,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceInventorySearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4790,12 +4675,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoiceServiceSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4823,12 +4703,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False"/>
                                 <TextBox Grid.Column="1" Name="_ViewInvoicePurchaseSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4875,12 +4750,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4908,12 +4778,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceInventorySearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4941,12 +4806,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceServiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4974,12 +4834,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoicePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -5026,12 +4881,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceClientSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -5059,12 +4909,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceInventorySearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -5092,12 +4937,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceServiceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -5125,12 +4965,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoicePurchaseSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -5155,6 +4990,7 @@ Function cim-db
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
+    $Cim.SearchProperty()
     # ---------------- #
     # Tab/Panel Access #
     # ---------------- #
@@ -5387,7 +5223,7 @@ Function cim-db
         {
             $Name = "{0}, {1}" -f $Cim.IO._EditClientLast.Text, $Cim.IO._EditClientLast.Text
 
-            If ( $Cim.IO._EditClientMI.Text -eq "" )
+            If ( $Cim.IO._EditClientMI.Text -eq "")
             {
                 $Full = $Name
             }

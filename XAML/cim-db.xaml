@@ -172,13 +172,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetUIDSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="UID"/>
-                        <ComboBoxItem Content="Index"/>
-                        <ComboBoxItem Content="Date"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1" >
-                    </TextBox>
+                    <ComboBox Grid.Column="0" Name="_GetUIDSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetUIDSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetUIDSearchResult">
@@ -267,11 +261,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetClientSearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Name"/>
-                        <ComboBoxItem Content="Phone Number"/>
-                        <ComboBoxItem Content="Email Address"/>
-                    </ComboBox>
+                    <ComboBox Grid.Column="0" Name="_GetClientSearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetClientSearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetClientSearchResult">
@@ -398,13 +388,8 @@
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientDeviceSearchProperty" IsEnabled="False">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_ViewClientDeviceSearchFilter" IsEnabled="False"/>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientDeviceSearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewClientDeviceSearchFilter" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -431,12 +416,7 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientInvoiceSearchProperty" IsEnabled="False">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewClientInvoiceSearchProperty" IsEnabled="False"/>
                             <TextBox Grid.Column="1" Name="_ViewClientInvoiceSearchFilter" IsEnabled="False"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -568,12 +548,7 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientDeviceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientDeviceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditClientDeviceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -601,12 +576,7 @@
                                 <ColumnDefinition Width="120"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientInvoiceSearchProperty">
-                                <ComboBoxItem Content="UID"/>
-                                <ComboBoxItem Content="Index"/>
-                                <ComboBoxItem Content="Date"/>
-                                <ComboBoxItem Content="Rank"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditClientInvoiceSearchProperty"/>
                             <TextBox Grid.Column="1" Name="_EditClientInvoiceSearchFilter"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -1926,11 +1896,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="4*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Name="_GetInventorySearchProperty" SelectedIndex="0" BorderThickness="1">
-                        <ComboBoxItem Content="Client"/>
-                        <ComboBoxItem Content="Device"/>
-                    </ComboBox>
-                    <TextBox Grid.Column="1"/>
+                    <ComboBox Grid.Column="0" Name="_GetInventorySearchProperty"/>
                     <TextBox Grid.Column="1" Name="_GetInventorySearchFilter"/>
                 </Grid>
                 <DataGrid Grid.Row="1" Margin="5" Name="_GetInventorySearchResult">
@@ -2594,13 +2560,8 @@
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewExpenseDeviceSearchProperty">
-                                    <ComboBoxItem Content="UID"/>
-                                    <ComboBoxItem Content="Index"/>
-                                    <ComboBoxItem Content="Date"/>
-                                    <ComboBoxItem Content="Rank"/>
-                                </ComboBox>
-                                <TextBox Grid.Column="1" Name="_NewExpenseDeviceSearchFilter"/>
+                            <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewExpenseDeviceSearchProperty"/>
+                            <TextBox Grid.Column="1" Name="_NewExpenseDeviceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>

@@ -4,12 +4,13 @@ Function cim-db
 
     Class _DGList
     {
-        [String]   $Name
+        [String] $Name
         [Object] $Value
-        _DGList([String]$Name,[Object[]]$Value)
+
+        _DGList([String]$Name,[Object]$Value)
         {
             $This.Name  = $Name
-            $This.Value = $Value
+            $This.Value = $Value -join ", "
         }
     }
 
@@ -4532,14 +4533,6 @@ Function cim-db
                         <DataGridTextColumn Header="Object"  Binding='{Binding Record.Object}' Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Name="_GetAccountRefresh" Content="Refresh"/>
-                    <Button Grid.Column="1" Name="_ViewAccountRecord" Content="View"/>
-                </Grid>
             </Grid>
             <Grid Grid.Row="1" Name="_ViewAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>

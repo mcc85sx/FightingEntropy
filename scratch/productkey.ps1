@@ -32,7 +32,5 @@ End Function
 "@
 
   Start-Process -FilePath $_
-  Start-Sleep -Milliseconds 100
-  Remove-Item $_ 
    
 }

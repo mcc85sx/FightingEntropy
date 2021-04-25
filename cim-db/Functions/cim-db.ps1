@@ -2983,13 +2983,11 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetIssueTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewIssueTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditIssueTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewIssueTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveIssueTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewIssueTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditIssueTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewIssueTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveIssueTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -3727,13 +3725,11 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetPurchaseTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewPurchaseTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditPurchaseTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewPurchaseTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SavePurchaseTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewPurchaseTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditPurchaseTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewPurchaseTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SavePurchaseTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -4307,7 +4303,7 @@ Function cim-db
                 </GroupBox>
             </Grid>
         </Grid>
-        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Collapsed">
+        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
@@ -4346,7 +4342,7 @@ Function cim-db
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Collapsed">
+            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="35"/>

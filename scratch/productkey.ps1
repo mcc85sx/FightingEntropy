@@ -1,8 +1,7 @@
 # https://answers.microsoft.com/en-us/windows/forum/windows_10-windows_install-winpc/how-to-recover-your-windows-product-key/8687ef5d-4d32-41fc-9310-158f8e5f02e3
 
-"$Home\Desktop\productkey.vbs" | % { 
-
-  Set-Content -Path $_ -Value @"
+  $Path  = "$Home\Desktop\productkey.vbs"
+  $Value = @"
 Set WshShell = CreateObject("WScript.Shell")
 MsgBox ConvertToKey(WshShell.RegRead("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\DigitalProductId"))
 
@@ -31,6 +30,7 @@ ConvertToKey = KeyOutput
 End Function
 "@
 
-  Start-Process -FilePath $_
+  Set-Content -Path $Path -Value $Value
+  Start-Process -FilePath $Path
    
 }

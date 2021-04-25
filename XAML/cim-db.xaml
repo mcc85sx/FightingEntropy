@@ -46,6 +46,7 @@
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Background" Value="#DFFFBA"/>
             <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="2"/>
@@ -87,12 +88,12 @@
                     <Setter Property="Background" Value="White"/>
                 </Trigger>
                 <Trigger Property="AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="SkyBlue"/>
+                    <Setter Property="Background" Value="#FFD6FFFB"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="ToolTip">
                         <Setter.Value>
-                            <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>
+                            <TextBlock TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>
                         </Setter.Value>
                     </Setter>
                     <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>
@@ -157,10 +158,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetUIDTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewUIDTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewUIDTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetUIDPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -243,13 +242,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetClientTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewClientTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditClientTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewClientTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveClientTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewClientTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditClientTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewClientTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveClientTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetClientPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -766,13 +763,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetServiceTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewServiceTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditServiceTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewServiceTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveServiceTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewServiceTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditServiceTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewServiceTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveServiceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -855,13 +850,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetDeviceTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewDeviceTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditDeviceTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewDeviceTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveDeviceTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewDeviceTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditDeviceTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewDeviceTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveDeviceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetDevicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -1390,13 +1383,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetIssueTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewIssueTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditIssueTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewIssueTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveIssueTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewIssueTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditIssueTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewIssueTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveIssueTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -1878,13 +1869,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetInventoryTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewInventoryTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditInventoryTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewInventoryTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveInventoryTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewInventoryTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditInventoryTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewInventoryTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveInventoryTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetInventoryPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2136,13 +2125,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetPurchaseTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewPurchaseTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditPurchaseTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewPurchaseTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SavePurchaseTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewPurchaseTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditPurchaseTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewPurchaseTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SavePurchaseTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2404,13 +2391,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetExpenseTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewExpenseTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditExpenseTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewExpenseTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveExpenseTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewExpenseTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditExpenseTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewExpenseTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveExpenseTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetExpensePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2593,13 +2578,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetAccountTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewAccountTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditAccountTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewAccountTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveAccountTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewAccountTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditAccountTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewAccountTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveAccountTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2720,7 +2703,7 @@
                 </GroupBox>
             </Grid>
         </Grid>
-        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Collapsed">
+        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
@@ -2731,13 +2714,11 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Get" Name="_GetInvoiceTab"/>
-                <Button Grid.Column="1" Content="View" Name="_ViewInvoiceTab"/>
-                <Button Grid.Column="2" Content="Edit" Name="_EditInvoiceTab"/>
-                <Button Grid.Column="3" Content="New" Name="_NewInvoiceTab"/>
-                <Button Grid.Column="4" Content="Save" Name="_SaveInvoiceTab"/>
+                <Button Grid.Column="0" Content="View" Name="_ViewInvoiceTab"/>
+                <Button Grid.Column="1" Content="Edit" Name="_EditInvoiceTab"/>
+                <Button Grid.Column="2" Content="New" Name="_NewInvoiceTab"/>
+                <Button Grid.Column="3" Content="Save" Name="_SaveInvoiceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetInvoicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2761,7 +2742,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Collapsed">
+            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="35"/>

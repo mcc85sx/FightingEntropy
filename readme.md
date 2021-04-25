@@ -2,6 +2,44 @@
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/2020.12.0/Graphics/OEMbg.jpg?raw=true)
 (3840x2160)[Original] Albany, NY Corning Tower Observation Deck, before my son's birthday in 2017.
 
+# [Cim-db] In active development
+Company Information Management Database is a testing environment for a working database, for point-of-sale
+and business transactions. It uses a combination of (C#/PowerShell/.Net) class types, Extensible Application
+Markup Language/XAML, Windows Presentation (Foundation|Framework)/WPF, with DataBinding/MVVM synchronizing 
+the PowerShell components to the GUI.
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0409-(Client%20Registration).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(1).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(2).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(3).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(4).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(5).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(6).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(7).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(8).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(9).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(10).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(11).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(12).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(13).jpg?raw=true)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(14).jpg?raw=true)
+
+# Install Versions [Still Beta] 
+2021.1.0
+2021.1.1
+2021.2.0
+2021.3.0
+2021.3.1
+2021.4.0
+
+irm github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true
+This script here installs 2021.4.0, but this script can be changed to another version.
+
+Simply change the last line...
+    
+    $Install = Install-FEModule -Version {version} 
+    
+# [Legacy] ------ I'll clean this up at some point.
 # Install v2020.12.0 [BETA]
 
     $Install = Invoke-RestMethod https://raw.githubusercontent.com/mcc85sx/FightingEntropy/master/Install.ps1
@@ -16,6 +54,8 @@
 
 # Preview (12/30/2020)
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/GFX/2020_1230-(GUI%20Diagram).jpg?raw=true)
+
+# [Story] -------------
 
 # About FightingEntropy 
 Beginning the fight against Identity Theft, and Cybercriminal Activities.<br>

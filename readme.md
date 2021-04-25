@@ -8,6 +8,7 @@ and business transactions. It uses a combination of (C#/PowerShell/.Net) class t
 Markup Language/XAML, Windows Presentation (Foundation|Framework)/WPF, with DataBinding/MVVM synchronizing 
 the PowerShell components to the GUI.
 
+Screenshots =>
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0409-(Client%20Registration).jpg?raw=true)
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(1).jpg?raw=true)
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(2).jpg?raw=true)
@@ -25,14 +26,16 @@ the PowerShell components to the GUI.
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/cim-db/Snapshots/2021_0421-(cim-db)(14).jpg?raw=true)
 
 # Install Versions [Still Beta] 
-2021.1.0
-2021.1.1
-2021.2.0
-2021.3.0
-2021.3.1
-2021.4.0
 
-irm github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true
+    2021.1.0
+    2021.1.1
+    2021.2.0
+    2021.3.0
+    2021.3.1
+    2021.4.0
+
+    irm github.com/mcc85sx/FightingEntropy/blob/master/Install.ps1?raw=true
+    
 This script here installs 2021.4.0, but this script can be changed to another version.
 
 Simply change the last line...

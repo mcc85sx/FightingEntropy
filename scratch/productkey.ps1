@@ -32,5 +32,3 @@ End Function
 
   Set-Content -Path $Path -Value $Value
   Start-Process -FilePath $Path
-   
-}

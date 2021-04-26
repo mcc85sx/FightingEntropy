@@ -581,12 +581,154 @@ Function cim-db
         [Object]     $Tab = ("UID Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")
         [Object]      $DB
 
+        [Object] NewUID([UInt32]$Slot)
+        {
+            Return @( $This.DB.NewUID($Slot) )
+        }
+
+        [Object] GetUID([String]$UID)
+        {
+            Return @( $This.DB.UID | ? UID -match $UID )
+        }
+
         cimdb([String]$Xaml)
         {
             $This.Window                                    = [_Xaml]::New($Xaml)
             $This.IO                                        = $This.Window.IO
             $This.Temp                                      = [_Template]::New()
             $This.DB                                        = [_DB]::New()
+
+            # Defaults
+
+            $This.IO._GetUIDSearchProperty.ItemsSource                  = $This.Temp.UID
+            $This.IO._GetClientSearchProperty.ItemsSource               = $This.Temp.Client
+            $This.IO._ViewClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._ViewClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._EditClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._EditClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._NewClientDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._NewClientInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._GetServiceSearchProperty.ItemsSource              = $This.Temp.Service
+            $This.IO._GetDeviceSearchProperty.ItemsSource               = $This.Temp.Device
+            $This.IO._ViewDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._ViewDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
+            $This.IO._ViewDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+            $This.IO._ViewDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._EditDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._EditDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
+            $This.IO._EditDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+            $This.IO._EditDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
+            $This.IO._NewDeviceClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._NewDeviceIssueSearchProperty.ItemsSource          = $This.Temp.Issue
+            $This.IO._NewDevicePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._NewDeviceInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._GetIssueSearchProperty.ItemsSource                = $This.Temp.Issue
+            $This.IO._ViewIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._ViewIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._ViewIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._ViewIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._EditIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
+            $This.IO._EditIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
+            $This.IO._EditIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
+            $This.IO._EditIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
+            $This.IO._NewIssueClientSearchProperty.ItemsSource          = $This.Temp.Client
+            $This.IO._NewIssueDeviceSearchProperty.ItemsSource          = $This.Temp.Device
+            $This.IO._NewIssuePurchaseSearchProperty.ItemsSource        = $This.Temp.Purchase
+            $This.IO._NewIssueInvoiceSearchProperty.ItemsSource         = $This.Temp.Invoice
+            $This.IO._GetInventorySearchProperty.ItemsSource            = $This.Temp.Inventory
+            $This.IO._ViewInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
+            $This.IO._EditInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
+            $This.IO._NewInventoryDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._GetPurchaseSearchProperty.ItemsSource             = $This.Temp.Purchase
+            $This.IO._ViewPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._EditPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
+            $This.IO._NewPurchaseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._GetExpenseSearchProperty.ItemsSource              = $This.Temp.Expense
+            $This.IO._ViewExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._EditExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
+            $This.IO._NewExpenseDeviceSearchProperty.ItemsSource        = $This.Temp.Device
+            $This.IO._GetAccountSearchProperty.ItemsSource              = $This.Temp.Account
+            $This.IO._ViewAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
+            $This.IO._EditAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
+            $This.IO._NewAccountObjectSearchProperty.ItemsSource        = $This.Temp.Object
+            $This.IO._GetInvoiceSearchProperty.ItemsSource              = $This.Temp.Invoice
+            $This.IO._ViewInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
+            $This.IO._ViewInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
+            $This.IO._ViewInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
+            $This.IO._ViewInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
+            $This.IO._EditInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
+            $This.IO._EditInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
+            $This.IO._EditInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
+            $This.IO._EditInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
+            $This.IO._NewInvoiceClientSearchProperty.ItemsSource        = $This.Temp.Client
+            $This.IO._NewInvoiceInventorySearchProperty.ItemsSource     = $This.Temp.Inventory
+            $This.IO._NewInvoiceServiceSearchProperty.ItemsSource       = $This.Temp.Service
+            $This.IO._NewInvoicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
+
+            $This.IO._GetUIDSearchProperty.SelectedIndex                = 0
+            $This.IO._GetClientSearchProperty.SelectedIndex             = 0
+            $This.IO._ViewClientDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._ViewClientInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditClientDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._EditClientInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewClientDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._NewClientInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetServiceSearchProperty.SelectedIndex            = 0
+            $This.IO._GetDeviceSearchProperty.SelectedIndex             = 0
+            $This.IO._ViewDeviceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._ViewDeviceIssueSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewDevicePurchaseSearchProperty.SelectedIndex    = 0
+            $This.IO._ViewDeviceInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditDeviceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._EditDeviceIssueSearchProperty.SelectedIndex       = 0
+            $This.IO._EditDevicePurchaseSearchProperty.SelectedIndex    = 0
+            $This.IO._EditDeviceInvoiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewDeviceClientSearchProperty.SelectedIndex       = 0
+            $This.IO._NewDeviceIssueSearchProperty.SelectedIndex        = 0
+            $This.IO._NewDevicePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._NewDeviceInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetIssueSearchProperty.SelectedIndex              = 0
+            $This.IO._ViewIssueClientSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewIssueDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._ViewIssuePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._ViewIssueInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._EditIssueClientSearchProperty.SelectedIndex       = 0
+            $This.IO._EditIssueDeviceSearchProperty.SelectedIndex       = 0
+            $This.IO._EditIssuePurchaseSearchProperty.SelectedIndex     = 0
+            $This.IO._EditIssueInvoiceSearchProperty.SelectedIndex      = 0
+            $This.IO._NewIssueClientSearchProperty.SelectedIndex        = 0
+            $This.IO._NewIssueDeviceSearchProperty.SelectedIndex        = 0
+            $This.IO._NewIssuePurchaseSearchProperty.SelectedIndex      = 0
+            $This.IO._NewIssueInvoiceSearchProperty.SelectedIndex       = 0
+            $This.IO._GetInventorySearchProperty.SelectedIndex          = 0
+            $This.IO._ViewInventoryDeviceSearchProperty.SelectedIndex   = 0
+            $This.IO._EditInventoryDeviceSearchProperty.SelectedIndex   = 0
+            $This.IO._NewInventoryDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._GetPurchaseSearchProperty.SelectedIndex           = 0
+            $This.IO._ViewPurchaseDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._EditPurchaseDeviceSearchProperty.SelectedIndex    = 0
+            $This.IO._NewPurchaseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._GetExpenseSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewExpenseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._EditExpenseDeviceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewExpenseDeviceSearchProperty.SelectedIndex      = 0
+            $This.IO._GetAccountSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewAccountObjectSearchProperty.SelectedIndex     = 0
+            $This.IO._EditAccountObjectSearchProperty.SelectedIndex     = 0
+            $This.IO._NewAccountObjectSearchProperty.SelectedIndex      = 0
+            $This.IO._GetInvoiceSearchProperty.SelectedIndex            = 0
+            $This.IO._ViewInvoiceClientSearchProperty.SelectedIndex     = 0
+            $This.IO._ViewInvoiceInventorySearchProperty.SelectedIndex  = 0
+            $This.IO._ViewInvoiceServiceSearchProperty.SelectedIndex    = 0
+            $This.IO._ViewInvoicePurchaseSearchProperty.SelectedIndex   = 0
+            $This.IO._EditInvoiceClientSearchProperty.SelectedIndex     = 0
+            $This.IO._EditInvoiceInventorySearchProperty.SelectedIndex  = 0
+            $This.IO._EditInvoiceServiceSearchProperty.SelectedIndex    = 0
+            $This.IO._EditInvoicePurchaseSearchProperty.SelectedIndex   = 0
+            $This.IO._NewInvoiceClientSearchProperty.SelectedIndex      = 0
+            $This.IO._NewInvoiceInventorySearchProperty.SelectedIndex   = 0
+            $This.IO._NewInvoiceServiceSearchProperty.SelectedIndex     = 0
+            $This.IO._NewInvoicePurchaseSearchProperty.SelectedIndex    = 0
         }
 
         Collapse()
@@ -915,15 +1057,7 @@ Function cim-db
             }
         }
 
-        SelectedStyle([String]$Control)
-        {
-            $This.IO."$Control`Panel".Visibility            = "Visible"
-            $This.IO."$Control`Tab".Background              = "#4444FF"
-            $This.IO."$Control`Tab".Foreground              = "#FFFFFF" 
-            $This.IO."$Control`Tab".BorderBrush             = "#000000"
-        }
-
-        MainTab([UInt32]$Slot)
+        GetTab([UInt32]$Slot)
         {
             $This.IO._UIDPanel.Visibility                   = "Collapsed"
             $This.IO._ClientPanel.Visibility                = "Collapsed"
@@ -936,241 +1070,55 @@ Function cim-db
             $This.IO._AccountPanel.Visibility               = "Collapsed"
             $This.IO._InvoicePanel.Visibility               = "Collapsed"
 
-            $This.IO._UIDTab.Background                     = "#DFFFBA"
-            $This.IO._ClientTab.Background                  = "#DFFFBA"
-            $This.IO._ServiceTab.Background                 = "#DFFFBA"
-            $This.IO._DeviceTab.Background                  = "#DFFFBA"
-            $This.IO._IssueTab.Background                   = "#DFFFBA"
-            $This.IO._InventoryTab.Background               = "#DFFFBA"
-            $This.IO._PurchaseTab.Background                = "#DFFFBA"
-            $This.IO._ExpenseTab.Background                 = "#DFFFBA"
-            $This.IO._AccountTab.Background                 = "#DFFFBA"
-            $This.IO._InvoiceTab.Background                 = "#DFFFBA"
-
-            $This.IO._UIDTab.Foreground                     = "#000000"
-            $This.IO._ClientTab.Foreground                  = "#000000"
-            $This.IO._ServiceTab.Foreground                 = "#000000"
-            $This.IO._DeviceTab.Foreground                  = "#000000"
-            $This.IO._IssueTab.Foreground                   = "#000000"
-            $This.IO._InventoryTab.Foreground               = "#000000"
-            $This.IO._PurchaseTab.Foreground                = "#000000"
-            $This.IO._ExpenseTab.Foreground                 = "#000000"
-            $This.IO._AccountTab.Foreground                 = "#000000"
-            $This.IO._InvoiceTab.Foreground                 = "#000000"
-            
-            $This.IO._UIDTab.BorderBrush                    = "#000000"
-            $This.IO._ClientTab.BorderBrush                 = "#000000"
-            $This.IO._ServiceTab.BorderBrush                = "#000000"
-            $This.IO._DeviceTab.BorderBrush                 = "#000000"
-            $This.IO._IssueTab.BorderBrush                  = "#000000"
-            $This.IO._InventoryTab.BorderBrush              = "#000000"
-            $This.IO._PurchaseTab.BorderBrush               = "#000000"
-            $This.IO._ExpenseTab.BorderBrush                = "#000000"
-            $This.IO._AccountTab.BorderBrush                = "#000000"
-            $This.IO._InvoiceTab.BorderBrush                = "#000000"
-
-            Switch($Slot)
-            {
-                0 { $This.SelectedStyle(       "_UID") }
-                1 { $This.SelectedStyle(    "_Client") }
-                2 { $This.SelectedStyle(   "_Service") }
-                3 { $This.SelectedStyle(    "_Device") }
-                4 { $This.SelectedStyle(     "_Issue") }
-                5 { $This.SelectedStyle( "_Inventory") }
-                6 { $This.SelectedStyle(  "_Purchase") }
-                7 { $This.SelectedStyle(   "_Expense") }     
-                8 { $This.SelectedStyle(   "_Account") }
-                9 { $This.SelectedStyle(   "_Invoice") }
-            }
-        }
-
-        GetTab([UInt32]$Slot)
-        {
             $This.Collapse()
-            $This.Clear()
-            $This.IO."_Get$($This.Tab[$Slot])Panel".Visibility         = "Visible"
-            $This.Refresh()
 
-            $This.IO."_View$($This.Tab[$Slot])Tab".IsEnabled           = 0
+            $This.Tab                                       | % { "_$_`Tab" } | % {
+
+                $This.IO.$_.Background                                = "#DFFFBA"
+                $This.IO.$_.Foreground                                = "#000000"
+                $This.IO.$_.BorderBrush                               = "#000000"
+            }
+
+            Write-Host $This.Tab[$Slot]
+
+            $This.IO."_$($This.Tab[$Slot])Panel".Visibility           = "Visible"
+            $This.IO."_Get$($This.Tab[$Slot])Panel".Visibility        = "Visible"
+
+            $This.IO."_$($This.Tab[$Slot])Tab".Background             = "#4444FF"
+            $This.IO."_$($This.Tab[$Slot])Tab".Foreground             = "#FFFFFF"
+            $This.IO."_$($This.Tab[$Slot])Tab".BorderBrush            = "#000000"
 
             If ( $Slot -ne 0 )
             {
-                $This.IO."_Edit$($This.Tab[$Slot])Tab".IsEnabled           = 0
-                $This.IO."_Save$($This.Tab[$Slot])Tab".IsEnabled           = 0
+                $This.IO."_Edit$($This.Tab[$Slot])Panel".Visibility   = "Collapsed"
+                $This.IO."_New$($This.Tab[$Slot])Panel".Visibility    = "Collapsed"
+                $This.IO."_New$($This.Tab[$Slot])Tab".IsEnabled       = 1
             }
+
+            $This.Clear()
+            $This.Refresh()
         }
 
         ViewTab([UInt32]$Slot)
         {
             $This.Collapse()
-            $This.IO."_View$($This.Tab[$Slot])Panel".Visibility        = "Visible"
-            $This.IO."_View$($This.Tab[$Slot])Tab".IsEnabled           = 0
-
-            If ( $Slot -ne 0 )
-            {
-                $This.IO."_Save$($This.Tab[$Slot])Tab".IsEnabled           = 0
-            }
+            $This.IO."_View$($This.Tab[$Slot])Panel".Visibility       = "Visible"
         }
 
         EditTab([UInt32]$Slot)
         {
             $This.Collapse()
-
-            $This.IO."_Edit$($This.Tab[$Slot])Panel".Visibility        = "Visible"
-            $This.IO."_View$($This.Tab[$Slot])Tab".IsEnabled           = 0
-            $This.IO."_Save$($This.Tab[$Slot])Tab".IsEnabled           = 1
+            $This.IO."_Edit$($This.Tab[$Slot])Panel".Visibility       = "Visible"
         }
 
         NewTab([UInt32]$Slot)
         {
             $This.Collapse()
             $This.Clear()
+
             $This.IO."_New$($This.Tab[$Slot])Panel".Visibility         = "Visible"
             $This.IO."_Get$($This.Tab[$Slot])SearchResult".ItemsSource = $Null
             $This.IO."_Save$($This.Tab[$Slot])Tab".IsEnabled           = 1
-        }
-
-        Defaults()
-        {
-            $This.IO._GetUIDSearchProperty.ItemsSource                  = $This.Temp.UID
-            $This.IO._GetClientSearchProperty.ItemsSource               = $This.Temp.Client
-            $This.IO._ViewClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
-            $This.IO._ViewClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
-            $This.IO._EditClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
-            $This.IO._EditClientInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
-            $This.IO._NewClientDeviceSearchProperty.ItemsSource         = $This.Temp.Device
-            $This.IO._NewClientInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
-            $This.IO._GetServiceSearchProperty.ItemsSource              = $This.Temp.Service
-            $This.IO._GetDeviceSearchProperty.ItemsSource               = $This.Temp.Device
-            $This.IO._ViewDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
-            $This.IO._ViewDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
-            $This.IO._ViewDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
-            $This.IO._ViewDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
-            $This.IO._EditDeviceClientSearchProperty.ItemsSource        = $This.Temp.Client
-            $This.IO._EditDeviceIssueSearchProperty.ItemsSource         = $This.Temp.Issue
-            $This.IO._EditDevicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
-            $This.IO._EditDeviceInvoiceSearchProperty.ItemsSource       = $This.Temp.Invoice
-            $This.IO._NewDeviceClientSearchProperty.ItemsSource         = $This.Temp.Client
-            $This.IO._NewDeviceIssueSearchProperty.ItemsSource          = $This.Temp.Issue
-            $This.IO._NewDevicePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
-            $This.IO._NewDeviceInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
-            $This.IO._GetIssueSearchProperty.ItemsSource                = $This.Temp.Issue
-            $This.IO._ViewIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
-            $This.IO._ViewIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
-            $This.IO._ViewIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
-            $This.IO._ViewIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
-            $This.IO._EditIssueClientSearchProperty.ItemsSource         = $This.Temp.Client
-            $This.IO._EditIssueDeviceSearchProperty.ItemsSource         = $This.Temp.Device
-            $This.IO._EditIssuePurchaseSearchProperty.ItemsSource       = $This.Temp.Purchase
-            $This.IO._EditIssueInvoiceSearchProperty.ItemsSource        = $This.Temp.Invoice
-            $This.IO._NewIssueClientSearchProperty.ItemsSource          = $This.Temp.Client
-            $This.IO._NewIssueDeviceSearchProperty.ItemsSource          = $This.Temp.Device
-            $This.IO._NewIssuePurchaseSearchProperty.ItemsSource        = $This.Temp.Purchase
-            $This.IO._NewIssueInvoiceSearchProperty.ItemsSource         = $This.Temp.Invoice
-            $This.IO._GetInventorySearchProperty.ItemsSource            = $This.Temp.Inventory
-            $This.IO._ViewInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
-            $This.IO._EditInventoryDeviceSearchProperty.ItemsSource     = $This.Temp.Device
-            $This.IO._NewInventoryDeviceSearchProperty.ItemsSource      = $This.Temp.Device
-            $This.IO._GetPurchaseSearchProperty.ItemsSource             = $This.Temp.Purchase
-            $This.IO._ViewPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
-            $This.IO._EditPurchaseDeviceSearchProperty.ItemsSource      = $This.Temp.Device
-            $This.IO._NewPurchaseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
-            $This.IO._GetExpenseSearchProperty.ItemsSource              = $This.Temp.Expense
-            $This.IO._ViewExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
-            $This.IO._EditExpenseDeviceSearchProperty.ItemsSource       = $This.Temp.Device
-            $This.IO._NewExpenseDeviceSearchProperty.ItemsSource        = $This.Temp.Device
-            $This.IO._GetAccountSearchProperty.ItemsSource              = $This.Temp.Account
-            $This.IO._ViewAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
-            $This.IO._EditAccountObjectSearchProperty.ItemsSource       = $This.Temp.Object
-            $This.IO._NewAccountObjectSearchProperty.ItemsSource        = $This.Temp.Object
-            $This.IO._GetInvoiceSearchProperty.ItemsSource              = $This.Temp.Invoice
-            $This.IO._ViewInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
-            $This.IO._ViewInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
-            $This.IO._ViewInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
-            $This.IO._ViewInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
-            $This.IO._EditInvoiceClientSearchProperty.ItemsSource       = $This.Temp.Client
-            $This.IO._EditInvoiceInventorySearchProperty.ItemsSource    = $This.Temp.Inventory
-            $This.IO._EditInvoiceServiceSearchProperty.ItemsSource      = $This.Temp.Service
-            $This.IO._EditInvoicePurchaseSearchProperty.ItemsSource     = $This.Temp.Purchase
-            $This.IO._NewInvoiceClientSearchProperty.ItemsSource        = $This.Temp.Client
-            $This.IO._NewInvoiceInventorySearchProperty.ItemsSource     = $This.Temp.Inventory
-            $This.IO._NewInvoiceServiceSearchProperty.ItemsSource       = $This.Temp.Service
-            $This.IO._NewInvoicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
-
-            $This.IO._GetUIDSearchProperty.SelectedIndex                = 0
-            $This.IO._GetClientSearchProperty.SelectedIndex             = 0
-            $This.IO._ViewClientDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._ViewClientInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditClientDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._EditClientInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewClientDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._NewClientInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetServiceSearchProperty.SelectedIndex            = 0
-            $This.IO._GetDeviceSearchProperty.SelectedIndex             = 0
-            $This.IO._ViewDeviceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._ViewDeviceIssueSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewDevicePurchaseSearchProperty.SelectedIndex    = 0
-            $This.IO._ViewDeviceInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditDeviceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._EditDeviceIssueSearchProperty.SelectedIndex       = 0
-            $This.IO._EditDevicePurchaseSearchProperty.SelectedIndex    = 0
-            $This.IO._EditDeviceInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewDeviceClientSearchProperty.SelectedIndex       = 0
-            $This.IO._NewDeviceIssueSearchProperty.SelectedIndex        = 0
-            $This.IO._NewDevicePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._NewDeviceInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetIssueSearchProperty.SelectedIndex              = 0
-            $This.IO._ViewIssueClientSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewIssueDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewIssuePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._ViewIssueInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._EditIssueClientSearchProperty.SelectedIndex       = 0
-            $This.IO._EditIssueDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._EditIssuePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._EditIssueInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._NewIssueClientSearchProperty.SelectedIndex        = 0
-            $This.IO._NewIssueDeviceSearchProperty.SelectedIndex        = 0
-            $This.IO._NewIssuePurchaseSearchProperty.SelectedIndex      = 0
-            $This.IO._NewIssueInvoiceSearchProperty.SelectedIndex       = 0
-            $This.IO._GetInventorySearchProperty.SelectedIndex          = 0
-            $This.IO._ViewInventoryDeviceSearchProperty.SelectedIndex   = 0
-            $This.IO._EditInventoryDeviceSearchProperty.SelectedIndex   = 0
-            $This.IO._NewInventoryDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._GetPurchaseSearchProperty.SelectedIndex           = 0
-            $This.IO._ViewPurchaseDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._EditPurchaseDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._NewPurchaseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._GetExpenseSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewExpenseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditExpenseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewExpenseDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetAccountSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewAccountObjectSearchProperty.SelectedIndex     = 0
-            $This.IO._EditAccountObjectSearchProperty.SelectedIndex     = 0
-            $This.IO._NewAccountObjectSearchProperty.SelectedIndex      = 0
-            $This.IO._GetInvoiceSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewInvoiceClientSearchProperty.SelectedIndex     = 0
-            $This.IO._ViewInvoiceInventorySearchProperty.SelectedIndex  = 0
-            $This.IO._ViewInvoiceServiceSearchProperty.SelectedIndex    = 0
-            $This.IO._ViewInvoicePurchaseSearchProperty.SelectedIndex   = 0
-            $This.IO._EditInvoiceClientSearchProperty.SelectedIndex     = 0
-            $This.IO._EditInvoiceInventorySearchProperty.SelectedIndex  = 0
-            $This.IO._EditInvoiceServiceSearchProperty.SelectedIndex    = 0
-            $This.IO._EditInvoicePurchaseSearchProperty.SelectedIndex   = 0
-            $This.IO._NewInvoiceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._NewInvoiceInventorySearchProperty.SelectedIndex   = 0
-            $This.IO._NewInvoiceServiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewInvoicePurchaseSearchProperty.SelectedIndex    = 0
-        }
-
-        [Object] NewUID([UInt32]$Slot)
-        {
-            Return @( $This.DB.NewUID($Slot) )
-        }
-
-        [Object] GetUID([String]$UID)
-        {
-            Return @( $This.DB.UID | ? UID -match $UID )
         }
 
         ViewUID([String]$UID)
@@ -1759,7 +1707,6 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewUIDTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetUIDPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -1841,12 +1788,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewClientTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditClientTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewClientTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveClientTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditClientTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewClientTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveClientTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetClientPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2362,12 +2307,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewServiceTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditServiceTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewServiceTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveServiceTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditServiceTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewServiceTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveServiceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetServicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2449,12 +2392,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewDeviceTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditDeviceTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewDeviceTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveDeviceTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditDeviceTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewDeviceTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveDeviceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetDevicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -2982,12 +2923,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewIssueTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditIssueTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewIssueTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveIssueTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditIssueTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewIssueTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveIssueTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -3126,7 +3065,7 @@ Function cim-db
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_ViewIssueServiceEntry" IsEnabled="False"/>
+                        <ComboBox Grid.Column="0" Name="_ViewIssueServiceSearchResult" IsEnabled="False"/>
                         <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewIssueAddService" IsEnabled="False"/>
                         <ComboBox Grid.Column="2" Name="_ViewIssueServiceList"/>
                         <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewIssueRemoveService" IsEnabled="False"/>
@@ -3274,7 +3213,7 @@ Function cim-db
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_EditIssueServiceEntry"/>
+                        <ComboBox Grid.Column="0" Name="_EditIssueServiceSearchResult"/>
                         <Button Grid.Column="1" Margin="5" Content="+" Name="_EditIssueAddService"/>
                         <ComboBox Grid.Column="2" Name="_EditIssueServiceList"/>
                         <Button Grid.Column="3" Margin="5" Content="-" Name="_EditIssueRemoveService"/>
@@ -3422,7 +3361,7 @@ Function cim-db
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueServiceEntry"/>
+                            <ComboBox Grid.Column="0" Name="_NewIssueServiceSearchResult"/>
                             <Button Grid.Column="1" Margin="5" Content="+" Name="_NewIssueAddService"/>
                             <ComboBox Grid.Column="2" Name="_NewIssueServiceList"/>
                             <Button Grid.Column="3" Margin="5" Content="-" Name="_NewIssueRemoveService"/>
@@ -3468,12 +3407,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewInventoryTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditInventoryTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewInventoryTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveInventoryTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditInventoryTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewInventoryTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveInventoryTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetInventoryPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -3724,12 +3661,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewPurchaseTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditPurchaseTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewPurchaseTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SavePurchaseTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditPurchaseTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewPurchaseTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SavePurchaseTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetPurchasePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -3990,12 +3925,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewExpenseTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditExpenseTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewExpenseTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveExpenseTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditExpenseTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewExpenseTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveExpenseTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetExpensePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -4177,12 +4110,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewAccountTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditAccountTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewAccountTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveAccountTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditAccountTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewAccountTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveAccountTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetAccountPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -4303,7 +4234,7 @@ Function cim-db
                 </GroupBox>
             </Grid>
         </Grid>
-        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Visible">
+        <Grid Grid.Column="1" Name="_InvoicePanel" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
@@ -4313,12 +4244,10 @@ Function cim-db
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View" Name="_ViewInvoiceTab"/>
-                <Button Grid.Column="1" Content="Edit" Name="_EditInvoiceTab"/>
-                <Button Grid.Column="2" Content="New" Name="_NewInvoiceTab"/>
-                <Button Grid.Column="3" Content="Save" Name="_SaveInvoiceTab"/>
+                <Button Grid.Column="0" Content="Edit" Name="_EditInvoiceTab"/>
+                <Button Grid.Column="1" Content="New" Name="_NewInvoiceTab"/>
+                <Button Grid.Column="2" Content="Save" Name="_SaveInvoiceTab"/>
             </Grid>
             <Grid Grid.Row="1" Name="_GetInvoicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -4342,136 +4271,129 @@ Function cim-db
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Visible">
+            <Grid Grid.Row="1" Name="_ViewInvoicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="105"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[Mode]">
-                        <ComboBox Name="_ViewInvoiceMode" IsEnabled="False"/>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Header="[Client]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False"/>
-                                <TextBox Grid.Column="1" Name="_ViewInvoiceClientSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewInvoiceClientSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddClient" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewInvoiceClientList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveClient" IsEnabled="False"/>
-                            </Grid>
+                <GroupBox Grid.Row="0" Header="[Mode]">
+                    <ComboBox Name="_ViewInvoiceMode" IsEnabled="False"/>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Header="[Client]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceClientSearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewInvoiceClientSearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Inventory]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False"/>
-                                <TextBox Grid.Column="1" Name="_ViewInvoiceInventorySearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewInvoiceInventorySearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddInventory" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewInvoiceInventoryList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveInventory" IsEnabled="False"/>
-                            </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceClientSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddClient" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewInvoiceClientList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveClient" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Service]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False"/>
-                                <TextBox Grid.Column="1" Name="_ViewInvoiceServiceSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewInvoiceServiceSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddService" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewInvoiceServiceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveService" IsEnabled="False"/>
-                            </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Header="[Inventory]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceInventorySearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewInvoiceInventorySearchFilter" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Purchase]">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False"/>
-                                <TextBox Grid.Column="1" Name="_ViewInvoicePurchaseSearchFilter" IsEnabled="False"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_ViewInvoicePurchaseSearchResult" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddPurchase" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="_ViewInvoicePurchaseList"/>
-                                <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemovePurchase" IsEnabled="False"/>
-                            </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceInventorySearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddInventory" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewInvoiceInventoryList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveInventory" IsEnabled="False"/>
                         </Grid>
-                    </GroupBox>
-                </Grid>
-                <Button Grid.Row="1" Name="_EditInvoiceRecord" Content="Save"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Service]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceServiceSearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewInvoiceServiceSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoiceServiceSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddService" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewInvoiceServiceList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemoveService" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Purchase]">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoicePurchaseSearchProperty" IsEnabled="False"/>
+                            <TextBox Grid.Column="1" Name="_ViewInvoicePurchaseSearchFilter" IsEnabled="False"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" Name="_ViewInvoicePurchaseSearchResult" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="+" Name="_ViewInvoiceAddPurchase" IsEnabled="False"/>
+                            <ComboBox Grid.Column="2" Name="_ViewInvoicePurchaseList"/>
+                            <Button Grid.Column="3" Content="-" Name="_ViewInvoiceRemovePurchase" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditInvoicePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -4500,7 +4422,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceClientSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_EditInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4528,7 +4450,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceInventorySearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_EditInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4556,7 +4478,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoiceServiceSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_EditInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4584,7 +4506,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_EditInvoicePurchaseSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_EditInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_EditInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4631,7 +4553,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceClientSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_NewInvoiceClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceClientSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4659,7 +4581,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceInventorySearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_NewInvoiceInventorySearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceInventorySearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4687,7 +4609,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoiceServiceSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_NewInvoiceServiceSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoiceServiceSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4715,7 +4637,7 @@ Function cim-db
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="_NewInvoicePurchaseSearchProperty"/>
+                                <ComboBox Grid.Column="0" Name="_NewInvoicePurchaseSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewInvoicePurchaseSearchFilter"/>
                             </Grid>
                             <Grid Grid.Row="1">
@@ -4740,50 +4662,46 @@ Function cim-db
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
-    $Cim.Defaults()
+    # --------- #
+    # UID Panel #
+    # --------- #
 
-    # ---------------- #
-    # Tab/Panel Access #
-    # ---------------- #
-
-    $Cim.IO.       _UIDTab.Add_Click{ $Cim.MainTab(0); $Cim.GetTab(0) }
-    $Cim.IO.    _ClientTab.Add_Click{ $Cim.MainTab(1); $Cim.GetTab(1) }
-    $Cim.IO.   _ServiceTab.Add_Click{ $Cim.MainTab(2); $Cim.GetTab(2) }
-    $Cim.IO.    _DeviceTab.Add_Click{ $Cim.MainTab(3); $Cim.GetTab(3) }
-    $Cim.IO.     _IssueTab.Add_Click{ $Cim.MainTab(4); $Cim.GetTab(4) }
-    $Cim.IO. _InventoryTab.Add_Click{ $Cim.MainTab(5); $Cim.GetTab(5) }
-    $Cim.IO.  _PurchaseTab.Add_Click{ $Cim.MainTab(6); $Cim.GetTab(6) }
-    $Cim.IO.   _ExpenseTab.Add_Click{ $Cim.MainTab(7); $Cim.GetTab(7) }
-    $Cim.IO.   _AccountTab.Add_Click{ $Cim.MainTab(8); $Cim.GetTab(8) }
-    $Cim.IO.   _InvoiceTab.Add_Click{ $Cim.MainTab(9); $Cim.GetTab(9) }
+    $Cim.IO.       _UIDTab.Add_Click{ $Cim.GetTab(0) }
+    $Cim.IO.    _ClientTab.Add_Click{ $Cim.GetTab(1) }
+    $Cim.IO.   _ServiceTab.Add_Click{ $Cim.GetTab(2) }
+    $Cim.IO.    _DeviceTab.Add_Click{ $Cim.GetTab(3) }
+    $Cim.IO.     _IssueTab.Add_Click{ $Cim.GetTab(4) }
+    $Cim.IO. _InventoryTab.Add_Click{ $Cim.GetTab(5) }
+    $Cim.IO.  _PurchaseTab.Add_Click{ $Cim.GetTab(6) }
+    $Cim.IO.   _ExpenseTab.Add_Click{ $Cim.GetTab(7) }
+    $Cim.IO.   _AccountTab.Add_Click{ $Cim.GetTab(8) }
+    $Cim.IO.   _InvoiceTab.Add_Click{ $Cim.GetTab(9) }
 
     # Defaults
-    $Cim.IO._ViewUIDTab.IsEnabled                     = 0
-    $Cim.IO._ViewClientTab.IsEnabled                  = 0
     $Cim.IO._EditClientTab.IsEnabled                  = 0
     $Cim.IO._SaveClientTab.IsEnabled                  = 0
-    $Cim.IO._ViewServiceTab.IsEnabled                 = 0
+
     $Cim.IO._EditServiceTab.IsEnabled                 = 0
     $Cim.IO._SaveServiceTab.IsEnabled                 = 0
-    $Cim.IO._ViewDeviceTab.IsEnabled                  = 0
+
     $Cim.IO._EditDeviceTab.IsEnabled                  = 0
     $Cim.IO._SaveDeviceTab.IsEnabled                  = 0
-    $Cim.IO._ViewIssueTab.IsEnabled                   = 0
+
     $Cim.IO._EditIssueTab.IsEnabled                   = 0
     $Cim.IO._SaveIssueTab.IsEnabled                   = 0
-    $Cim.IO._ViewInventoryTab.IsEnabled               = 0
+
     $Cim.IO._EditInventoryTab.IsEnabled               = 0
     $Cim.IO._SaveInventoryTab.IsEnabled               = 0
-    $Cim.IO._ViewPurchaseTab.IsEnabled                = 0
+
     $Cim.IO._EditPurchaseTab.IsEnabled                = 0
     $Cim.IO._SavePurchaseTab.IsEnabled                = 0
-    $Cim.IO._ViewExpenseTab.IsEnabled                 = 0
+
     $Cim.IO._EditExpenseTab.IsEnabled                 = 0
     $Cim.IO._SaveExpenseTab.IsEnabled                 = 0
-    $Cim.IO._ViewAccountTab.IsEnabled                 = 0
+
     $Cim.IO._EditAccountTab.IsEnabled                 = 0
     $Cim.IO._SaveAccountTab.IsEnabled                 = 0
-    $Cim.IO._ViewInvoiceTab.IsEnabled                 = 0
+
     $Cim.IO._EditInvoiceTab.IsEnabled                 = 0
     $Cim.IO._SaveInvoiceTab.IsEnabled                 = 0
 
@@ -4795,63 +4713,50 @@ Function cim-db
     {    
         $Cim.ViewTab(0)
         $Cim.ViewUID($Cim.IO._GetUIDSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewUIDTab.IsEnabled              = 0
-    })
-
-    $Cim.IO._GetUIDSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetUIDSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewUIDTab.IsEnabled          = 0
-        }
-
-        ElseIf ($Cim.IO._GetUIDSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewUIDTab.IsEnabled          = 1
-        }
     })
 
     $Cim.IO._GetUIDSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetUIDSearchResult.ItemsSource    = $Null
+        $Cim.IO._GetUIDSearchResult.ItemsSource       = $Null
 
         $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchProperty.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
 
-        $Cim.IO._GetUIDSearchResult.ItemsSource    = @($Null,$Item)[!!$Item]
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetUIDSearchResult )
+        }
 
         Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewUIDTab.Add_Click(
-    {
-        $Cim.ViewTab(0) 
-        $Cim.ViewUID($Cim.IO._GetUIDSearchResult.SelectedItem.UID)
-        $Cim.IO._ViewUIDTab.IsEnabled              = 0
     })
 
     # ------------ #
     # Client Panel #
     # ------------ #
-
+    
     $Cim.IO._GetClientSearchResult.Add_MouseDoubleClick(
     {    
         $Cim.ViewTab(1)
         $Cim.ViewClient($Cim.IO._GetClientSearchResult.SelectedItem.UID)
+        $Cim.IO._EditClientTab.IsEnabled = 1
+        $Cim.IO._NewClientTab.IsEnabled  = 1
+        $Cim.IO._SaveClientTab.IsEnabled = 0
     })
 
-    $Cim.IO._GetClientSearchResult.Add_SelectionChanged(
+    $Cim.IO._EditClientTab.Add_Click(
     {
-        If ($Cim.IO._GetClientSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewClientTab.IsEnabled = 0
-            $Cim.IO._EditClientTab.IsEnabled = 0
-        }
+        $Cim.EditTab(1)
+        $Cim.EditClient($Cim.IO._GetClientSearchResult.SelectedItem.UID)
+        $Cim.IO._EditClientTab.IsEnabled = 0
+        $Cim.IO._NewClientTab.IsEnabled  = 1
+        $Cim.IO._SaveClientTab.IsEnabled = 1
+    })
 
-        ElseIf ($Cim.IO._GetClientSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewClientTab.IsEnabled = 1
-            $Cim.IO._EditClientTab.IsEnabled = 1
-        }
+    $Cim.IO._NewClientTab.Add_Click(
+    { 
+        $Cim.NewTab(1)
+        $Cim.IO._EditClientTab.IsEnabled = 0
+        $Cim.IO._NewClientTab.IsEnabled  = 0
+        $Cim.IO._SaveClientTab.IsEnabled = 1
     })
 
     $Cim.IO._GetClientSearchFilter.Add_TextChanged(
@@ -4860,26 +4765,12 @@ Function cim-db
         
         $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
 
-        $Cim.IO._GetClientSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetClientSearchResult )
+        }
 
         Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewClientTab.Add_Click(
-    { 
-        $Cim.ViewTab(1)
-        $Cim.ViewClient($Cim.IO._GetClientSearchResult.SelectedItem.UID) 
-    })
-
-    $Cim.IO._EditClientTab.Add_Click(
-    {
-        $Cim.EditTab(1)
-        $Cim.EditClient($Cim.IO._GetClientSearchResult.SelectedItem.UID) 
-    })
-
-    $Cim.IO._NewClientTab.Add_Click(
-    { 
-        $Cim.NewTab(1)
     })
 
     # -------------------------
@@ -4985,10 +4876,7 @@ Function cim-db
 
                 [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
 
-                $Cim.Clear()
-
-                $Cim.IO._NewClientPhoneList.ItemsSource = $Null
-                $Cim.IO._NewClientEmailList.ItemsSource = $Null
+                $Cim.GetTab(1)
             }
         }
 
@@ -5091,11 +4979,7 @@ Function cim-db
 
                 [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
 
-                $Cim.Clear()
-                $Cim.IO._EditClientGender.SelectedIndex = 2
-
-                $Cim.IO._EditClientPhoneList.ItemsSource = $Null
-                $Cim.IO._EditClientEmailList.ItemsSource = $Null
+                $Cim.GetTab(1)
             }
         }
     })
@@ -5290,49 +5174,40 @@ Function cim-db
     {    
         $Cim.ViewTab(2)
         $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetServiceSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetServiceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewServiceTab.IsEnabled       = 0
-            $Cim.IO._EditServiceTab.IsEnabled       = 0
-        }
-
-        ElseIf ($Cim.IO._GetServiceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewServiceTab.IsEnabled       = 1
-            $Cim.IO._EditServiceTab.IsEnabled       = 1
-        }
-    })
-
-    $Cim.IO._GetServiceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
-
-        $Cim.IO._GetServiceSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewServiceTab.Add_Click(
-    { 
-        $Cim.ViewTab(2)
-        $Cim.ViewService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditServiceTab.IsEnabled = 1
+        $Cim.IO._NewServiceTab.IsEnabled  = 1
+        $Cim.IO._SaveServiceTab.IsEnabled = 0
     })
 
     $Cim.IO._EditServiceTab.Add_Click(
-    { 
+    {
         $Cim.EditTab(2)
         $Cim.EditService($Cim.IO._GetServiceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditServiceTab.IsEnabled = 0
+        $Cim.IO._NewServiceTab.IsEnabled  = 1
+        $Cim.IO._SaveServiceTab.IsEnabled = 1
     })
 
     $Cim.IO._NewServiceTab.Add_Click(
     { 
         $Cim.NewTab(2)
+        $Cim.IO._EditServiceTab.IsEnabled = 0
+        $Cim.IO._NewServiceTab.IsEnabled  = 0
+        $Cim.IO._SaveServiceTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetServiceSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetServiceSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # --------------------
@@ -5409,54 +5284,45 @@ Function cim-db
     # ------------ #
     # Device Panel #
     # ------------ #
-
+    
     $Cim.IO._GetDeviceSearchResult.Add_MouseDoubleClick(
     {    
         $Cim.ViewTab(3)
         $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetDeviceSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewDeviceTab.IsEnabled       = 0
-            $Cim.IO._EditDeviceTab.IsEnabled       = 0
-        }
-
-        If ($Cim.IO._GetDeviceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewDeviceTab.IsEnabled       = 1
-            $Cim.IO._EditDeviceTab.IsEnabled       = 1
-        }
-    })
-
-    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetDeviceSearchResult.ItemsSource     = $Null
-
-        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
-
-        $Cim.IO._GetDeviceSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewDeviceTab.Add_Click(
-    { 
-        $Cim.ViewTab(3)
-        $Cim.ViewDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditDeviceTab.IsEnabled = 1
+        $Cim.IO._NewDeviceTab.IsEnabled  = 1
+        $Cim.IO._SaveDeviceTab.IsEnabled = 0
     })
 
     $Cim.IO._EditDeviceTab.Add_Click(
-    { 
+    {
         $Cim.EditTab(3)
         $Cim.EditDevice($Cim.IO._GetDeviceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditDeviceTab.IsEnabled = 0
+        $Cim.IO._NewDeviceTab.IsEnabled  = 1
+        $Cim.IO._SaveDeviceTab.IsEnabled = 1
     })
 
     $Cim.IO._NewDeviceTab.Add_Click(
     { 
         $Cim.NewTab(3)
+        $Cim.IO._EditDeviceTab.IsEnabled = 0
+        $Cim.IO._NewDeviceTab.IsEnabled  = 0
+        $Cim.IO._SaveDeviceTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetDeviceSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # -------------------
@@ -5507,7 +5373,7 @@ Function cim-db
 
                 [System.Windows.MessageBox]::Show("Device [$($Item.Record.Title)] added to database","Success")
 
-                $Cim.MainTab(3)
+                $Cim.GetTab(3)
             }
         }
 
@@ -5555,7 +5421,7 @@ Function cim-db
 
                 [System.Windows.MessageBox]::Show("Device [$($Item.Record.Title)] added to database","Success")
 
-                $Cim.MainTab(3)
+                $Cim.GetTab(3)
             }
         }
     })
@@ -5563,107 +5429,121 @@ Function cim-db
     # ----------- #
     # Issue Panel #
     # ----------- #
-
+    
     $Cim.IO._GetIssueSearchResult.Add_MouseDoubleClick(
     {    
         $Cim.ViewTab(4)
         $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+        $Cim.IO._EditIssueTab.IsEnabled = 1
+        $Cim.IO._NewIssueTab.IsEnabled  = 1
+        $Cim.IO._SaveIssueTab.IsEnabled = 0
     })
 
-    $Cim.IO._GetIssueSearchResult.Add_SelectionChanged(
+    $Cim.IO._EditIssueTab.Add_Click(
     {
-        If ($Cim.IO._GetIssueSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewIssueTab.IsEnabled           = 0
-            $Cim.IO._EditIssueTab.IsEnabled           = 0
-        }
+        $Cim.EditTab(4)
+        $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+        $Cim.IO._EditIssueTab.IsEnabled = 0
+        $Cim.IO._NewIssueTab.IsEnabled  = 1
+        $Cim.IO._SaveIssueTab.IsEnabled = 1
+    })
 
-        ElseIf ($Cim.IO._GetIssueSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewIssueTab.IsEnabled           = 1
-            $Cim.IO._EditIssueTab.IsEnabled           = 1
-        }
+    $Cim.IO._NewIssueTab.Add_Click(
+    { 
+        $Cim.NewTab(4)
+        $Cim.IO._EditIssueTab.IsEnabled = 0
+        $Cim.IO._NewIssueTab.IsEnabled  = 0
+        $Cim.IO._SaveIssueTab.IsEnabled = 1
+
+        $Cim.Populate($Cim.DB.Service,$Cim.IO._NewIssueServiceList)
     })
 
     $Cim.IO._GetIssueSearchFilter.Add_TextChanged(
     {
-        $Cim.IO._GetIssueSearchResult.ItemsSource     = $Null
-
+        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+        
         $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
 
-        $Cim.IO._GetIssueSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetIssueSearchResult )
+        }
 
         Start-Sleep -Milliseconds 50
     })
 
-    $Cim.IO._ViewIssueTab.Add_Click(
+    # ------------------------------
+
+    $Cim.IO._NewIssueClientSearchFilter.Add_TextChanged(
     {
-        $Cim.ViewTab(4)
-        $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)    
-    })
-    
-    $Cim.IO._EditIssueTab.Add_Click(
-    {
-        $Cim.EditTab(4)
-        $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)  
+        $Cim.IO._NewIssueClientSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Issue | ? $Cim.IO._NewIssueClientSearchProperty.SelectedItem.Content -match $Cim.IO._NewIssueClientSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._NewIssueClientSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
-    $Cim.IO._NewIssueTab.Add_Click({ 
-    
-        $Cim.NewTab(4)
+    $Cim.IO._NewIssueDeviceSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._NewIssueDeviceSearchResult.ItemsSource = $Null
+
+        $Item = $Cim.DB.Issue | ? $Cim.IO._NewIssueDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._NewIssueDeviceSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._NewIssueDeviceSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # --------------- #
     # Inventory Panel #
     # --------------- #
-
+    
     $Cim.IO._GetInventorySearchResult.Add_MouseDoubleClick(
-    {
+    {    
         $Cim.ViewTab(5)
         $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetInventorySearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetInventorySearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewInventoryTab.IsEnabled = 0
-            $Cim.IO._EditInventoryTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetInventorySearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewInventoryTab.IsEnabled = 1
-            $Cim.IO._EditInventoryTab.IsEnabled = 1
-        }
-    })
-
-    $Cim.IO._GetInventorySearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
-
-        $Cim.IO._GetInventorySearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewInventoryTab.Add_Click(
-    { 
-        $Cim.ViewTab(5)
-        $Cim.ViewInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)    
+        $Cim.IO._EditInventoryTab.IsEnabled = 1
+        $Cim.IO._NewInventoryTab.IsEnabled  = 1
+        $Cim.IO._SaveInventoryTab.IsEnabled = 0
     })
 
     $Cim.IO._EditInventoryTab.Add_Click(
-    { 
+    {
         $Cim.EditTab(5)
         $Cim.EditInventory($Cim.IO._GetInventorySearchResult.SelectedItem.UID)
+        $Cim.IO._EditInventoryTab.IsEnabled = 0
+        $Cim.IO._NewInventoryTab.IsEnabled  = 1
+        $Cim.IO._SaveInventoryTab.IsEnabled = 1
     })
 
     $Cim.IO._NewInventoryTab.Add_Click(
     { 
         $Cim.NewTab(5)
+        $Cim.IO._EditInventoryTab.IsEnabled = 0
+        $Cim.IO._NewInventoryTab.IsEnabled  = 0
+        $Cim.IO._SaveInventoryTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetInventorySearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetInventorySearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
     
     # -------------- #
@@ -5674,103 +5554,84 @@ Function cim-db
     {    
         $Cim.ViewTab(6)
         $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetPurchaseSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewPurchaseTab.IsEnabled = 0
-            $Cim.IO._EditPurchaseTab.IsEnabled = 0
-        }
-
-        ElseIf ($Cim.IO._GetPurchaseSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewPurchaseTab.IsEnabled = 1
-            $Cim.IO._EditPurchaseTab.IsEnabled = 1
-        }
-    })
-
-    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
-
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewPurchaseTab.Add_Click(
-    { 
-        $Cim.ViewTab(6)
-        $Cim.ViewPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)    
+        $Cim.IO._EditPurchaseTab.IsEnabled = 1
+        $Cim.IO._NewPurchaseTab.IsEnabled  = 1
+        $Cim.IO._SavePurchaseTab.IsEnabled = 0
     })
 
     $Cim.IO._EditPurchaseTab.Add_Click(
     {
         $Cim.EditTab(6)
         $Cim.EditPurchase($Cim.IO._GetPurchaseSearchResult.SelectedItem.UID)
+        $Cim.IO._EditPurchaseTab.IsEnabled = 0
+        $Cim.IO._NewPurchaseTab.IsEnabled  = 1
+        $Cim.IO._SavePurchaseTab.IsEnabled = 1
     })
 
     $Cim.IO._NewPurchaseTab.Add_Click(
     { 
         $Cim.NewTab(6)
+        $Cim.IO._EditPurchaseTab.IsEnabled = 0
+        $Cim.IO._NewPurchaseTab.IsEnabled  = 0
+        $Cim.IO._SavePurchaseTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetPurchaseSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # ------------- #
     # Expense Panel #
     # ------------- #
-
     
     $Cim.IO._GetExpenseSearchResult.Add_MouseDoubleClick(
     {    
         $Cim.ViewTab(7)
         $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetExpenseSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetExpenseSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewExpenseTab.IsEnabled       = 0
-            $Cim.IO._EditExpenseTab.IsEnabled       = 0
-        }
-
-        ElseIf ($Cim.IO._GetExpenseSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewExpenseTab.IsEnabled       = 1
-            $Cim.IO._EditExpenseTab.IsEnabled       = 1
-        }
-    })
-
-    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
-
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewExpenseTab.Add_Click(
-    {  
-        $Cim.ViewTab(7)
-        $Cim.ViewExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
+        $Cim.IO._EditExpenseTab.IsEnabled = 1
+        $Cim.IO._NewExpenseTab.IsEnabled  = 1
+        $Cim.IO._SaveExpenseTab.IsEnabled = 0
     })
 
     $Cim.IO._EditExpenseTab.Add_Click(
     {
         $Cim.EditTab(7)
         $Cim.EditExpense($Cim.IO._GetExpenseSearchResult.SelectedItem.UID)
+        $Cim.IO._EditExpenseTab.IsEnabled = 0
+        $Cim.IO._NewExpenseTab.IsEnabled  = 1
+        $Cim.IO._SaveExpenseTab.IsEnabled = 1
     })
 
     $Cim.IO._NewExpenseTab.Add_Click(
     { 
         $Cim.NewTab(7)
+        $Cim.IO._EditExpenseTab.IsEnabled = 0
+        $Cim.IO._NewExpenseTab.IsEnabled  = 0
+        $Cim.IO._SaveExpenseTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetExpenseSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # ------------- #
@@ -5781,49 +5642,40 @@ Function cim-db
     {    
         $Cim.ViewTab(8)
         $Cim.ViewAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._GetAccountSearchResult.Add_SelectionChanged(
-    {
-        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewAccountTab.IsEnabled = 0
-            $Cim.IO._EditAccountTab.IsEnabled = 0
-        }
-
-        If ($Cim.IO._GetAccountSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewAccountTab.IsEnabled = 1
-            $Cim.IO._EditAccountTab.IsEnabled = 1
-        }
-    })    
-
-    $Cim.IO._GetAccountSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
-
-        $Cim.IO._GetAccountSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._ViewAccountTab.Add_Click(
-    { 
-        $Cim.ViewTab(8)
-        $Cim.ViewAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
+        $Cim.IO._EditAccountTab.IsEnabled = 1
+        $Cim.IO._NewAccountTab.IsEnabled  = 1
+        $Cim.IO._SaveAccountTab.IsEnabled = 0
     })
 
     $Cim.IO._EditAccountTab.Add_Click(
     {
         $Cim.EditTab(8)
         $Cim.EditAccount($Cim.IO._GetAccountSearchResult.SelectedItem.UID)
+        $Cim.IO._EditAccountTab.IsEnabled = 0
+        $Cim.IO._NewAccountTab.IsEnabled  = 1
+        $Cim.IO._SaveAccountTab.IsEnabled = 1
     })
 
     $Cim.IO._NewAccountTab.Add_Click(
-    {     
+    { 
         $Cim.NewTab(8)
+        $Cim.IO._EditAccountTab.IsEnabled = 0
+        $Cim.IO._NewAccountTab.IsEnabled  = 0
+        $Cim.IO._SaveAccountTab.IsEnabled = 1
+    })
+
+    $Cim.IO._GetAccountSearchFilter.Add_TextChanged(
+    {
+        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+        
+        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
+
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetAccountSearchResult )
+        }
+
+        Start-Sleep -Milliseconds 50
     })
 
     # ------------- #
@@ -5834,50 +5686,41 @@ Function cim-db
     {    
         $Cim.ViewTab(9)
         $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditInvoiceTab.IsEnabled = 1
+        $Cim.IO._NewInvoiceTab.IsEnabled  = 1
+        $Cim.IO._SaveInvoiceTab.IsEnabled = 0
     })
 
-    $Cim.IO._GetInvoiceSearchResult.Add_SelectionChanged(
+    $Cim.IO._EditInvoiceTab.Add_Click(
     {
-        If ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -eq -1)
-        {
-            $Cim.IO._ViewInvoiceTab.IsEnabled = 0
-            $Cim.IO._EditInvoiceTab.IsEnabled = 0
-        }
+        $Cim.EditTab(9)
+        $Cim.EditInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
+        $Cim.IO._EditInvoiceTab.IsEnabled = 0
+        $Cim.IO._NewInvoiceTab.IsEnabled  = 1
+        $Cim.IO._SaveInvoiceTab.IsEnabled = 1
+    })
 
-        ElseIf ($Cim.IO._GetInvoiceSearchResult.SelectedIndex -ne -1)
-        {
-            $Cim.IO._ViewInvoiceTab.IsEnabled = 1
-            $Cim.IO._EditInvoiceTab.IsEnabled = 1
-        }
+    $Cim.IO._NewInvoiceTab.Add_Click(
+    { 
+        $Cim.NewTab(9)
+        $Cim.IO._EditInvoiceTab.IsEnabled = 0
+        $Cim.IO._NewInvoiceTab.IsEnabled  = 0
+        $Cim.IO._SaveInvoiceTab.IsEnabled = 1
     })
 
     $Cim.IO._GetInvoiceSearchFilter.Add_TextChanged(
     {
         $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
-
+        
         $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
 
-        $Cim.IO._GetInvoiceSearchResult.ItemsSource = @($Null,$Item)[!!$Item]
+        If ( !!$Item )
+        {
+            $Cim.Populate( $Item , $Cim.IO._GetInvoiceSearchResult )
+        }
 
         Start-Sleep -Milliseconds 50
     })
-
-    $Cim.IO._ViewInvoiceTab.Add_Click(
-    {   
-        $Cim.ViewTab(9)
-        $Cim.ViewInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._EditInvoiceTab.Add_Click(
-    { 
-        $Cim.EditTab(9)
-        $Cim.EditInvoice($Cim.IO._GetInvoiceSearchResult.SelectedItem.UID)
-    })
-
-    $Cim.IO._NewInvoiceTab.Add_Click{ 
-    
-        $Cim.NewTab(9)
-    }
 
     # ------------- #
     # Return Object #

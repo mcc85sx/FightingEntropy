@@ -431,6 +431,7 @@ Function cim-db
                 5 { $This.Purchase   += $Item }
                 6 { $This.Expense    += $Item }
                 7 { $This.Account    += $Item }
+                8 { $This.Invoice    += $Item }
             }
 
             $This.UID           += $Item
@@ -579,7 +580,9 @@ Function cim-db
         [Object]      $IO
         [Object]    $Temp
         [Object]     $Tab = ("UID Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")
+        [Object]    $Date = (Get-Date -uformat %m/%d/%Y)
         [Object]      $DB
+        [Object]      $DG
 
         [Object] NewUID([UInt32]$Slot)
         {
@@ -591,15 +594,8 @@ Function cim-db
             Return @( $This.DB.UID | ? UID -match $UID )
         }
 
-        cimdb([String]$Xaml)
-        {
-            $This.Window                                    = [_Xaml]::New($Xaml)
-            $This.IO                                        = $This.Window.IO
-            $This.Temp                                      = [_Template]::New()
-            $This.DB                                        = [_DB]::New()
-
-            # Defaults
-
+        DefaultSearchProperty()
+        { 
             $This.IO._GetUIDSearchProperty.ItemsSource                  = $This.Temp.UID
             $This.IO._GetClientSearchProperty.ItemsSource               = $This.Temp.Client
             $This.IO._ViewClientDeviceSearchProperty.ItemsSource        = $This.Temp.Device
@@ -665,73 +661,233 @@ Function cim-db
             $This.IO._NewInvoiceServiceSearchProperty.ItemsSource       = $This.Temp.Service
             $This.IO._NewInvoicePurchaseSearchProperty.ItemsSource      = $This.Temp.Purchase
 
-            $This.IO._GetUIDSearchProperty.SelectedIndex                = 0
-            $This.IO._GetClientSearchProperty.SelectedIndex             = 0
-            $This.IO._ViewClientDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._ViewClientInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditClientDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._EditClientInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewClientDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._NewClientInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetServiceSearchProperty.SelectedIndex            = 0
-            $This.IO._GetDeviceSearchProperty.SelectedIndex             = 0
-            $This.IO._ViewDeviceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._ViewDeviceIssueSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewDevicePurchaseSearchProperty.SelectedIndex    = 0
-            $This.IO._ViewDeviceInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditDeviceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._EditDeviceIssueSearchProperty.SelectedIndex       = 0
-            $This.IO._EditDevicePurchaseSearchProperty.SelectedIndex    = 0
-            $This.IO._EditDeviceInvoiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewDeviceClientSearchProperty.SelectedIndex       = 0
-            $This.IO._NewDeviceIssueSearchProperty.SelectedIndex        = 0
-            $This.IO._NewDevicePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._NewDeviceInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetIssueSearchProperty.SelectedIndex              = 0
-            $This.IO._ViewIssueClientSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewIssueDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._ViewIssuePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._ViewIssueInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._EditIssueClientSearchProperty.SelectedIndex       = 0
-            $This.IO._EditIssueDeviceSearchProperty.SelectedIndex       = 0
-            $This.IO._EditIssuePurchaseSearchProperty.SelectedIndex     = 0
-            $This.IO._EditIssueInvoiceSearchProperty.SelectedIndex      = 0
-            $This.IO._NewIssueClientSearchProperty.SelectedIndex        = 0
-            $This.IO._NewIssueDeviceSearchProperty.SelectedIndex        = 0
-            $This.IO._NewIssuePurchaseSearchProperty.SelectedIndex      = 0
-            $This.IO._NewIssueInvoiceSearchProperty.SelectedIndex       = 0
-            $This.IO._GetInventorySearchProperty.SelectedIndex          = 0
-            $This.IO._ViewInventoryDeviceSearchProperty.SelectedIndex   = 0
-            $This.IO._EditInventoryDeviceSearchProperty.SelectedIndex   = 0
-            $This.IO._NewInventoryDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._GetPurchaseSearchProperty.SelectedIndex           = 0
-            $This.IO._ViewPurchaseDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._EditPurchaseDeviceSearchProperty.SelectedIndex    = 0
-            $This.IO._NewPurchaseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._GetExpenseSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewExpenseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._EditExpenseDeviceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewExpenseDeviceSearchProperty.SelectedIndex      = 0
-            $This.IO._GetAccountSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewAccountObjectSearchProperty.SelectedIndex     = 0
-            $This.IO._EditAccountObjectSearchProperty.SelectedIndex     = 0
-            $This.IO._NewAccountObjectSearchProperty.SelectedIndex      = 0
-            $This.IO._GetInvoiceSearchProperty.SelectedIndex            = 0
-            $This.IO._ViewInvoiceClientSearchProperty.SelectedIndex     = 0
-            $This.IO._ViewInvoiceInventorySearchProperty.SelectedIndex  = 0
-            $This.IO._ViewInvoiceServiceSearchProperty.SelectedIndex    = 0
-            $This.IO._ViewInvoicePurchaseSearchProperty.SelectedIndex   = 0
-            $This.IO._EditInvoiceClientSearchProperty.SelectedIndex     = 0
-            $This.IO._EditInvoiceInventorySearchProperty.SelectedIndex  = 0
-            $This.IO._EditInvoiceServiceSearchProperty.SelectedIndex    = 0
-            $This.IO._EditInvoicePurchaseSearchProperty.SelectedIndex   = 0
-            $This.IO._NewInvoiceClientSearchProperty.SelectedIndex      = 0
-            $This.IO._NewInvoiceInventorySearchProperty.SelectedIndex   = 0
-            $This.IO._NewInvoiceServiceSearchProperty.SelectedIndex     = 0
-            $This.IO._NewInvoicePurchaseSearchProperty.SelectedIndex    = 0
+            $This.IO._GetUIDSearchProperty.SelectedIndex                = 2
+            $This.IO._GetClientSearchProperty.SelectedIndex             = 2
+            $This.IO._ViewClientDeviceSearchProperty.SelectedIndex      = 2
+            $This.IO._ViewClientInvoiceSearchProperty.SelectedIndex     = 2
+            $This.IO._EditClientDeviceSearchProperty.SelectedIndex      = 2
+            $This.IO._EditClientInvoiceSearchProperty.SelectedIndex     = 2
+            $This.IO._NewClientDeviceSearchProperty.SelectedIndex       = 2
+            $This.IO._NewClientInvoiceSearchProperty.SelectedIndex      = 2
+            $This.IO._GetServiceSearchProperty.SelectedIndex            = 2
+            $This.IO._GetDeviceSearchProperty.SelectedIndex             = 2
+            $This.IO._ViewDeviceClientSearchProperty.SelectedIndex      = 2
+            $This.IO._ViewDeviceIssueSearchProperty.SelectedIndex       = 2
+            $This.IO._ViewDevicePurchaseSearchProperty.SelectedIndex    = 2
+            $This.IO._ViewDeviceInvoiceSearchProperty.SelectedIndex     = 2
+            $This.IO._EditDeviceClientSearchProperty.SelectedIndex      = 2
+            $This.IO._EditDeviceIssueSearchProperty.SelectedIndex       = 2
+            $This.IO._EditDevicePurchaseSearchProperty.SelectedIndex    = 2
+            $This.IO._EditDeviceInvoiceSearchProperty.SelectedIndex     = 2
+            $This.IO._NewDeviceClientSearchProperty.SelectedIndex       = 2
+            $This.IO._NewDeviceIssueSearchProperty.SelectedIndex        = 2
+            $This.IO._NewDevicePurchaseSearchProperty.SelectedIndex     = 2
+            $This.IO._NewDeviceInvoiceSearchProperty.SelectedIndex      = 2
+            $This.IO._GetIssueSearchProperty.SelectedIndex              = 2
+            $This.IO._ViewIssueClientSearchProperty.SelectedIndex       = 2
+            $This.IO._ViewIssueDeviceSearchProperty.SelectedIndex       = 2
+            $This.IO._ViewIssuePurchaseSearchProperty.SelectedIndex     = 2
+            $This.IO._ViewIssueInvoiceSearchProperty.SelectedIndex      = 2
+            $This.IO._EditIssueClientSearchProperty.SelectedIndex       = 2
+            $This.IO._EditIssueDeviceSearchProperty.SelectedIndex       = 2
+            $This.IO._EditIssuePurchaseSearchProperty.SelectedIndex     = 2
+            $This.IO._EditIssueInvoiceSearchProperty.SelectedIndex      = 2
+            $This.IO._NewIssueClientSearchProperty.SelectedIndex        = 2
+            $This.IO._NewIssueDeviceSearchProperty.SelectedIndex        = 2
+            $This.IO._NewIssuePurchaseSearchProperty.SelectedIndex      = 2
+            $This.IO._NewIssueInvoiceSearchProperty.SelectedIndex       = 2
+            $This.IO._GetInventorySearchProperty.SelectedIndex          = 2
+            $This.IO._ViewInventoryDeviceSearchProperty.SelectedIndex   = 2
+            $This.IO._EditInventoryDeviceSearchProperty.SelectedIndex   = 2
+            $This.IO._NewInventoryDeviceSearchProperty.SelectedIndex    = 2
+            $This.IO._GetPurchaseSearchProperty.SelectedIndex           = 2
+            $This.IO._ViewPurchaseDeviceSearchProperty.SelectedIndex    = 2
+            $This.IO._EditPurchaseDeviceSearchProperty.SelectedIndex    = 2
+            $This.IO._NewPurchaseDeviceSearchProperty.SelectedIndex     = 2
+            $This.IO._GetExpenseSearchProperty.SelectedIndex            = 2
+            $This.IO._ViewExpenseDeviceSearchProperty.SelectedIndex     = 2
+            $This.IO._EditExpenseDeviceSearchProperty.SelectedIndex     = 2
+            $This.IO._NewExpenseDeviceSearchProperty.SelectedIndex      = 2
+            $This.IO._GetAccountSearchProperty.SelectedIndex            = 2
+            $This.IO._ViewAccountObjectSearchProperty.SelectedIndex     = 2
+            $This.IO._EditAccountObjectSearchProperty.SelectedIndex     = 2
+            $This.IO._NewAccountObjectSearchProperty.SelectedIndex      = 2
+            $This.IO._GetInvoiceSearchProperty.SelectedIndex            = 2
+            $This.IO._ViewInvoiceClientSearchProperty.SelectedIndex     = 2
+            $This.IO._ViewInvoiceInventorySearchProperty.SelectedIndex  = 2
+            $This.IO._ViewInvoiceServiceSearchProperty.SelectedIndex    = 2
+            $This.IO._ViewInvoicePurchaseSearchProperty.SelectedIndex   = 2
+            $This.IO._EditInvoiceClientSearchProperty.SelectedIndex     = 2
+            $This.IO._EditInvoiceInventorySearchProperty.SelectedIndex  = 2
+            $This.IO._EditInvoiceServiceSearchProperty.SelectedIndex    = 2
+            $This.IO._EditInvoicePurchaseSearchProperty.SelectedIndex   = 2
+            $This.IO._NewInvoiceClientSearchProperty.SelectedIndex      = 2
+            $This.IO._NewInvoiceInventorySearchProperty.SelectedIndex   = 2
+            $This.IO._NewInvoiceServiceSearchProperty.SelectedIndex     = 2
+            $This.IO._NewInvoicePurchaseSearchProperty.SelectedIndex    = 2
         }
 
-        Collapse()
+        DefaultSearchResult()
+        {
+            $This.IO._GetUIDSearchResult.ItemsSource                    = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetClientSearchResult.ItemsSource                 = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewClientDeviceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewClientInvoiceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditClientDeviceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditClientInvoiceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewClientDeviceSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewClientInvoiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetServiceSearchResult.ItemsSource                = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetDeviceSearchResult.ItemsSource                 = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewDeviceClientSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewDeviceIssueSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewDevicePurchaseSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewDeviceInvoiceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditDeviceClientSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditDeviceIssueSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditDevicePurchaseSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditDeviceInvoiceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewDeviceClientSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewDeviceIssueSearchResult.ItemsSource            = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewDevicePurchaseSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewDeviceInvoiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetIssueSearchResult.ItemsSource                  = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewIssueClientSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewIssueDeviceSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewIssuePurchaseSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewIssueServiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewIssueInvoiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditIssueClientSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditIssueDeviceSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditIssuePurchaseSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditIssueServiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditIssueInvoiceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewIssueClientSearchResult.ItemsSource            = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewIssueDeviceSearchResult.ItemsSource            = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewIssuePurchaseSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewIssueServiceSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewIssueInvoiceSearchResult.ItemsSource           = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetInventorySearchResult.ItemsSource              = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewInventoryDeviceSearchResult.ItemsSource       = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditInventoryDeviceSearchResult.ItemsSource       = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewInventoryDeviceSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetPurchaseSearchResult.ItemsSource               = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewPurchaseDeviceSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditPurchaseDeviceSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewPurchaseDeviceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetExpenseSearchResult.ItemsSource                = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewExpenseDeviceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditExpenseDeviceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewExpenseDeviceSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetAccountSearchResult.ItemsSource                = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewAccountObjectSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditAccountObjectSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewAccountObjectSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._GetInvoiceSearchResult.ItemsSource                = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewInvoiceClientSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewInvoiceInventorySearchResult.ItemsSource      = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewInvoiceServiceSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._ViewInvoicePurchaseSearchResult.ItemsSource       = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditInvoiceClientSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditInvoiceInventorySearchResult.ItemsSource      = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditInvoiceServiceSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._EditInvoicePurchaseSearchResult.ItemsSource       = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewInvoiceClientSearchResult.ItemsSource          = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewInvoiceInventorySearchResult.ItemsSource       = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewInvoiceServiceSearchResult.ItemsSource         = New-Object System.Collections.ObjectModel.Collection[Object]
+            $This.IO._NewInvoicePurchaseSearchResult.ItemsSource        = New-Object System.Collections.ObjectModel.Collection[Object]
+        }
+
+        DefaultSearchFilter()
+        {
+            $This.IO._GetUIDSearchFilter.Text                           = $This.Date
+            $This.IO._GetClientSearchFilter.Text                        = $This.Date
+            $This.IO._ViewClientDeviceSearchFilter.Text                 = $This.Date
+            $This.IO._ViewClientInvoiceSearchFilter.Text                = $This.Date
+            $This.IO._EditClientDeviceSearchFilter.Text                 = $This.Date
+            $This.IO._EditClientInvoiceSearchFilter.Text                = $This.Date
+            $This.IO._NewClientDeviceSearchFilter.Text                  = $This.Date
+            $This.IO._NewClientInvoiceSearchFilter.Text                 = $This.Date
+            $This.IO._GetServiceSearchFilter.Text                       = $This.Date
+            $This.IO._GetDeviceSearchFilter.Text                        = $This.Date
+            $This.IO._ViewDeviceClientSearchFilter.Text                 = $This.Date
+            $This.IO._ViewDeviceIssueSearchFilter.Text                  = $This.Date
+            $This.IO._ViewDevicePurchaseSearchFilter.Text               = $This.Date
+            $This.IO._ViewDeviceInvoiceSearchFilter.Text                = $This.Date
+            $This.IO._EditDeviceClientSearchFilter.Text                 = $This.Date
+            $This.IO._EditDeviceIssueSearchFilter.Text                  = $This.Date
+            $This.IO._EditDevicePurchaseSearchFilter.Text               = $This.Date
+            $This.IO._EditDeviceInvoiceSearchFilter.Text                = $This.Date
+            $This.IO._NewDeviceClientSearchFilter.Text                  = $This.Date
+            $This.IO._NewDeviceIssueSearchFilter.Text                   = $This.Date
+            $This.IO._NewDevicePurchaseSearchFilter.Text                = $This.Date
+            $This.IO._NewDeviceInvoiceSearchFilter.Text                 = $This.Date
+            $This.IO._GetIssueSearchFilter.Text                         = $This.Date
+            $This.IO._ViewIssueClientSearchFilter.Text                  = $This.Date
+            $This.IO._ViewIssueDeviceSearchFilter.Text                  = $This.Date
+            $This.IO._ViewIssuePurchaseSearchFilter.Text                = $This.Date
+            $This.IO._ViewIssueInvoiceSearchFilter.Text                 = $This.Date
+            $This.IO._EditIssueClientSearchFilter.Text                  = $This.Date
+            $This.IO._EditIssueDeviceSearchFilter.Text                  = $This.Date
+            $This.IO._EditIssuePurchaseSearchFilter.Text                = $This.Date
+            $This.IO._EditIssueInvoiceSearchFilter.Text                 = $This.Date
+            $This.IO._NewIssueClientSearchFilter.Text                   = $This.Date
+            $This.IO._NewIssueDeviceSearchFilter.Text                   = $This.Date
+            $This.IO._NewIssuePurchaseSearchFilter.Text                 = $This.Date
+            $This.IO._NewIssueInvoiceSearchFilter.Text                  = $This.Date
+            $This.IO._GetInventorySearchFilter.Text                     = $This.Date
+            $This.IO._ViewInventoryDeviceSearchFilter.Text              = $This.Date
+            $This.IO._EditInventoryDeviceSearchFilter.Text              = $This.Date
+            $This.IO._NewInventoryDeviceSearchFilter.Text               = $This.Date
+            $This.IO._GetPurchaseSearchFilter.Text                      = $This.Date
+            $This.IO._ViewPurchaseDeviceSearchFilter.Text               = $This.Date
+            $This.IO._EditPurchaseDeviceSearchFilter.Text               = $This.Date
+            $This.IO._NewPurchaseDeviceSearchFilter.Text                = $This.Date
+            $This.IO._GetExpenseSearchFilter.Text                       = $This.Date
+            $This.IO._ViewExpenseDeviceSearchFilter.Text                = $This.Date
+            $This.IO._EditExpenseDeviceSearchFilter.Text                = $This.Date
+            $This.IO._NewExpenseDeviceSearchFilter.Text                 = $This.Date
+            $This.IO._GetAccountSearchFilter.Text                       = $This.Date
+            $This.IO._ViewAccountObjectSearchFilter.Text                = $This.Date
+            $This.IO._EditAccountObjectSearchFilter.Text                = $This.Date
+            $This.IO._NewAccountObjectSearchFilter.Text                 = $This.Date
+            $This.IO._GetInvoiceSearchFilter.Text                       = $This.Date
+            $This.IO._ViewInvoiceClientSearchFilter.Text                = $This.Date
+            $This.IO._ViewInvoiceInventorySearchFilter.Text             = $This.Date
+            $This.IO._ViewInvoiceServiceSearchFilter.Text               = $This.Date
+            $This.IO._ViewInvoicePurchaseSearchFilter.Text              = $This.Date
+            $This.IO._EditInvoiceClientSearchFilter.Text                = $This.Date
+            $This.IO._EditInvoiceInventorySearchFilter.Text             = $This.Date
+            $This.IO._EditInvoiceServiceSearchFilter.Text               = $This.Date
+            $This.IO._EditInvoicePurchaseSearchFilter.Text              = $This.Date
+            $This.IO._NewInvoiceClientSearchFilter.Text                 = $This.Date
+            $This.IO._NewInvoiceInventorySearchFilter.Text              = $This.Date
+            $This.IO._NewInvoiceServiceSearchFilter.Text                = $This.Date
+            $This.IO._NewInvoicePurchaseSearchFilter.Text               = $This.Date
+        }
+
+        cimdb([String]$Xaml)
+        {
+            $This.Window                                    = [_Xaml]::New($Xaml)
+            $This.IO                                        = $This.Window.IO
+            $This.Temp                                      = [_Template]::New()
+            $This.DB                                        = [_DB]::New()
+
+            $This.DefaultSearchProperty()
+            $This.DefaultSearchResult()
+            $This.DefaultSearchFilter()
+        }
+
+        SetDefaults()
+        {
+            $This.CollapsePanel()
+            $This.ClearTextBox()
+            $This.SetSearchFilter()
+            $This.ClearComboBoxItemsSource()
+            $This.Refresh()
+        }
+
+        CollapsePanel()
         {
             $This.IO._GetUIDPanel.Visibility                = "Collapsed"
             $This.IO._ViewUIDPanel.Visibility               = "Collapsed"
@@ -773,190 +929,197 @@ Function cim-db
             $This.IO._NewInvoicePanel.Visibility            = "Collapsed"
         }
 
-        Clear()
+        ClearTextBox()
         {
-            $This.IO._EditAccountObjectSearchFilter.Text     = $Null
-            $This.IO._EditClientAddress.Text                 = $Null
-            $This.IO._EditClientCity.Text                    = $Null
-            $This.IO._EditClientCountry.Text                 = $Null
-            $This.IO._EditClientDay.Text                     = $Null
-            $This.IO._EditClientDeviceSearchFilter.Text      = $Null
-            $This.IO._EditClientEmailText.Text               = $Null
-            $This.IO._EditClientFirst.Text                   = $Null
-            $This.IO._EditClientInvoiceSearchFilter.Text     = $Null
-            $This.IO._EditClientLast.Text                    = $Null
-            $This.IO._EditClientMI.Text                      = $Null
-            $This.IO._EditClientMonth.Text                   = $Null
-            $This.IO._EditClientPhoneText.Text               = $Null
-            $This.IO._EditClientPostal.Text                  = $Null
-            $This.IO._EditClientRegion.Text                  = $Null
-            $This.IO._EditClientYear.Text                    = $Null
-            $This.IO._EditDeviceClientSearchFilter.Text      = $Null
-            $This.IO._EditDeviceInvoiceSearchFilter.Text     = $Null
-            $This.IO._EditDeviceIssueSearchFilter.Text       = $Null
-            $This.IO._EditDeviceModel.Text                   = $Null
-            $This.IO._EditDevicePurchaseSearchFilter.Text    = $Null
-            $This.IO._EditDeviceSerial.Text                  = $Null
-            $This.IO._EditDeviceSpecification.Text           = $Null
-            $This.IO._EditDeviceTitle.Text                   = $Null
-            $This.IO._EditDeviceVendor.Text                  = $Null
-            $This.IO._EditExpenseCost.Text                   = $Null
-            $This.IO._EditExpenseDeviceSearchFilter.Text     = $Null
-            $This.IO._EditExpenseDisplayName.Text            = $Null
-            $This.IO._EditExpenseRecipient.Text              = $Null
-            $This.IO._EditInventoryCost.Text                 = $Null
-            $This.IO._EditInventoryDeviceSearchFilter.Text   = $Null
-            $This.IO._EditInventoryModel.Text                = $Null
-            $This.IO._EditInventorySerial.Text               = $Null
-            $This.IO._EditInventoryTitle.Text                = $Null
-            $This.IO._EditInventoryVendor.Text               = $Null
-            $This.IO._EditInvoiceClientSearchFilter.Text     = $Null
-            $This.IO._EditInvoiceInventorySearchFilter.Text  = $Null
-            $This.IO._EditInvoicePurchaseSearchFilter.Text   = $Null
-            $This.IO._EditInvoiceServiceSearchFilter.Text    = $Null
-            $This.IO._EditIssueClientSearchFilter.Text       = $Null
-            $This.IO._EditIssueDescription.Text              = $Null
-            $This.IO._EditIssueDeviceSearchFilter.Text       = $Null
-            $This.IO._EditIssueInvoiceSearchFilter.Text      = $Null
-            $This.IO._EditIssuePurchaseSearchFilter.Text     = $Null
-            $This.IO._EditPurchaseCost.Text                  = $Null
-            $This.IO._EditPurchaseDeviceSearchFilter.Text    = $Null
-            $This.IO._EditPurchaseDisplayName.Text           = $Null
-            $This.IO._EditPurchaseDistributor.Text           = $Null
-            $This.IO._EditPurchaseModel.Text                 = $Null
-            $This.IO._EditPurchaseSerial.Text                = $Null
-            $This.IO._EditPurchaseSpecification.Text         = $Null
-            $This.IO._EditPurchaseVendor.Text                = $Null
-            $This.IO._EditServiceCost.Text                   = $Null
-            $This.IO._EditServiceDescription.Text            = $Null
-            $This.IO._EditServiceName.Text                   = $Null
-            $This.IO._GetAccountSearchFilter.Text            = $Null
-            $This.IO._GetClientSearchFilter.Text             = $Null
-            $This.IO._GetDeviceSearchFilter.Text             = $Null
-            $This.IO._GetExpenseSearchFilter.Text            = $Null
-            $This.IO._GetInventorySearchFilter.Text          = $Null
-            $This.IO._GetInvoiceSearchFilter.Text            = $Null
-            $This.IO._GetIssueSearchFilter.Text              = $Null
-            $This.IO._GetPurchaseSearchFilter.Text           = $Null
-            $This.IO._GetServiceSearchFilter.Text            = $Null
-            $This.IO._GetUIDSearchFilter.Text                = $Null
-            $This.IO._NewAccountObjectSearchFilter.Text      = $Null
-            $This.IO._NewClientAddress.Text                  = $Null
-            $This.IO._NewClientCity.Text                     = $Null
-            $This.IO._NewClientCountry.Text                  = $Null
-            $This.IO._NewClientDay.Text                      = $Null
-            $This.IO._NewClientDeviceSearchFilter.Text       = $Null
-            $This.IO._NewClientEmailText.Text                = $Null
-            $This.IO._NewClientFirst.Text                    = $Null
-            $This.IO._NewClientInvoiceSearchFilter.Text      = $Null
-            $This.IO._NewClientLast.Text                     = $Null
-            $This.IO._NewClientMI.Text                       = $Null
-            $This.IO._NewClientMonth.Text                    = $Null
-            $This.IO._NewClientPhoneText.Text                = $Null
-            $This.IO._NewClientPostal.Text                   = $Null
-            $This.IO._NewClientRegion.Text                   = $Null
-            $This.IO._NewClientYear.Text                     = $Null
-            $This.IO._NewDeviceClientSearchFilter.Text       = $Null
-            $This.IO._NewDeviceInvoiceSearchFilter.Text      = $Null
-            $This.IO._NewDeviceIssueSearchFilter.Text        = $Null
-            $This.IO._NewDeviceModel.Text                    = $Null
-            $This.IO._NewDevicePurchaseSearchFilter.Text     = $Null
-            $This.IO._NewDeviceSerial.Text                   = $Null
-            $This.IO._NewDeviceSpecification.Text            = $Null
-            $This.IO._NewDeviceTitle.Text                    = $Null
-            $This.IO._NewDeviceVendor.Text                   = $Null
-            $This.IO._NewExpenseCost.Text                    = $Null
-            $This.IO._NewExpenseDeviceSearchFilter.Text      = $Null
-            $This.IO._NewExpenseDisplayName.Text             = $Null
-            $This.IO._NewExpenseRecipient.Text               = $Null
-            $This.IO._NewInventoryCost.Text                  = $Null
-            $This.IO._NewInventoryDeviceSearchFilter.Text    = $Null
-            $This.IO._NewInventoryModel.Text                 = $Null
-            $This.IO._NewInventorySerial.Text                = $Null
-            $This.IO._NewInventoryTitle.Text                 = $Null
-            $This.IO._NewInventoryVendor.Text                = $Null
-            $This.IO._NewInvoiceClientSearchFilter.Text      = $Null
-            $This.IO._NewInvoiceInventorySearchFilter.Text   = $Null
-            $This.IO._NewInvoicePurchaseSearchFilter.Text    = $Null
-            $This.IO._NewInvoiceServiceSearchFilter.Text     = $Null
-            $This.IO._NewIssueClientSearchFilter.Text        = $Null
-            $This.IO._NewIssueDescription.Text               = $Null
-            $This.IO._NewIssueDeviceSearchFilter.Text        = $Null
-            $This.IO._NewIssueInvoiceSearchFilter.Text       = $Null
-            $This.IO._NewIssuePurchaseSearchFilter.Text      = $Null
-            $This.IO._NewPurchaseCost.Text                   = $Null
-            $This.IO._NewPurchaseDeviceSearchFilter.Text     = $Null
-            $This.IO._NewPurchaseDisplayName.Text            = $Null
-            $This.IO._NewPurchaseDistributor.Text            = $Null
-            $This.IO._NewPurchaseModel.Text                  = $Null
-            $This.IO._NewPurchaseSerial.Text                 = $Null
-            $This.IO._NewPurchaseSpecification.Text          = $Null
-            $This.IO._NewPurchaseVendor.Text                 = $Null
-            $This.IO._NewServiceCost.Text                    = $Null
-            $This.IO._NewServiceDescription.Text             = $Null
-            $This.IO._NewServiceName.Text                    = $Null
-            $This.IO._ViewAccountObjectSearchFilter.Text     = $Null
-            $This.IO._ViewClientAddress.Text                 = $Null
-            $This.IO._ViewClientCity.Text                    = $Null
-            $This.IO._ViewClientCountry.Text                 = $Null
-            $This.IO._ViewClientDay.Text                     = $Null
-            $This.IO._ViewClientDeviceSearchFilter.Text      = $Null
-            $This.IO._ViewClientEmailText.Text               = $Null
-            $This.IO._ViewClientFirst.Text                   = $Null
-            $This.IO._ViewClientInvoiceSearchFilter.Text     = $Null
-            $This.IO._ViewClientLast.Text                    = $Null
-            $This.IO._ViewClientMI.Text                      = $Null
-            $This.IO._ViewClientMonth.Text                   = $Null
-            $This.IO._ViewClientPhoneText.Text               = $Null
-            $This.IO._ViewClientPostal.Text                  = $Null
-            $This.IO._ViewClientRegion.Text                  = $Null
-            $This.IO._ViewClientYear.Text                    = $Null
-            $This.IO._ViewDeviceClientSearchFilter.Text      = $Null
-            $This.IO._ViewDeviceInvoiceSearchFilter.Text     = $Null
-            $This.IO._ViewDeviceIssueSearchFilter.Text       = $Null
-            $This.IO._ViewDeviceModel.Text                   = $Null
-            $This.IO._ViewDevicePurchaseSearchFilter.Text    = $Null
-            $This.IO._ViewDeviceSerial.Text                  = $Null
-            $This.IO._ViewDeviceSpecification.Text           = $Null
-            $This.IO._ViewDeviceTitle.Text                   = $Null
-            $This.IO._ViewDeviceVendor.Text                  = $Null
-            $This.IO._ViewExpenseCost.Text                   = $Null
-            $This.IO._ViewExpenseDeviceSearchFilter.Text     = $Null
-            $This.IO._ViewExpenseDisplayName.Text            = $Null
-            $This.IO._ViewExpenseRecipient.Text              = $Null
-            $This.IO._ViewInventoryCost.Text                 = $Null
-            $This.IO._ViewInventoryDeviceSearchFilter.Text   = $Null
-            $This.IO._ViewInventoryModel.Text                = $Null
-            $This.IO._ViewInventorySerial.Text               = $Null
-            $This.IO._ViewInventoryTitle.Text                = $Null
-            $This.IO._ViewInventoryVendor.Text               = $Null
-            $This.IO._ViewInvoiceClientSearchFilter.Text     = $Null
-            $This.IO._ViewInvoiceInventorySearchFilter.Text  = $Null
-            $This.IO._ViewInvoicePurchaseSearchFilter.Text   = $Null
-            $This.IO._ViewInvoiceServiceSearchFilter.Text    = $Null
-            $This.IO._ViewIssueClientSearchFilter.Text       = $Null
-            $This.IO._ViewIssueDescription.Text              = $Null
-            $This.IO._ViewIssueDeviceSearchFilter.Text       = $Null
-            $This.IO._ViewIssueInvoiceSearchFilter.Text      = $Null
-            $This.IO._ViewIssuePurchaseSearchFilter.Text     = $Null
-            $This.IO._ViewPurchaseCost.Text                  = $Null
-            $This.IO._ViewPurchaseDeviceSearchFilter.Text    = $Null
-            $This.IO._ViewPurchaseDisplayName.Text           = $Null
-            $This.IO._ViewPurchaseDistributor.Text           = $Null
-            $This.IO._ViewPurchaseModel.Text                 = $Null
-            $This.IO._ViewPurchaseSerial.Text                = $Null
-            $This.IO._ViewPurchaseSpecification.Text         = $Null
-            $This.IO._ViewPurchaseVendor.Text                = $Null
-            $This.IO._ViewServiceCost.Text                   = $Null
-            $This.IO._ViewServiceDescription.Text            = $Null
-            $This.IO._ViewServiceName.Text                   = $Null
-            $This.IO._ViewUIDDate.Text                       = $Null
-            $This.IO._ViewUIDIndex.Text                      = $Null
-            $This.IO._ViewUIDSlot.Text                       = $Null
-            $This.IO._ViewUIDTime.Text                       = $Null
-            $This.IO._ViewUIDType.Text                       = $Null
-            $This.IO._ViewUIDUID.Text                        = $Null
-            
+            $This.IO._EditClientAddress.Text                           = $Null
+            $This.IO._EditClientCity.Text                              = $Null
+            $This.IO._EditClientCountry.Text                           = $Null
+            $This.IO._EditClientDay.Text                               = $Null
+            $This.IO._EditClientEmailText.Text                         = $Null
+            $This.IO._EditClientFirst.Text                             = $Null
+            $This.IO._EditClientLast.Text                              = $Null
+            $This.IO._EditClientMI.Text                                = $Null
+            $This.IO._EditClientMonth.Text                             = $Null
+            $This.IO._EditClientPhoneText.Text                         = $Null
+            $This.IO._EditClientPostal.Text                            = $Null
+            $This.IO._EditClientRegion.Text                            = $Null
+            $This.IO._EditClientYear.Text                              = $Null
+            $This.IO._EditDeviceModel.Text                             = $Null
+            $This.IO._EditDeviceSerial.Text                            = $Null
+            $This.IO._EditDeviceSpecification.Text                     = $Null
+            $This.IO._EditDeviceTitle.Text                             = $Null
+            $This.IO._EditDeviceVendor.Text                            = $Null
+            $This.IO._EditExpenseCost.Text                             = $Null
+            $This.IO._EditExpenseDisplayName.Text                      = $Null
+            $This.IO._EditExpenseRecipient.Text                        = $Null
+            $This.IO._EditInventoryCost.Text                           = $Null
+            $This.IO._EditInventoryModel.Text                          = $Null
+            $This.IO._EditInventorySerial.Text                         = $Null
+            $This.IO._EditInventoryTitle.Text                          = $Null
+            $This.IO._EditInventoryVendor.Text                         = $Null
+            $This.IO._EditIssueDescription.Text                        = $Null
+            $This.IO._EditPurchaseCost.Text                            = $Null
+            $This.IO._EditPurchaseDisplayName.Text                     = $Null
+            $This.IO._EditPurchaseDistributor.Text                     = $Null
+            $This.IO._EditPurchaseModel.Text                           = $Null
+            $This.IO._EditPurchaseSerial.Text                          = $Null
+            $This.IO._EditPurchaseSpecification.Text                   = $Null
+            $This.IO._EditPurchaseVendor.Text                          = $Null
+            $This.IO._EditServiceCost.Text                             = $Null
+            $This.IO._EditServiceDescription.Text                      = $Null
+            $This.IO._EditServiceName.Text                             = $Null
+            $This.IO._NewClientAddress.Text                            = $Null
+            $This.IO._NewClientCity.Text                               = $Null
+            $This.IO._NewClientCountry.Text                            = $Null
+            $This.IO._NewClientDay.Text                                = $Null
+            $This.IO._NewClientEmailText.Text                          = $Null
+            $This.IO._NewClientFirst.Text                              = $Null
+            $This.IO._NewClientLast.Text                               = $Null
+            $This.IO._NewClientMI.Text                                 = $Null
+            $This.IO._NewClientMonth.Text                              = $Null
+            $This.IO._NewClientPhoneText.Text                          = $Null
+            $This.IO._NewClientPostal.Text                             = $Null
+            $This.IO._NewClientRegion.Text                             = $Null
+            $This.IO._NewClientYear.Text                               = $Null
+            $This.IO._NewDeviceModel.Text                              = $Null
+            $This.IO._NewDeviceSerial.Text                             = $Null
+            $This.IO._NewDeviceSpecification.Text                      = $Null
+            $This.IO._NewDeviceTitle.Text                              = $Null
+            $This.IO._NewDeviceVendor.Text                             = $Null
+            $This.IO._NewExpenseCost.Text                              = $Null
+            $This.IO._NewExpenseDisplayName.Text                       = $Null
+            $This.IO._NewExpenseRecipient.Text                         = $Null
+            $This.IO._NewInventoryCost.Text                            = $Null
+            $This.IO._NewInventoryModel.Text                           = $Null
+            $This.IO._NewInventorySerial.Text                          = $Null
+            $This.IO._NewInventoryTitle.Text                           = $Null
+            $This.IO._NewInventoryVendor.Text                          = $Null
+            $This.IO._NewIssueDescription.Text                         = $Null
+            $This.IO._NewPurchaseCost.Text                             = $Null
+            $This.IO._NewPurchaseDisplayName.Text                      = $Null
+            $This.IO._NewPurchaseDistributor.Text                      = $Null
+            $This.IO._NewPurchaseModel.Text                            = $Null
+            $This.IO._NewPurchaseSerial.Text                           = $Null
+            $This.IO._NewPurchaseSpecification.Text                    = $Null
+            $This.IO._NewPurchaseVendor.Text                           = $Null
+            $This.IO._NewServiceCost.Text                              = $Null
+            $This.IO._NewServiceDescription.Text                       = $Null
+            $This.IO._NewServiceName.Text                              = $Null
+            $This.IO._ViewClientAddress.Text                           = $Null
+            $This.IO._ViewClientCity.Text                              = $Null
+            $This.IO._ViewClientCountry.Text                           = $Null
+            $This.IO._ViewClientDay.Text                               = $Null
+            $This.IO._ViewClientEmailText.Text                         = $Null
+            $This.IO._ViewClientFirst.Text                             = $Null
+            $This.IO._ViewClientLast.Text                              = $Null
+            $This.IO._ViewClientMI.Text                                = $Null
+            $This.IO._ViewClientMonth.Text                             = $Null
+            $This.IO._ViewClientPhoneText.Text                         = $Null
+            $This.IO._ViewClientPostal.Text                            = $Null
+            $This.IO._ViewClientRegion.Text                            = $Null
+            $This.IO._ViewClientYear.Text                              = $Null
+            $This.IO._ViewDeviceModel.Text                             = $Null
+            $This.IO._ViewDeviceSerial.Text                            = $Null
+            $This.IO._ViewDeviceSpecification.Text                     = $Null
+            $This.IO._ViewDeviceTitle.Text                             = $Null
+            $This.IO._ViewDeviceVendor.Text                            = $Null
+            $This.IO._ViewExpenseCost.Text                             = $Null
+            $This.IO._ViewExpenseDisplayName.Text                      = $Null
+            $This.IO._ViewExpenseRecipient.Text                        = $Null
+            $This.IO._ViewInventoryCost.Text                           = $Null
+            $This.IO._ViewInventoryModel.Text                          = $Null
+            $This.IO._ViewInventorySerial.Text                         = $Null
+            $This.IO._ViewInventoryTitle.Text                          = $Null
+            $This.IO._ViewInventoryVendor.Text                         = $Null
+            $This.IO._ViewIssueDescription.Text                        = $Null
+            $This.IO._ViewPurchaseCost.Text                            = $Null
+            $This.IO._ViewPurchaseDisplayName.Text                     = $Null
+            $This.IO._ViewPurchaseDistributor.Text                     = $Null
+            $This.IO._ViewPurchaseModel.Text                           = $Null
+            $This.IO._ViewPurchaseSerial.Text                          = $Null
+            $This.IO._ViewPurchaseSpecification.Text                   = $Null
+            $This.IO._ViewPurchaseVendor.Text                          = $Null
+            $This.IO._ViewServiceCost.Text                             = $Null
+            $This.IO._ViewServiceDescription.Text                      = $Null
+            $This.IO._ViewServiceName.Text                             = $Null
+            $This.IO._ViewUIDDate.Text                                 = $Null
+            $This.IO._ViewUIDIndex.Text                                = $Null
+            $This.IO._ViewUIDSlot.Text                                 = $Null
+            $This.IO._ViewUIDTime.Text                                 = $Null
+            $This.IO._ViewUIDType.Text                                 = $Null
+            $This.IO._ViewUIDUID.Text                                  = $Null
+        }
+
+        SetSearchFilter()
+        {
+            $This.IO._EditAccountObjectSearchFilter.Text               = $This.Date
+            $This.IO._EditClientDeviceSearchFilter.Text                = $This.Date
+            $This.IO._EditClientInvoiceSearchFilter.Text               = $This.Date
+            $This.IO._EditDeviceClientSearchFilter.Text                = $This.Date
+            $This.IO._EditDeviceInvoiceSearchFilter.Text               = $This.Date 
+            $This.IO._EditDeviceIssueSearchFilter.Text                 = $This.Date 
+            $This.IO._EditDevicePurchaseSearchFilter.Text              = $This.Date 
+            $This.IO._EditExpenseDeviceSearchFilter.Text               = $This.Date 
+            $This.IO._EditInventoryDeviceSearchFilter.Text             = $This.Date 
+            $This.IO._EditInvoiceClientSearchFilter.Text               = $This.Date 
+            $This.IO._EditInvoiceInventorySearchFilter.Text            = $This.Date 
+            $This.IO._EditInvoicePurchaseSearchFilter.Text             = $This.Date 
+            $This.IO._EditInvoiceServiceSearchFilter.Text              = $This.Date 
+            $This.IO._EditIssueClientSearchFilter.Text                 = $This.Date 
+            $This.IO._EditIssueDeviceSearchFilter.Text                 = $This.Date 
+            $This.IO._EditIssueInvoiceSearchFilter.Text                = $This.Date 
+            $This.IO._EditIssuePurchaseSearchFilter.Text               = $This.Date 
+            $This.IO._EditPurchaseDeviceSearchFilter.Text              = $This.Date 
+            $This.IO._GetAccountSearchFilter.Text                      = $This.Date 
+            $This.IO._GetClientSearchFilter.Text                       = $This.Date 
+            $This.IO._GetDeviceSearchFilter.Text                       = $This.Date 
+            $This.IO._GetExpenseSearchFilter.Text                      = $This.Date 
+            $This.IO._GetInventorySearchFilter.Text                    = $This.Date 
+            $This.IO._GetInvoiceSearchFilter.Text                      = $This.Date 
+            $This.IO._GetIssueSearchFilter.Text                        = $This.Date 
+            $This.IO._GetPurchaseSearchFilter.Text                     = $This.Date 
+            $This.IO._GetServiceSearchFilter.Text                      = $This.Date 
+            $This.IO._GetUIDSearchFilter.Text                          = $This.Date 
+            $This.IO._NewAccountObjectSearchFilter.Text                = $This.Date 
+            $This.IO._NewClientDeviceSearchFilter.Text                 = $This.Date 
+            $This.IO._NewClientInvoiceSearchFilter.Text                = $This.Date 
+            $This.IO._NewDeviceClientSearchFilter.Text                 = $This.Date 
+            $This.IO._NewDeviceInvoiceSearchFilter.Text                = $This.Date 
+            $This.IO._NewDeviceIssueSearchFilter.Text                  = $This.Date 
+            $This.IO._NewDevicePurchaseSearchFilter.Text               = $This.Date 
+            $This.IO._NewExpenseDeviceSearchFilter.Text                = $This.Date 
+            $This.IO._NewInventoryDeviceSearchFilter.Text              = $This.Date 
+            $This.IO._NewInvoiceClientSearchFilter.Text                = $This.Date 
+            $This.IO._NewInvoiceInventorySearchFilter.Text             = $This.Date 
+            $This.IO._NewInvoicePurchaseSearchFilter.Text              = $This.Date 
+            $This.IO._NewInvoiceServiceSearchFilter.Text               = $This.Date 
+            $This.IO._NewIssueClientSearchFilter.Text                  = $This.Date 
+            $This.IO._NewIssueDeviceSearchFilter.Text                  = $This.Date 
+            $This.IO._NewIssueInvoiceSearchFilter.Text                 = $This.Date 
+            $This.IO._NewIssuePurchaseSearchFilter.Text                = $This.Date 
+            $This.IO._NewPurchaseDeviceSearchFilter.Text               = $This.Date 
+            $This.IO._ViewAccountObjectSearchFilter.Text               = $This.Date 
+            $This.IO._ViewClientDeviceSearchFilter.Text                = $This.Date 
+            $This.IO._ViewClientInvoiceSearchFilter.Text               = $This.Date 
+            $This.IO._ViewDeviceClientSearchFilter.Text                = $This.Date
+            $This.IO._ViewDeviceInvoiceSearchFilter.Text               = $This.Date
+            $This.IO._ViewDeviceIssueSearchFilter.Text                 = $This.Date
+            $This.IO._ViewDevicePurchaseSearchFilter.Text              = $This.Date 
+            $This.IO._ViewExpenseDeviceSearchFilter.Text               = $This.Date 
+            $This.IO._ViewInventoryDeviceSearchFilter.Text             = $This.Date 
+            $This.IO._ViewInvoiceClientSearchFilter.Text               = $This.Date 
+            $This.IO._ViewInvoiceInventorySearchFilter.Text            = $This.Date 
+            $This.IO._ViewInvoicePurchaseSearchFilter.Text             = $This.Date 
+            $This.IO._ViewInvoiceServiceSearchFilter.Text              = $This.Date 
+            $This.IO._ViewIssueClientSearchFilter.Text                 = $This.Date 
+            $This.IO._ViewIssueDeviceSearchFilter.Text                 = $This.Date 
+            $This.IO._ViewIssueInvoiceSearchFilter.Text                = $This.Date 
+            $This.IO._ViewIssuePurchaseSearchFilter.Text               = $This.Date 
+            $This.IO._ViewPurchaseDeviceSearchFilter.Text              = $This.Date 
+        }
+         
+        ClearComboBoxItemsSource()
+        {   
             $This.IO._ViewClientPhoneList.ItemsSource        = $Null
             $This.IO._ViewClientEmailList.ItemsSource        = $Null
             $This.IO._ViewClientDeviceList.ItemsSource       = $Null
@@ -1050,15 +1213,21 @@ Function cim-db
         {
             $Control.ItemsSource = $Null
 
-            ForEach ( $Item in $Record )
+            If ( $Record.Count -ne 0 )
             {
-                $Control.Items.Add($Item)
-                $Control.SelectedIndex = $Control.Items.Count - 1
+                ForEach ( $Item in $Record )
+                {
+                    $Control.Items.Add($Item)
+                    $Control.SelectedIndex = $Control.Items.Count - 1
+                }
             }
         }
 
         GetTab([UInt32]$Slot)
         {
+            $This.CollapsePanel()
+            $This.ClearTextBox()
+            
             $This.IO._UIDPanel.Visibility                   = "Collapsed"
             $This.IO._ClientPanel.Visibility                = "Collapsed"
             $This.IO._ServicePanel.Visibility               = "Collapsed"
@@ -1070,13 +1239,11 @@ Function cim-db
             $This.IO._AccountPanel.Visibility               = "Collapsed"
             $This.IO._InvoicePanel.Visibility               = "Collapsed"
 
-            $This.Collapse()
-
-            $This.Tab                                       | % { "_$_`Tab" } | % {
-
-                $This.IO.$_.Background                                = "#DFFFBA"
-                $This.IO.$_.Foreground                                = "#000000"
-                $This.IO.$_.BorderBrush                               = "#000000"
+            ForEach ( $Item in $This.Tab | % { "_$_`Tab" } )
+            {
+                $This.IO.$Item.Background                                = "#DFFFBA"
+                $This.IO.$Item.Foreground                                = "#000000"
+                $This.IO.$Item.BorderBrush                               = "#000000"
             }
 
             Write-Host $This.Tab[$Slot]
@@ -1095,26 +1262,27 @@ Function cim-db
                 $This.IO."_New$($This.Tab[$Slot])Tab".IsEnabled       = 1
             }
 
-            $This.Clear()
             $This.Refresh()
         }
 
         ViewTab([UInt32]$Slot)
         {
-            $This.Collapse()
+            $This.CollapsePanel()
+
             $This.IO."_View$($This.Tab[$Slot])Panel".Visibility       = "Visible"
         }
 
         EditTab([UInt32]$Slot)
         {
-            $This.Collapse()
+            $This.CollapsePanel()
+
             $This.IO."_Edit$($This.Tab[$Slot])Panel".Visibility       = "Visible"
         }
 
         NewTab([UInt32]$Slot)
         {
-            $This.Collapse()
-            $This.Clear()
+            $This.CollapsePanel()
+            $This.ClearTextBox()
 
             $This.IO."_New$($This.Tab[$Slot])Panel".Visibility         = "Visible"
             $This.IO."_Get$($This.Tab[$Slot])SearchResult".ItemsSource = $Null
@@ -1123,7 +1291,7 @@ Function cim-db
 
         ViewUID([String]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item = $This.GetUID($UID)
             
@@ -1152,7 +1320,7 @@ Function cim-db
 
         ViewClient([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._ViewClientGender.SelectedItem      = 2
             $This.IO._ViewClientPhoneList.ItemsSource    = $Null
@@ -1192,7 +1360,7 @@ Function cim-db
 
         EditClient([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                        = $This.GetUID($UID)
             
@@ -1226,7 +1394,7 @@ Function cim-db
 
         ViewService([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                        = $This.GetUID($UID)
             
@@ -1242,7 +1410,7 @@ Function cim-db
 
         EditService([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                        = $This.GetUID($UID)
             
@@ -1258,7 +1426,7 @@ Function cim-db
 
         ViewDevice([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                        = $This.GetUID($UID)
             
@@ -1287,7 +1455,7 @@ Function cim-db
 
         EditDevice([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                         = $This.GetUID($UID)
             
@@ -1316,7 +1484,7 @@ Function cim-db
 
         ViewIssue([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
             $This.IO._ViewIssueStatus.SelectedIndex       = 0
 
             $Item                                         = $This.GetUID($UID)
@@ -1338,7 +1506,8 @@ Function cim-db
 
         ViewInventory([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
+
             $This.IO._ViewInventoryIsDevice.IsChecked     = $False
 
             $Item = $This.GetUID($UID)
@@ -1361,7 +1530,7 @@ Function cim-db
 
         EditInventory([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._EditInventoryIsDevice.IsChecked  = $False
 
@@ -1384,7 +1553,7 @@ Function cim-db
 
         ViewPurchase([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._ViewPurchaseIsDevice.IsChecked   = $Null
 
@@ -1410,7 +1579,7 @@ Function cim-db
 
         EditPurchase([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._EditPurchaseIsDevice.IsChecked   = $Null
 
@@ -1436,7 +1605,7 @@ Function cim-db
 
         ViewExpense([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1455,7 +1624,7 @@ Function cim-db
 
         EditExpense([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1474,7 +1643,7 @@ Function cim-db
 
         ViewAccount([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1488,7 +1657,7 @@ Function cim-db
 
         EditAccount([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $Item                                      = $This.GetUID($UID)
             
@@ -1502,7 +1671,7 @@ Function cim-db
 
         ViewInvoice([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._ViewInvoiceMode.SelectedIndex    = 0 
 
@@ -1523,7 +1692,7 @@ Function cim-db
 
         EditInvoice([Object]$UID)
         {
-            $This.Clear()
+            $This.ClearTextBox()
 
             $This.IO._EditInvoiceMode.SelectedIndex    = 0 
 
@@ -2913,7 +3082,7 @@ Function cim-db
                 </GroupBox>
             </Grid>
         </Grid>
-        <Grid Grid.Column="1" Name="_IssuePanel" Visibility="Collapsed">
+        <Grid Grid.Column="1" Name="_IssuePanel" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
@@ -2955,11 +3124,12 @@ Function cim-db
             <Grid Grid.Row="1" Name="_ViewIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70"/>
-                    <RowDefinition Height="105"/>
-                    <RowDefinition Height="105"/>
-                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="200"/>
                     <RowDefinition Height="70"/>
-                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -2967,147 +3137,209 @@ Function cim-db
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <GroupBox Grid.Column="0" Header="[Status]">
-                        <ComboBox Name="_ViewIssueStatus" IsEnabled="False"/>
+                        <ComboBox Name="_ViewIssueStatus"/>
                     </GroupBox>
                     <GroupBox Grid.Column="1" Header="[Description]">
-                        <TextBox Name="_ViewIssueDescription" IsEnabled="False"/>
+                        <TextBox Name="_ViewIssueDescription"/>
                     </GroupBox>
                 </Grid>
-                <GroupBox Grid.Row="1" Header="[Client]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty" IsEnabled="False"/>
-                            <TextBox Grid.Column="1" Name="_ViewIssueClientSearchFilter" IsEnabled="False"/>
+                <TabControl Grid.Row="1" Name="_ViewIssueTabControl" IsEnabled="False">
+                    <TabItem Header="Client">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_ViewIssueClientSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_ViewIssueClientSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueClientSearchResult" IsEnabled="False"/>
-                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddClient" IsEnabled="False"/>
-                            <ComboBox Grid.Column="2" Name="_ViewIssueClientList"/>
-                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveClient" IsEnabled="False"/>
+                    </TabItem>
+                    <TabItem Header="Device">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_ViewIssueDeviceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_ViewIssueDeviceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="2" Header="[Device]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchProperty" IsEnabled="False"/>
-                            <TextBox Grid.Column="1" Name="_ViewIssueDeviceSearchFilter" IsEnabled="False"/>
+                    </TabItem>
+                    <TabItem Header="Purchase">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_ViewIssuePurchaseSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_ViewIssuePurchaseSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueDeviceSearchResult" IsEnabled="False"/>
-                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddDevice" IsEnabled="False"/>
-                            <ComboBox Grid.Column="2" Name="_ViewIssueDeviceList"/>
-                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveDevice" IsEnabled="False"/>
+                    </TabItem>
+                    <TabItem Header="Service">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_ViewIssueServiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_ViewIssueServiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_ViewIssueServiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Description"  Binding='{Binding Record.Description}'  Width="*"/>
+                                    <DataGridTextColumn Header="Cost" Binding='{Binding Record.Cost}' Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="3" Header="[Purchase]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchProperty" IsEnabled="False"/>
-                            <TextBox Grid.Column="1" Name="_ViewIssuePurchaseSearchFilter" IsEnabled="False"/>
+                    </TabItem>
+                    <TabItem Header="Invoice">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_ViewIssueInvoiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_ViewIssueInvoiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssuePurchaseSearchResult" IsEnabled="False"/>
-                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddPurchase" IsEnabled="False"/>
-                            <ComboBox Grid.Column="2" Name="_ViewIssuePurchaseList"/>
-                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemovePurchase" IsEnabled="False"/>
-                        </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="4" Header="[Service]">
+                    </TabItem>
+                </TabControl>
+                <GroupBox Grid.Row="2" Header="[Client]">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_ViewIssueServiceSearchResult" IsEnabled="False"/>
-                        <Button Grid.Column="1" Margin="5" Content="+" Name="_ViewIssueAddService" IsEnabled="False"/>
-                        <ComboBox Grid.Column="2" Name="_ViewIssueServiceList"/>
-                        <Button Grid.Column="3" Margin="5" Content="-" Name="_ViewIssueRemoveService" IsEnabled="False"/>
+                        <Button Grid.Column="0" Content="+" Name="_ViewIssueAddClient" IsEnabled="False"/>
+                        <ComboBox Grid.Column="1" Name="_ViewIssueClientList"/>
+                        <Button Grid.Column="2" Content="-" Name="_ViewIssueRemoveClient" IsEnabled="False"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="5" Header="[Invoice]">
+                <GroupBox Grid.Row="3" Header="[Device]">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchProperty" IsEnabled="False"/>
-                            <TextBox Grid.Column="1" Name="_ViewIssueInvoiceSearchFilter" IsEnabled="False"/>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_ViewIssueInvoiceSearchResult" IsEnabled="False"/>
-                            <Button Grid.Column="1" Content="+" Name="_ViewIssueAddInvoice" IsEnabled="False"/>
-                            <ComboBox Grid.Column="2" Name="_ViewIssueInvoiceList"/>
-                            <Button Grid.Column="3" Content="-" Name="_ViewIssueRemoveInvoice" IsEnabled="False"/>
-                        </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_ViewIssueAddDevice" IsEnabled="False"/>
+                        <ComboBox Grid.Column="1" Name="_ViewIssueDeviceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_ViewIssueRemoveDevice" IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Purchase]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_ViewIssueAddPurchase" IsEnabled="False"/>
+                        <ComboBox Grid.Column="1" Name="_ViewIssuePurchaseList"/>
+                        <Button Grid.Column="2" Content="-" Name="_ViewIssueRemovePurchase" IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Service]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_ViewIssueAddService" IsEnabled="False"/>
+                        <ComboBox Grid.Column="1" Name="_ViewIssueServiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_ViewIssueRemoveService" IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="6" Header="[Invoice]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_ViewIssueAddInvoice" IsEnabled="False"/>
+                        <ComboBox Grid.Column="1" Name="_ViewIssueInvoiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_ViewIssueRemoveInvoice" IsEnabled="False"/>
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" Name="_EditIssuePanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70"/>
-                    <RowDefinition Height="105"/>
-                    <RowDefinition Height="105"/>
-                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="200"/>
                     <RowDefinition Height="70"/>
-                    <RowDefinition Height="105"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -3121,278 +3353,406 @@ Function cim-db
                         <TextBox Name="_EditIssueDescription"/>
                     </GroupBox>
                 </Grid>
-                <GroupBox Grid.Row="1" Header="[Client]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_EditIssueClientSearchFilter"/>
+                <TabControl Grid.Row="1" Name="_EditIssueTabControl">
+                    <TabItem Header="Client">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_EditIssueClientSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_EditIssueClientSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_EditIssueClientSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueClientSearchResult"/>
-                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddClient"/>
-                            <ComboBox Grid.Column="2" Name="_EditIssueClientList"/>
-                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveClient"/>
+                    </TabItem>
+                    <TabItem Header="Device">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_EditIssueDeviceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_EditIssueDeviceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="2" Header="[Device]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_EditIssueDeviceSearchFilter"/>
+                    </TabItem>
+                    <TabItem Header="Purchase">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_EditIssuePurchaseSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_EditIssuePurchaseSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueDeviceSearchResult"/>
-                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddDevice"/>
-                            <ComboBox Grid.Column="2" Name="_EditIssueDeviceList"/>
-                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveDevice"/>
+                    </TabItem>
+                    <TabItem Header="Service">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_EditIssueServiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_EditIssueServiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_EditIssueServiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Description"  Binding='{Binding Record.Description}'  Width="*"/>
+                                    <DataGridTextColumn Header="Cost" Binding='{Binding Record.Cost}' Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="3" Header="[Purchase]">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_EditIssuePurchaseSearchFilter"/>
+                    </TabItem>
+                    <TabItem Header="Invoice">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_EditIssueInvoiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_EditIssueInvoiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssuePurchaseSearchResult"/>
-                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddPurchase"/>
-                            <ComboBox Grid.Column="2" Name="_EditIssuePurchaseList"/>
-                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemovePurchase"/>
-                        </Grid>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Grid.Row="4" Header="[Service]">
+                    </TabItem>
+                </TabControl>
+                <GroupBox Grid.Row="2" Header="[Client]">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="_EditIssueServiceSearchResult"/>
-                        <Button Grid.Column="1" Margin="5" Content="+" Name="_EditIssueAddService"/>
-                        <ComboBox Grid.Column="2" Name="_EditIssueServiceList"/>
-                        <Button Grid.Column="3" Margin="5" Content="-" Name="_EditIssueRemoveService"/>
+                        <Button Grid.Column="0" Content="+" Name="_EditIssueAddClient"/>
+                        <ComboBox Grid.Column="1" Name="_EditIssueClientList"/>
+                        <Button Grid.Column="2" Content="-" Name="_EditIssueRemoveClient"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Grid.Row="5" Header="[Invoice]">
+                <GroupBox Grid.Row="3" Header="[Device]">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_EditIssueInvoiceSearchFilter"/>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_EditIssueInvoiceSearchResult"/>
-                            <Button Grid.Column="1" Content="+" Name="_EditIssueAddInvoice"/>
-                            <ComboBox Grid.Column="2" Name="_EditIssueInvoiceList"/>
-                            <Button Grid.Column="3" Content="-" Name="_EditIssueRemoveInvoice"/>
-                        </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_EditIssueAddDevice"/>
+                        <ComboBox Grid.Column="1" Name="_EditIssueDeviceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_EditIssueRemoveDevice"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Purchase]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_EditIssueAddPurchase"/>
+                        <ComboBox Grid.Column="1" Name="_EditIssuePurchaseList"/>
+                        <Button Grid.Column="2" Content="-" Name="_EditIssueRemovePurchase"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Service]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_EditIssueAddService"/>
+                        <ComboBox Grid.Column="1" Name="_EditIssueServiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_EditIssueRemoveService"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="6" Header="[Invoice]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_EditIssueAddInvoice"/>
+                        <ComboBox Grid.Column="1" Name="_EditIssueInvoiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_EditIssueRemoveInvoice"/>
                     </Grid>
                 </GroupBox>
             </Grid>
-            <Grid Grid.Row="1" Name="_NewIssuePanel" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="105"/>
-                        <RowDefinition Height="70"/>
-                        <RowDefinition Height="105"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox Name="_NewIssueStatus"/>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Description]">
-                            <TextBox Name="_NewIssueDescription"/>
-                        </GroupBox>
-                    </Grid>
-                    <GroupBox Grid.Row="1" Header="[Client]">
+            <Grid Grid.Row="1" Name="_NewIssuePanel" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="[Status]">
+                        <ComboBox Name="_NewIssueStatus" SelectedIndex="0">
+                            <ComboBoxItem Content="New"/>
+                            <ComboBoxItem Content="Diagnosed"/>
+                            <ComboBoxItem Content="Commit"/>
+                            <ComboBoxItem Content="Complete"/>
+                        </ComboBox>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="[Description]">
+                        <TextBox Name="_NewIssueDescription"/>
+                    </GroupBox>
+                </Grid>
+                <TabControl Grid.Row="1" Name="_NewIssueTabControl">
+                    <TabItem Header="Client">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="50"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
+                            <Grid Grid.Row="0" Margin="5">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="_NewIssueClientSearchProperty"/>
                                 <TextBox Grid.Column="1" Name="_NewIssueClientSearchFilter"/>
                             </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueClientSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewIssueAddClient"/>
-                                <ComboBox Grid.Column="2" Name="_NewIssueClientList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewIssueRemoveClient"/>
-                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_NewIssueClientSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Header="[Device]">
+                    </TabItem>
+                    <TabItem Header="Device">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="50"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
+                            <Grid Grid.Row="0" Margin="5">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueDeviceSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_NewIssueDeviceSearchFilter"/>
+                                <ComboBox Grid.Column="0" Name="_NewIssueDeviceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_NewIssueDeviceSearchFilter"/>
                             </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssueDeviceSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewIssueAddDevice"/>
-                                <ComboBox Grid.Column="2" Name="_NewIssueDeviceList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewIssueRemoveDevice"/>
-                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_NewIssueDeviceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Purchase]">
+                    </TabItem>
+                    <TabItem Header="Purchase">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="50"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
+                            <Grid Grid.Row="0" Margin="5">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
                                 </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssuePurchaseSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_NewIssuePurchaseSearchFilter"/>
+                                <ComboBox Grid.Column="0" Name="_NewIssuePurchaseSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_NewIssuePurchaseSearchFilter"/>
                             </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="_NewIssuePurchaseSearchResult"/>
-                                <Button Grid.Column="1" Content="+" Name="_NewIssueAddPurchase"/>
-                                <ComboBox Grid.Column="2" Name="_NewIssuePurchaseList"/>
-                                <Button Grid.Column="3" Content="-" Name="_NewIssueRemovePurchase"/>
-                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_NewIssuePurchaseSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Service]">
+                    </TabItem>
+                    <TabItem Header="Service">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueServiceSearchResult"/>
-                            <Button Grid.Column="1" Margin="5" Content="+" Name="_NewIssueAddService"/>
-                            <ComboBox Grid.Column="2" Name="_NewIssueServiceList"/>
-                            <Button Grid.Column="3" Margin="5" Content="-" Name="_NewIssueRemoveService"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_NewIssueServiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_NewIssueServiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_NewIssueServiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Description"  Binding='{Binding Record.Description}'  Width="*"/>
+                                    <DataGridTextColumn Header="Cost" Binding='{Binding Record.Cost}' Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                    </GroupBox>
-                <GroupBox Grid.Row="5" Header="[Invoice]">
+                    </TabItem>
+                    <TabItem Header="Invoice">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty"/>
+                                <TextBox Grid.Column="1" Name="_NewIssueInvoiceSearchFilter"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="_NewIssueInvoiceSearchResult">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+                <GroupBox Grid.Row="2" Header="[Client]">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchProperty"/>
-                            <TextBox Grid.Column="1" Name="_NewIssueInvoiceSearchFilter"/>
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="40"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Column="0" Name="_NewIssueInvoiceSearchResult"/>
-                            <Button Grid.Column="1" Content="+" Name="_NewIssueAddInvoice"/>
-                            <ComboBox Grid.Column="2" Name="_NewIssueInvoiceList"/>
-                            <Button Grid.Column="3" Content="-" Name="_NewIssueRemoveInvoice"/>
-                        </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_NewIssueAddClient"/>
+                        <ComboBox Grid.Column="1" Name="_NewIssueClientList"/>
+                        <Button Grid.Column="2" Content="-" Name="_NewIssueRemoveClient"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="3" Header="[Device]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_NewIssueAddDevice"/>
+                        <ComboBox Grid.Column="1" Name="_NewIssueDeviceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_NewIssueRemoveDevice"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="4" Header="[Purchase]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_NewIssueAddPurchase"/>
+                        <ComboBox Grid.Column="1" Name="_NewIssuePurchaseList"/>
+                        <Button Grid.Column="2" Content="-" Name="_NewIssueRemovePurchase"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Header="[Service]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_NewIssueAddService"/>
+                        <ComboBox Grid.Column="1" Name="_NewIssueServiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_NewIssueRemoveService"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="6" Header="[Invoice]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+" Name="_NewIssueAddInvoice"/>
+                        <ComboBox Grid.Column="1" Name="_NewIssueInvoiceList"/>
+                        <Button Grid.Column="2" Content="-" Name="_NewIssueRemoveInvoice"/>
                     </Grid>
                 </GroupBox>
             </Grid>
@@ -4662,10 +5022,12 @@ Function cim-db
 "@
     $Cim  = [Cimdb]::New($Xaml)
 
+    $Cim.SetDefaults()
+
     # --------- #
     # UID Panel #
     # --------- #
-
+    
     $Cim.IO.       _UIDTab.Add_Click{ $Cim.GetTab(0) }
     $Cim.IO.    _ClientTab.Add_Click{ $Cim.GetTab(1) }
     $Cim.IO.   _ServiceTab.Add_Click{ $Cim.GetTab(2) }
@@ -4705,6 +5067,2251 @@ Function cim-db
     $Cim.IO._EditInvoiceTab.IsEnabled                 = 0
     $Cim.IO._SaveInvoiceTab.IsEnabled                 = 0
 
+    # -------------- #
+    # Event Triggers #
+    # -------------- #
+
+
+    $Cim.IO._GetUIDSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetUIDSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetUIDSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchProperty.SelectedItem -match $Cim.IO._GetUIDSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetUIDSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetUIDSearchResult.ItemsSource = $Cim.DB.UID
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetUIDSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetUIDSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetUIDSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetUIDSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem -match $Cim.IO._GetClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewClientDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewClientDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewClientDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._ViewClientDeviceSearchProperty.SelectedItem -match $Cim.IO._ViewClientDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewClientDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewClientDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewClientDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewClientDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewClientDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewClientDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewClientInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewClientInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewClientInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._ViewClientInvoiceSearchProperty.SelectedItem -match $Cim.IO._ViewClientInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewClientInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewClientInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewClientInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewClientInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewClientInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewClientInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditClientDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditClientDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditClientDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._EditClientDeviceSearchProperty.SelectedItem -match $Cim.IO._EditClientDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditClientDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditClientDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditClientDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditClientDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditClientInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditClientInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditClientInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._EditClientInvoiceSearchProperty.SelectedItem -match $Cim.IO._EditClientInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditClientInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditClientInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditClientInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditClientInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewClientDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewClientDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewClientDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._NewClientDeviceSearchProperty.SelectedItem -match $Cim.IO._NewClientDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewClientDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewClientDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewClientDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewClientDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewClientInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewClientInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewClientInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._NewClientInvoiceSearchProperty.SelectedItem -match $Cim.IO._NewClientInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewClientInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewClientInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewClientInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewClientInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewClientInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetServiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetServiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem -match $Cim.IO._GetServiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetServiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetServiceSearchResult.ItemsSource = $Cim.DB.Service
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetServiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetServiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetServiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetServiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem -match $Cim.IO._GetDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewDeviceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewDeviceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewDeviceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._ViewDeviceClientSearchProperty.SelectedItem -match $Cim.IO._ViewDeviceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewDeviceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewDeviceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewDeviceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewDeviceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewDeviceIssueSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewDeviceIssueSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewDeviceIssueSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Issue | ? $Cim.IO._ViewDeviceIssueSearchProperty.SelectedItem -match $Cim.IO._ViewDeviceIssueSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewDeviceIssueSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceIssueSearchResult.ItemsSource = $Cim.DB.Issue
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewDeviceIssueSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewDeviceIssueSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewDeviceIssueSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceIssueSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewDevicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewDevicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewDevicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._ViewDevicePurchaseSearchProperty.SelectedItem -match $Cim.IO._ViewDevicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewDevicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDevicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewDevicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewDevicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewDevicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDevicePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewDeviceInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewDeviceInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewDeviceInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._ViewDeviceInvoiceSearchProperty.SelectedItem -match $Cim.IO._ViewDeviceInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewDeviceInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewDeviceInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewDeviceInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewDeviceInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewDeviceInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditDeviceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditDeviceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditDeviceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._EditDeviceClientSearchProperty.SelectedItem -match $Cim.IO._EditDeviceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditDeviceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditDeviceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditDeviceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditDeviceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditDeviceIssueSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditDeviceIssueSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditDeviceIssueSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Issue | ? $Cim.IO._EditDeviceIssueSearchProperty.SelectedItem -match $Cim.IO._EditDeviceIssueSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditDeviceIssueSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceIssueSearchResult.ItemsSource = $Cim.DB.Issue
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditDeviceIssueSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditDeviceIssueSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditDeviceIssueSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceIssueSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditDevicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditDevicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditDevicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._EditDevicePurchaseSearchProperty.SelectedItem -match $Cim.IO._EditDevicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditDevicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditDevicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditDevicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditDevicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditDevicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditDevicePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditDeviceInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditDeviceInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditDeviceInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._EditDeviceInvoiceSearchProperty.SelectedItem -match $Cim.IO._EditDeviceInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditDeviceInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditDeviceInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditDeviceInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditDeviceInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditDeviceInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewDeviceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewDeviceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewDeviceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._NewDeviceClientSearchProperty.SelectedItem -match $Cim.IO._NewDeviceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewDeviceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewDeviceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewDeviceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewDeviceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewDeviceIssueSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewDeviceIssueSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewDeviceIssueSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Issue | ? $Cim.IO._NewDeviceIssueSearchProperty.SelectedItem -match $Cim.IO._NewDeviceIssueSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewDeviceIssueSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceIssueSearchResult.ItemsSource = $Cim.DB.Issue
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewDeviceIssueSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewDeviceIssueSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewDeviceIssueSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceIssueSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewDevicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewDevicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewDevicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._NewDevicePurchaseSearchProperty.SelectedItem -match $Cim.IO._NewDevicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewDevicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewDevicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewDevicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewDevicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewDevicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewDevicePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewDeviceInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewDeviceInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewDeviceInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._NewDeviceInvoiceSearchProperty.SelectedItem -match $Cim.IO._NewDeviceInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewDeviceInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewDeviceInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewDeviceInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewDeviceInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewDeviceInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetIssueSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetIssueSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem -match $Cim.IO._GetIssueSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetIssueSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetIssueSearchResult.ItemsSource = $Cim.DB.Issue
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetIssueSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetIssueSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetIssueSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetIssueSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewIssueClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewIssueClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewIssueClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._ViewIssueClientSearchProperty.SelectedItem -match $Cim.IO._ViewIssueClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewIssueClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewIssueClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewIssueClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewIssueClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewIssueDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewIssueDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewIssueDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._ViewIssueDeviceSearchProperty.SelectedItem -match $Cim.IO._ViewIssueDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewIssueDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewIssueDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewIssueDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewIssueDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewIssuePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewIssuePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewIssuePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._ViewIssuePurchaseSearchProperty.SelectedItem -match $Cim.IO._ViewIssuePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewIssuePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssuePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewIssuePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewIssuePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewIssuePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssuePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewIssueInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewIssueInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewIssueInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._ViewIssueInvoiceSearchProperty.SelectedItem -match $Cim.IO._ViewIssueInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewIssueInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewIssueInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewIssueInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewIssueInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewIssueInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditIssueClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditIssueClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditIssueClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._EditIssueClientSearchProperty.SelectedItem -match $Cim.IO._EditIssueClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditIssueClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditIssueClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditIssueClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditIssueClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditIssueDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditIssueDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditIssueDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._EditIssueDeviceSearchProperty.SelectedItem -match $Cim.IO._EditIssueDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditIssueDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditIssueDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditIssueDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditIssueDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditIssuePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditIssuePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditIssuePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._EditIssuePurchaseSearchProperty.SelectedItem -match $Cim.IO._EditIssuePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditIssuePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssuePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditIssuePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditIssuePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditIssuePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssuePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditIssueInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditIssueInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditIssueInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._EditIssueInvoiceSearchProperty.SelectedItem -match $Cim.IO._EditIssueInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditIssueInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditIssueInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditIssueInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditIssueInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditIssueInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewIssueClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewIssueClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewIssueClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._NewIssueClientSearchProperty.SelectedItem -match $Cim.IO._NewIssueClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewIssueClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewIssueClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewIssueClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewIssueClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewIssueDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewIssueDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewIssueDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._NewIssueDeviceSearchProperty.SelectedItem -match $Cim.IO._NewIssueDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewIssueDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewIssueDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewIssueDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewIssueDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewIssuePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewIssuePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewIssuePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._NewIssuePurchaseSearchProperty.SelectedItem -match $Cim.IO._NewIssuePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewIssuePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssuePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewIssuePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewIssuePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewIssuePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssuePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewIssueInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewIssueInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewIssueInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._NewIssueInvoiceSearchProperty.SelectedItem -match $Cim.IO._NewIssueInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewIssueInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewIssueInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewIssueInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewIssueInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewIssueInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetInventorySearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetInventorySearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem -match $Cim.IO._GetInventorySearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetInventorySearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetInventorySearchResult.ItemsSource = $Cim.DB.Inventory
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetInventorySearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetInventorySearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetInventorySearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetInventorySearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewInventoryDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewInventoryDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewInventoryDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._ViewInventoryDeviceSearchProperty.SelectedItem -match $Cim.IO._ViewInventoryDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewInventoryDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInventoryDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewInventoryDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewInventoryDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewInventoryDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInventoryDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditInventoryDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditInventoryDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditInventoryDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._EditInventoryDeviceSearchProperty.SelectedItem -match $Cim.IO._EditInventoryDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditInventoryDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditInventoryDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditInventoryDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditInventoryDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditInventoryDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditInventoryDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewInventoryDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewInventoryDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewInventoryDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._NewInventoryDeviceSearchProperty.SelectedItem -match $Cim.IO._NewInventoryDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewInventoryDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewInventoryDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewInventoryDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewInventoryDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewInventoryDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewInventoryDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetPurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem -match $Cim.IO._GetPurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetPurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetPurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetPurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetPurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetPurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewPurchaseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewPurchaseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewPurchaseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._ViewPurchaseDeviceSearchProperty.SelectedItem -match $Cim.IO._ViewPurchaseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewPurchaseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewPurchaseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewPurchaseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewPurchaseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewPurchaseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewPurchaseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditPurchaseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditPurchaseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditPurchaseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._EditPurchaseDeviceSearchProperty.SelectedItem -match $Cim.IO._EditPurchaseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditPurchaseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditPurchaseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditPurchaseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditPurchaseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditPurchaseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditPurchaseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewPurchaseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewPurchaseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewPurchaseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._NewPurchaseDeviceSearchProperty.SelectedItem -match $Cim.IO._NewPurchaseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewPurchaseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewPurchaseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewPurchaseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewPurchaseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewPurchaseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewPurchaseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetExpenseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem -match $Cim.IO._GetExpenseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetExpenseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetExpenseSearchResult.ItemsSource = $Cim.DB.Expense
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetExpenseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetExpenseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetExpenseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetExpenseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewExpenseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewExpenseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewExpenseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._ViewExpenseDeviceSearchProperty.SelectedItem -match $Cim.IO._ViewExpenseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewExpenseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewExpenseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewExpenseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewExpenseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewExpenseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewExpenseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditExpenseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditExpenseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditExpenseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._EditExpenseDeviceSearchProperty.SelectedItem -match $Cim.IO._EditExpenseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditExpenseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditExpenseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditExpenseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditExpenseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditExpenseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditExpenseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewExpenseDeviceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewExpenseDeviceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewExpenseDeviceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Device | ? $Cim.IO._NewExpenseDeviceSearchProperty.SelectedItem -match $Cim.IO._NewExpenseDeviceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewExpenseDeviceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewExpenseDeviceSearchResult.ItemsSource = $Cim.DB.Device
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewExpenseDeviceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewExpenseDeviceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewExpenseDeviceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewExpenseDeviceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetAccountSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetAccountSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem -match $Cim.IO._GetAccountSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetAccountSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetAccountSearchResult.ItemsSource = $Cim.DB.Account
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetAccountSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetAccountSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetAccountSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetAccountSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewAccountObjectSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewAccountObjectSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewAccountObjectSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Object | ? $Cim.IO._ViewAccountObjectSearchProperty.SelectedItem -match $Cim.IO._ViewAccountObjectSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewAccountObjectSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewAccountObjectSearchResult.ItemsSource = $Cim.DB.Object
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewAccountObjectSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewAccountObjectSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewAccountObjectSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewAccountObjectSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditAccountObjectSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditAccountObjectSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditAccountObjectSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Object | ? $Cim.IO._EditAccountObjectSearchProperty.SelectedItem -match $Cim.IO._EditAccountObjectSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditAccountObjectSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditAccountObjectSearchResult.ItemsSource = $Cim.DB.Object
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditAccountObjectSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditAccountObjectSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditAccountObjectSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditAccountObjectSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewAccountObjectSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewAccountObjectSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewAccountObjectSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Object | ? $Cim.IO._NewAccountObjectSearchProperty.SelectedItem -match $Cim.IO._NewAccountObjectSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewAccountObjectSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewAccountObjectSearchResult.ItemsSource = $Cim.DB.Object
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewAccountObjectSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewAccountObjectSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewAccountObjectSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewAccountObjectSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._GetInvoiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._GetInvoiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem -match $Cim.IO._GetInvoiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._GetInvoiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Cim.DB.Invoice
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._GetInvoiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._GetInvoiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._GetInvoiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._GetInvoiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewInvoiceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewInvoiceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._ViewInvoiceClientSearchProperty.SelectedItem -match $Cim.IO._ViewInvoiceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewInvoiceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewInvoiceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewInvoiceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewInvoiceInventorySearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceInventorySearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewInvoiceInventorySearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Inventory | ? $Cim.IO._ViewInvoiceInventorySearchProperty.SelectedItem -match $Cim.IO._ViewInvoiceInventorySearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewInvoiceInventorySearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceInventorySearchResult.ItemsSource = $Cim.DB.Inventory
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewInvoiceInventorySearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceInventorySearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewInvoiceInventorySearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceInventorySearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewInvoiceServiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceServiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewInvoiceServiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Service | ? $Cim.IO._ViewInvoiceServiceSearchProperty.SelectedItem -match $Cim.IO._ViewInvoiceServiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewInvoiceServiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceServiceSearchResult.ItemsSource = $Cim.DB.Service
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewInvoiceServiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewInvoiceServiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewInvoiceServiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoiceServiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._ViewInvoicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._ViewInvoicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._ViewInvoicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._ViewInvoicePurchaseSearchProperty.SelectedItem -match $Cim.IO._ViewInvoicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._ViewInvoicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._ViewInvoicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._ViewInvoicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._ViewInvoicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._ViewInvoicePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditInvoiceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditInvoiceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditInvoiceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._EditInvoiceClientSearchProperty.SelectedItem -match $Cim.IO._EditInvoiceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditInvoiceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditInvoiceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditInvoiceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditInvoiceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditInvoiceInventorySearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditInvoiceInventorySearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditInvoiceInventorySearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Inventory | ? $Cim.IO._EditInvoiceInventorySearchProperty.SelectedItem -match $Cim.IO._EditInvoiceInventorySearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditInvoiceInventorySearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceInventorySearchResult.ItemsSource = $Cim.DB.Inventory
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditInvoiceInventorySearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditInvoiceInventorySearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditInvoiceInventorySearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceInventorySearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditInvoiceServiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditInvoiceServiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditInvoiceServiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Service | ? $Cim.IO._EditInvoiceServiceSearchProperty.SelectedItem -match $Cim.IO._EditInvoiceServiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditInvoiceServiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceServiceSearchResult.ItemsSource = $Cim.DB.Service
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditInvoiceServiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditInvoiceServiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditInvoiceServiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoiceServiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._EditInvoicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._EditInvoicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._EditInvoicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._EditInvoicePurchaseSearchProperty.SelectedItem -match $Cim.IO._EditInvoicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._EditInvoicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._EditInvoicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._EditInvoicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._EditInvoicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._EditInvoicePurchaseSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewInvoiceClientSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewInvoiceClientSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewInvoiceClientSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Client | ? $Cim.IO._NewInvoiceClientSearchProperty.SelectedItem -match $Cim.IO._NewInvoiceClientSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewInvoiceClientSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceClientSearchResult.ItemsSource = $Cim.DB.Client
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewInvoiceClientSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewInvoiceClientSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewInvoiceClientSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceClientSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewInvoiceInventorySearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewInvoiceInventorySearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewInvoiceInventorySearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Inventory | ? $Cim.IO._NewInvoiceInventorySearchProperty.SelectedItem -match $Cim.IO._NewInvoiceInventorySearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewInvoiceInventorySearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceInventorySearchResult.ItemsSource = $Cim.DB.Inventory
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewInvoiceInventorySearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewInvoiceInventorySearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewInvoiceInventorySearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceInventorySearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewInvoiceServiceSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewInvoiceServiceSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewInvoiceServiceSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Service | ? $Cim.IO._NewInvoiceServiceSearchProperty.SelectedItem -match $Cim.IO._NewInvoiceServiceSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewInvoiceServiceSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceServiceSearchResult.ItemsSource = $Cim.DB.Service
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewInvoiceServiceSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewInvoiceServiceSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewInvoiceServiceSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoiceServiceSearchFilter.Text = ""
+        }
+    })
+
+    $Cim.IO._NewInvoicePurchaseSearchFilter.Add_TextChanged(
+    {
+        If ( $Cim.IO._NewInvoicePurchaseSearchFilter.Text -ne "" )
+        {
+            $Cim.IO._NewInvoicePurchaseSearchResult.ItemsSource = $Null
+
+            $Cim.DG = $Cim.DB.Purchase | ? $Cim.IO._NewInvoicePurchaseSearchProperty.SelectedItem -match $Cim.IO._NewInvoicePurchaseSearchFilter.Text
+
+            If ( $Cim.DG.Count -gt 0 )
+            {
+                $Cim.IO._NewInvoicePurchaseSearchResult.ItemsSource = @( $Cim.DG )
+            }
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoicePurchaseSearchResult.ItemsSource = $Cim.DB.Purchase
+        }
+                
+        Start-Sleep -Milliseconds 50
+    })
+    
+    $Cim.IO._NewInvoicePurchaseSearchProperty.Add_SelectionChanged(
+    {
+        If ( $Cim.IO._NewInvoicePurchaseSearchProperty.SelectedItem -eq "Date" )
+        {
+            $Cim.IO._NewInvoicePurchaseSearchFilter.Text = $Cim.Date
+        }
+
+        Else
+        {
+            $Cim.IO._NewInvoicePurchaseSearchFilter.Text = ""
+        }
+    })
+
     # --------- #
     # UID Panel #
     # --------- #
@@ -4715,24 +7322,10 @@ Function cim-db
         $Cim.ViewUID($Cim.IO._GetUIDSearchResult.SelectedItem.UID)
     })
 
-    $Cim.IO._GetUIDSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetUIDSearchResult.ItemsSource       = $Null
-
-        $Item = $Cim.DB.UID | ? $Cim.IO._GetUIDSearchProperty.SelectedItem.Content -match $Cim.IO._GetUIDSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetUIDSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
-    })
-
     # ------------ #
     # Client Panel #
     # ------------ #
-    
+
     $Cim.IO._GetClientSearchResult.Add_MouseDoubleClick(
     {    
         $Cim.ViewTab(1)
@@ -4745,6 +7338,11 @@ Function cim-db
     $Cim.IO._EditClientTab.Add_Click(
     {
         $Cim.EditTab(1)
+        $Cim.IO._EditClientPhoneList.ItemsSource = $Null
+        $Cim.IO._EditClientEmailList.ItemsSource = $Null
+        $Cim.IO._EditClientDeviceList.ItemsSource = $Null
+        $Cim.IO._EditClientInvoiceList.ItemsSource = $Null
+
         $Cim.EditClient($Cim.IO._GetClientSearchResult.SelectedItem.UID)
         $Cim.IO._EditClientTab.IsEnabled = 0
         $Cim.IO._NewClientTab.IsEnabled  = 1
@@ -4754,235 +7352,17 @@ Function cim-db
     $Cim.IO._NewClientTab.Add_Click(
     { 
         $Cim.NewTab(1)
+        $Cim.IO._NewClientPhoneList.ItemsSource = $Null
+        $Cim.IO._NewClientEmailList.ItemsSource = $Null
+        $Cim.IO._NewClientDeviceList.ItemsSource = $Null
+        $Cim.IO._NewClientInvoiceList.ItemsSource = $Null
+
         $Cim.IO._EditClientTab.IsEnabled = 0
         $Cim.IO._NewClientTab.IsEnabled  = 0
         $Cim.IO._SaveClientTab.IsEnabled = 1
     })
 
-    $Cim.IO._GetClientSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetClientSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Client | ? $Cim.IO._GetClientSearchProperty.SelectedItem.Content -match $Cim.IO._GetClientSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetClientSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
-    })
-
     # -------------------------
-
-    $Cim.IO._SaveClientTab.Add_Click(
-    {
-        If ( $Cim.IO._GetClientSearchResult.SelectedIndex -eq -1 )
-        {
-            $Name = "{0}, {1}" -f $Cim.IO._NewClientLast.Text, $Cim.IO._NewClientFirst.Text 
-            
-            If ( $Cim.IO._NewClientMI.Text -eq "" )
-            {
-                $Full = $Name
-            }
-
-            If ( $Cim.IO._NewClientMI.Text -ne "" )
-            {
-                $Full = "{0} {1}." -f $Name, $Cim.IO._NewClientMI.Text.TrimEnd(".")
-            }
-
-            $DOB  = "{0:d2}/{1:d2}/{2:d4}" -f $Cim.IO._NewClientMonth.Text, $Cim.IO._NewClientDay.Text, $Cim.IO._NewClientYear.Text
-
-            If ($Cim.IO._NewClientLast.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Last name missing","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientFirst.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("First name missing","Error")
-            }
-
-            ElseIf ($Full -in $Cim.DB.Client.Record.Name -and $DOB -in $Cim.DB.Client.Record.DOB)
-            {
-                [System.Windows.MessageBox]::Show("Client account exists","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientAddress.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Address missing","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientCity.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("City missing","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientPostal.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Zip code missing","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientMonth.Text -notin 1..12)
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Month","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientDay.Text -notin 1..31)
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Day","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientYear.Text.Length -lt 4 )
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Year","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientGender.SelectedIndex -notin 0..1)
-            {
-                [System.Windows.MessageBox]::Show("Invalid Gender","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientPhoneList.Items[0] -eq $Null)
-            {
-                [System.Windows.MessageBox]::Show("No phone number","Error")
-            }
-
-            ElseIf ($Cim.IO._NewClientEmailList.Items[0] -eq $Null)
-            {
-                [System.Windows.MessageBox]::Show("No email","Error")
-            }
-
-            Else
-            {
-                $Item                 = $Cim.NewUID(0)
-                $Cim.Refresh()
-                $Item.Record.First    = $Cim.IO._NewClientFirst.Text.ToUpper()
-                $Item.Record.MI       = $Cim.IO._NewClientMI.Text.ToUpper()
-                $Item.Record.Last     = $Cim.IO._NewClientLast.Text.ToUpper()
-                $Item.Record.Name     = $Full.ToUpper()
-                $Item.Record.Address  = $Cim.IO._NewClientAddress.Text.ToUpper()
-                $Item.Record.City     = $Cim.IO._NewClientCity.Text.ToUpper()
-                $Item.Record.Region   = $Cim.IO._NewClientRegion.Text.ToUpper()
-                $Item.Record.Country  = $Cim.IO._NewClientCountry.Text.ToUpper()
-                $Item.Record.Postal   = $Cim.IO._NewClientPostal.Text
-                $Item.Record.Month    = $Cim.IO._NewClientMonth.Text
-                $Item.Record.Day      = $Cim.IO._NewClientDay.Text
-                $Item.Record.Year     = $Cim.IO._NewClientYear.Text
-                $Item.Record.DOB      = $DOB
-                $Item.Record.Gender   = $Cim.IO._NewClientGender.SelectedItem.Content
-                $Item.Record.Phone    = $Cim.IO._NewClientPhoneList.Items
-                $Item.Record.Email    = $Cim.IO._NewClientEmailList.Items
-
-                [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
-
-                $Cim.GetTab(1)
-            }
-        }
-
-        If ( $Cim.IO._GetClientSearchResult.SelectedIndex -ne -1 )
-        {
-            $Name = "{0}, {1}" -f $Cim.IO._EditClientLast.Text, $Cim.IO._EditClientLast.Text
-
-            If ( $Cim.IO._EditClientMI.Text -eq "")
-            {
-                $Full = $Name
-            }
-
-            If ( $Cim.IO._EditClientMI.Text -ne "" )
-            {
-                $Full = "{0} {1}." -f $Name, $Cim.IO._EditClientMI.Text.TrimEnd(".")
-            }
-
-            $DOB  = "{0:d2}/{1:d2}/{2:d4}" -f $Cim.IO._EditClientMonth.Text, $Cim.IO._EditClientDay.Text, $Cim.IO._EditClientYear.Text
-
-            If ($Cim.IO._EditClientLast.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Last name missing","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientFirst.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("First name missing","Error")
-            }
-
-            ElseIf ($Full -in $Cim.DB.Client.Record.Name -and $DOB -in $Cim.DB.Client.Record.DOB)
-            {
-                [System.Windows.MessageBox]::Show("Client account exists","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientAddress.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Address missing","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientCity.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("City missing","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientPostal.Text -eq "")
-            {
-                [System.Windows.MessageBox]::Show("Zip code missing","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientMonth.Text -notin 1..12)
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Month","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientDay.Text -notin 1..31)
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Day","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientYear.Text.Length -lt 4 )
-            {
-                [System.Windows.MessageBox]::Show("Invalid DOB.Year","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientGender.SelectedIndex -notin 0..1)
-            {
-                [System.Windows.MessageBox]::Show("Invalid Gender","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientPhoneList.Items[0] -eq $Null)
-            {
-                [System.Windows.MessageBox]::Show("No phone number","Error")
-            }
-
-            ElseIf ($Cim.IO._EditClientEmailList.Items[0] -eq $Null)
-            {
-                [System.Windows.MessageBox]::Show("No email","Error")
-            }
-
-            Else
-            {
-                $Item                 = $Cim.NewUID(0)
-                $Cim.Refresh()
-                $Item.Record.First    = $Cim.IO._EditClientFirst.Text.ToUpper()
-                $Item.Record.MI       = $Cim.IO._EditClientMI.Text.ToUpper()
-                $Item.Record.Last     = $Cim.IO._EditClientLast.Text.ToUpper()
-                $Item.Record.Name     = $Full.ToUpper()
-                $Item.Record.Address  = $Cim.IO._EditClientAddress.Text.ToUpper()
-                $Item.Record.City     = $Cim.IO._EditClientCity.Text.ToUpper()
-                $Item.Record.Region   = $Cim.IO._EditClientRegion.Text.ToUpper()
-                $Item.Record.Country  = $Cim.IO._EditClientCountry.Text.ToUpper()
-                $Item.Record.Postal   = $Cim.IO._EditClientPostal.Text
-                $Item.Record.Month    = $Cim.IO._EditClientMonth.Text
-                $Item.Record.Day      = $Cim.IO._EditClientDay.Text
-                $Item.Record.Year     = $Cim.IO._EditClientYear.Text
-                $Item.Record.DOB      = $DOB
-                $Item.Record.Gender   = $Cim.IO._EditClientGender.SelectedItem.Content
-                $Item.Record.Phone    = $Cim.IO._EditClientPhoneList.Items
-                $Item.Record.Email    = $Cim.IO._EditClientEmailList.Items
-
-                [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
-
-                $Cim.GetTab(1)
-            }
-        }
-    })
 
     $Cim.IO._EditClientAddPhone.Add_Click(
     {
@@ -5148,6 +7528,33 @@ Function cim-db
         }
     }
 
+    $Cim.IO._EditClientAddEmail.Add_Click{
+        
+        $Item = $Cim.IO._EditClientEmailText.Text
+
+        If ( $Item -notmatch "^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$")
+        {
+            [System.Windows.MessageBox]::Show("Invalid Email Address","Error")
+        }
+
+        ElseIf ( $Item -in $Cim.IO._EditClientEmailList.Items )
+        {
+            [System.Windows.MessageBox]::Show("Duplicate email address","Error")
+        }
+
+        ElseIf ($Item -in $Cim.DB.Client.Record.Email)
+        {
+            [System.Windows.MessageBox]::Show("Phone number belongs to another record","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientEmailList.Items.Add($Item)
+            $Cim.IO._EditClientEmailList.SelectedIndex = ($Cim.IO._EditClientEmailList.Count - 1)
+            $Cim.IO._EditClientEmailText.Text,$Item = $Null
+        }
+    }
+
     $Cim.IO._NewClientRemoveEmail.Add_Click{
         
         If ( $Cim.IO._NewClientEmailList.Items.Count -eq 0)
@@ -5165,6 +7572,245 @@ Function cim-db
             $Cim.IO._NewClientEmailList.Items.Remove($Cim.IO._NewClientEmailList.SelectedItem)
         }
     }
+
+    $Cim.IO._EditClientRemoveEmail.Add_Click{
+        
+        If ( $Cim.IO._EditClientEmailList.Items.Count -eq 0)
+        {
+            [System.Windows.MessageBox]::Show("No email address to remove","Error")
+        }
+
+        ElseIf( $Cim.IO._EditClientEmailList.Items.Count -eq 1)
+        {
+            [System.Windows.MessageBox]::Show("Add another email address before removing","Error")
+        }
+
+        Else
+        {
+            $Cim.IO._EditClientEmailList.Items.Remove($Cim.IO._EditClientEmailList.SelectedItem)
+        }
+    }
+
+    $Cim.IO._NewClientAddDevice.Add_Click(
+    {
+        If ( $Cim.IO._NewClientDeviceSearchResult.Items.Count -eq 0 )
+        {
+            [System.Windows.MessageBox]::Show("No device listed to add","Error")
+        }
+    })
+
+    $Cim.IO._SaveClientTab.Add_Click(
+    {
+        If ( $Cim.IO._GetClientSearchResult.SelectedIndex -eq -1 )
+        {
+            $Name = "{0}, {1}" -f $Cim.IO._NewClientLast.Text, $Cim.IO._NewClientFirst.Text 
+            
+            If ( $Cim.IO._NewClientMI.Text -eq "" )
+            {
+                $Full = $Name
+            }
+
+            If ( $Cim.IO._NewClientMI.Text -ne "" )
+            {
+                $Full = "{0} {1}." -f $Name, $Cim.IO._NewClientMI.Text.TrimEnd(".")
+            }
+
+            $DOB  = "{0:d2}/{1:d2}/{2:d4}" -f $Cim.IO._NewClientMonth.Text, $Cim.IO._NewClientDay.Text, $Cim.IO._NewClientYear.Text
+
+            If ($Cim.IO._NewClientLast.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Last name missing","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientFirst.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("First name missing","Error")
+            }
+
+            ElseIf ($Full -in $Cim.DB.Client.Record.Name -and $DOB -in $Cim.DB.Client.Record.DOB)
+            {
+                [System.Windows.MessageBox]::Show("Client account exists","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientAddress.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Address missing","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientCity.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("City missing","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientPostal.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Zip code missing","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientMonth.Text -notin 1..12)
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Month","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientDay.Text -notin 1..31)
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Day","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientYear.Text.Length -lt 4 )
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Year","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientGender.SelectedIndex -notin 0..1)
+            {
+                [System.Windows.MessageBox]::Show("Invalid Gender","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientPhoneList.Items[0] -eq $Null)
+            {
+                [System.Windows.MessageBox]::Show("No phone number","Error")
+            }
+
+            ElseIf ($Cim.IO._NewClientEmailList.Items[0] -eq $Null)
+            {
+                [System.Windows.MessageBox]::Show("No email","Error")
+            }
+
+            Else
+            {
+                $Item                 = $Cim.NewUID(0)
+                $Cim.Refresh()
+                $Item.Record.First    = $Cim.IO._NewClientFirst.Text.ToUpper()
+                $Item.Record.MI       = $Cim.IO._NewClientMI.Text.ToUpper()
+                $Item.Record.Last     = $Cim.IO._NewClientLast.Text.ToUpper()
+                $Item.Record.Name     = $Full.ToUpper()
+                $Item.Record.Address  = $Cim.IO._NewClientAddress.Text.ToUpper()
+                $Item.Record.City     = $Cim.IO._NewClientCity.Text.ToUpper()
+                $Item.Record.Region   = $Cim.IO._NewClientRegion.Text.ToUpper()
+                $Item.Record.Country  = $Cim.IO._NewClientCountry.Text.ToUpper()
+                $Item.Record.Postal   = $Cim.IO._NewClientPostal.Text
+                $Item.Record.Month    = $Cim.IO._NewClientMonth.Text
+                $Item.Record.Day      = $Cim.IO._NewClientDay.Text
+                $Item.Record.Year     = $Cim.IO._NewClientYear.Text
+                $Item.Record.DOB      = $DOB
+                $Item.Record.Gender   = $Cim.IO._NewClientGender.SelectedItem.Content
+                $Item.Record.Phone    = $Cim.IO._NewClientPhoneList.Items
+                $Item.Record.Email    = $Cim.IO._NewClientEmailList.Items
+                $Item.Record.Device   = $Cim.IO._NewClientDeviceList.Items
+                $Item.Record.Invoice  = $Cim.IO._NewClientInvoiceList.Items
+
+                [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
+
+                $Cim.GetTab(1)
+            }
+        }
+
+        If ( $Cim.IO._GetClientSearchResult.SelectedIndex -ne -1 )
+        {
+            $Name = "{0}, {1}" -f $Cim.IO._EditClientLast.Text, $Cim.IO._EditClientLast.Text
+
+            If ( $Cim.IO._EditClientMI.Text -eq "")
+            {
+                $Full = $Name
+            }
+
+            If ( $Cim.IO._EditClientMI.Text -ne "" )
+            {
+                $Full = "{0} {1}." -f $Name, $Cim.IO._EditClientMI.Text.TrimEnd(".")
+            }
+
+            $DOB  = "{0:d2}/{1:d2}/{2:d4}" -f $Cim.IO._EditClientMonth.Text, $Cim.IO._EditClientDay.Text, $Cim.IO._EditClientYear.Text
+
+            If ($Cim.IO._EditClientLast.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Last name missing","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientFirst.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("First name missing","Error")
+            }
+
+            ElseIf ($Full -in $Cim.DB.Client.Record.Name -and $DOB -in $Cim.DB.Client.Record.DOB)
+            {
+                [System.Windows.MessageBox]::Show("Client account exists","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientAddress.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Address missing","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientCity.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("City missing","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientPostal.Text -eq "")
+            {
+                [System.Windows.MessageBox]::Show("Zip code missing","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientMonth.Text -notin 1..12)
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Month","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientDay.Text -notin 1..31)
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Day","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientYear.Text.Length -lt 4 )
+            {
+                [System.Windows.MessageBox]::Show("Invalid DOB.Year","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientGender.SelectedIndex -notin 0..1)
+            {
+                [System.Windows.MessageBox]::Show("Invalid Gender","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientPhoneList.Items[0] -eq $Null)
+            {
+                [System.Windows.MessageBox]::Show("No phone number","Error")
+            }
+
+            ElseIf ($Cim.IO._EditClientEmailList.Items[0] -eq $Null)
+            {
+                [System.Windows.MessageBox]::Show("No email","Error")
+            }
+
+            Else
+            {
+                $Item                 = $Cim.NewUID(0)
+                $Cim.Refresh()
+                $Item.Record.First    = $Cim.IO._EditClientFirst.Text.ToUpper()
+                $Item.Record.MI       = $Cim.IO._EditClientMI.Text.ToUpper()
+                $Item.Record.Last     = $Cim.IO._EditClientLast.Text.ToUpper()
+                $Item.Record.Name     = $Full.ToUpper()
+                $Item.Record.Address  = $Cim.IO._EditClientAddress.Text.ToUpper()
+                $Item.Record.City     = $Cim.IO._EditClientCity.Text.ToUpper()
+                $Item.Record.Region   = $Cim.IO._EditClientRegion.Text.ToUpper()
+                $Item.Record.Country  = $Cim.IO._EditClientCountry.Text.ToUpper()
+                $Item.Record.Postal   = $Cim.IO._EditClientPostal.Text
+                $Item.Record.Month    = $Cim.IO._EditClientMonth.Text
+                $Item.Record.Day      = $Cim.IO._EditClientDay.Text
+                $Item.Record.Year     = $Cim.IO._EditClientYear.Text
+                $Item.Record.DOB      = $DOB
+                $Item.Record.Gender   = $Cim.IO._EditClientGender.SelectedItem.Content
+                $Item.Record.Phone    = $Cim.IO._EditClientPhoneList.Items
+                $Item.Record.Email    = $Cim.IO._EditClientEmailList.Items
+                $Item.Record.Device   = $Cim.IO._EditClientDeviceList.Items
+                $Item.Record.Invoice  = $Cim.IO._EditClientInvoiceList.Items
+
+                [System.Windows.MessageBox]::Show("Client [$($Item.Record.Name)] added to database","Success")
+
+                $Cim.GetTab(1)
+            }
+        }
+    })
 
     # ------------- #
     # Service Panel #
@@ -5194,20 +7840,6 @@ Function cim-db
         $Cim.IO._EditServiceTab.IsEnabled = 0
         $Cim.IO._NewServiceTab.IsEnabled  = 0
         $Cim.IO._SaveServiceTab.IsEnabled = 1
-    })
-
-    $Cim.IO._GetServiceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetServiceSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Service | ? $Cim.IO._GetServiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetServiceSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetServiceSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
     })
 
     # --------------------
@@ -5244,6 +7876,8 @@ Function cim-db
                 $Cim.IO._NewServiceName.Text        = $Null
                 $Cim.IO._NewServiceDescription.Text = $Null
                 $Cim.IO._NewServiceCost.Text        = $Null
+
+                $Cim.GetTab(2)
             }
         }
 
@@ -5277,6 +7911,8 @@ Function cim-db
                 $Cim.IO._EditServiceName.Text        = $Null
                 $Cim.IO._EditServiceDescription.Text = $Null
                 $Cim.IO._EditServiceCost.Text        = $Null
+
+                $Cim.GetTab(2)
             }
         }
     })
@@ -5309,20 +7945,6 @@ Function cim-db
         $Cim.IO._EditDeviceTab.IsEnabled = 0
         $Cim.IO._NewDeviceTab.IsEnabled  = 0
         $Cim.IO._SaveDeviceTab.IsEnabled = 1
-    })
-
-    $Cim.IO._GetDeviceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetDeviceSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Device | ? $Cim.IO._GetDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._GetDeviceSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetDeviceSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
     })
 
     # -------------------
@@ -5434,6 +8056,7 @@ Function cim-db
     {    
         $Cim.ViewTab(4)
         $Cim.ViewIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+
         $Cim.IO._EditIssueTab.IsEnabled = 1
         $Cim.IO._NewIssueTab.IsEnabled  = 1
         $Cim.IO._SaveIssueTab.IsEnabled = 0
@@ -5443,6 +8066,9 @@ Function cim-db
     {
         $Cim.EditTab(4)
         $Cim.EditIssue($Cim.IO._GetIssueSearchResult.SelectedItem.UID)
+
+        $Cim.Populate($Cim.DB.Service.Record,$Cim.IO._EditIssueServiceSearchResult)
+
         $Cim.IO._EditIssueTab.IsEnabled = 0
         $Cim.IO._NewIssueTab.IsEnabled  = 1
         $Cim.IO._SaveIssueTab.IsEnabled = 1
@@ -5451,55 +8077,57 @@ Function cim-db
     $Cim.IO._NewIssueTab.Add_Click(
     { 
         $Cim.NewTab(4)
+
+        $Cim.IO._NewIssueClientSearchResult.Items.Clear()
+        $Cim.IO._NewIssueClientList.Items.Clear()
+        
+        $Cim.IO._NewIssueDeviceSearchResult.Items.Clear()
+        $Cim.IO._NewIssueDeviceList.Items.Clear()
+
+        $Cim.IO._NewIssuePurchaseSearchResult.Items.Clear()
+        $Cim.IO._NewIssuePurchaseList.Items.Clear()
+        
+        $Cim.IO._NewIssueServiceSearchResult.Items.Clear()
+        $Cim.IO._NewIssueServiceList.Items.Clear()
+        
+        $Cim.IO._NewIssueInvoiceSearchResult.Items.Clear()
+        $Cim.IO._NewIssueInvoiceList.Items.Clear()
+
+        $Cim.Populate($Cim.DB.Client,$Cim.IO._NewIssueClientSearchResult)
+        $Cim.Populate($Cim.DB.Device,$Cim.IO._NewIssueDeviceSearchResult)
+        $Cim.Populate($Cim.DB.Purchase,$Cim.IO._NewIssuePurchaseSearchResult)
+        $Cim.Populate($Cim.DB.Service,$Cim.IO._NewIssueServiceSearchResult)
+        $Cim.Populate($Cim.DB.Invoice,$Cim.IO._NewIssueInvoiceSearchResult)
+
         $Cim.IO._EditIssueTab.IsEnabled = 0
         $Cim.IO._NewIssueTab.IsEnabled  = 0
         $Cim.IO._SaveIssueTab.IsEnabled = 1
-
-        $Cim.Populate($Cim.DB.Service,$Cim.IO._NewIssueServiceList)
     })
 
-    $Cim.IO._GetIssueSearchFilter.Add_TextChanged(
+    $Cim.IO._NewIssueAddService.Add_Click(
     {
-        $Cim.IO._GetIssueSearchResult.ItemsSource = $Null
+        $Item = $Cim.DB.Service | ? { $_.Record.Name -eq $Cim.IO._NewIssueServiceSearchResult.SelectedItem }
         
-        $Item = $Cim.DB.Issue | ? $Cim.IO._GetIssueSearchProperty.SelectedItem.Content -match $Cim.IO._GetIssueSearchFilter.Text
-
-        If ( !!$Item )
+        If ( $Item -in $Cim.IO._NewIssueServiceList.Items )
         {
-            $Cim.Populate( $Item , $Cim.IO._GetIssueSearchResult )
+            [System.Windows.MessageBox]::Show("Service is already selected","Error")
+        }   
+            
+        Else
+        {
+            $Cim.IO._NewIssueServiceList.Items.Add($Item.Record.Name)
         }
 
-        Start-Sleep -Milliseconds 50
     })
 
-    # ------------------------------
-
-    $Cim.IO._NewIssueClientSearchFilter.Add_TextChanged(
+    $Cim.IO._NewIssueRemoveService.Add_Click(
     {
-        $Cim.IO._NewIssueClientSearchResult.ItemsSource = $Null
+        $Item = $Cim.DB.Service | ? { $_.Record.Name -eq $Cim.IO._NewIssueServiceSearchResult.SelectedItem }
 
-        $Item = $Cim.DB.Issue | ? $Cim.IO._NewIssueClientSearchProperty.SelectedItem.Content -match $Cim.IO._NewIssueClientSearchFilter.Text
-
-        If ( !!$Item )
+        If ( $Item -in $Cim.IO._NewIssueServiceList.Items )
         {
-            $Cim.Populate( $Item , $Cim.IO._NewIssueClientSearchResult )
+            $Cim.IO._NewIssueServiceList.Items.Remove($Item.Record.Name)
         }
-
-        Start-Sleep -Milliseconds 50
-    })
-
-    $Cim.IO._NewIssueDeviceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._NewIssueDeviceSearchResult.ItemsSource = $Null
-
-        $Item = $Cim.DB.Issue | ? $Cim.IO._NewIssueDeviceSearchProperty.SelectedItem.Content -match $Cim.IO._NewIssueDeviceSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._NewIssueDeviceSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
     })
 
     # --------------- #
@@ -5532,20 +8160,6 @@ Function cim-db
         $Cim.IO._SaveInventoryTab.IsEnabled = 1
     })
 
-    $Cim.IO._GetInventorySearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetInventorySearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Inventory | ? $Cim.IO._GetInventorySearchProperty.SelectedItem.Content -match $Cim.IO._GetInventorySearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetInventorySearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
-    })
-    
     # -------------- #
     # Purchase Panel #
     # -------------- #
@@ -5574,20 +8188,6 @@ Function cim-db
         $Cim.IO._EditPurchaseTab.IsEnabled = 0
         $Cim.IO._NewPurchaseTab.IsEnabled  = 0
         $Cim.IO._SavePurchaseTab.IsEnabled = 1
-    })
-
-    $Cim.IO._GetPurchaseSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetPurchaseSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Purchase | ? $Cim.IO._GetPurchaseSearchProperty.SelectedItem.Content -match $Cim.IO._GetPurchaseSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetPurchaseSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
     })
 
     # ------------- #
@@ -5620,20 +8220,6 @@ Function cim-db
         $Cim.IO._SaveExpenseTab.IsEnabled = 1
     })
 
-    $Cim.IO._GetExpenseSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetExpenseSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Expense | ? $Cim.IO._GetExpenseSearchProperty.SelectedItem.Content -match $Cim.IO._GetExpenseSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetExpenseSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
-    })
-
     # ------------- #
     # Account Panel #
     # ------------- #
@@ -5664,20 +8250,6 @@ Function cim-db
         $Cim.IO._SaveAccountTab.IsEnabled = 1
     })
 
-    $Cim.IO._GetAccountSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetAccountSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Account | ? $Cim.IO._GetAccountSearchProperty.SelectedItem.Content -match $Cim.IO._GetAccountSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetAccountSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
-    })
-
     # ------------- #
     # Invoice Panel #
     # ------------- #
@@ -5706,20 +8278,6 @@ Function cim-db
         $Cim.IO._EditInvoiceTab.IsEnabled = 0
         $Cim.IO._NewInvoiceTab.IsEnabled  = 0
         $Cim.IO._SaveInvoiceTab.IsEnabled = 1
-    })
-
-    $Cim.IO._GetInvoiceSearchFilter.Add_TextChanged(
-    {
-        $Cim.IO._GetInvoiceSearchResult.ItemsSource = $Null
-        
-        $Item = $Cim.DB.Invoice | ? $Cim.IO._GetInvoiceSearchProperty.SelectedItem.Content -match $Cim.IO._GetInvoiceSearchFilter.Text
-
-        If ( !!$Item )
-        {
-            $Cim.Populate( $Item , $Cim.IO._GetInvoiceSearchResult )
-        }
-
-        Start-Sleep -Milliseconds 50
     })
 
     # ------------- #

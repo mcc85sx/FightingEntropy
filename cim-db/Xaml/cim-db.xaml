@@ -2908,7 +2908,7 @@
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="p9_x1_Purchase__SR" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="p9_x1_Purchase__B" IsEnabled="False"/>
+                                <Button Grid.Column="1" Content="+" Name="p9_x1_Purchase__AB" IsEnabled="False"/>
                                 <ComboBox Grid.Column="2" Name="p9_x1_Purchase__LI"/>
                                 <Button Grid.Column="3" Content="-" Name="p9_x1_Purchase__RB" IsEnabled="False"/>
                             </Grid>
@@ -3032,7 +3032,7 @@
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="p9_x2_Purchase__SR"/>
-                                <Button Grid.Column="1" Content="+" Name="p9_x2_Purchase__B"/>
+                                <Button Grid.Column="1" Content="+" Name="p9_x2_Purchase__AB"/>
                                 <ComboBox Grid.Column="2" Name="p9_x2_Purchase__LI"/>
                                 <Button Grid.Column="3" Content="-" Name="p9_x2_Purchase__RB"/>
                             </Grid>
@@ -3156,7 +3156,7 @@
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="p9_x3_Purchase__SR"/>
-                                <Button Grid.Column="1" Content="+" Name="p9_x3_Purchase__B"/>
+                                <Button Grid.Column="1" Content="+" Name="p9_x3_Purchase__AB"/>
                                 <ComboBox Grid.Column="2" Name="p9_x3_Purchase__LI"/>
                                 <Button Grid.Column="3" Content="-" Name="p9_x3_Purchase__RB"/>
                             </Grid>

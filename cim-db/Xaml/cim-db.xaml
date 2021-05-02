@@ -157,12 +157,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Name="New" Content="New"/>
-                <Button Grid.Column="1" Name="View" Content="View"/>
-                <Button Grid.Column="2" Name="Edit" Content="Edit"/>
-                <Button Grid.Column="3" Name="Save" Content="Save"/>
+                <Button Grid.Column="1" Name="Edit" Content="Edit"/>
+                <Button Grid.Column="2" Name="Save" Content="Save"/>
             </Grid>
             <Grid Grid.Row="1" Name="p0" Visibility="Collapsed">
                 <Grid Name="p0_x0" Visibility="Collapsed">
@@ -1390,7 +1388,7 @@
                                     <ComboBox Grid.Column="0" Name="p4_x1_Client____SP"/>
                                     <TextBox Grid.Column="1" Name="p4_x1_Client____SF"/>
                                 </Grid>
-                                <DataGrid Grid.Row="1" Name="p4_x1_Client___SR">
+                                <DataGrid Grid.Row="1" Name="p4_x1_Client____SR">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
                                         <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
@@ -1995,10 +1993,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="p4_x0_Inventory_SP"/>
-                        <TextBox Grid.Column="1" Name="p4_x0_Inventory_SF"/>
+                        <ComboBox Grid.Column="0" Name="p5_x0_Inventory_SP"/>
+                        <TextBox Grid.Column="1" Name="p5_x0_Inventory_SF"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="p4_x0_Inventory_SR">
+                    <DataGrid Grid.Row="1" Margin="5" Name="p5_x0_Inventory_SR">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Vendor"     Binding='{Binding Record.Vendor}'   Width="*"/>
                             <DataGridTextColumn Header="Serial"     Binding='{Binding Record.Serial}'   Width="*"/>
@@ -2235,10 +2233,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" Name="p4_x0_Purchase__SP"/>
-                        <TextBox Grid.Column="1" Name="p4_x0_Purchase__SF"/>
+                        <ComboBox Grid.Column="0" Name="p6_x0_Purchase__SP"/>
+                        <TextBox Grid.Column="1" Name="p6_x0_Purchase__SF"/>
                     </Grid>
-                    <DataGrid Grid.Row="1" Margin="5" Name="p4_x0_Purchase__SR">
+                    <DataGrid Grid.Row="1" Margin="5" Name="p6_x0_Purchase__SR">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Distributor}' Width="*"/>
                             <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="*"/>
@@ -2526,8 +2524,8 @@
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="1" Name="p7_x1_Account_SP" IsEnabled="False"/>
-                                <TextBox Grid.Column="2" Name="p7_x1_Account_SF" IsEnabled="False"/>
+                                <ComboBox Grid.Column="1" Name="p7_x1_Account___SP" IsEnabled="False"/>
+                                <TextBox Grid.Column="2" Name="p7_x1_Account___SF" IsEnabled="False"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -2536,10 +2534,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="p7_x1_Account_SR" IsEnabled="False"/>
-                                <Button Grid.Column="1" Content="+" Name="p7_x1_Account_AB" IsEnabled="False"/>
-                                <ComboBox Grid.Column="2" Name="p7_x1_Account_LI"/>
-                                <Button Grid.Column="3" Content="-" Name="p7_x1_Account_RB" IsEnabled="False"/>
+                                <ComboBox Grid.Column="0" Name="p7_x1_Account___SR" IsEnabled="False"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x1_Account___AB" IsEnabled="False"/>
+                                <ComboBox Grid.Column="2" Name="p7_x1_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x1_Account___RB" IsEnabled="False"/>
                             </Grid>
                         </Grid>
                     </GroupBox>
@@ -2576,8 +2574,8 @@
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="1" Name="p7_x2_Account_SP"/>
-                                <TextBox Grid.Column="2" Name="p7_x2_Account_SF"/>
+                                <ComboBox Grid.Column="1" Name="p7_x2_Account___SP"/>
+                                <TextBox Grid.Column="2" Name="p7_x2_Account___SF"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -2586,10 +2584,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="p7_x2_Account_SR"/>
-                                <Button Grid.Column="1" Content="+" Name="p7_x2_Account_AB"/>
-                                <ComboBox Grid.Column="2" Name="p7_x2_Account_LI"/>
-                                <Button Grid.Column="3" Content="-" Name="p7_x2_Account_RB"/>
+                                <ComboBox Grid.Column="0" Name="p7_x2_Account___SR"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x2_Account___AB"/>
+                                <ComboBox Grid.Column="2" Name="p7_x2_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x2_Account___RB"/>
                             </Grid>
                         </Grid>
                     </GroupBox>
@@ -2626,8 +2624,8 @@
                                     <ComboBoxItem Content="No"/>
                                     <ComboBoxItem Content="Yes"/>
                                 </ComboBox>
-                                <ComboBox Grid.Column="1" Name="p7_x3_Account_SP"/>
-                                <TextBox Grid.Column="2" Name="p7_x3_Account_SF"/>
+                                <ComboBox Grid.Column="1" Name="p7_x3_Account___SP"/>
+                                <TextBox Grid.Column="2" Name="p7_x3_Account___SF"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -2636,10 +2634,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox Grid.Column="0" Name="p7_x3_Account_SR"/>
-                                <Button Grid.Column="1" Content="+" Name="p7_x3_Account_AB"/>
-                                <ComboBox Grid.Column="2" Name="p7_x3_Account_LI"/>
-                                <Button Grid.Column="3" Content="-" Name="p7_x3_Account_RB"/>
+                                <ComboBox Grid.Column="0" Name="p7_x3_Account___SR"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x3_Account___AB"/>
+                                <ComboBox Grid.Column="2" Name="p7_x3_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x3_Account___RB"/>
                             </Grid>
                         </Grid>
                     </GroupBox>

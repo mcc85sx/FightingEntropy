@@ -876,7 +876,7 @@
             "p4_x0_Issue_____SP",
             "p4_x0_Issue_____SF",
             "p4_x0_Issue_____SR",
-			"p4_x1_Status____TB",
+			"p4_x1_Status____LI",
             "p4_x1_Descript__TB",
             "p4_x1_Issue_____TC",
             "p4_x1_Client____SP",
@@ -909,7 +909,7 @@
             "p4_x1_Invoice___AB",
             "p4_x1_Invoice___LI",
             "p4_x1_Invoice___RB",
-			"p4_x2_Status____TB",
+			"p4_x2_Status____LI",
             "p4_x2_Descript__TB",
             "p4_x2_Issue_____TC",
             "p4_x2_Client____SP",
@@ -942,7 +942,7 @@
             "p4_x2_Invoice___AB",
             "p4_x2_Invoice___LI",
             "p4_x2_Invoice___RB",
-            "p4_x3_Status____TB",
+            "p4_x3_Status____LI",
             "p4_x3_Descript__TB",
             "p4_x3_Issue_____TC",
             "p4_x3_Client____SP",
@@ -1374,6 +1374,12 @@
             $This.Relinquish( $This.IO.p1_x3_Invoice___LI )
         }
 
+        NewClient()
+        {
+            $This._NewClient()
+
+        }
+
         _ViewService()
         {
             $This.IO.p2_x1_Name______TB.Text         = $Null
@@ -1399,6 +1405,8 @@
 
         _EditService()
         {
+            $This.Collapse()
+
             $This.IO.p2_x2_Name______TB.Text         = $Null
             $This.IO.p2_x2_Descript__TB.Text         = $Null
             $This.IO.p2_x2_Cost______TB.Text         = $Null
@@ -1517,6 +1525,8 @@
     
         _NewDevice()
         {
+            $This.Collapse()
+
             $This.IO.p3_x3_Chassis___LI.SelectedItem = 8
             $This.IO.p3_x3_Vendor____TB.Text         = $Null
             $This.IO.p3_x3_Model_____TB.Text         = $Null
@@ -1553,8 +1563,12 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x1_Status____TB.Text              = $Item.Record.Description
-            $This.IO.p4_x1_Descript__TB.SelectedIndex     = $Item.Record.Status
+            $This.IO.p4_x1_Status____LI.SelectedIndex     = Switch($Item.Record.Status)
+            {
+                0 { "New" } 1 { "Diagnosed" } 2 { "Commit" } 3 { "Complete" }
+            }
+
+            $This.IO.p4_x1_Descript__TB.SelectedIndex     = $Item.Record.Description
 
             $This.Populate( $Item.Record.Client           , $This.IO.p4_x1_Client____LI )
             $This.Populate( $Item.Record.Device           , $This.IO.p4_x1_Device____LI )
@@ -1610,7 +1624,6 @@
 
         _ViewInventory()
         {
-            
             $This.IO.p5_x1_Vendor____TB.Text         = $Null
             $This.IO.p5_x1_Model_____TB.Text         = $Null
             $This.IO.p5_x1_Serial____TB.Text         = $Null
@@ -1875,6 +1888,7 @@
 
         _EditAccount()
         {
+
             $This.Relinquish($This.IO.p8_x2_AcctObj___LI)
         }
 
@@ -1899,6 +1913,8 @@
 
         _ViewInvoice()
         {
+            $This.Collapse()
+
             $This.IO.p9_x1_Mode______LI.SelectedIndex = 0
 
             $This.Relinquish($This.IO.p9_x1_Client_____LI)
@@ -2041,13 +2057,22 @@
             $This.Collapse()
             $This.Stage()
             
-            $This.IO.New.Visibility                    = "Visible"
-            $This.IO.New.IsEnabled                     = 1
+            If ( $Slot -eq 0 )
+            {
+                $This.IO.New.Visibility                = "Hidden"
+                $This.IO.New.IsEnabled                 = 0
+            }
 
-            $This.IO.Edit.IsVisible                    = "Hidden"
+            If ( $Slot -ne 0 )
+            {
+                $This.IO.New.Visibility                = "Visible"
+                $This.IO.New.IsEnabled                 = 1
+            }
+
+            $This.IO.Edit.Visibility                   = "Hidden"
             $This.IO.Edit.IsEnabled                    = 0
 
-            $This.IO.Save.IsVisible                    = "Hidden"
+            $This.IO.Save.Visibility                   = "Hidden"
             $This.IO.Save.IsEnabled                    = 0
             
             ForEach ( $X in 0..9 )
@@ -3491,7 +3516,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Status]" IsEnabled="False">
-                            <ComboBox Name="p4_x1_Status____TB"/>
+                            <ComboBox Name="p4_x1_Status____LI"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Description]" IsEnabled="False">
                             <TextBox Name="p4_x1_Descript__TB"/>
@@ -3701,7 +3726,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox Name="p4_x2_Status____TB"/>
+                            <ComboBox Name="p4_x2_Status____LI"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Description]">
                             <TextBox Name="p4_x2_Descript__TB"/>
@@ -3911,7 +3936,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox Name="p4_x3_Status____TB"/>
+                            <ComboBox Name="p4_x3_Status____LI"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Description]">
                             <TextBox Name="p4_x3_Descript__TB"/>
@@ -5290,7 +5315,6 @@
     </Grid>
 </Window>
 "@
-
     $Cim  = [Cimdb]::New($Xaml)
 
     # --------- #
@@ -5379,9 +5403,23 @@
 
         Switch([UInt32]$Cim.Slot)
         {
-            0 { $Null               }
-            1 { $Cim._NewClient()   }
-            2 { $Cim._NewService()  }
+            0 
+            {
+                $Null               
+            }
+
+            1 
+            { 
+                $Cim._NewClient()
+
+            }
+
+            2 
+            { 
+                $Cim._NewService()
+
+            }
+
             3 { $Cim._NewDevice()   }
             4 { $Cim._NewIssue()    }
             5 { $Cim._NewInventory()}
@@ -5464,16 +5502,15 @@
         }
     })
 
-    Function Disable
-    {
-    Function ClientPanel
-    {
-
     $Cim.IO.Save.Add_Click(
     {
-        Switch($Cim.Slot)
+        Switch([UInt32]$Cim.Slot)
         {
-            0 { $Null }
+            0 
+            { 
+                $Null 
+            }
+
             1 
             {
                 If ( $New -eq 0 )
@@ -5876,7 +5913,74 @@
 
             4
             {
-                
+                If ( $New -eq 0 )
+                {
+                    If ( $Cim.IO.p4_x2_Client____LI.Items.Count -lt 1 )
+                    {
+                        [System.Windows.MessageBox]::Show("No services specified","Error")
+                    }
+
+                    ElseIf ( $Cim.IO.p4_x2_Device____LI.Items.Count -lt 1 )
+                    {
+                        [System.Windows.MessageBox]::Show("No services specified","Error")
+                    }
+
+                    ElseIf ( $Cim.IO.p4_x2_Service___LI.Items.Count -lt 1 )
+                    {
+                        [System.Windows.MessageBox]::Show("No services specified","Error")
+                    }
+
+                    Switch($Cim.IO.p4_x2_Status____LI.SelectedIndex)
+                    {
+                        0 # New
+                        {
+                            [System.Windows.MessageBox]::Show("This option should be unreachable","Error")
+                        }
+                        
+                        1 # Diagnosed
+                        { 
+                            If ( $Cim.IO.p4_x2_Service___LI.Items.Count -lt 1 )
+                            {
+                                [System.Windows.MessageBox]::Show("No services specified","Error")
+                            }
+                        } 
+                        
+                        2 # Commit
+                        { 
+                            If ( $Cim.IO.p4_x2_Service___LI.Items.Count -lt 1 )
+                            {
+                                [System.Windows.MessageBox]::Show("No services specified","Error")
+                            }
+                        } 
+                        
+                        3 # Complete
+                        { 
+                            If ( $Cim.IO.p4_x2_Service___LI.Items.Count -lt 1 )
+                            {
+                                [System.Windows.MessageBox]::Show("No services specified","Error")
+                            }
+                        }
+                    }
+                }
+
+                If ( $New -eq 1 )
+                {
+                    If ( $Cim.IO.p4_x3_Client____LI.Items.Count -lt 1 )
+                    {
+                        [System.Windows.MessageBox]::Show("No client listed","Error")
+                    }
+
+                    ElseIf ( $Cim.IO.p4_x3_Device____LI.Items.Count -lt 1 )
+                    {
+                        [System.Windows.MessageBox]::Show("No client listed","Error")
+                    }
+
+                    Else
+                    {
+                        $Item                          = $Cim.NewUID(3)
+                        $Cim.Refresh()
+                    }
+                }
             }
         }  
 
@@ -6130,6 +6234,412 @@
         $Cim.IO.p1_x3_Device____LI.Items.Remove($Cim.IO.p1_x3_Device____SR.SelectedItem.UID)
     })
 
+    # ------- #
+    # Service #
+    # ------- #
+
+    # ------ #
+    # Device #
+    # ------ #
+
+    # ----- #
+    # Issue #
+    # ----- #
+
+    # Edit ----
+
+    $Cim.IO.p4_x2_Client____RB.IsEnabled = 0
+    $Cim.IO.p4_x2_Device____RB.IsEnabled = 0
+    $Cim.IO.p4_x2_Purchase__RB.IsEnabled = 0
+    $Cim.IO.p4_x2_Service___RB.IsEnabled = 0
+    $Cim.IO.p4_x2_Invoice___RB.IsEnabled = 0
+
+    $Cim.IO.p4_x2_Client____LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x2_Client____LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x2_Client____AB.IsEnabled = 1
+                $Cim.IO.p4_x2_Client____RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x2_Client____AB.IsEnabled = 0 
+                $Cim.IO.p4_x2_Client____RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x2_Device____LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x2_Device____LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x2_Device____AB.IsEnabled = 1
+                $Cim.IO.p4_x2_Device____RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x2_Device____AB.IsEnabled = 0 
+                $Cim.IO.p4_x2_Device____RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x2_Purchase__LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x2_Purchase__LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x2_Purchase__AB.IsEnabled = 1
+                $Cim.IO.p4_x2_Purchase__RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x2_Purchase__AB.IsEnabled = 0 
+                $Cim.IO.p4_x2_Purchase__RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x2_Client____AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x2_Client____SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x2_Client____SR.SelectedItem -in $Cim.IO.p4_x2_Client____LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x2_Client____LI.Items.Add($Cim.IO.p4_x2_Client____SR.SelectedItem.UID)
+            $Cim.IO.p4_x2_Client____AB.IsEnabled = 0
+            $Cim.IO.p4_x2_Client____RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x2_Client____RB.Add_Click(
+    {
+        $Cim.IO.p4_x2_Client____LI($Cim.IO.p4_x2_Client____SR.SelectedItem.UID)
+        $Cim.IO.p4_x2_Client____AB.IsEnabled = 1
+        $Cim.IO.p4_x2_Client____RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x2_Device____AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x2_Device____SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x2_Device____SR.SelectedItem -in $Cim.IO.p4_x2_Device____LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x2_Device____LI.Items.Add($Cim.IO.p4_x2_Device____SR.SelectedItem.UID)
+            $Cim.IO.p4_x2_Device____AB.IsEnabled = 0
+            $Cim.IO.p4_x2_Device____RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x2_Device____RB.Add_Click(
+    {
+        $Cim.IO.p4_x2_Device____LI($Cim.IO.p4_x2_Device____SR.SelectedItem.UID)
+        $Cim.IO.p4_x2_Device____AB.IsEnabled = 1
+        $Cim.IO.p4_x2_Device____RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x2_Purchase__AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x2_Purchase__SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x2_Purchase__SR.SelectedItem -in $Cim.IO.p4_x2_Purchase__LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x2_Purchase__LI.Items.Add($Cim.IO.p4_x2_Purchase__SR.SelectedItem.UID)
+            $Cim.IO.p4_x2_Purchase__AB.IsEnabled = 0
+            $Cim.IO.p4_x2_Purchase__RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x2_Purchase__RB.Add_Click(
+    {
+        $Cim.IO.p4_x2_Purchase__LI($Cim.IO.p4_x2_Purchase__SR.SelectedItem.UID)
+        $Cim.IO.p4_x2_Purchase__AB.IsEnabled = 1
+        $Cim.IO.p4_x2_Purchase__RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x2_Service___AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x2_Service___SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x2_Service___SR.SelectedItem -in $Cim.IO.p4_x2_Service___LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x2_Service___LI.Items.Add($Cim.IO.p4_x2_Service___SR.SelectedItem.UID)
+            $Cim.IO.p4_x2_Service___AB.IsEnabled = 0
+            $Cim.IO.p4_x2_Service___RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x2_Service___RB.Add_Click(
+    {
+        $Cim.IO.p4_x2_Service___LI($Cim.IO.p4_x2_Service___SR.SelectedItem.UID)
+        $Cim.IO.p4_x2_Service___AB.IsEnabled = 1
+        $Cim.IO.p4_x2_Service___RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x2_Invoice___AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x2_Invoice___SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x2_Invoice___SR.SelectedItem -in $Cim.IO.p4_x2_Invoice___LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x2_Invoice___LI.Items.Add($Cim.IO.p4_x2_Invoice___SR.SelectedItem.UID)
+            $Cim.IO.p4_x2_Invoice___AB.IsEnabled = 0
+            $Cim.IO.p4_x2_Invoice___RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x2_Invoice___RB.Add_Click(
+    {
+        $Cim.IO.p4_x2_Invoice___LI($Cim.IO.p4_x2_Invoice___SR.SelectedItem.UID)
+        $Cim.IO.p4_x2_Invoice___AB.IsEnabled = 1
+        $Cim.IO.p4_x2_Invoice___RB.IsEnabled = 0
+    })
+
+    # New ----
+
+    $Cim.IO.p4_x3_Client____RB.IsEnabled = 0
+    $Cim.IO.p4_x3_Device____RB.IsEnabled = 0
+    $Cim.IO.p4_x3_Purchase__RB.IsEnabled = 0
+    $Cim.IO.p4_x3_Service___RB.IsEnabled = 0
+    $Cim.IO.p4_x3_Invoice___RB.IsEnabled = 0
+
+    $Cim.IO.p4_x3_Client____LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x3_Client____LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x3_Client____AB.IsEnabled = 1
+                $Cim.IO.p4_x3_Client____RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x3_Client____AB.IsEnabled = 0 
+                $Cim.IO.p4_x3_Client____RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x3_Device____LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x3_Device____LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x3_Device____AB.IsEnabled = 1
+                $Cim.IO.p4_x3_Device____RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x3_Device____AB.IsEnabled = 0 
+                $Cim.IO.p4_x3_Device____RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x3_Purchase__LI.Add_DataContextChanged(
+    {
+        Switch($Cim.IO.p4_x3_Purchase__LI.Items.Count)
+        {
+            0 
+            { 
+                $Cim.IO.p4_x3_Purchase__AB.IsEnabled = 1
+                $Cim.IO.p4_x3_Purchase__RB.IsEnabled = 0 
+            } 
+
+            1 
+            { 
+                $Cim.IO.p4_x3_Purchase__AB.IsEnabled = 0 
+                $Cim.IO.p4_x3_Purchase__RB.IsEnabled = 1
+            }
+        }
+    })
+
+    $Cim.IO.p4_x3_Client____AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x3_Client____SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x3_Client____SR.SelectedItem -in $Cim.IO.p4_x3_Client____LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x3_Client____LI.Items.Add($Cim.IO.p4_x3_Client____SR.SelectedItem.UID)
+            $Cim.IO.p4_x3_Client____AB.IsEnabled = 0
+            $Cim.IO.p4_x3_Client____RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x3_Client____RB.Add_Click(
+    {
+        $Cim.IO.p4_x3_Client____LI($Cim.IO.p4_x3_Client____SR.SelectedItem.UID)
+        $Cim.IO.p4_x3_Client____AB.IsEnabled = 1
+        $Cim.IO.p4_x3_Client____RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x3_Device____AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x3_Device____SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x3_Device____SR.SelectedItem -in $Cim.IO.p4_x3_Device____LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x3_Device____LI.Items.Add($Cim.IO.p4_x3_Device____SR.SelectedItem.UID)
+            $Cim.IO.p4_x3_Device____AB.IsEnabled = 0
+            $Cim.IO.p4_x3_Device____RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x3_Device____RB.Add_Click(
+    {
+        $Cim.IO.p4_x3_Device____LI($Cim.IO.p4_x3_Device____SR.SelectedItem.UID)
+        $Cim.IO.p4_x3_Device____AB.IsEnabled = 1
+        $Cim.IO.p4_x3_Device____RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x3_Purchase__AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x3_Purchase__SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x3_Purchase__SR.SelectedItem -in $Cim.IO.p4_x3_Purchase__LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x3_Purchase__LI.Items.Add($Cim.IO.p4_x3_Purchase__SR.SelectedItem.UID)
+            $Cim.IO.p4_x3_Purchase__AB.IsEnabled = 0
+            $Cim.IO.p4_x3_Purchase__RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x3_Purchase__RB.Add_Click(
+    {
+        $Cim.IO.p4_x3_Purchase__LI($Cim.IO.p4_x3_Purchase__SR.SelectedItem.UID)
+        $Cim.IO.p4_x3_Purchase__AB.IsEnabled = 1
+        $Cim.IO.p4_x3_Purchase__RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x3_Service___AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x3_Service___SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x3_Service___SR.SelectedItem -in $Cim.IO.p4_x3_Service___LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x3_Service___LI.Items.Add($Cim.IO.p4_x3_Service___SR.SelectedItem.UID)
+            $Cim.IO.p4_x3_Service___AB.IsEnabled = 0
+            $Cim.IO.p4_x3_Service___RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x3_Service___RB.Add_Click(
+    {
+        $Cim.IO.p4_x3_Service___LI($Cim.IO.p4_x3_Service___SR.SelectedItem.UID)
+        $Cim.IO.p4_x3_Service___AB.IsEnabled = 1
+        $Cim.IO.p4_x3_Service___RB.IsEnabled = 0
+    })
+
+    $Cim.IO.p4_x3_Invoice___AB.Add_Click(
+    {
+        If ( $Cim.IO.p4_x3_Invoice___SR.SelectedIndex -eq -1 )
+        {
+            [System.Windows.MessageBox]::Show("No client selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p4_x3_Invoice___SR.SelectedItem -in $Cim.IO.p4_x3_Invoice___LI.Items )
+        {
+            [System.Windows.MessageBox]::Show("Client is already specified","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p4_x3_Invoice___LI.Items.Add($Cim.IO.p4_x3_Invoice___SR.SelectedItem.UID)
+            $Cim.IO.p4_x3_Invoice___AB.IsEnabled = 0
+            $Cim.IO.p4_x3_Invoice___RB.IsEnabled = 1
+        }
+    })
+
+    $Cim.IO.p4_x3_Invoice___RB.Add_Click(
+    {
+        $Cim.IO.p4_x3_Invoice___LI($Cim.IO.p4_x3_Invoice___SR.SelectedItem.UID)
+        $Cim.IO.p4_x3_Invoice___AB.IsEnabled = 1
+        $Cim.IO.p4_x3_Invoice___RB.IsEnabled = 0
+    })
+
     Function IssuePanel 
     {
     $Cim.IO._EditIssueTab.Add_Click(
@@ -6298,13 +6808,14 @@
         $Cim.IO._NewInvoiceTab.IsEnabled  = 0
         $Cim.IO._SaveInvoiceTab.IsEnabled = 1
     })
+    }
 
     # ------------- #
     # Return Object #
     # ------------- #
 
-    $Cim
-}}
+    #$Cim
+#
 
 #$Cim      = cim-db
 

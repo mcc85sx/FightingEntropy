@@ -2298,25 +2298,21 @@
 
                 3 
                 { 
-                    $This._NewDevice()   
                     $This.NewDevice()
                 }
 
                 4 
                 { 
-                    $This._NewIssue()    
                     $This.NewIssue()
                 }
 
                 5 
                 { 
-                    $This._NewInventory()
                     $This.NewInventory()
                 }
 
                 6 
                 { 
-                    $This._NewPurchase() 
                     $This.NewPurchase()
                 }
 
@@ -3154,7 +3150,7 @@
                     </GroupBox>
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Name="p3" Visibility="Collapsed">
+            <Grid Grid.Row="1" Name="p3" Visibility="Visible">
                 <Grid Name="p3_x0" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -3218,6 +3214,118 @@
                             <TextBox Name="p3_x1_Spec______TB"/>
                         </GroupBox>
                     </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Client"   Name="p3_x1_Client____TC"/>
+                            <Button Grid.Column="1" Content="Issue"    Name="p3_x1_Issue_____TC"/>
+                            <Button Grid.Column="2" Content="Purchase" Name="p3_x1_Purchase__Tc"/>
+                            <Button Grid.Column="3" Content="Invoice"  Name="p3_x1_Invoice___TC"/>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x1_Client____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x1_Client____SP"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x1_Client____SF"/>
+                            </Grid>
+                                <DataGrid Grid.Row="1" Grid.Column="0" Name="p3_x1_Client____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x1_Issue_____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x1_Issue_____SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x1_Issue_____SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x1_Issue_____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x1_Purchase__TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x1_Purchase__SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x1_Purchase__SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x1_Purchase__SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x1_Invoice___TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x1_Invoice___SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x1_Invoice___SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x1_Invoice___SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -3230,110 +3338,6 @@
                             <TextBox Name="p3_x1_Title_____TB"/>
                         </GroupBox>
                     </Grid>
-                    <TabControl Grid.Row="1" Name="p3_x1_Device____TC">
-                        <TabItem Header="Client">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x1_Client____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x1_Client____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x1_Client____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Issue">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x1_Issue_____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x1_Issue_____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x1_Issue_____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
-                                        <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
-                                        <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
-                                        <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Purchase">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x1_Purchase__SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x1_Purchase__SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x1_Purchase__SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                        <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Invoice">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x1_Invoice___SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x1_Invoice___SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x1_Invoice___SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
-                                        <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
-                                        <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
                     <GroupBox Grid.Row="3" Header="[Client(s)]">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -3423,6 +3427,118 @@
                             <TextBox Name="p3_x2_Spec______TB"/>
                         </GroupBox>
                     </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Client"   Name="p3_x2_Client____TC"/>
+                            <Button Grid.Column="1" Content="Issue"    Name="p3_x2_Issue_____TC"/>
+                            <Button Grid.Column="2" Content="Purchase" Name="p3_x2_Purchase__TC"/>
+                            <Button Grid.Column="3" Content="Invoice"  Name="p3_x2_Invoice___TC"/>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x2_Client____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x2_Client____SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x2_Client____SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Grid.Column="0" Name="p3_x2_Client____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x2_Issue_____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x2_Issue_____SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x2_Issue_____SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x2_Issue_____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x2_Purchase__TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x2_Purchase__SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x2_Purchase__SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x2_Purchase__SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x2_Invoice___TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x2_Invoice___SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x2_Invoice___SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x2_Invoice___SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -3435,110 +3551,6 @@
                             <TextBox Name="p3_x2_Title_____TB"/>
                         </GroupBox>
                     </Grid>
-                    <TabControl Grid.Row="1" Name="p3_x2_Device____TC">
-                        <TabItem Header="Client">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x2_Client____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x2_Client____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x2_Client____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Issue">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x2_Issue_____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x2_Issue_____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x2_Issue_____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
-                                        <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
-                                        <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
-                                        <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Purchase">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x2_Purchase__SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x2_Purchase__SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x2_Purchase__SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                        <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Invoice">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x2_Invoice___SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x2_Invoice___SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x2_Invoice___SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
-                                        <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
-                                        <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
                     <GroupBox Grid.Row="3" Header="[Client(s)]">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -3588,7 +3600,7 @@
                         </Grid>
                     </GroupBox>
                 </Grid>
-                <Grid Name="p3_x3" Visibility="Collapsed">
+                <Grid Name="p3_x3" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="200"/>
@@ -3628,6 +3640,118 @@
                             <TextBox Name="p3_x3_Spec______TB"/>
                         </GroupBox>
                     </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Client"   Name="p3_x3_Client____TC"/>
+                            <Button Grid.Column="1" Content="Issue"    Name="p3_x3_Issue_____TC"/>
+                            <Button Grid.Column="2" Content="Purchase" Name="p3_x3_Purchase__TC"/>
+                            <Button Grid.Column="3" Content="Invoice"  Name="p3_x3_Invoice___TC"/>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x3_Client____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x3_Client____SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x3_Client____SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Grid.Column="0" Name="p3_x3_Client____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x3_Issue_____TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x3_Issue_____SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x3_Issue_____SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x3_Issue_____SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
+                                    <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
+                                    <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
+                                    <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x3_Purchase__TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x3_Purchase__SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x3_Purchase__SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x3_Purchase__SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
+                                    <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
+                                    <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                    <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
+                                    <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid Grid.Row="1" Name="p3_x3_Invoice___TI" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Row="0" Grid.Column="0" Name="p3_x3_Invoice___SP"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Name="p3_x3_Invoice___SF"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Name="p3_x3_Invoice___SR">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
+                                    <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
+                                    <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
+                                    <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -3640,110 +3764,6 @@
                             <TextBox Name="p3_x3_Title_____TB"/>
                         </GroupBox>
                     </Grid>
-                    <TabControl Grid.Row="1" Name="p3_x3_Device____TC">
-                        <TabItem Header="Client">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x3_Client____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x3_Client____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x3_Client____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Last"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="First" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="MI"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="DOB"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Issue">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x3_Issue_____SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x3_Issue_____SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x3_Issue_____SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.Vendor}'  Width="*"/>
-                                        <DataGridTextColumn Header="Model"  Binding='{Binding Record.Model}'  Width="*"/>
-                                        <DataGridTextColumn Header="Spec."  Binding='{Binding Record.Specification}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial" Binding='{Binding Record.Serial}'    Width="*"/>
-                                        <DataGridTextColumn Header="Title"  Binding='{Binding Record.Title}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Purchase">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x3_Purchase__SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x3_Purchase__SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x3_Purchase__SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Distributor"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.Last}'  Width="*"/>
-                                        <DataGridTextColumn Header="Vendor" Binding='{Binding Record.First}' Width="*"/>
-                                        <DataGridTextColumn Header="Serial"    Binding='{Binding Record.MI}'    Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                        <DataGridTextColumn Header="Device" Binding='{Binding Record.IsDevice}' Width="*"/>
-                                        <DataGridTextColumn Header="Model"   Binding='{Binding Record.DOB}'   Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                        <TabItem Header="Invoice">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Column="0" Name="p3_x3_Invoice___SP"/>
-                                    <TextBox Grid.Column="1" Name="p3_x3_Invoice___SF"/>
-                                </Grid>
-                                <DataGrid Grid.Row="1" Name="p3_x3_Invoice___SR">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>
-                                        <DataGridTextColumn Header="Date"  Binding='{Binding Record.Date}'  Width="*"/>
-                                        <DataGridTextColumn Header="Name"  Binding='{Binding Record.Name}'  Width="*"/>
-                                        <DataGridTextColumn Header="Phone" Binding='{Binding Record.Phone}' Width="*"/>
-                                        <DataGridTextColumn Header="Email"  Binding='{Binding Record.Email}'  Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
                     <GroupBox Grid.Row="3" Header="[Client(s)]">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -5752,55 +5772,46 @@
 
             1 
             { 
-                $Cim._EditClient()
                 $Cim.EditClient($Cim.IO.p1_x0_Client____SR.SelectedItem.UID)
             }
 
             2 
             { 
-                $Cim._EditService()
                 $Cim.EditService($Cim.IO.p2_x0_Service___SR.SelectedItem.UID)
             }
             
             3 
             { 
-                $Cim._EditDevice()
                 $Cim.EditDevice($Cim.IO.p3_x0_Device____SR.SelectedItem.UID)
             }
 
             4 
             { 
-                $Cim._EditIssue()
                 $Cim.EditIssue($Cim.IO.p4_x0_Issue_____SR.SelectedItem.UID)
             }
 
             5 
             { 
-                $Cim._EditInventory()
                 $Cim.EditInventory($Cim.IO.p5_x0_Inventory_SR.SelectedItem.UID)
             }
 
             6 
             { 
-                $Cim._EditPurchase()
                 $Cim.EditPurchase($Cim.IO.p6_x0_Purchase__SR.SelectedItem.UID)
             }
 
             7 
             { 
-                $Cim._EditExpense()
                 $Cim.EditExpense($Cim.IO.p7_x0_Expense___SR.SelectedItem.UID)
             }
 
             8 
             { 
-                $Cim._EditAccount()
                 $Cim.EditAccount($Cim.IO.p8_x0_Account___SR.SelectedItem.UID)
             }
 
             9 
             { 
-                $Cim._EditInvoice()
                 $Cim.EditInvoice($Cim.IO.p9_x0_Invoice___SR.SelectedItem.UID)
             }
         }
@@ -6556,61 +6567,336 @@
 
     # Edit #
 
-    $Cim.IO.p3_x2_Device____TC.Add_SelectionChanged(
+    # Tab Control...
+    $Cim.IO.p3_x2_Client____TC.Add_Click(
     {
-        $Cim.Refresh()
+        $Cim.IO.p3_x2_Client____TI.Visibility = "Visible"
+        $Cim.IO.p3_x2_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Invoice___TI.Visibility = "Collapsed"
 
-        Switch($Cim.IO.p3_x2_Device____TC.SelectedIndex)
+        $Cim.IO.p3_x2_Client____SR.ItemsSource = $Cim.DB.Client
+    })
+
+    $Cim.IO.p3_x2_Issue_____TC.Add_Click(
+    {
+        $Cim.IO.p3_x2_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Issue_____TI.Visibility = "Visible"
+        $Cim.IO.p3_x2_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Invoice___TI.Visibility = "Collapsed"
+
+        $Cim.IO.p3_x2_Issue_____SR.ItemsSource = $Cim.DB.Issue
+    })
+
+    $Cim.IO.p3_x2_Purchase__TC.Add_Click(
+    {
+        $Cim.IO.p3_x2_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Purchase__TI.Visibility = "Visible"
+        $Cim.IO.p3_x2_Invoice___TI.Visibility = "Collapsed"
+
+        $Cim.IO.p3_x2_Purchase___SR.ItemsSource = $Cim.DB.Purchase
+    })
+
+    $Cim.IO.p3_x2_Invoice___TC.Add_Click(
+    {
+        $Cim.IO.p3_x2_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x2_Invoice___TI.Visibility = "Visible"
+
+        $Cim.IO.p3_x2_Invoice___SR.ItemsSource = $Cim.DB.Invoice
+    })
+
+    # Client Add/Remove
+    $Cim.IO.p3_x2_Client____AB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x2_Client____SR.SelectedItem.UID -in $Cim.IO.p3_x2_Client____LI.Items.UID)
         {
-            0 
-            { 
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x2_Client____SR)
-            }
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
 
-            1
-            {
-                $Cim.Populate($Cim.DB.Issue,$Cim.IO.p3_x2_Issue_____SR)
-            }
-    
-            2
-            {
-                $Cim.Populate($Cim.DB.Purchase,$Cim.IO.p3_x2_Purchase__SR)
-            }
+        ElseIf ($Cim.IO.p3_x2_Client____SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
 
-            3
-            {   
-                $Cim.Populate($Cim.DB.Invoice,$Cim.IO.p3_x2_Invoice___SR)
-            }
+        Else
+        {
+            $Cim.IO.p3_x2_Client____LI.Items.Add($Cim.IO.p3_x2_Client____SR.SelectedItem)
         }
     })
 
+    $Cim.IO.p3_x2_Client____RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x2_Client____LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No client to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Client____LI.Items.Remove($Cim.IO.p3_x2_Client____LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Issue_____AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x2_Issue_____SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x2_Issue_____SR.SelectedItem.UID -in $Cim.IO.p3_x2_Issue_____LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Issue_____LI.Items.Add($Cim.IO.p3_x2_Issue_____SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Issue_____RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x2_Issue_____LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Issue_____LI.Items.Remove($Cim.IO.p3_x2_Issue_____LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Purchase__AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x2_Purchase__SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x2_Purchase__SR.SelectedItem.UID -in $Cim.IO.p3_x2_Purchase__LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Purchase__LI.Items.Add($Cim.IO.p3_x2_Purchase__SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Purchase__RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x2_Purchase__LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Purchase__LI.Items.Remove($Cim.IO.p3_x2_Purchase__LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Invoice___AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x2_Invoice___SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x2_Invoice___SR.SelectedItem.UID -in $Cim.IO.p3_x2_Invoice___LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Invoice___LI.Items.Add($Cim.IO.p3_x2_Invoice___SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x2_Invoice___RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x2_Invoice___LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x2_Invoice___LI.Items.Remove($Cim.IO.p3_x2_Invoice___LI.SelectedItem)
+        }
+    })
+   
     # New #
 
-    $Cim.IO.p3_x3_Device____TC.Add_SelectionChanged(
+    $Cim.IO.p3_x3_Client____TC.Add_Click(
     {
-        $Cim.Refresh()
+        $Cim.IO.p3_x3_Client____TI.Visibility = "Visible"
+        $Cim.IO.p3_x3_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Invoice___TI.Visibility = "Collapsed"
 
-        Switch($Cim.IO.p3_x3_Device____TC.SelectedIndex)
+        $Cim.IO.p3_x3_Client____SR.ItemsSource = $Cim.DB.Client
+    })
+
+    $Cim.IO.p3_x3_Issue_____TC.Add_Click(
+    {
+        $Cim.IO.p3_x3_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Issue_____TI.Visibility = "Visible"
+        $Cim.IO.p3_x3_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Invoice___TI.Visibility = "Collapsed"
+
+        $Cim.IO.p3_x3_Issue_____SR.ItemsSource = $Cim.DB.Issue
+    })
+
+    $Cim.IO.p3_x3_Purchase__TC.Add_Click(
+    {
+        $Cim.IO.p3_x3_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Purchase__TI.Visibility = "Visible"
+        $Cim.IO.p3_x3_Invoice___TI.Visibility = "Collapsed"
+
+        $Cim.IO.p3_x3_Purchase___SR.ItemsSource = $Cim.DB.Purchase
+    })
+
+    $Cim.IO.p3_x3_Invoice___TC.Add_Click(
+    {
+        $Cim.IO.p3_x3_Client____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Issue_____TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Purchase__TI.Visibility = "Collapsed"
+        $Cim.IO.p3_x3_Invoice___TI.Visibility = "Visible"
+
+        $Cim.IO.p3_x3_Invoice___SR.ItemsSource = $Cim.DB.Invoice
+    })
+
+        # Client Add/Remove
+    $Cim.IO.p3_x3_Client____AB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x3_Client____SR.SelectedItem.UID -in $Cim.IO.p3_x3_Client____LI.Items.UID)
         {
-            0 
-            { 
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Client____SR)
-            }
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
 
-            1
-            {
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Issue_____SR)
-            }
-    
-            2
-            {
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Purchase__SR)
-            }
+        ElseIf ($Cim.IO.p3_x3_Client____SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
 
-            3
-            {   
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Invoice___SR)
-            }
+        Else
+        {
+            $Cim.IO.p3_x3_Client____LI.Items.Add($Cim.IO.p3_x3_Client____SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Client____RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x3_Client____LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No client to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Client____LI.Items.Remove($Cim.IO.p3_x3_Client____LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Issue_____AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x3_Issue_____SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x3_Issue_____SR.SelectedItem.UID -in $Cim.IO.p3_x3_Issue_____LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Issue_____LI.Items.Add($Cim.IO.p3_x3_Issue_____SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Issue_____RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x3_Issue_____LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Issue_____LI.Items.Remove($Cim.IO.p3_x3_Issue_____LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Purchase__AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x3_Purchase__SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x3_Purchase__SR.SelectedItem.UID -in $Cim.IO.p3_x3_Purchase__LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Purchase__LI.Items.Add($Cim.IO.p3_x3_Purchase__SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Purchase__RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x3_Purchase__LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Purchase__LI.Items.Remove($Cim.IO.p3_x3_Purchase__LI.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Invoice___AB.Add_Click(
+    {
+        If ($Cim.IO.p3_x3_Invoice___SR.SelectedItem -le 0)
+        {
+            [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
+        }
+
+        ElseIf ( $Cim.IO.p3_x3_Invoice___SR.SelectedItem.UID -in $Cim.IO.p3_x3_Invoice___LI.Items.UID)
+        {
+            [System.Windows.MessageBox]::Show("Entry is already selected","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Invoice___LI.Items.Add($Cim.IO.p3_x3_Invoice___SR.SelectedItem)
+        }
+    })
+
+    $Cim.IO.p3_x3_Invoice___RB.Add_Click(
+    {
+        If ( $Cim.IO.p3_x3_Invoice___LI.Items.Count -le 0 )
+        {
+            [System.Windows.MessageBox]::Show("No issue to remove","Error")
+        }
+
+        Else
+        {
+            $Cim.IO.p3_x3_Invoice___LI.Items.Remove($Cim.IO.p3_x3_Invoice___LI.SelectedItem)
         }
     })
 

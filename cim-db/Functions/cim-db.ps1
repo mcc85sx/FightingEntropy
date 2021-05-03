@@ -1542,7 +1542,7 @@
 
         _ViewIssue()
         {
-            $This.IO.p4_x1_Status____TB.SelectedIndex = -1
+            $This.IO.p4_x1_Status____LI.SelectedIndex = -1
             $This.IO.p4_x1_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x1_Client____LI)
@@ -1579,7 +1579,7 @@
 
         _EditIssue()
         {
-            $This.IO.p4_x2_Status____TB.SelectedItem = -1
+            $This.IO.p4_x2_Status____LI.SelectedItem = -1
             $This.IO.p4_x2_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x2_Client____LI)
@@ -1600,8 +1600,8 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x2_Status____TB.Text              = $Item.Record.Description
-            $This.IO.p4_x2_Descript__TB.SelectedIndex     = $Item.Record.Status
+            $This.IO.p4_x2_Status____LI.SelectedItem      = $Item.Record.Status
+            $This.IO.p4_x2_Descript__TB.SelectedIndex     = $Item.Record.Description
 
             $This.Populate( $Item.Record.Client           , $This.IO.p4_x2_Client____LI )
             $This.Populate( $Item.Record.Device           , $This.IO.p4_x2_Device____LI )
@@ -1612,7 +1612,7 @@
 
         _NewIssue()
         {
-            $This.IO.p4_x3_Status____TB.SelectedItem = -1
+            $This.IO.p4_x3_Status____LI.SelectedItem = -1
             $This.IO.p4_x3_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x3_Client____LI)

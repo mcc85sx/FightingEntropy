@@ -6564,26 +6564,22 @@
         {
             0 
             { 
-                $Cim.Relinquish($Cim.IO.p3_x2_Client____SR)
                 $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x2_Client____SR)
             }
 
             1
             {
-                $Cim.Relinquish($Cim.IO.p3_x2_Issue_____SR)
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x2_Issue_____SR)
+                $Cim.Populate($Cim.DB.Issue,$Cim.IO.p3_x2_Issue_____SR)
             }
     
             2
             {
-                $Cim.Relinquish($Cim.IO.p3_x2_Purchase__SR)
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x2_Purchase__SR)
+                $Cim.Populate($Cim.DB.Purchase,$Cim.IO.p3_x2_Purchase__SR)
             }
 
             3
             {   
-                $Cim.Relinquish($Cim.IO.p3_x2_Invoice___SR)
-                $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x2_Invoice___SR)
+                $Cim.Populate($Cim.DB.Invoice,$Cim.IO.p3_x2_Invoice___SR)
             }
         }
     })
@@ -6598,25 +6594,21 @@
         {
             0 
             { 
-                $Cim.Relinquish($Cim.IO.p3_x3_Client____SR)
                 $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Client____SR)
             }
 
             1
             {
-                $Cim.Relinquish($Cim.IO.p3_x3_Issue_____SR)
                 $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Issue_____SR)
             }
     
             2
             {
-                $Cim.Relinquish($Cim.IO.p3_x3_Purchase__SR)
                 $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Purchase__SR)
             }
 
             3
             {   
-                $Cim.Relinquish($Cim.IO.p3_x3_Invoice___SR)
                 $Cim.Populate($Cim.DB.Client,$Cim.IO.p3_x3_Invoice___SR)
             }
         }

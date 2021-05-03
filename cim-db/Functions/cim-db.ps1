@@ -583,6 +583,7 @@
         [Object]     $Tab = ("UID Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")
         [Object]    $Date = (Get-Date -uformat %m/%d/%Y)
         [UInt32]    $Slot
+        [UInt32]     $New
         [Object]      $DB
         [Object]      $DG
 
@@ -1200,14 +1201,61 @@
         }
 
         [Void] Collapse()
+        {   
+            $This.IO."p0_x0".Visibility = "Collapsed"
+            $This.IO."p0_x1".Visibility = "Collapsed"
+            $This.IO."p1_x0".Visibility = "Collapsed"
+            $This.IO."p1_x1".Visibility = "Collapsed"
+            $This.IO."p1_x2".Visibility = "Collapsed"
+            $This.IO."p1_x3".Visibility = "Collapsed"
+            $This.IO."p2_x0".Visibility = "Collapsed"
+            $This.IO."p2_x1".Visibility = "Collapsed"
+            $This.IO."p2_x2".Visibility = "Collapsed"
+            $This.IO."p2_x3".Visibility = "Collapsed"
+            $This.IO."p3_x0".Visibility = "Collapsed"
+            $This.IO."p3_x1".Visibility = "Collapsed"
+            $This.IO."p3_x2".Visibility = "Collapsed"
+            $This.IO."p3_x3".Visibility = "Collapsed"
+            $This.IO."p4_x0".Visibility = "Collapsed"
+            $This.IO."p4_x1".Visibility = "Collapsed"
+            $This.IO."p4_x2".Visibility = "Collapsed"
+            $This.IO."p4_x3".Visibility = "Collapsed"
+            $This.IO."p5_x0".Visibility = "Collapsed"
+            $This.IO."p5_x1".Visibility = "Collapsed"
+            $This.IO."p5_x2".Visibility = "Collapsed"
+            $This.IO."p5_x3".Visibility = "Collapsed"
+            $This.IO."p6_x0".Visibility = "Collapsed"
+            $This.IO."p6_x1".Visibility = "Collapsed"
+            $This.IO."p6_x2".Visibility = "Collapsed"
+            $This.IO."p6_x3".Visibility = "Collapsed"
+            $This.IO."p7_x0".Visibility = "Collapsed"
+            $This.IO."p7_x1".Visibility = "Collapsed"
+            $This.IO."p7_x2".Visibility = "Collapsed"
+            $This.IO."p7_x3".Visibility = "Collapsed"
+            $This.IO."p8_x0".Visibility = "Collapsed"
+            $This.IO."p8_x1".Visibility = "Collapsed"
+            $This.IO."p8_x2".Visibility = "Collapsed"
+            $This.IO."p8_x3".Visibility = "Collapsed"
+            $This.IO."p9_x0".Visibility = "Collapsed"
+            $This.IO."p9_x1".Visibility = "Collapsed"
+            $This.IO."p9_x2".Visibility = "Collapsed"
+            $This.IO."p9_x3".Visibility = "Collapsed"
+        }
+
+        SlotCollapse([UInt32]$Slot)
         {
-            ForEach ( $I in 0..9 )
-            {                
-                0..$(@(1;3)[$I -ne 0]) | % { 
-                    
-                    "`$This.IO.`"p$I`_x$_`".Visibility = `"Collapsed`""
-                }
-            }
+            $This.IO.p0.Visibility = "Collapsed"
+            $This.IO.p1.Visibility = "Collapsed"
+            $This.IO.p2.Visibility = "Collapsed"
+            $This.IO.p3.Visibility = "Collapsed"
+            $This.IO.p4.Visibility = "Collapsed"
+            $This.IO.p5.Visibility = "Collapsed"
+            $This.IO.p6.Visibility = "Collapsed"
+            $This.IO.p7.Visibility = "Collapsed"
+            $This.IO.p8.Visibility = "Collapsed"
+            $This.IO.p9.Visibility = "Collapsed"
+
+            $This.IO."p${Slot}".Visibility = "Visible"
         }
 
         _ViewUID()
@@ -1377,7 +1425,7 @@
         NewClient()
         {
             $This._NewClient()
-
+            $This.IO.p1_x3.Visibility                = "Visible"
         }
 
         _ViewService()
@@ -2046,8 +2094,13 @@
 
             $This.SetDefaults()
             $This.Collapse()
+            $This.SlotCollapse(0)
             $This.Stage()
             $This.Refresh()
+
+            $This.IO.New.Visibility  = "Hidden"
+            $This.IO.Edit.Visibility = "Hidden"
+            $This.IO.Save.Visibility = "Hidden"
         }
 
         GetTab([UInt32]$Slot)
@@ -2055,8 +2108,9 @@
             $This.Slot = $Slot
 
             $This.Collapse()
+            $This.SlotCollapse($Slot)
             $This.Stage()
-            
+           
             If ( $Slot -eq 0 )
             {
                 $This.IO.New.Visibility                = "Hidden"
@@ -2113,35 +2167,118 @@
 
         ViewTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
+            $This.SlotCollapse($This.Slot)
 
             $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x1".Visibility           = "Visible"
 
             $This.IO.New.IsEnabled                     = 1
             $This.IO.Edit.IsEnabled                    = 1
             $This.IO.Save.IsEnabled                    = 0
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
         }
 
         EditTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
+            $This.SlotCollapse($This.Slot)
 
             $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x2".Visibility           = "Visible"
 
             $This.IO.New.IsEnabled                     = 1
             $This.IO.Edit.IsEnabled                    = 0
             $This.IO.Save.IsEnabled                    = 1
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
         }
 
         NewTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
-            
-            $This.IO."p$Slot".Visibility               = "Visible"
+            $This.SlotCollapse($This.Slot)
 
-            $This.IO.New.IsEnabled                     = 0
+            $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x3".Visibility           = "Visible"
+
+            $This.IO.New.IsEnabled                     = 1
             $This.IO.Edit.IsEnabled                    = 0
             $This.IO.Save.IsEnabled                    = 1
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
+            
+            Switch([UInt32]$This.Slot)
+            {
+                0 
+                {
+                    $Null               
+                }
+
+                1 
+                { 
+                    $This._NewClient()
+                    $This.NewClient()
+                }
+
+                2 
+                { 
+                    $This._NewService()
+                    $This.NewService()
+                }
+
+                3 
+                { 
+                    $This._NewDevice()   
+                    $This.NewDevice()
+                }
+
+                4 
+                { 
+                    $This._NewIssue()    
+                    $This.NewIssue()
+                }
+
+                5 
+                { 
+                    $This._NewInventory()
+                    $This.NewInventory()
+                }
+
+                6 
+                { 
+                    $This._NewPurchase() 
+                    $This.NewPurchase()
+                }
+
+                7 
+                { 
+                    $This._NewExpense()  
+                    $This.NewExpense()
+                }
+
+                8 
+                { 
+                    $This._NewAccount()  
+                    $This.NewAccount()
+                }
+
+                9 
+                { 
+                    $This._NewInvoice()  
+                    $This.NewInvoice()
+                }
+            }
         }
     }
 
@@ -5394,45 +5531,25 @@
 
     $Cim.IO.New.Add_Click(
     {
-        $New  = 1
+        $Cim.Collapse()
+
+        $Cim.New  = 1
         $Cim.IO.Edit.IsEnabled                         = 0
         $Cim.IO.New.IsEnabled                          = 0
         $Cim.IO.Save.IsEnabled                         = 1
-        
+
+        $Cim.IO.New.Visibility                         = "Visible"        
+        $Cim.IO.Save.Visibility                        = "Visible"
+        $Cim.IO.Edit.Visibility                        = "Visible"
+
         $Cim.NewTab($Cim.Slot)
-
-        Switch([UInt32]$Cim.Slot)
-        {
-            0 
-            {
-                $Null               
-            }
-
-            1 
-            { 
-                $Cim._NewClient()
-
-            }
-
-            2 
-            { 
-                $Cim._NewService()
-
-            }
-
-            3 { $Cim._NewDevice()   }
-            4 { $Cim._NewIssue()    }
-            5 { $Cim._NewInventory()}
-            6 { $Cim._NewPurchase() }
-            7 { $Cim._NewExpense()  }
-            8 { $Cim._NewAccount()  }
-            9 { $Cim._NewInvoice()  }
-        }
     })
 
     $Cim.IO.Edit.Add_Click(
     {
-        $New  = 0
+        $Cim.Collapse()
+
+        $Cim.New  = 0
         $Cim.IO.Edit.IsEnabled = 0
         $Cim.IO.New.IsEnabled  = 1
         $Cim.IO.Save.IsEnabled = 1
@@ -5513,7 +5630,7 @@
 
             1 
             {
-                If ( $New -eq 0 )
+                If ( $Cim.New -eq 0 )
                 {
                     $Name = "{0}, {1}" -f $Cim.IO.p1_x2_Last______TB.Text, $Cim.IO.p1_x2_First_____TB.Text 
             
@@ -5618,7 +5735,7 @@
                     }
                 }
 
-                ElseIf ( $New -eq 1 )
+                If ( $Cim.New -eq 1 )
                 {
                     $Name = "{0}, {1}" -f $Cim.IO.p1_x3_Last______TB.Text, $Cim.IO.p1_x3_First_____TB.Text 
             
@@ -5722,16 +5839,11 @@
                         $Cim.GetTab(1)
                     }
                 }
-
-                Else
-                {
-                    [System.Windows.MessageBox]::Show("The entry was not saved","Error")
-                }
             }
 
             2 
             { 
-                If ( $New -eq 0 )
+                If ( $Cim.New -eq 0 )
                 {
                     If ( $Cim.IO.p2_x2_Name______TB.Text -eq "" )
                     {
@@ -5766,7 +5878,7 @@
                     }
                 }
 
-                ElseIf ( $New -eq 1 )
+                ElseIf ( $Cim.New -eq 1 )
                 {
                     If ( $Cim.IO.p2_x3_Name______TB.Text -eq "" )
                     {
@@ -5809,7 +5921,7 @@
 
             3
             {
-                If ( $New -eq 0 )
+                If ( $Cim.New -eq 0 )
                 {        
                     If ($Cim.IO.p3_x2_Chassis___LI.SelectedIndex -eq 8)
                     {
@@ -5913,7 +6025,7 @@
 
             4
             {
-                If ( $New -eq 0 )
+                If ( $Cim.New -eq 0 )
                 {
                     If ( $Cim.IO.p4_x2_Client____LI.Items.Count -lt 1 )
                     {
@@ -5963,7 +6075,7 @@
                     }
                 }
 
-                If ( $New -eq 1 )
+                If ( $Cim.New -eq 1 )
                 {
                     If ( $Cim.IO.p4_x3_Client____LI.Items.Count -lt 1 )
                     {

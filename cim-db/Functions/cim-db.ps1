@@ -2318,19 +2318,16 @@
 
                 7 
                 { 
-                    $This._NewExpense()  
                     $This.NewExpense()
                 }
 
                 8 
                 { 
-                    $This._NewAccount()  
                     $This.NewAccount()
                 }
 
                 9 
                 { 
-                    $This._NewInvoice()  
                     $This.NewInvoice()
                 }
             }
@@ -3772,7 +3769,13 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Content="+" Name="p3_x3_Client____AB"/>
-                            <ComboBox Grid.Column="1" Name="p3_x3_Client____LI"/>
+                            <ComboBox Grid.Column="1" Name="p3_x3_Client____LI">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Grid.Column="1" Margin="2, 1" Text="{Binding Record.Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <Button Grid.Column="2" Content="-" Name="p3_x3_Client____RB"/>
                         </Grid>
                     </GroupBox>
@@ -6543,12 +6546,12 @@
             [System.Windows.MessageBox]::Show("No device listed to add","Error")
         }
 
-        ElseIf( $Cim.IO.p1_x3_Device____SR.SelectedItem.UID -in $Cim.IO.p1_x3_Device____LI.Items)
+        ElseIf( $Cim.IO.p1_x3_Device____SR.SelectedItem.UID -in $Cim.IO.p1_x3_Device____LI.Items.UID)
         {
             [System.Windows.MessageBox]::Show("Device is already selected","Error")
         }
 
-        $Cim.IO.p1_x3_Device____LI.Items.Add($Cim.IO.p1_x3_Device____SR.SelectedItem.UID)
+        $Cim.IO.p1_x3_Device____LI.Items.Add($Cim.IO.p1_x3_Device____SR.SelectedItem)
     })
 
     $Cim.IO.p1_x3_Device____RB.Add_Click(
@@ -6558,7 +6561,10 @@
             [System.Windows.MessageBox]::Show("No device listed to remove","Error")
         }
 
-        $Cim.IO.p1_x3_Device____LI.Items.Remove($Cim.IO.p1_x3_Device____SR.SelectedItem.UID)
+        Else
+        {
+            $Cim.IO.p1_x3_Device____LI.Items.Remove($Cim.IO.p1_x3_Device____SR.SelectedItem)
+        }
     })
 
     # ------ #
@@ -6762,7 +6768,7 @@
         $Cim.IO.p3_x3_Purchase__TI.Visibility = "Visible"
         $Cim.IO.p3_x3_Invoice___TI.Visibility = "Collapsed"
 
-        $Cim.IO.p3_x3_Purchase___SR.ItemsSource = $Cim.DB.Purchase
+        $Cim.IO.p3_x3_Purchase__SR.ItemsSource = $Cim.DB.Purchase
     })
 
     $Cim.IO.p3_x3_Invoice___TC.Add_Click(
@@ -6775,15 +6781,15 @@
         $Cim.IO.p3_x3_Invoice___SR.ItemsSource = $Cim.DB.Invoice
     })
 
-        # Client Add/Remove
+    # Client Add/Remove
     $Cim.IO.p3_x3_Client____AB.Add_Click(
     {
-        If ( $Cim.IO.p3_x3_Client____SR.SelectedItem.UID -in $Cim.IO.p3_x3_Client____LI.Items.UID)
+        If ( $Cim.IO.p3_x3_Client____SR.SelectedItem -in $Cim.IO.p3_x3_Client____LI.Items)
         {
             [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
         }
 
-        ElseIf ($Cim.IO.p3_x3_Client____SR.SelectedItem -le 0)
+        ElseIf ($Cim.IO.p3_x3_Client____SR.Items.Count -le 0)
         {
             [System.Windows.MessageBox]::Show("Invalid entry selected","Error")
         }
@@ -6796,7 +6802,7 @@
 
     $Cim.IO.p3_x3_Client____RB.Add_Click(
     {
-        If ( $Cim.IO.p3_x3_Client____LI.Items.Count -le 0 )
+        If ( $Cim.IO.p3_x3_Client____LI.Items.Count -le 0)
         {
             [System.Windows.MessageBox]::Show("No client to remove","Error")
         }

@@ -1,4 +1,4 @@
-    Class cimdb
+    Class _cimdb
     {
         [Object]  $Window
         [Object]      $IO

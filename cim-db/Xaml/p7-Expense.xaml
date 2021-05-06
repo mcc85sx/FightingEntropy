@@ -1,0 +1,174 @@
+            <Grid Grid.Row="1" Name="p7" Visibility="Collapsed">
+                <Grid Name="p7_x0" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Name="p7_x0_Expense___SP"/>
+                        <TextBox Grid.Column="1" Name="p7_x0_Expense___SF"/>
+                    </Grid>
+                    <DataGrid Grid.Row="1" Margin="5" Name="p7_x0_Expense___SR">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Recipient"    Binding='{Binding Record.Recipient}'   Width="*"/>
+                            <DataGridTextColumn Header="DisplayName"  Binding='{Binding Record.DisplayName}' Width="1.5*"/>
+                            <DataGridTextColumn Header="Account"      Binding='{Binding Record.Account}'     Width="*"/>
+                            <DataGridTextColumn Header="Cost"         Binding='{Binding Record.Cost}'        Width="0.5*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <Grid Name="p7_x1" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="105"/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="[Recipient]">
+                        <TextBox Name="p7_x1_Recipient_TB" IsEnabled="False"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="[Display Name]">
+                        <TextBox Name="p7_x1_Display___TB" IsEnabled="False"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[Account]">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>                                    
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="p7_x1_IsAccount_LI" IsEnabled="False">
+                                    <ComboBoxItem Content="No"/>
+                                    <ComboBoxItem Content="Yes"/>
+                                </ComboBox>
+                                <ComboBox Grid.Column="1" Name="p7_x1_Account___SP" IsEnabled="False"/>
+                                <TextBox Grid.Column="2" Name="p7_x1_Account___SF" IsEnabled="False"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="p7_x1_Account___SR" IsEnabled="False"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x1_Account___AB" IsEnabled="False"/>
+                                <ComboBox Grid.Column="2" Name="p7_x1_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x1_Account___RB" IsEnabled="False"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[Cost]">
+                        <TextBox Name="p7_x1_Cost______TB" IsEnabled="False"/>
+                    </GroupBox>
+                </Grid>
+                <Grid Name="p7_x2" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="105"/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="[Recipient]">
+                        <TextBox Name="p7_x2_Recipient_TB"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="[Display Name]">
+                        <TextBox Name="p7_x2_Display___TB"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[Account]">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="p7_x2_IsAccount_LI">
+                                    <ComboBoxItem Content="No"/>
+                                    <ComboBoxItem Content="Yes"/>
+                                </ComboBox>
+                                <ComboBox Grid.Column="1" Name="p7_x2_Account___SP"/>
+                                <TextBox Grid.Column="2" Name="p7_x2_Account___SF"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="p7_x2_Account___SR"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x2_Account___AB"/>
+                                <ComboBox Grid.Column="2" Name="p7_x2_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x2_Account___RB"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[Cost]">
+                        <TextBox Name="p7_x2_Cost______TB"/>
+                    </GroupBox>
+                </Grid>
+                <Grid Name="p7_x3" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="105"/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="[Recipient]">
+                        <TextBox Name="p7_x3_Recipient_TB"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="[Display Name]">
+                        <TextBox Name="p7_x3_Display___TB"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[Account]">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="p7_x3_IsAccount_LI">
+                                    <ComboBoxItem Content="No"/>
+                                    <ComboBoxItem Content="Yes"/>
+                                </ComboBox>
+                                <ComboBox Grid.Column="1" Name="p7_x3_Account___SP"/>
+                                <TextBox Grid.Column="2" Name="p7_x3_Account___SF"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Name="p7_x3_Account___SR"/>
+                                <Button Grid.Column="1" Content="+" Name="p7_x3_Account___AB"/>
+                                <ComboBox Grid.Column="2" Name="p7_x3_Account___LI"/>
+                                <Button Grid.Column="3" Content="-" Name="p7_x3_Account___RB"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[Cost]">
+                        <TextBox Name="p7_x3_Cost______TB"/>
+                    </GroupBox>
+                </Grid>
+            </Grid>

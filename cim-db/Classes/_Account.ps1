@@ -1,21 +1,28 @@
-Class _Account
-{
-    [Object]           $UID
-    [UInt32]         $Index
-    [Object]          $Slot
-    [Object]          $Type
-    [Object]          $Date
-    [Object]          $Time
-    [UInt32]          $Rank
-
-    [Object]        $Object
-
-    _Account([Object]$UID) 
+    Class _Account
     {
-        $This.UID  = $UID.UID
-        $This.Slot = 7
-        $This.Type = "Account"
-        $This.Date = $UID.Date
-        $This.Time = $UID.Time
+        [Object]           $UID
+        [UInt32]         $Index
+        [Object]          $Slot
+        [Object]          $Type
+        [Object]          $Date
+        [Object]          $Time
+
+        [UInt32]          $Rank
+        [String]   $DisplayName
+
+        [Object]        $Object
+
+        _Account([Object]$UID) 
+        {
+            $This.UID  = $UID.UID
+            $This.Slot = 7
+            $This.Type = "Account"
+            $This.Date = $UID.Date
+            $This.Time = $UID.Time
+        }
+
+        [String] ToString()
+        {
+            Return "Account"
+        }
     }
-}

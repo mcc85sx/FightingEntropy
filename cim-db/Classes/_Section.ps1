@@ -1,9 +1,9 @@
     Class _Section
     {
-        [String] $Xaml
-        [String] $Name
         [UInt32] $Slot
+        [String] $Name
         [String[]] $Names
+        [String] $Xaml
 
         _Section([UInt32]$Slot,[String]$Xaml)
         {

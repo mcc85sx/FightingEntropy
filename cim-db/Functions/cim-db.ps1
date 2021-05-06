@@ -4360,7 +4360,7 @@
             "p4_x0_Issue_____SP",
             "p4_x0_Issue_____SF",
             "p4_x0_Issue_____SR",
-			"p4_x1_Status____TB",
+			"p4_x1_Status____LI",
             "p4_x1_Descript__TB",
             "p4_x1_Issue_____TC",
             "p4_x1_Client____SP",
@@ -4393,7 +4393,7 @@
             "p4_x1_Invoice___AB",
             "p4_x1_Invoice___LI",
             "p4_x1_Invoice___RB",
-			"p4_x2_Status____TB",
+			"p4_x2_Status____LI",
             "p4_x2_Descript__TB",
             "p4_x2_Issue_____TC",
             "p4_x2_Client____SP",
@@ -4426,7 +4426,7 @@
             "p4_x2_Invoice___AB",
             "p4_x2_Invoice___LI",
             "p4_x2_Invoice___RB",
-            "p4_x3_Status____TB",
+            "p4_x3_Status____LI",
             "p4_x3_Descript__TB",
             "p4_x3_Issue_____TC",
             "p4_x3_Client____SP",
@@ -5016,7 +5016,7 @@
 
         _ViewIssue()
         {
-            $This.IO.p4_x1_Status____TB.SelectedIndex = -1
+            $This.IO.p4_x1_Status____LI.SelectedIndex = -1
             $This.IO.p4_x1_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x1_Client____LI)
@@ -5037,8 +5037,12 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x1_Status____TB.Text              = $Item.Record.Description
-            $This.IO.p4_x1_Descript__TB.SelectedIndex     = $Item.Record.Status
+            $This.IO.p4_x1_Status____LI.SelectedItem      = Switch($Item.Record.Status)
+            {
+                0 {"New"} 1 {"Diagnosed"} 2 {"Commit"} 3 {"Complete"}
+            }
+
+            $This.IO.p4_x1_Descript__TB.SelectedIndex     = $Item.Record.Description
 
             $This.Populate( $Item.Record.Client           , $This.IO.p4_x1_Client____LI )
             $This.Populate( $Item.Record.Device           , $This.IO.p4_x1_Device____LI )
@@ -5049,7 +5053,7 @@
 
         _EditIssue()
         {
-            $This.IO.p4_x2_Status____TB.SelectedItem = -1
+            $This.IO.p4_x2_Status____LI.SelectedItem = -1
             $This.IO.p4_x2_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x2_Client____LI)
@@ -5070,7 +5074,11 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x2_Status____TB.Text              = $Item.Record.Description
+            $This.IO.p4_x2_Status____LI.SelectedItem      = Switch($Item.Record.Status)
+            {
+                0 { "New" } 1 { "Diagnosed" } 2 { "Commit" } 3 { "Complete" }
+            }
+
             $This.IO.p4_x2_Descript__TB.SelectedIndex     = $Item.Record.Status
 
             $This.Populate( $Item.Record.Client           , $This.IO.p4_x2_Client____LI )
@@ -5082,7 +5090,7 @@
 
         _NewIssue()
         {
-            $This.IO.p4_x3_Status____TB.SelectedItem = -1
+            $This.IO.p4_x3_Status____LI.SelectedItem = -1
             $This.IO.p4_x3_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x3_Client____LI)

@@ -1569,7 +1569,7 @@
             $This.IO.p9_x0_Invoice___SR.ItemsSource = $This.DB.Invoice
         }
 
-        cimdb([String]$Xaml)
+        _cimdb([String]$Xaml)
         {
             $This.Window                                    = [_Xaml]::New($Xaml)
             $This.IO                                        = $This.Window.IO

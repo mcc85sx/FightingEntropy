@@ -238,7 +238,7 @@
                     </DataGrid>
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Name="p1" Visibility="Visible">
+            <Grid Grid.Row="1" Name="p1" Visibility="Collapsed">
                 <Grid Name="p1_x0" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -652,7 +652,7 @@
                         </GroupBox>
                     </Grid>
                 </Grid>
-                <Grid Name="p1_x3" Visibility="Visible">
+                <Grid Name="p1_x3" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="70"/>
@@ -919,7 +919,7 @@
                     </GroupBox>
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Name="p3" Visibility="Visible">
+            <Grid Grid.Row="1" Name="p3" Visibility="Collapsed">
                 <Grid Name="p3_x0" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -4060,13 +4060,15 @@
         }
     }
 
-    Class cimdb
+Class cimdb
     {
         [Object]  $Window
         [Object]      $IO
         [Object]    $Temp
         [Object]     $Tab = ("UID Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")
         [Object]    $Date = (Get-Date -uformat %m/%d/%Y)
+        [UInt32]    $Slot
+        [UInt32]     $New
         [Object]      $DB
         [Object]      $DG
 
@@ -4684,14 +4686,61 @@
         }
 
         [Void] Collapse()
+        {   
+            $This.IO."p0_x0".Visibility = "Collapsed"
+            $This.IO."p0_x1".Visibility = "Collapsed"
+            $This.IO."p1_x0".Visibility = "Collapsed"
+            $This.IO."p1_x1".Visibility = "Collapsed"
+            $This.IO."p1_x2".Visibility = "Collapsed"
+            $This.IO."p1_x3".Visibility = "Collapsed"
+            $This.IO."p2_x0".Visibility = "Collapsed"
+            $This.IO."p2_x1".Visibility = "Collapsed"
+            $This.IO."p2_x2".Visibility = "Collapsed"
+            $This.IO."p2_x3".Visibility = "Collapsed"
+            $This.IO."p3_x0".Visibility = "Collapsed"
+            $This.IO."p3_x1".Visibility = "Collapsed"
+            $This.IO."p3_x2".Visibility = "Collapsed"
+            $This.IO."p3_x3".Visibility = "Collapsed"
+            $This.IO."p4_x0".Visibility = "Collapsed"
+            $This.IO."p4_x1".Visibility = "Collapsed"
+            $This.IO."p4_x2".Visibility = "Collapsed"
+            $This.IO."p4_x3".Visibility = "Collapsed"
+            $This.IO."p5_x0".Visibility = "Collapsed"
+            $This.IO."p5_x1".Visibility = "Collapsed"
+            $This.IO."p5_x2".Visibility = "Collapsed"
+            $This.IO."p5_x3".Visibility = "Collapsed"
+            $This.IO."p6_x0".Visibility = "Collapsed"
+            $This.IO."p6_x1".Visibility = "Collapsed"
+            $This.IO."p6_x2".Visibility = "Collapsed"
+            $This.IO."p6_x3".Visibility = "Collapsed"
+            $This.IO."p7_x0".Visibility = "Collapsed"
+            $This.IO."p7_x1".Visibility = "Collapsed"
+            $This.IO."p7_x2".Visibility = "Collapsed"
+            $This.IO."p7_x3".Visibility = "Collapsed"
+            $This.IO."p8_x0".Visibility = "Collapsed"
+            $This.IO."p8_x1".Visibility = "Collapsed"
+            $This.IO."p8_x2".Visibility = "Collapsed"
+            $This.IO."p8_x3".Visibility = "Collapsed"
+            $This.IO."p9_x0".Visibility = "Collapsed"
+            $This.IO."p9_x1".Visibility = "Collapsed"
+            $This.IO."p9_x2".Visibility = "Collapsed"
+            $This.IO."p9_x3".Visibility = "Collapsed"
+        }
+
+        SlotCollapse([UInt32]$Slot)
         {
-            ForEach ( $I in 0..9 )
-            {                
-                0..$(@(1;3)[$I -ne 0]) | % { 
-                    
-                    "`$This.IO.`"p$I`_x$_`".Visibility = `"Collapsed`""
-                }
-            }
+            $This.IO.p0.Visibility = "Collapsed"
+            $This.IO.p1.Visibility = "Collapsed"
+            $This.IO.p2.Visibility = "Collapsed"
+            $This.IO.p3.Visibility = "Collapsed"
+            $This.IO.p4.Visibility = "Collapsed"
+            $This.IO.p5.Visibility = "Collapsed"
+            $This.IO.p6.Visibility = "Collapsed"
+            $This.IO.p7.Visibility = "Collapsed"
+            $This.IO.p8.Visibility = "Collapsed"
+            $This.IO.p9.Visibility = "Collapsed"
+
+            $This.IO."p$Slot".Visibility = "Visible"
         }
 
         _ViewUID()
@@ -4858,6 +4907,12 @@
             $This.Relinquish( $This.IO.p1_x3_Invoice___LI )
         }
 
+        NewClient()
+        {
+            $This._NewClient()
+            $This.IO.p1_x3.Visibility                = "Visible"
+        }
+
         _ViewService()
         {
             $This.IO.p2_x1_Name______TB.Text         = $Null
@@ -4883,6 +4938,8 @@
 
         _EditService()
         {
+            $This.Collapse()
+
             $This.IO.p2_x2_Name______TB.Text         = $Null
             $This.IO.p2_x2_Descript__TB.Text         = $Null
             $This.IO.p2_x2_Cost______TB.Text         = $Null
@@ -4909,6 +4966,13 @@
             $This.IO.p2_x3_Name______TB.Text         = $Null
             $This.IO.p2_x3_Descript__TB.Text         = $Null
             $This.IO.p2_x3_Cost______TB.Text         = $Null
+        }
+
+        NewService()
+        {
+            $This._NewService()
+
+            $This.IO.p2_x3.Visibility                = "Visible"
         }
 
         _ViewDevice()
@@ -5001,6 +5065,8 @@
     
         _NewDevice()
         {
+            $This.Collapse()
+
             $This.IO.p3_x3_Chassis___LI.SelectedItem = 8
             $This.IO.p3_x3_Vendor____TB.Text         = $Null
             $This.IO.p3_x3_Model_____TB.Text         = $Null
@@ -5014,10 +5080,17 @@
             $This.Relinquish($This.IO.p3_x3_Invoice___LI)
         }
 
+        NewDevice()
+        {
+            $This._NewDevice()
+
+            $This.IO.p3_x3.Visibility                = "Visible"
+        }
+
         _ViewIssue()
         {
-            $This.IO.p4_x1_Status____LI.SelectedIndex = -1
-            $This.IO.p4_x1_Descript__TB.Text         = $Null
+            $This.IO.p4_x1_Status____LI.SelectedIndex = $Null
+            $This.IO.p4_x1_Descript__TB.Text          = $Null
 
             $This.Relinquish($This.IO.p4_x1_Client____LI)
             $This.Relinquish($This.IO.p4_x1_Device____LI)
@@ -5037,9 +5110,14 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x1_Status____LI.SelectedItem      = Switch($Item.Record.Status)
+            If ( $Item.Record.Status -notin 0..3 )
             {
-                0 {"New"} 1 {"Diagnosed"} 2 {"Commit"} 3 {"Complete"}
+                $Item.Record.Status = 0
+            }
+
+            $This.IO.p4_x1_Status____LI.SelectedIndex     = Switch($Item.Record.Status)
+            {
+                0 { "New" } 1 { "Diagnosed" } 2 { "Commit" } 3 { "Complete" }
             }
 
             $This.IO.p4_x1_Descript__TB.SelectedIndex     = $Item.Record.Description
@@ -5053,7 +5131,7 @@
 
         _EditIssue()
         {
-            $This.IO.p4_x2_Status____LI.SelectedItem = -1
+            $This.IO.p4_x2_Status____LI.SelectedIndex = $Null
             $This.IO.p4_x2_Descript__TB.Text         = $Null
 
             $This.Relinquish($This.IO.p4_x2_Client____LI)
@@ -5074,12 +5152,8 @@
                 Throw "Invalid Issue UID"
             }
 
-            $This.IO.p4_x2_Status____LI.SelectedItem      = Switch($Item.Record.Status)
-            {
-                0 { "New" } 1 { "Diagnosed" } 2 { "Commit" } 3 { "Complete" }
-            }
-
-            $This.IO.p4_x2_Descript__TB.SelectedIndex     = $Item.Record.Status
+            $This.IO.p4_x2_Status____LI.SelectedIndex     = $Item.Record.Status
+            $This.IO.p4_x2_Descript__TB.SelectedIndex     = $Item.Record.Description
 
             $This.Populate( $Item.Record.Client           , $This.IO.p4_x2_Client____LI )
             $This.Populate( $Item.Record.Device           , $This.IO.p4_x2_Device____LI )
@@ -5100,9 +5174,15 @@
             $This.Relinquish($This.IO.p4_x3_Invoice___LI)
         }
 
+        NewIssue()
+        {
+            $This._NewDevice()
+
+            $This.IO.p4_x3.Visibility                = "Visible"
+        }
+
         _ViewInventory()
         {
-            
             $This.IO.p5_x1_Vendor____TB.Text         = $Null
             $This.IO.p5_x1_Model_____TB.Text         = $Null
             $This.IO.p5_x1_Serial____TB.Text         = $Null
@@ -5177,6 +5257,13 @@
             $This.IO.p5_x3_IsDevice__LI.SelectedIndex = 0
 
             $This.Relinquish($This.IO.p5_x3_Device____LI)
+        }
+
+        NewInventory()
+        {
+            $This._NewInventory()
+
+            $This.IO.p5_x3.Visibility                = "Visible"
         }
 
         _ViewPurchase()
@@ -5273,6 +5360,13 @@
             $This.IO.p6_x3_Cost______TB.Text         = $Null
         }
 
+        NewPurchase()
+        {
+            $This._NewPurchase()
+
+            $This.IO.p6_x3.Visibility                = "Visible"
+        }
+
         _ViewExpense()
         {
             $This.IO.p7_x1_Display___TB.Text         = $Null
@@ -5346,6 +5440,13 @@
             $This.IO.p7_x3_Cost______TB.Text         = $Null
         }
 
+        NewExpense()
+        {
+            $This._NewExpense()
+
+            $This.IO.p7_x3.Visibility                = "Visible"
+        }
+
         _ViewAccount()
         {
             $This.Relinquish($This.IO.p8_x1_AcctObj___LI)
@@ -5367,6 +5468,7 @@
 
         _EditAccount()
         {
+
             $This.Relinquish($This.IO.p8_x2_AcctObj___LI)
         }
 
@@ -5389,8 +5491,17 @@
             $This.Relinquish($This.IO.p8_x3_AcctObj___LI)
         }
 
+        NewAccount()
+        {
+            $This._NewAccount()
+
+            $This.IO.p8_x3.Visibility                = "Visible"
+        }
+
         _ViewInvoice()
         {
+            $This.Collapse()
+
             $This.IO.p9_x1_Mode______LI.SelectedIndex = 0
 
             $This.Relinquish($This.IO.p9_x1_Client_____LI)
@@ -5455,6 +5566,13 @@
             $This.Relinquish($This.IO.p9_x3_Inventory__LI)
             $This.Relinquish($This.IO.p9_x3_Service____LI)
             $This.Relinquish($This.IO.p9_x3_Purchase___LI)
+        }
+
+        NewInvoice()
+        {
+            $This._NewInvoice()
+
+            $This.IO.p9_x3.Visibility                = "Visible"
         }
 
         Stage()
@@ -5522,49 +5640,68 @@
 
             $This.SetDefaults()
             $This.Collapse()
+            $This.SlotCollapse(0)
             $This.Stage()
             $This.Refresh()
+
+            $This.IO.New.Visibility  = "Hidden"
+            $This.IO.Edit.Visibility = "Hidden"
+            $This.IO.Save.Visibility = "Hidden"
         }
 
         GetTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
+
             $This.Collapse()
+            $This.SlotCollapse($Slot)
             $This.Stage()
-            
-            ForEach ( $Item in "New","Edit","Save" )
+           
+            If ( $Slot -eq 0 )
             {
-                $This.IO.$Item.Visibility         = "Hidden"
-                $This.IO.$Item.IsEnabled          = 0
+                $This.IO.New.Visibility                = "Hidden"
+                $This.IO.New.IsEnabled                 = 0
             }
+
+            If ( $Slot -ne 0 )
+            {
+                $This.IO.New.Visibility                = "Visible"
+                $This.IO.New.IsEnabled                 = 1
+            }
+
+            $This.IO.Edit.Visibility                   = "Hidden"
+            $This.IO.Edit.IsEnabled                    = 0
+
+            $This.IO.Save.Visibility                   = "Hidden"
+            $This.IO.Save.IsEnabled                    = 0
             
             ForEach ( $X in 0..9 )
             {
-                $T = "t$X"
-                $P = "p$X"
+                $Tab__                                 = "t$X"
+                $Panel                                 = "p$X"
 
-                If ( $X -ne $Slot )
+                If ( $X -ne $This.Slot )
                 {
-                    $This.IO.$T.Background             = "#DFFFBA"
-                    $This.IO.$T.Foreground             = "#000000"
-                    $This.IO.$T.BorderBrush            = "#000000"
-
-                    $This.IO.$P.Visibility             = "Collapsed"
+                    $This.IO.$Tab__.Background         = "#DFFFBA"
+                    $This.IO.$Tab__.Foreground         = "#000000"
+                    $This.IO.$Tab__.BorderBrush        = "#000000"
+                    $This.IO.$Panel.Visibility         = "Collapsed"
                 }
 
-                If ( $X -eq $Slot )
+                If ( $X -eq $This.Slot )
                 {
-                    $This.IO.$T.Background             = "#4444FF"
-                    $This.IO.$T.Foreground             = "#FFFFFF"
-                    $This.IO.$T.BorderBrush            = "#111111"
+                    $This.IO.$Tab__.Background         = "#4444FF"
+                    $This.IO.$Tab__.Foreground         = "#FFFFFF"
+                    $This.IO.$Tab__.BorderBrush        = "#111111"
 
-                    $This.IO.$P.Visibility             = "Visible"
-                    $This.IO."$($P)_x0".Visibility     = "Visible"
-                    $This.IO."$($P)_x1".Visibility     = "Collapsed"
+                    $This.IO.$Panel.Visibility         = "Visible"
+                    $This.IO."$($Panel)_x0".Visibility = "Visible"
+                    $This.IO."$($Panel)_x1".Visibility = "Collapsed"
 
                     If ( $Slot -ne 0 )
                     {
-                        $This.IO."$($P)_x2".Visibility = "Collapsed"
-                        $This.IO."$($P)_x3".Visibility = "Collapsed"
+                        $This.IO."$($Panel)_x2".Visibility = "Collapsed"
+                        $This.IO."$($Panel)_x3".Visibility = "Collapsed"
                     }
                 }
             }
@@ -5576,24 +5713,109 @@
 
         ViewTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
+            $This.SlotCollapse($This.Slot)
 
             $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x1".Visibility           = "Visible"
+
+            $This.IO.New.IsEnabled                     = 1
+            $This.IO.Edit.IsEnabled                    = 1
+            $This.IO.Save.IsEnabled                    = 0
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
         }
 
         EditTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
+            $This.SlotCollapse($This.Slot)
 
             $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x2".Visibility           = "Visible"
+
+            $This.IO.New.IsEnabled                     = 1
+            $This.IO.Edit.IsEnabled                    = 0
+            $This.IO.Save.IsEnabled                    = 1
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
         }
 
         NewTab([UInt32]$Slot)
         {
+            $This.Slot = $Slot
             $This.Collapse()
+            $This.SlotCollapse($This.Slot)
+
+            $This.IO."p$Slot".Visibility               = "Visible"
+            $This.IO."p$Slot`_x3".Visibility           = "Visible"
+
+            $This.IO.New.IsEnabled                     = 1
+            $This.IO.Edit.IsEnabled                    = 0
+            $This.IO.Save.IsEnabled                    = 1
+
+            $This.IO.New.Visibility                    = "Visible"
+            $This.IO.Edit.Visibility                   = "Visible"
+            $This.IO.Save.Visibility                   = "Visible"
             
-            $This.IO."p$Slot".Visibility = "Visible"
-            
+            Switch([UInt32]$This.Slot)
+            {
+                0 
+                {
+                    $Null               
+                }
+
+                1 
+                { 
+                    $This.NewClient()
+                }
+
+                2 
+                { 
+                    $This.NewService()
+                }
+
+                3 
+                { 
+                    $This.NewDevice()
+                }
+
+                4 
+                { 
+                    $This.NewIssue()
+                }
+
+                5 
+                { 
+                    $This.NewInventory()
+                }
+
+                6 
+                { 
+                    $This.NewPurchase()
+                }
+
+                7 
+                { 
+                    $This.NewExpense()
+                }
+
+                8 
+                { 
+                    $This.NewAccount()
+                }
+
+                9 
+                { 
+                    $This.NewInvoice()
+                }
+            }
         }
     }
 

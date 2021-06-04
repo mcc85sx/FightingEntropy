@@ -15,7 +15,7 @@ Function Get-FECheeks
     }
 
     $Stories = "&MicrosoftDeploymentToolkit","&TopShelfToolkit","&ShapedByFire","My&Briefcase"
-    $Titles  = $Stories -Replace "&",""
+    $Titles  = $Stories -Replace "&","" 
 
     $Item    = @{ }
     $Item.Add(0,@{"[Title]"="FightingEntropy";Version="2021.6.0";Company="Secure Digits Plus LLC";Author="Michael C. Cook Sr.";Description="Beginning the fight against ID theft and cybercrime"})
@@ -26,28 +26,28 @@ Function Get-FECheeks
         {
             $Cap = $Titles[0] | % { [_Fun]::New($_) }
             $Item.Add(1,@{"[Document]"= $Titles[0]})
-            $Item.Add(2,$Cap[0].Content -Split "`n")
+            $Item.Add(2,$Cap.Content -Split "`n")
         }
 
         1 
         { 
             $Cap = $Titles[1] | % { [_Fun]::New($_) }
             $Item.Add(1,@{"[Document]"= $Titles[1]})
-            $Item.Add(2,$Cap[1].Content -Split "`n")
+            $Item.Add(2,$Cap.Content -Split "`n")
         }
 
         2 
         {
             $Cap = $Titles[2] | % { [_Fun]::New($_) }
             $Item.Add(1,@{"[Document]"= $Titles[2]})
-            $Item.Add(2,$Cap[2].Content -Split "`n")
+            $Item.Add(2,$Cap.Content -Split "`n")
         }
 
         3 
         { 
             $Cap = $Titles[3] | % { [_Fun]::New($_) }
             $Item.Add(1,@{"[Document]"= $Titles[3]})
-            $Item.Add(2,$Cap[3].Content -Split "`n")
+            $Item.Add(2,$Cap.Content -Split "`n")
         }
 
         Default

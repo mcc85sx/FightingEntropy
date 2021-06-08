@@ -1,7 +1,7 @@
 
-	public class Window
+    public class Window
     {
-        public double height_ { get; set; } = 0;
+	    public double height_ { get; set; } = 0;
         public double height  { get; set; } = 0;
         public double  width_ { get; set; } = 0;
         public double  width  { get; set; } = 0;
@@ -14,10 +14,10 @@
 			
         }
 		
-		public void Set(double width, double height)
-		{
-			this.width_  =      width;
-			this.width   = this.width_;
+	public void Set(double width, double height)
+	{
+		this.width_  =      width;
+		this.width   = this.width_;
 			this.height_ =      height;
 			this.height  = this.height_;
 			

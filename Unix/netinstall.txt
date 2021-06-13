@@ -1,0 +1,5 @@
+# https://serverok.in/install-centos-8-from-net-boot-iso
+
+# In order to be able to install the software with only the boot image
+
+http://mirror.centos.org/centos/8/BaseOS/x86_64/os/

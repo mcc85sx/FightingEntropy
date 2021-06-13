@@ -1,5 +1,5 @@
-set pathx=/var/etc/acme-client/certs
-set pathy=`ls $pathx | `
-set pathz=$pathx/$pathy[2]/fullchain.pem
+set x=/var/etc/acme-client/certs
+set y=`ls $x | tail -n 1`
+set cert=`openssl x509 -in $x/$y/fullchain.pem -noout -text`
 
-set certificate=`openssl x509 -in $pathz -noout -text`
+

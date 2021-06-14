@@ -1,1 +1,11 @@
-Placeholder
+su -
+yum update
+yum install nano -y
+sudo nano /etc/sysconfig/selinux
+	- Change line...
+SELINUX=enforcing
+	- to...
+SELINUX=disabled
+yum groupinstall "Server with GUI" -y
+systemctl set-default graphical.target
+systemctl isolate graphical.target

@@ -9,10 +9,10 @@ Function Install-Roundcube
         [String]    $File 
         [String]    $Path = "/var/www/roundcube"
         [String]     $URL = 
-        [String[]] $Items = "install https://rpms.remirepo.net/enterprise/remi-release-8.rpm",
+        [String[]] $Items = ("install https://rpms.remirepo.net/enterprise/remi-release-8.rpm",
                             "module reset php",
                             "module enable php:remi-7.4",
-                            "$("ldap imagick common gd imap json curl zip xml mbstring bz2 intl gmp".Split(" ") | % { "php-$_" })"
+                            "$("ldap imagick common gd imap json curl zip xml mbstring bz2 intl gmp".Split(" ") | % { "php-$_" })")
         
         RCInstall([String]$Version)
         {

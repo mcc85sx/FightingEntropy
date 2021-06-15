@@ -120,21 +120,21 @@ Function _Certificate
 
     ssh $username@$hostname | tee $LogPath/$LogName
 
-# Log/Certificate Dump
-8
-set x=/var/etc/acme-client/certs
-set y=`ls $x | tail -n 1`
-set z=$x/$y
-ls $z > swap
-set list=`cat swap`
-foreach i ($list)
-echo "[{--------------------/$i}]"
-openssl x509 -in $z/$i -text
-echo "[{--------------------\$i}]"
-echo ""
-end
-exit
-exit
+    # Log/Certificate Dump
+    8
+    set x=/var/etc/acme-client/certs
+    set y=`ls $x | tail -n 1`
+    set z=$x/$y
+    ls $z > swap
+    set list=`cat swap`
+    foreach i ($list)
+    echo "[{--------------------/$i}]"
+    openssl x509 -in $z/$i -text
+    echo "[{--------------------\$i}]"
+    echo ""
+    end
+    exit
+    exit
 
     $Path    = "/home/$LogName"
     $Content = Get-Content $LogPath/$LogName

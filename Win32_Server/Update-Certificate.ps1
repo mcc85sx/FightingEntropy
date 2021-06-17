@@ -45,6 +45,21 @@ Function Update-Certificate
             }
         }
     }
+    
+    Class _CertString
+    {
+        [String] $Subject
+        [String] $Issuer
+        [String] $SerialNumber
+        [String] $NotBefore
+        [String] $NotAfter
+        [String] $Thumbprint
+        _CertString([Object]$Cert)
+        {
+            $This.Subject, $This.Issuer, $This.SerialNumber, $This.NotBefore, $This.NotAfter, 
+            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ")
+        }
+    }
 
     $Session         = New-SSHSession -ComputerName $ComputerName -KeyFile $KeyFile -Credential $Credential
     $ID              = $Session.SessionID

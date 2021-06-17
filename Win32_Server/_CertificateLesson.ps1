@@ -1,3 +1,4 @@
+
 # ------------- #
 # The Situation #
 # ------------- #
@@ -5,19 +6,23 @@
 # A fellow company network administrator needs someone to flush all of the 
 # certificates for a domain. These certificates are used for a number of 
 # devices on the network, the website, email, DNS, printers, etc.
-
+#                ¯¯¯¯¯¯¯      ¯¯¯¯¯¯¯  ¯¯¯¯¯  ¯¯¯  ¯¯¯¯¯¯¯¯  ¯¯¯
 # You're the leading (wizard/security engineer) that's been tasked with 
-# quelling the flame ASAP.
+# quelling the flame ASAP... and you don't play around. Nope. 
 
-# With this how-to guide, you'll make quick work in updating the certificates.
-
+# Some people might play around, but- not you.
+# ¯¯¯¯                                ¯¯¯¯¯¯¯
+# Anyway, with this how to guide...?
+#
+# Well, you'll make short work out of updating those certificates...
+#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 # The certificate server is located at "cp.securedigitsplus.com"
 # The certificate account is certsrv
 # The certificate files are under /var/etc/acme-client/cert
-# SSH Keys are already assigned and dispatched to the equipment
+# SSH-Keys are already assigned to the device for remote shell access
 
 # ----------- #
-# SSH Version # For parallel demonstration only
+# SSH Version # For parallel demonstration only, can be used to collect
 # ----------- #
 
 # 1) Login
@@ -58,7 +63,7 @@ IRM https://github.com/mcc85sx/FightingEntropy/blob/master/Win32_Server/Update-C
 # Write-Theme 2021.6.0
 IRM https://github.com/mcc85s/FightingEntropy/blob/main//Functions/Write-Theme.ps1?raw=true | IEX
 
-Write-Theme "Write-Theme [+] function loaded" 10,2,15,0
+Write-Theme "Write-Theme [+] Function loaded" 10,2,15,0
 
 $ComputerName = "cp.securedigitsplus.com"
 $KeyFile      = "$home\.ssh\putty_key"

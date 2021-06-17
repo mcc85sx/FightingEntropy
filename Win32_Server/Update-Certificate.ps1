@@ -21,7 +21,7 @@ Function Update-Certificate
         {
             $This.Subject, 
             $This.Issuer, $This.SerialNumber, $This.NotBefore, $This.NotAfter, 
-            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ").TrimEnd(" ")
+            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ")
         }
     }
     
@@ -58,8 +58,8 @@ Function Update-Certificate
                 $This.TargetPath = $_
                 
                 Set-Content -Path $_ -Value $This.Content
-                $This.Cert = [System.Security.Cryptography.x509Certificates.x509Certificate2]::New($_)
-                $This.CertString = $This.Cert.ToString().Split("`n")
+                $This.Cert       = [System.Security.Cryptography.x509Certificates.x509Certificate2]::New($_)
+                $This.CertString = [_CertString]::New($This.Cert.ToString().Split("`n"))
             }
         }
     }

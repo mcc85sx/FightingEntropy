@@ -9,19 +9,118 @@ Function Update-Certificate
     
     Import-Module posh-ssh
 
-    Class _CertString
+    Class _CertStoreObject
     {
+        [String] $Path
+        [String] $Thumbprint
         [String] $Subject
         [String] $Issuer
-        [String] $SerialNumber
+        [String] $FriendlyName
         [String] $NotBefore
         [String] $NotAfter
-        [String] $Thumbprint
-        _CertString([Object]$Cert)
+        [Object] $Extensions
+        _CertStoreObject([String]$Path,[Object]$CSO)
         {
-            $This.Subject, 
-            $This.Issuer, $This.SerialNumber, $This.NotBefore, $This.NotAfter, 
-            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ")
+            $This.Path         = $Path
+            $This.Subject      = $CSO.Subject
+            $This.Issuer       = $CSO.Issuer
+            $This.Thumbprint   = $CSO.Thumbprint
+            $This.FriendlyName = $CSO.FriendlyName
+            $This.NotBefore    = $CSO.NotBefore.ToString()
+            $This.NotAfter     = $CSO.NotAfter.ToString()
+            $This.Extensions   = $CSO.Extensions
+        }
+    }
+
+    Class _CertStore
+    {
+        [Object] $Files
+        [Object] $Store
+        Hidden [Object] $Report
+        _CertStore([Object[]]$Files)
+        {
+            $This.Files = $Files
+            $This.Store = @( )
+            $Path = "Cert:\"
+
+            ForEach ( $Item in Get-Childitem $Path -Recurse )
+            {
+                Switch -Regex ($Item.GetType().Name)
+                {
+                    X509Store
+                    {
+                        $Path = "Cert:\$($Item.Location)\$($Item.Name)"
+                    }
+        
+                    X509Certificate
+                    {
+                        $This.Store += [_CertStoreObject]::New($Path,$Item) 
+                    }
+                }
+            }
+        }
+
+        Import([String]$Target)
+        {
+            ForEach ( $File in $This.Files )
+            {
+                $Subject        = $Null
+                $Thumbprint     = $Null
+
+                If ($File.Subject -in $This.Store.Subject)
+                {
+                    $Subject    = $This.Store | ? Subject -match $File.Subject
+                    Write-Host "[$Subject]"
+                }
+
+                If ($File.Thumbprint -in $This.Store.Thumbprint)
+                {
+                    $Thumbprint = $This.Store | ? Thumbprint -match $File.Thumbprint
+                    Write-Host "[$Thumbprint]"
+                }
+                
+                If ( $Subject -or $Thumbprint )
+                {    
+                    Switch((Host).UI.PromptForChoice("Certificate conflict [!]","Duplicate subject/thumbprint signature found, replace or cancel?",
+                    @("&Replace","&Skip"),1))
+                    {
+                        0 
+                        { 
+                            "Replacing [{0}] {1}" -f $File.Thumbprint, $File.Subject
+                        }
+
+                        1 
+                        { 
+                            "Skipping [{0}] {1}" -f $File.Thumbprint, $File.Subject
+                        }
+                    }
+                }
+
+                Else
+                {
+                    $File.Import($Target)
+                }
+            }
+        }
+
+        _Report()
+        {
+            $This.Report        = ForEach ($Item in $This.Files)
+            {
+                ((        "Name" , $Item.Name),
+                 (  "SourcePath" , $Item.SourcePath),
+                 (  "TargetPath" , $Item.TargetPath),
+                 (     "Subject" , $Item.Certificate.Subject),
+                 (      "Issuer" , $Item.Certificate.Issuer),
+                 ("SerialNumber" , $Item.Certificate.SerialNumber),
+                 (   "NotBefore" , $Item.Certificate.NotBefore.ToString()),
+                 (    "NotAfter" , $Item.Certificate.NotAfter.ToString()),
+                 (  "Thumbprint" , $Item.Certificate.Thumbprint)) | % { "{0}{1}: {2}" -f (@(" ")*(20-$_[0].Length) -join ''), $_[0], $_[1] } 
+                " "
+                $Item.x509;
+                "-------------------------------------";
+                $Item.Certificate.ToString().Split("`n")
+            }
         }
     }
     
@@ -29,11 +128,10 @@ Function Update-Certificate
     {
         [String]$Name
         [String]$SourcePath
-        [String]$TargetPath
         [Object]$x509
         [Object]$Content
-        [Object]$Cert
-        [Object]$CertString
+        [String]$TargetPath
+        [Object]$Certificate
         _CertFile([Int32]$ID,[String]$Path,[String]$Name)
         {
             $This.Name       = $Name
@@ -41,25 +139,24 @@ Function Update-Certificate
             $This.x509       = Invoke-SSHCommand -SessionID $ID -Command "openssl x509 -in $Path -text" | % Output
             $This.Content    = Invoke-SSHCommand -SessionID $ID -Command "cat $Path"                    | % Output
         }
-        Transport([String]$Target)
+        Import([String]$Target)
         {
             If (!(Test-Path $Target))
             {
                 Throw "Invalid path"
             }
             
-            "$Target/$($This.Name)" | % {
+            $This.TargetPath = "$Target\$($This.Name)"
+            
+            If (Test-Path $This.TargetPath)
+            {
+                Throw "Item exists"
+            }
                 
-                If (Test-Path $_ )
-                {
-                    Throw "Item exists"
-                }
-                
-                $This.TargetPath = $_
-                
-                Set-Content -Path $_ -Value $This.Content
-                $This.Cert       = [System.Security.Cryptography.x509Certificates.x509Certificate2]::New($_)
-                $This.CertString = [_CertString]::New($This.Cert.ToString().Split("`n"))
+            Else
+            {
+                Set-Content -Path $This.TargetPath -Value $This.Content -Verbose
+                $This.Certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]($This.TargetPath)
             }
         }
     }
@@ -80,5 +177,7 @@ Function Update-Certificate
 
     [Void](Remove-SSHSession -SessionID $ID)
 
-    $File
+    $Store           = [_CertStore]::New($File)
+
+    $Store
 }

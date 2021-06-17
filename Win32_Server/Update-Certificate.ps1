@@ -36,7 +36,6 @@ Function Update-Certificate
     {
         [Object] $Files
         [Object] $Store
-        Hidden [Object] $Report
         _CertStore([Object[]]$Files)
         {
             $This.Files = $Files
@@ -103,23 +102,11 @@ Function Update-Certificate
             }
         }
 
-        _Report()
+        Report()
         {
-            $This.Report        = ForEach ($Item in $This.Files)
+            ForEach ($File in $This.Files)
             {
-                ((        "Name" , $Item.Name),
-                 (  "SourcePath" , $Item.SourcePath),
-                 (  "TargetPath" , $Item.TargetPath),
-                 (     "Subject" , $Item.Certificate.Subject),
-                 (      "Issuer" , $Item.Certificate.Issuer),
-                 ("SerialNumber" , $Item.Certificate.SerialNumber),
-                 (   "NotBefore" , $Item.Certificate.NotBefore.ToString()),
-                 (    "NotAfter" , $Item.Certificate.NotAfter.ToString()),
-                 (  "Thumbprint" , $Item.Certificate.Thumbprint)) | % { "{0}{1}: {2}" -f (@(" ")*(20-$_[0].Length) -join ''), $_[0], $_[1] } 
-                " "
-                $Item.x509;
-                "-------------------------------------";
-                $Item.Certificate.ToString().Split("`n")
+                Write-Theme $File.Report
             }
         }
     }
@@ -132,6 +119,7 @@ Function Update-Certificate
         [Object]$Content
         [String]$TargetPath
         [Object]$Certificate
+        [Object]$Report
         _CertFile([Int32]$ID,[String]$Path,[String]$Name)
         {
             $This.Name       = $Name
@@ -157,6 +145,24 @@ Function Update-Certificate
             {
                 Set-Content -Path $This.TargetPath -Value $This.Content -Verbose
                 $This.Certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]($This.TargetPath)
+                $This.Report      = @(
+                    ((        "Name" , $This.Name),
+                     (  "SourcePath" , $This.SourcePath),
+                     (  "TargetPath" , $This.TargetPath),
+                     (     "Subject" , $This.Certificate.Subject),
+                     (      "Issuer" , $This.Certificate.Issuer),
+                     ("SerialNumber" , $This.Certificate.SerialNumber),
+                     (   "NotBefore" , $This.Certificate.NotBefore.ToString()),
+                     (    "NotAfter" , $This.Certificate.NotAfter.ToString()),
+                     (  "Thumbprint" , $This.Certificate.Thumbprint)) | % { 
+                             
+                        "{0}{1}: {2}" -f (@(" ")*(20-$_[0].Length) -join ''), $_[0], $_[1] 
+                    } 
+                        " "
+                        $This.x509;
+                        "-------------------------------------";
+                        $This.Content
+                )
             }
         }
     }

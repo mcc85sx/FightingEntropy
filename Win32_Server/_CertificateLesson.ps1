@@ -50,6 +50,7 @@ rm swap
 
 # Here's the PowerShell version of the same thing... 
 # ...except the files and objects are parsed and imported/reported.
+# So, it'll look cool while you're doing actual work.
 
 # Update-Certificate function
 IRM https://github.com/mcc85sx/FightingEntropy/blob/master/Win32_Server/Update-Certificate.ps1?raw=true | IEX
@@ -60,12 +61,12 @@ IRM https://github.com/mcc85s/FightingEntropy/blob/main//Functions/Write-Theme.p
 Write-Theme "Write-Theme [+] function loaded" 10,2,15,0
 
 $ComputerName = "cp.securedigitsplus.com"
-$KeyFile="$home\.ssh\putty_key"
-$Root="/var/etc/acme-client/certs"
-$Credential=Get-Credential
-$FilePath="$home\desktop"
+$KeyFile      = "$home\.ssh\putty_key"
+$Root         = "/var/etc/acme-client/certs"
+$Credential   = Get-Credential
+$FilePath     = "$home\desktop"
 
-$Cert = Update-Certificate -ComputerName $ComputerName -KeyFile $KeyFile -Root $Root -Credential $Credential
+$Cert         = Update-Certificate -ComputerName $ComputerName -KeyFile $KeyFile -Root $Root -Credential $Credential
 GCI $FilePath | ? Name -in $Cert.Files.Name | Remove-Item -Verbose -Force
 $Cert.Import($FilePath)
 

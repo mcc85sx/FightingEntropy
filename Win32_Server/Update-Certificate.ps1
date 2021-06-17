@@ -7,14 +7,14 @@ Function Update-Certificate
         [Parameter()][PSCredential]$Credential = (Get-Credential)
     )
 
-    If (!(Get-Module posh-ssh))
+    $Module = Get-Module posh-ssh
+    
+    If ($Module -eq $Null)
     {
         Find-Module posh-ssh | Install-Module -Force
     }
-
-    Import-Module posh-ssh
     
-    Import-Module posh-ssh
+    Import-Module posh-ssh -Verbose
 
     Class _CertFile
     {

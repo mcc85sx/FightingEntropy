@@ -6,28 +6,23 @@ Function Update-Certificate
         [Parameter(Mandatory)][String]$Root,
         [Parameter()][PSCredential]$Credential = (Get-Credential)
     )
-
-    $Module = Get-Module posh-ssh
-    
-    If ($Module -eq $Null)
-    {
-        Find-Module posh-ssh | Install-Module -Force
-    }
     
     Import-Module posh-ssh
 
     Class _CertFile
     {
         [String]$Name
-        [String]$Path
+        [String]$SourcePath
+        [String]$TargetPath
         [Object]$x509
         [Object]$Content
+        [Object]$Cert
         _CertFile([Int32]$ID,[String]$Path,[String]$Name)
         {
-            $This.Name    = $Name
-            $This.Path    = $Path
-            $This.x509    = Invoke-SSHCommand -SessionID $ID -Command "openssl x509 -in $Path -text" | % Output
-            $This.Content = Invoke-SSHCommand -SessionID $ID -Command "cat $Path"                    | % Output
+            $This.Name       = $Name
+            $This.SourcePath = $Path
+            $This.x509       = Invoke-SSHCommand -SessionID $ID -Command "openssl x509 -in $Path -text" | % Output
+            $This.Content    = Invoke-SSHCommand -SessionID $ID -Command "cat $Path"                    | % Output
         }
         Transport([String]$Target)
         {
@@ -36,14 +31,18 @@ Function Update-Certificate
                 Throw "Invalid path"
             }
             
-            $Temp = "$Target/$($This.Name)"
-            
-            If (Test-Path $Temp)
-            {
-                Throw "Item exists"
+            "$Target/$($This.Name)" | % {
+                
+                If (Test-Path $_ )
+                {
+                    Throw "Item exists"
+                }
+                
+                $This.TargetPath = $_
+                
+                Set-Content -Path $_ -Value $This.Content
+                $This.Cert = [System.Security.Cryptography.x509Certificates.x509Certificate2]::New($_)
             }
-            
-            Set-Content -Path $Temp -Value $This.Content -Verbose
         }
     }
 

@@ -14,7 +14,7 @@ Function Update-Certificate
         Find-Module posh-ssh | Install-Module -Force
     }
     
-    Import-Module posh-ssh -Verbose
+    Import-Module posh-ssh
 
     Class _CertFile
     {

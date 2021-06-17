@@ -9,6 +9,22 @@ Function Update-Certificate
     
     Import-Module posh-ssh
 
+    Class _CertString
+    {
+        [String] $Subject
+        [String] $Issuer
+        [String] $SerialNumber
+        [String] $NotBefore
+        [String] $NotAfter
+        [String] $Thumbprint
+        _CertString([Object]$Cert)
+        {
+            $This.Subject, 
+            $This.Issuer, $This.SerialNumber, $This.NotBefore, $This.NotAfter, 
+            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ").TrimEnd(" ")
+        }
+    }
+    
     Class _CertFile
     {
         [String]$Name
@@ -17,6 +33,7 @@ Function Update-Certificate
         [Object]$x509
         [Object]$Content
         [Object]$Cert
+        [Object]$CertString
         _CertFile([Int32]$ID,[String]$Path,[String]$Name)
         {
             $This.Name       = $Name
@@ -42,22 +59,8 @@ Function Update-Certificate
                 
                 Set-Content -Path $_ -Value $This.Content
                 $This.Cert = [System.Security.Cryptography.x509Certificates.x509Certificate2]::New($_)
+                $This.CertString = $This.Cert.ToString().Split("`n")
             }
-        }
-    }
-    
-    Class _CertString
-    {
-        [String] $Subject
-        [String] $Issuer
-        [String] $SerialNumber
-        [String] $NotBefore
-        [String] $NotAfter
-        [String] $Thumbprint
-        _CertString([Object]$Cert)
-        {
-            $This.Subject, $This.Issuer, $This.SerialNumber, $This.NotBefore, $This.NotAfter, 
-            $This.Thumbprint = $Cert[1,4,7,10,13,16].TrimStart(" ")
         }
     }
 

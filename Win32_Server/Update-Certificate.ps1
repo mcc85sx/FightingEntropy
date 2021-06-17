@@ -29,6 +29,22 @@ Function Update-Certificate
             $This.x509    = Invoke-SSHCommand -SessionID $ID -Command "openssl x509 -in $Path -text" | % Output
             $This.Content = Invoke-SSHCommand -SessionID $ID -Command "cat $Path"                    | % Output
         }
+        Transport([String]$Target)
+        {
+            If (!(Test-Path $Target))
+            {
+                Throw "Invalid path"
+            }
+            
+            $Temp = "$Target/$($This.Name)"
+            
+            If (Test-Path $Temp)
+            {
+                Throw "Item exists"
+            }
+            
+            Set-Content -Path $Temp -Value $This.Content -Verbose
+        }
     }
 
     $Session         = New-SSHSession -ComputerName $ComputerName -KeyFile $KeyFile -Credential $Credential

@@ -60,7 +60,7 @@ rm swap
 IRM https://github.com/mcc85sx/FightingEntropy/blob/master/Win32_Server/Update-Certificate.ps1?raw=true | IEX
 
 # Write-Theme 2021.6.0
-IRM https://github.com/mcc85s/FightingEntropy/blob/main//Functions/Write-Theme.ps1?raw=true | IEX
+IRM https://github.com/mcc85s/FightingEntropy/blob/main/Functions/Write-Theme.ps1?raw=true | IEX
 
 Write-Theme "Write-Theme [+] Function loaded" 10,2,15,0
 

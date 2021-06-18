@@ -1,24 +1,32 @@
-# ------------- #
-# The Situation #
-# ------------- #
-
-# A fellow company network administrator needs someone to flush all of the 
-# certificates for a domain. These certificates are used for a number of 
-# devices on the network, the website, email, DNS, printers, etc.
-#                ¯¯¯¯¯¯¯      ¯¯¯¯¯¯¯  ¯¯¯¯¯  ¯¯¯  ¯¯¯¯¯¯¯¯  ¯¯¯
-# You're the leading (wizard/security engineer) that's been tasked with 
-# quelling the flame ASAP... and you don't play around. Nope. 
-
-# Some people might play around, but- not you.
-# ¯¯¯¯                                ¯¯¯¯¯¯¯
-# Anyway, with this how to guide...?
-#
-# Well, you'll make short work out of updating those certificates...
-#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# The certificate server is located at "cp.securedigitsplus.com"
-# The certificate account is certsrv
-# The certificate files are under /var/etc/acme-client/cert
-# SSH-Keys are already assigned to the device for remote shell access
+#   ____                                                                                                    ________
+#  //¯¯\\__________________________________________________________________________________________________//¯¯\\__//
+#  \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯\\
+#  //¯¯\\__[ The Situation ]_______________________________________________________________________________//¯¯\\__//
+#  \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯\\
+#  //¯¯¯                                                                                                           //
+#  \\       A fellow company network administrator needs someone to flush all of the                               \\
+#  //       certificates for a domain. These certificates are used for a number of                                 //
+#  \\       devices on the network, the website, email, DNS, printers, etc.                                        \\
+#  //                      ¯¯¯¯¯¯¯      ¯¯¯¯¯¯¯  ¯¯¯¯¯  ¯¯¯  ¯¯¯¯¯¯¯¯  ¯¯¯                                         //
+#  \\       You're the leading (wizard/security engineer) that's been tasked with                                  \\
+#  //       quelling the flame ASAP... and you don't play around. Nope.                                            //
+#  \\                                                                                                              \\
+#  //       Some people might play around, but- not you.                                                           //
+#  \\       ¯¯¯¯                                ¯¯¯¯¯¯¯                                                            \\
+#  //       Anyway, with this how to guide...?                                                                     //
+#  \\                                                                                                              \\
+#  //       ...you'll make short work out of updating those certificates.                                          //
+#  \\          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯                                           \\
+#  //       The certificate server is located at "cp.securedigitsplus.com"                                         //
+#  \\       The certificate account is certsrv                                                                     \\
+#  //       The certificate files are under /var/etc/acme-client/cert                                              //
+#  \\       SSH-Keys are already assigned to the device for remote shell access                                    \\
+#  //                                                                                                           ___//
+#  \\___                                                                                                    ___//¯¯\\
+#  //¯¯\\__________________________________________________________________________________________________//¯¯¯___//
+#  \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯
+#   ¯¯¯\\__[ Press enter to continue    ]__________________________________________________________________//¯¯¯
+#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
 # ----------- #
 # SSH Version # For parallel demonstration only, can be used to collect
@@ -52,14 +60,13 @@ rm swap
 # PowerShell Version #
 # ------------------ #
 
-# Here's the PowerShell version of the same thing... 
-# ...except the files and objects are parsed and imported/reported.
-# So, it'll look cool while you're doing actual work.
+# Here's the PowerShell version of the same thing
+# The files and objects are parsed and imported/reported.
 
-# Update-Certificate function
+# Update-Certificate function (Interim name of script/function)
 IRM https://github.com/mcc85sx/FightingEntropy/blob/master/Win32_Server/Update-Certificate.ps1?raw=true | IEX
 
-# Write-Theme 2021.6.0
+# Write-Theme 2021.6.0 (For messages
 IRM https://github.com/mcc85s/FightingEntropy/blob/main/Functions/Write-Theme.ps1?raw=true | IEX
 
 Write-Theme "Write-Theme [+] Function loaded" 10,2,15,0

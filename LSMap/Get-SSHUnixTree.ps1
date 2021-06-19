@@ -40,7 +40,7 @@ Function Get-SSHUnixTree
             
         Switch -Regex ($String)
         {
-            \:
+            (\:)
             {
                 $Type  = "Folder"
                 $Path  = $String -Replace ":",""

@@ -5,7 +5,7 @@ Function Get-SSHUnixTree
         [Parameter(Mandatory,Position=0)][String]$ComputerName,
         [Parameter(Mandatory,Position=1)][String]$KeyFile,
         [Parameter(Mandatory,Position=2)][String]$FilePath,
-        [Parameter()][PSCredential]$Credential,
+        [Parameter()][PSCredential]$Credential
     )
 
     Class _Item

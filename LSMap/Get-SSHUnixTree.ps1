@@ -53,7 +53,10 @@ Function Get-SSHUnixTree
         }
 
         $Name          = ($String -Split "/" | Select-Object -Last 1)
-                
+        If ( $Name[-1] -eq ":" )
+        {
+            $Name.TrimEnd(":")
+        }
         $Stack.Add($Stack.Count,[_Item]::New($Stack.Count,$Type,$Path,$Name))
     }
 

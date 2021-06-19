@@ -1,4 +1,3 @@
-
 Function Get-SSHUnixTree
 {
     [CmdLetBinding()]Param(
@@ -67,8 +66,6 @@ Function Get-SSHUnixTree
             {
                 $This.Stock[$X]
             }
-
-            $This.Output($FilePath)
         }
 
         [Void] Output([String]$FilePath)
@@ -91,7 +88,7 @@ Function Get-SSHUnixTree
     $Session    = New-SSHSession -ComputerName $ComputerName -KeyFile $KeyFile -Credential $Credential
     $ID         = $Session.SessionID
     $Stack      = [_Stock]::New($ID)
-    $Stack.Output($FilePath) 
+    $Stack.Output($FilePath)
 
     $Stack
 }

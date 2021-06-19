@@ -26,69 +26,56 @@ Function Get-SSHUnixTree
         }
     }
 
-    Class _Stack
-    {
-        [Object] $Stock
-        [Object] $Stack
-        _Stock([String]$ID)
-        {
-            $This.Stack       = @{ }
-            $Path             = $Null
+    $Session           = New-SSHSession -ComputerName $ComputerName -KeyFile $KeyFile -Credential $Credential
+    $ID                = $Session.SessionID
+    $Stack             = @{ }
 
-            Invoke-SSHCommand -SessionID $ID -Command "cd .."
-            Invoke-SSHCommand -SessionID $ID -Command "cd .."
-            Invoke-SSHCommand -SessionID $ID -Command "ls -R /" | % Output | % { 
+    $Path              = $Null
+
+    [Void](Invoke-SSHCommand -SessionID $ID -Command "cd ..")
+    [Void](Invoke-SSHCommand -SessionID $ID -Command "cd ..")
+    Invoke-SSHCommand -SessionID $ID -Command "ls -R /" | % Output | % { 
         
-                $String       = $_
+        $String        = $_
             
-                Switch -Regex ($String)
-                {
-                    \:
-                    {
-                        $Type = "Folder"
-                        $Path = $String -Replace ":",""
-                    }
-            
-                    Default
-                    {
-                        $Type = "File"
-                    }
-                }
-
-                $Name         = ($String -Split "/" | Select-Object -Last 1)
-                
-                $This.Stock.Add($This.Stock.Count,[_Item]::New($This.Stock.Count,$Type,$Path,$Name))
-            }
-
-            [Void](Get-SSHSession | ? SessionID -match $ID | Remove-SSHSession)
-
-            $This.Stack = ForEach ( $X in 0..($This.Stock.Count - 1))
-            {
-                $This.Stock[$X]
-            }
-        }
-
-        [Void] Output([String]$FilePath)
+        Switch -Regex ($String)
         {
-            Set-Content $FilePath -Value @( 
-                
-                ForEach ($X in 0..($This.Stack.Count-1))
-                {
-                    $Item = $This.Stack[$X]
-                    $Item.Hex
-                    $Item.Type
-                    $Item.Path
-                    $Item.Name
-                    " "
-                }
-            ) -Verbose
+            \:
+            {
+                $Type  = "Folder"
+                $Path  = $String -Replace ":",""
+            }
+            
+            Default
+            {
+                $Type  = "File"
+            }
         }
+
+        $Name          = ($String -Split "/" | Select-Object -Last 1)
+                
+        $Stack.Add($Stack.Count,[_Item]::New($Stack.Count,$Type,$Path,$Name))
     }
 
-    $Session    = New-SSHSession -ComputerName $ComputerName -KeyFile $KeyFile -Credential $Credential
-    $ID         = $Session.SessionID
-    $Stack      = [_Stock]::New($ID)
-    $Stack.Output($FilePath)
+    [Void](Get-SSHSession | ? SessionID -match $ID | Remove-SSHSession)
 
-    $Stack
+    $Stock = ForEach ( $X in 0..($Stack.Count - 1))
+    {
+        $Stack[$X]
+    }
+
+    Set-Content -LiteralPath $FilePath -Value @( 
+            
+        ForEach ($X in 0..($Stock.Count-1))
+        {
+            $Item = $Stock[$X]
+            $Item.Hex
+            $Item.Type
+            $Item.Path
+            $Item.Name
+            " "
+        }
+    ) -Verbose
+
+    $Stock
 }

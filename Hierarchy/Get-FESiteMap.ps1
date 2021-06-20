@@ -288,12 +288,12 @@ Function Get-FESiteMap
 
 # PS C:\windows\system32> $SM.Sitemap | FT
 
-# Location      Region   Country Postal TimeZone         SiteLink      
-# --------      ------   ------- ------ --------         --------      
-# Clifton Park  New York US       12065 America/New_York CP-NY-US-12065
-# Waterford     New York US       12188 America/New_York WA-NY-US-12188
-# Ballston Spa  New York US       12020 America/New_York BS-NY-US-12020
-# Ballston Lake New York US       12019 America/New_York BL-NY-US-12019
-# Albany        New York US       12201 America/New_York AL-NY-US-12201
-# Troy          New York US       12180 America/New_York TR-NY-US-12180
-# Schenectady   New York US       12301 America/New_York SC-NY-US-12301
+# Location      Region   Country Postal TimeZone         SiteLink       SiteName      
+# --------      ------   ------- ------ --------         --------       --------      
+# Clifton Park  New York US       12065 America/New_York CP-NY-US-12065 CP.NY.US.12065
+# Waterford     New York US       12188 America/New_York WA-NY-US-12188 WA.NY.US.12188
+# Ballston Spa  New York US       12020 America/New_York BS-NY-US-12020 BS.NY.US.12020
+# Ballston Lake New York US       12019 America/New_York BL-NY-US-12019 BL.NY.US.12019
+# Albany        New York US       12201 America/New_York AL-NY-US-12201 AL.NY.US.12201
+# Troy          New York US       12180 America/New_York TR-NY-US-12180 TR.NY.US.12180
+# Schenectady   New York US       12301 America/New_York SC-NY-US-12301 SC.NY.US.12301

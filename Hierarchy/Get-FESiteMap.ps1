@@ -1,3 +1,33 @@
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯\\   
+#   //¯¯\\__[ The Situation ]+++____________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯\\   
+#   //¯¯¯                                                                                                           //   
+#   \\       You're a network administrator that wants to build a PKI infrastructure                                \\   
+#   //       You want each site to pull variables from the environment, to assist with certifcate                   //   
+#   \\       distribution, as well as Active Directory Sites and Services allocation.                               \\   
+
+#            Sample sites... 
+
+#            - Clifton Park
+#            - Waterford
+#            - Ballston Spa
+#            - Ballston Lake
+#            - Albany
+#            - Troy
+#            - Schenectady
+
+#            Certificates and DNS settings depend on the sitemap being built correctly.
+#            Routing and remote access depend on proper gateway configuration
+#            
+#   //                                                                                                           ___//   
+#   \\___                                                                                                    ___//¯¯\\   
+#   //¯¯\\__________________________________________________________________________________________________//¯¯¯___//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Press enter to continue    ]__________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
 Function Get-FESiteMap
 {
     [CmdLetBinding()]
@@ -130,6 +160,18 @@ Function Get-FESiteMap
             }  
         }
     }
+
+    Class Gateway
+    {
+        [String]$Name
+        [Object]$Sitemap
+
+        Gateway([String]$CommonName,[Object]$Sitemap)
+        {
+            $This.Name    = "{0}.{1}" -f $Sitemap.Sitename, $CommonName
+            $This.Sitemap = $Sitemap
+        }
+    }
     
     Class Certificate
     {
@@ -175,11 +217,10 @@ Function Get-FESiteMap
             $This.Postal           = $This.Ping.Postal
             $This.TimeZone         = $This.Ping.TimeZone
 
-            $This.SiteName         = $This.GetSiteLink(".")
-            $This.SiteLink         = $This.GetSiteLink("-")
+            $This.GetSiteLink()
         }
 
-        [String] GetSiteLink([String]$Token)
+        GetSiteLink()
         {
             $Return                = @{ }
 
@@ -207,7 +248,8 @@ Function Get-FESiteMap
             # Zip
             $Return.Add(3,$This.Postal)
 
-            Return $Return[0..3] -join "$Token"
+            $This.SiteLink = $Return[0..3] -join "-"
+            $This.SiteName = "{0}.{1}" -f ($Return[0..3] -join "."),$This.CommonName
         }
     }
 
@@ -217,6 +259,7 @@ Function Get-FESiteMap
         [String]$CommonName
         Hidden [Object]$ZipStack
         [Object]$SiteMap
+        [Object]$Gateway
         Control([String]$Organization,[String]$CommonName)
         {
             $This.Organization = $Organization
@@ -244,7 +287,7 @@ Function Get-FESiteMap
 
             Else
             {
-                $This.SiteMap += $Item | Select-Object Location, Region, Country, Postal, Timezone, Sitelink
+                $This.SiteMap += $Item | Select-Object Location, Region, Country, Postal, Timezone, Sitelink, Sitename
             }
         }
 
@@ -256,44 +299,3 @@ Function Get-FESiteMap
     
     [Control]::New($Organization,$CommonName)
 }
-
-# $SM                = @{  
-
-#     Organization   = "Secure Digits Plus LLC"
-#     CommonName     = "securedigitsplus.com"
-
-# }                  | % { Get-FESiteMap @_ -Verbose } 
-
-# $SM                | % Pull                          # Main
-
-# ForEach ( $Town in "Waterford","Ballston Spa","Ballston Lake","Albany","Troy","Schenectady")
-# {
-#    $Item              = $SM.ZipStack.TownZip($Town) | ? State -eq NY
-    
-#    If ( $Item.Count -gt 1 ) 
-#    {
-#        $Item          = $Item | Select-Object -First 1
-#    }
-
-#    $Tmp               = $SM.NewCertificate()
-#    $Tmp[0].Location   = $Item.Name
-#    $Tmp[0].Postal     = $Item.Zip
-
-#    $Tmp[0].SiteLink   = $Tmp.GetSiteLink("-")
-#    $Tmp[0].SiteName   = $Tmp.GetSiteLink(".")
-
-#    Write-Theme 
-#    $SM.Load($Tmp[0])
-#}
-
-# PS C:\windows\system32> $SM.Sitemap | FT
-
-# Location      Region   Country Postal TimeZone         SiteLink       SiteName      
-# --------      ------   ------- ------ --------         --------       --------      
-# Clifton Park  New York US       12065 America/New_York CP-NY-US-12065 CP.NY.US.12065
-# Waterford     New York US       12188 America/New_York WA-NY-US-12188 WA.NY.US.12188
-# Ballston Spa  New York US       12020 America/New_York BS-NY-US-12020 BS.NY.US.12020
-# Ballston Lake New York US       12019 America/New_York BL-NY-US-12019 BL.NY.US.12019
-# Albany        New York US       12201 America/New_York AL-NY-US-12201 AL.NY.US.12201
-# Troy          New York US       12180 America/New_York TR-NY-US-12180 TR.NY.US.12180
-# Schenectady   New York US       12301 America/New_York SC-NY-US-12301 SC.NY.US.12301

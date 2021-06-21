@@ -1,4 +1,4 @@
-Function Install-WDSLinux # # tutorial by https://kenvb.gitbook.io/deploy-linux-with-microsoft-wds/
+Function Install-WDSLinuxPackage # # tutorial by https://kenvb.gitbook.io/deploy-linux-with-microsoft-wds/
 {
     [CmdLetBinding()]Param([Parameter()][String]$Root)
 
@@ -131,7 +131,7 @@ Function Install-WDSLinux # # tutorial by https://kenvb.gitbook.io/deploy-linux-
         $Root = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\services\WDSServer\Providers\WDSTFTP" | % RootFolder
     }
 
-    $Syslinux = Get-SyslinuxWDS
+    $Syslinux = Get-WDSLinuxPackage
 
     [WDS]::New($Root,$Syslinux)
 }

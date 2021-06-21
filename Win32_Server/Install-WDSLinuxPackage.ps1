@@ -8,7 +8,7 @@ Function Install-WDSLinuxPackage
         Throw "Not a valid server"
     }
 
-    If ( Get-WindowsFeature | ? Name -match WDS | ? Installed -eq 0 )
+    ElseIf ( Get-WindowsFeature | ? Name -match WDS | ? Installed -eq 0 )
     {
         Throw "WDS is not installed"
     }
@@ -130,6 +130,11 @@ Function Install-WDSLinuxPackage
     If ( $Root.Length -le 1 )
     {
         $Root = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\services\WDSServer\Providers\WDSTFTP" | % RootFolder
+        
+        If ( $Root -eq $Null)
+        {
+            Throw "WDS not yet configured"
+        }
     }
 
     $Syslinux = Get-WDSLinuxPackage

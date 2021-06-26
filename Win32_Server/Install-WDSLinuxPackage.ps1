@@ -1,4 +1,3 @@
-
 Function Install-WDSLinuxPackage
 {
     [CmdLetBinding()]Param([Parameter()][String]$Root)
@@ -32,35 +31,35 @@ Function Install-WDSLinuxPackage
                 Throw "Import path invalid"
             }
 
+            # Test/Create directories
+            ForEach ( $I in "linux","pxelinux.cfg" )
+            {
+                If (!(Test-Path "$($This.Path)\$I") )
+                {
+                    New-Item -Path $This.Path -Name $I -ItemType Directory -Verbose
+                }
+            }
+
             # Copy all syslinux files
             ForEach ($File in Get-ChildItem $Files)
             {
                 If (!(Test-Path "$($This.Path)/$($File.Name)"))
                 {
-                    Copy-Item -Path $File.FullName -Destination $This.Path -Verbose
+                    Copy-Item -Path $File.FullName -Destination "$($This.Path)\$($File.Name)" -Verbose
                 }
             }
 
             # Copy/Newname these files
             ForEach ( $I in ("pxelinux.0","pxelinux.com"),("abortpxe.com","abortpxe.0"),("pxeboot.n12","pxeboot.0"))
             {
-                Switch(Test-Path $I[1])
+                If(!(Test-Path "$($This.Path)\$($I[1])"))
                 {
-                    1 {} 0 { Copy-Item -Path "$($This.Path)\$($I[0])" -Destination "$($This.Path)/$($I[1])" -Verbose }
-                }
-            }
-
-            # Test/Create directories
-            ForEach ( $I in "linux","pxelinux.cfg" )
-            {
-                Switch(Test-Path $I)
-                {
-                    1 {} 0 { New-Item -Path $This.Path -Name $I -ItemType Directory -Verbose }
+                    Copy-Item -Path "$($This.Path)\$($I[0])" -Destination "$($This.Path)/$($I[1])" -Verbose
                 }
             }
 
             # Copy system graphic
-            Copy-Item -Path $This.Graphic.FullName -Destination "$($This.Path)/pxelinux.cfg" -Verbose
+            Copy-Item -Path $This.Graphic.FullName -Destination "$($This.Path)/pxelinux.cfg/$($This.Graphic.Name)" -Verbose
             
             # Set configuration
             $This.Config = @("DEFAULT vesamenu.c32",
@@ -95,6 +94,11 @@ Function Install-WDSLinuxPackage
             "  Type 0x80" -join "`n")
             
             # Write configuration
+            If (!(Test-Path "$($This.Path)\pxelinux.cfg\default"))
+            {
+                New-Item "$($This.Path)\pxelinux.cfg\default" -ItemType File -Verbose
+            }
+
             Set-Content -Path "$($This.Path)\pxelinux.cfg\default" -Value $This.Config -Verbose
 
             # Collect file tree
@@ -131,7 +135,7 @@ Function Install-WDSLinuxPackage
     {
         $Root = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\services\WDSServer\Providers\WDSTFTP" | % RootFolder
         
-        If ( $Root -eq $Null)
+        If (!$Root)
         {
             Throw "WDS not yet configured"
         }

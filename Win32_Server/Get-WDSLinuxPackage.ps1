@@ -49,11 +49,12 @@ Function Get-WDSLinuxPackage
     ForEach ( $Item in 
         "bios/core/pxelinux.0",
         "bios/com32/menu/vesamenu.c32",
+        "bios/com32/lib/libcom32.c32",
         "bios/com32/chain/chain.c32",
         "bios/com32/elflink/ldlinux/ldlinux.c32",
         "bios/com32/elflink/ldlinux/ldlinux.elf",
         "bios/com32/libutil/libutil.c32",
-        "bios/com32/cmenu/libmenu/Libmenu.c32",
+        "bios/com32/cmenu/libmenu/libmenu.c32",
         "bios/com32/gpllib/libgpl.c32",
         "bios/com32/lua/src/liblua.c32")
     {

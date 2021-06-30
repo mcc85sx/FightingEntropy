@@ -2,6 +2,7 @@ Class WindowsImage
 {
     [Uint32] $Index
     [String] $Name
+    [String] $Description
     Hidden [Float]   $FileSize
     [String] $Size
     WindowsImage([Object]$Image)
@@ -11,10 +12,11 @@ Class WindowsImage
             Throw "No image input"
         }
 
-        $This.Index     = $Image.ImageIndex
-        $This.Name      = $Image.ImageName
-        $This.FileSize  = $Image.ImageSize/1GB
-        $This.Size      = "{0:n3} GB" -f $This.FileSize 
+        $This.Index       = $Image.ImageIndex
+        $This.Name        = $Image.ImageName
+        $This.Description = $Image.ImageDescription
+        $This.FileSize    = $Image.ImageSize/1GB
+        $This.Size        = "{0:n3} GB" -f $This.FileSize 
     }
 }
 
@@ -23,7 +25,8 @@ Class ImageQueue
     [String]  $Name
     [String]  $FullName
     [String]  $Index
-    ImageQueue([String]$FullName,[String]$Index)
+    [String]  $Description
+    ImageQueue([String]$FullName,[String]$Index,[String]$Description)
     {
         If (!$FullName -or !$Index)
         {
@@ -33,6 +36,7 @@ Class ImageQueue
         $This.Name          = $FullName | Split-Path -Leaf
         $This.FullName      = $FullName
         $This.Index         = $Index
+        $This.Description   = $Description
     }
 }
 
@@ -495,8 +499,6 @@ Class _ImageStore
     }
 }
 
-#$Images = [_ImageStore]::New($Source,$Target)
-
 $Xaml  = [_XamlWindow]::New([ImageTab]::New().Tab)
 
 $Xaml.IO.WimIso.ItemsSource = @()
@@ -630,7 +632,9 @@ $Xaml.IO.WimQueue.Add_Click(
 
     Else
     {
-        $Xaml.IO.WimIso.ItemsSource += [ImageQueue]::New($Xaml.IO.IsoList.SelectedItem.Fullname,($Xaml.IO.IsoView.SelectedItems.Index -join ","))
+        $Indexes      = $Xaml.IO.IsoView.SelectedItems.Index -join ","
+        $Descriptions = $Xaml.IO.IsoView.SelectedItems.Description -join ","
+        $Xaml.IO.WimIso.ItemsSource += [ImageQueue]::New($Xaml.IO.IsoList.SelectedItem.Fullname,$Indexes,$Descriptions)
     }
 })
 
@@ -736,18 +740,40 @@ $Xaml.IO.WimExtract.Add_Click(
 {
     If (Test-Path $Xaml.IO.WimSwap.Text)
     {
-        Switch((Get-Host).UI.PromptForChoice("Path [!] exists!","The path provided already exists.",@("&Yes","&No"),2))
+        Switch([System.Windows.MessageBox]::Show("Path [!] exists!","The path already exists, delete?","YesNo"))
         {
-            0 { Write-Host "Removing path... [$($Xaml.IO.WimSwap.Text)]" }
-            1 { Write-Host "No action taken" }
+            Yes 
+            { 
+                Write-Host "Removing path... [$($Xaml.IO.WimSwap.Text)]"
+                Remove-Item -Path $Xaml.IO.WimSwap.Text -Recurse -Force -Verbose
+            }
+            
+            No
+            { 
+                Write-Host "No action taken"
+                Break
+            }
         }
     }
 
+    $Images = [_ImageStore]::New($Xaml.IO.IsoPath.Text,$Xaml.IO.WimSwap.Text)
+
+    $X      = 0
     ForEach ( $Item in $Xaml.IO.WimIso.Items )
     {
-        Write-Host $Item.Name
-        Write-Host $Item.Index -Split ","
+        $Type = Switch -Regex ($Item.Description)
+        {
+            Server { "Server" } Default { "Client" }
+        }
+
+        $Images.AddImage($Type,$Item.Name)
+        $Images.Store[$X].AddMap($Item.Index.Split(","))
+        $X ++
     }
+
+    $Images.GetSwap()
+    $Images.GetOutput()
+    Write-Theme "Complete [+] Images Collected"
 })
 
 $Xaml.IO.WimSwap.Add_TextChanged(

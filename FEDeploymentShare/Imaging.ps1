@@ -84,7 +84,7 @@ Class ImageTab
     ImageTab()
     {
         $This.Tab = @"
-        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="750" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -190,32 +190,28 @@ Class ImageTab
                 <Setter Property="TextBlock.TextAlignment" Value="Left" />
             </Style>
         </Window.Resources>
-        <GroupBox Style="{StaticResource xGroupBox}" Margin="10" Padding="5" Foreground="Black" Background="White">
+        <GroupBox Style="{StaticResource xGroupBox}" Margin="5" Padding="5" Foreground="Black" Background="White">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="80"/>
                     <RowDefinition Height="120"/>
                     <RowDefinition Height="60"/>
                     <RowDefinition Height="120"/>
                     <RowDefinition Height="60"/>
                     <RowDefinition Height="120"/>
                     <RowDefinition Height="80"/>
-                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="[ISO Path (Source Directory)]">
+                <GroupBox Grid.Row="0" Header="[ISO Path (Source Directory)]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
                         <TextBox Style="{StaticResource TextBro}" Name="IsoPath"/>
-                    </GroupBox>
-                    <Button Name="IsoScan" Grid.Column="1" Style="{StaticResource xButton}" Height="30" Content="Scan" IsEnabled="False"/>
-                    <GroupBox Grid.Column="2" Header="[ISO Swap (Target Directory)]">
-                        <TextBox Style="{StaticResource TextBro}" Name="IsoSwap"/>
-                    </GroupBox>
-                </Grid>
+                        <Button Name="IsoScan" Grid.Column="1" Style="{StaticResource xButton}" Height="30" Content="Scan" IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
                 <Grid Grid.Row="1">
                     <GroupBox Header="[ISO List (Detected)]">
                         <DataGrid Name="IsoList" Margin="5">
@@ -240,7 +236,7 @@ Class ImageTab
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding='{Binding Index}' Width="40"/>
                                 <DataGridTextColumn Header="Name"  Binding='{Binding Name}' Width="*"/>
-                                <DataGridTextColumn Header="Size"  Binding='{Binding Size}' Width="*"/>
+                                <DataGridTextColumn Header="Size"  Binding='{Binding Size}' Width="100"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
@@ -255,15 +251,39 @@ Class ImageTab
                 </Grid>
                 <Grid Grid.Row="5">
                     <GroupBox Header="[Windows Image (Extraction Queue)]">
-                        <DataGrid Name="WimIso" Margin="5">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name"  Binding='{Binding FullName}' Width="*"/>
-                                <DataGridTextColumn Header="Index" Binding='{Binding Index}' Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Button Grid.Row="0" Name="WimIsoUp" Style="{StaticResource xButton}" Content="˄" Margin="0"/>
+                                <Button Grid.Row="1" Name="WimIsoDown" Style="{StaticResource xButton}" Content="˅" Margin="0"/>
+                            </Grid>
+                            <DataGrid Grid.Column="1" Name="WimIso" Margin="5">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding='{Binding FullName}' Width="*"/>
+                                    <DataGridTextColumn Header="Index" Binding='{Binding Index}' Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </GroupBox>
                 </Grid>
-                <Grid Grid.Row="6">
+                <GroupBox Grid.Row="6" Header="[ISO Swap (Target Directory)]">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Style="{StaticResource TextBro}" Name="WimSwap"/>
+                        <Button Grid.Column="1" Style="{StaticResource xButton}" Name="WimExtract" Content="Extract"/>
+                    </Grid>
+                </GroupBox>
+                <Grid Grid.Row="7">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -479,6 +499,8 @@ Class _ImageStore
 
 $Xaml  = [_XamlWindow]::New([ImageTab]::New().Tab)
 
+$Xaml.IO.WimIso.ItemsSource = @()
+
 $Xaml.IO.IsoPath.Add_TextChanged(
 {
     If ( $Xaml.IO.IsoPath.Text -ne "" )
@@ -490,10 +512,6 @@ $Xaml.IO.IsoPath.Add_TextChanged(
     {
         $Xaml.IO.IsoScan.IsEnabled = 0
     }
-})
-
-$Xaml.IO.IsoSwap.Add_TextChanged(
-{
 })
 
 $Xaml.IO.IsoScan.Add_Click(
@@ -591,11 +609,15 @@ $Xaml.IO.WimIso.Add_SelectionChanged(
     If ( $Xaml.IO.WimIso.Items.Count -eq 0 )
     {
         $Xaml.IO.WimDequeue.IsEnabled   = 0
+        $Xaml.IO.WimIsoUp.IsEnabled     = 0
+        $xaml.IO.WimIsoDown.IsEnabled   = 0
     }
 
     If ( $Xaml.IO.WimIso.Items.Count -gt 0 )
     {
         $Xaml.IO.WimDequeue.IsEnabled   = 1
+        $Xaml.IO.WimIsoUp.IsEnabled     = 1
+        $xaml.IO.WimIsoDown.IsEnabled   = 1
     }
 })
 
@@ -608,19 +630,136 @@ $Xaml.IO.WimQueue.Add_Click(
 
     Else
     {
-        $Items = $Xaml.IO.IsoView.SelectedItems.Index -join ","
-        Write-Host $Items
-        $Xaml.IO.WimIso.Items.Add([ImageQueue]::New($Xaml.IO.IsoList.SelectedItem.Fullname,$Items))
+        $Xaml.IO.WimIso.ItemsSource += [ImageQueue]::New($Xaml.IO.IsoList.SelectedItem.Fullname,($Xaml.IO.IsoView.SelectedItems.Index -join ","))
     }
 })
 
 $Xaml.IO.WimDequeue.Add_Click(
 {
-    $Xaml.IO.WimIso.Items.Remove($Xaml.IO.WimIso.SelectedItem)
+    $Grid = $Xaml.IO.WimIso.ItemsSource
+    $Items = @( )
+
+    ForEach ( $Item in $Grid )
+    {
+        If ( $Item -ne $Xaml.IO.WimIso.SelectedItem )
+        {
+            $Items += $Item
+        }
+    }
+
+    $Xaml.IO.WimIso.ItemsSource = @( )
+    $Xaml.IO.WimIso.ItemsSource = $Items
+    $Grid                       = $Null
+    $Items                      = $Null
 
     If ( $Xaml.IO.WimIso.Items.Count -eq 0 )
     {
         $Xaml.IO.WimDequeue.IsEnabled = 0
+    }
+})
+
+$Xaml.IO.WimIsoUp.Add_Click(
+{
+    If ( $Xaml.IO.WimIso.Items.Count -gt 1 )
+    {
+        $Rank  = $Xaml.IO.WimIso.SelectedIndex
+        $Grid  = $Xaml.IO.WimIso.ItemsSource
+        $Items = 0..($Grid.Count-1)
+
+        If ($Rank -ne 0)
+        {
+            ForEach ($I in 0..($Grid.Count-1))
+            {
+                If ( $I -eq $Rank - 1 )
+                {
+                    $Items[$I] = $Grid[$I+1]
+                }
+
+                ElseIf ( $I -eq $Rank )
+                {
+                    $Items[$I] = $Grid[$I-1]   
+                }
+
+                Else
+                {
+                    $Items[$I] = $Grid[$I]
+                }
+            }
+
+            $Xaml.IO.WimIso.ItemsSource = @( )
+            $Xaml.IO.WimIso.ItemsSource = $Items
+            $Items = $Null
+            $Rank  = $Null
+            $Grid  = $Null
+        }
+    }
+})
+
+$Xaml.IO.WimIsoDown.Add_Click(
+{
+    If ( $Xaml.IO.WimIso.Items.Count -gt 1 )
+    {
+        $Rank  = $Xaml.IO.WimIso.SelectedIndex
+        $Grid  = $Xaml.IO.WimIso.ItemsSource
+        $Items = 0..($Grid.Count - 1)
+
+        If ($Rank -ne $Grid.Count - 1)
+        {
+            ForEach ($I in 0..($Grid.Count-1))
+            {
+                If ( $I -eq $Rank )
+                {
+                    $Items[$I] = $Grid[$I+1]   
+                }
+
+                ElseIf ( $I -eq $Rank + 1 )
+                {
+                    $Items[$I] = $Grid[$I-1]
+                }
+
+                Else
+                {
+                    $Items[$I] = $Grid[$I]
+                }
+            }
+            
+            $Xaml.IO.WimIso.ItemsSource = @( )
+            $Xaml.IO.WimIso.ItemsSource = $Items
+            $Items = $Null
+            $Rank  = $Null
+            $Grid  = $Null
+        }
+    }
+})
+
+$Xaml.IO.WimExtract.Add_Click(
+{
+    If (Test-Path $Xaml.IO.WimSwap.Text)
+    {
+        Switch((Get-Host).UI.PromptForChoice("Path [!] exists!","The path provided already exists.",@("&Yes","&No"),2))
+        {
+            0 { Write-Host "Removing path... [$($Xaml.IO.WimSwap.Text)]" }
+            1 { Write-Host "No action taken" }
+        }
+    }
+
+    ForEach ( $Item in $Xaml.IO.WimIso.Items )
+    {
+        Write-Host $Item.Name
+        Write-Host $Item.Index -Split ","
+    }
+})
+
+$Xaml.IO.WimSwap.Add_TextChanged(
+{
+    If ( $Xaml.IO.WimSwap.Text -ne "" )
+    {
+        $Xaml.IO.WimExtract.IsEnabled = 1
+    }
+
+    If ( $Xaml.IO.WimSwap.Text -eq "" )
+    {
+        $Xaml.IO.WimExtract.IsEnabled = 0
     }
 })
 

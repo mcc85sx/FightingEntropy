@@ -34,7 +34,7 @@ Function Install-WDSLinuxPackage
             # Test/Create directories
             ForEach ( $I in "linux","pxelinux.cfg" )
             {
-                If (!(Test-Path "$($This.Path)\$I") )
+                If (!(Test-Path "$($This.Path)/$I"))
                 {
                     New-Item -Path $This.Path -Name $I -ItemType Directory -Verbose
                 }
@@ -45,14 +45,14 @@ Function Install-WDSLinuxPackage
             {
                 If (!(Test-Path "$($This.Path)/$($File.Name)"))
                 {
-                    Copy-Item -Path $File.FullName -Destination "$($This.Path)\$($File.Name)" -Verbose
+                    Copy-Item -Path $File.FullName -Destination $This.Path -Verbose
                 }
             }
 
             # Copy/Newname these files
             ForEach ( $I in ("pxelinux.0","pxelinux.com"),("abortpxe.com","abortpxe.0"),("pxeboot.n12","pxeboot.0"))
             {
-                If(!(Test-Path "$($This.Path)\$($I[1])"))
+                If (!(Test-Path "$($This.Path)\$($I[1])"))
                 {
                     Copy-Item -Path "$($This.Path)\$($I[0])" -Destination "$($This.Path)/$($I[1])" -Verbose
                 }
@@ -94,12 +94,14 @@ Function Install-WDSLinuxPackage
             "  Type 0x80" -join "`n")
             
             # Write configuration
-            If (!(Test-Path "$($This.Path)\pxelinux.cfg\default"))
+            $Conf = "$($This.Path)\pxelinux.cfg\default"
+
+            If (!(Test-Path $Conf))
             {
-                New-Item "$($This.Path)\pxelinux.cfg\default" -ItemType File -Verbose
+                New-Item $Conf -ItemType File -Verbose
             }
 
-            Set-Content -Path "$($This.Path)\pxelinux.cfg\default" -Value $This.Config -Verbose
+            Set-Content -Path $Conf -Value $This.Config -Verbose
 
             # Collect file tree
             $This.Files  = Get-ChildItem $This.Path
@@ -135,7 +137,7 @@ Function Install-WDSLinuxPackage
     {
         $Root = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\services\WDSServer\Providers\WDSTFTP" | % RootFolder
         
-        If (!$Root)
+        If ( $Root -eq $Null)
         {
             Throw "WDS not yet configured"
         }

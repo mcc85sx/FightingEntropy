@@ -427,6 +427,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
+            <TabItem Header="Updates" BorderBrush="{x:Null}"/>
             <TabItem Header="Branding" BorderBrush="{x:Null}">
                 <Grid>
                     <Grid.RowDefinitions>

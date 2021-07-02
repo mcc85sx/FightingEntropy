@@ -1,25 +1,25 @@
 Function FEDeploymentShare
 {
-    Class DSClass
+    If ( (Get-CimInstance Win32_OperatingSystem).Caption -notmatch "Server" )
     {
-        Static [String]  $Base = "github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare"
-        Static [String] $Order = (Invoke-RestMethod "$([DSClass]::Base)/Classes/index.txt?raw=true")
-        [Object] $Hash
-        DSClass()
-        {
-            $This.Hash = @{ }
-            $This.Hash.Add("Class" , @{} ) 
-            $This.Hash.Add("Xaml"  , @{} )
+        Throw "Must use Windows Server operating system"
+    }
 
-            [DSClass]::Order.Split("`n") | % { $This.Hash.Class.Add($_,(Invoke-RestMethod "$([DSClass]::Base)/Classes/$_.ps1?raw=true")) }
+    $Base  = "github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare"
+    $Order = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" | % Split "`n" | ? Length -gt 0
+    $Xaml  = Invoke-WebRequest "$Base/Xaml/DS.xaml?raw=true" | % Content
+    $List  = @( )
 
-            $This.Hash.Xaml.Add("DS",(Invoke-WebRequest "$([DSClass]::Base)/Xaml/DS.xaml?raw=true" | % Content))
-        }
-    }   
+    ForEach ($Item in $Order)
+    {
+        $List += (Invoke-RestMethod "$Base/Classes/$Item.ps1?raw=true" -Verbose)
+    }
+
+    $List -join "`n" | Invoke-Expression
 
     Class Main
     {
-        Static [String] $Base       = "$Env:ProgramData\Secure Digits Plus LLC"
+        Static [String] $Base       = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy"
         Static [String] $GFX        = "$([Main]::Base)\Graphics"
         Static [String] $Icon       = "$([Main]::GFX)\icon.ico"
         Static [String] $Logo       = "$([Main]::GFX)\sdplogo.png"
@@ -139,6 +139,19 @@ Function FEDeploymentShare
     })
 
     # Imaging Tab
+    $Xaml.IO.IsoSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.FolderBrowserDialog
+        $Item.ShowDialog()
+        
+        If (!$Item.SelectedPath)
+        {
+            $Item.SelectedPath  = ""
+        }
+
+        $Xaml.IO.IsoPath.Text = $Item.SelectedPath
+    })
+
     $Xaml.IO.IsoPath.Add_TextChanged(
     {
         If ( $Xaml.IO.IsoPath.Text -ne "" )
@@ -412,24 +425,37 @@ Function FEDeploymentShare
         Write-Theme "Complete [+] Images Collected"
     })
     
-    $Xaml.IO.WimSwap.Add_TextChanged(
+    $Xaml.IO.WimSelect.Add_Click(
     {
-        If ( $Xaml.IO.WimSwap.Text -ne "" )
+        $Item                  = New-Object System.Windows.Forms.FolderBrowserDialog
+        $Item.ShowDialog()
+        
+        If (!$Item.SelectedPath)
+        {
+            $Item.SelectedPath  = ""
+        }
+
+        $Xaml.IO.WimPath.Text = $Item.SelectedPath
+    })
+
+    $Xaml.IO.WimPath.Add_TextChanged(
+    {
+        If ( $Xaml.IO.WimPath.Text -ne "" )
         {
             $Xaml.IO.WimExtract.IsEnabled = 1
         }
     
-        If ( $Xaml.IO.WimSwap.Text -eq "" )
+        If ( $Xaml.IO.WimPath.Text -eq "" )
         {
             $Xaml.IO.WimExtract.IsEnabled = 0
         }
     })
 
     # Branding Tab
-    $Xaml.IO.AddLogo.Add_Click(
+    $Xaml.IO.LogoSelect.Add_Click(
     {
         $Item                  = New-Object System.Windows.Forms.OpenFileDialog
-        $Item.InitialDirectory = $This.Graphics | Select-Object -Unique | % Directory | % FullName
+        $Item.InitialDirectory = [Main]::Base
         $Item.ShowDialog()
         
         If (!$Item.Filename)
@@ -437,13 +463,13 @@ Function FEDeploymentShare
             $Item.Filename     = [Main]::Logo
         }
 
-        $Xaml.IO.LogoText.Text = $Item.FileName
+        $Xaml.IO.Logo.Text = $Item.FileName
     })
     
-    $Xaml.IO.AddBackground.Add_Click(
+    $Xaml.IO.BackgroundSelect.Add_Click(
     {
         $Item                  = New-Object System.Windows.Forms.OpenFileDialog
-        $Item.InitialDirectory = $This.Graphics | Select-Object -Unique | % Directory | % FullName
+        $Item.InitialDirectory = [Main]::Base
         $Item.ShowDialog()
         
         If (!$Item.Filename)
@@ -451,7 +477,7 @@ Function FEDeploymentShare
             $Item.Filename     = [Main]::Background
         }
 
-        $Xaml.IO.BackgroundText.Text = $Item.FileName
+        $Xaml.IO.Background.Text = $Item.FileName
     })
 
     # Configuration Tab
@@ -497,14 +523,25 @@ Function FEDeploymentShare
 
     # Final
 
-    # $Xaml.IO.PhoneText
-    # $Xaml.IO.HoursText
-    # $Xaml.IO.WebsiteText
-    # $Xaml.IO.LogoText
-    # $Xaml.IO.BackgroundText
-    # $Xaml.IO.LMUsernameText
-    # $Xaml.IO.LMPasswordText
-    # $Xaml.IO.LMConfirmText
+    # Textboxes
+    # ---------
+    # $Xaml.IO.DCUsername
+    # $Xaml.IO.NetBIOSName
+    # $Xaml.IO.DNSName
+    # $Xaml.IO.WimPath
+    # $Xaml.IO.Phone
+    # $Xaml.IO.Hours
+    # $Xaml.IO.Website
+    # $Xaml.IO.Logo
+    # $Xaml.IO.Background
+    # $Xaml.IO.LMUsername
+
+    # Passwords
+    # ---------
+    # $Xaml.IO.DCPassword
+    # $Xaml.IO.DCConfirm
+    # $Xaml.IO.LMPassword
+    # $Xaml.IO.LMConfirm
 
     $Xaml.Invoke()
 }

@@ -136,10 +136,10 @@
                             <ColumnDefinition Width="120"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Organization]">
-                            <TextBox Name="OrganizationText"/>
+                            <TextBox Name="Organization"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Common Name]">
-                            <TextBox Name="CommonNameText"/>
+                            <TextBox Name="CommonName"/>
                         </GroupBox>
                         <Button Grid.Column="2" Name="GetSitename" Content="Get Sitename"/>
                     </Grid>

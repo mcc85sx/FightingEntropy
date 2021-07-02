@@ -1,6 +1,30 @@
+Function FEDeploymentShare
+{
+    Class DSClass
+    {
+        Static [String]  $Base = "github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare"
+        Static [String] $Order = (Invoke-RestMethod "$([DSClass]::Base)/Classes/index.txt?raw=true")
+        [Object] $Hash
+        DSClass()
+        {
+            $This.Hash = @{ }
+            $This.Hash.Add("Class" , @{} ) 
+            $This.Hash.Add("Xaml"  , @{} )
+
+            [DSClass]::Order.Split("`n") | % { $This.Hash.Class.Add($_,(Invoke-RestMethod "$([DSClass]::Base)/Classes/$_.ps1?raw=true")) }
+
+            $This.Hash.Xaml.Add("DS",(Invoke-WebRequest "$([DSClass]::Base)/Xaml/DS.xaml?raw=true" | % Content))
+        }
+    }   
+
     Class Main
     {
-        Static [String] $Tab = (IWR github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/Xaml/DS.xaml?raw=true | % Content)    
+        Static [String] $Base       = "$Env:ProgramData\Secure Digits Plus LLC"
+        Static [String] $GFX        = "$([Main]::Base)\Graphics"
+        Static [String] $Icon       = "$([Main]::GFX)\icon.ico"
+        Static [String] $Logo       = "$([Main]::GFX)\sdplogo.png"
+        Static [String] $Background = "$([Main]::GFX)\background.jpg"
+        Static [String] $Tab        = (IWR github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/Xaml/DS.xaml?raw=true | % Content)
         Main()
         {
         }
@@ -24,6 +48,8 @@
     $Xaml.IO.IsoView.ItemsSource   = @( )
     $Xaml.IO.IsoList.ItemsSource   = @( )
 
+    # 5) Configuration
+    $Xaml.IO.Services.ItemsSource  = @( )
     # end array declarations 
 
     # Domain Tab
@@ -399,4 +425,86 @@
         }
     })
 
+    # Branding Tab
+    $Xaml.IO.AddLogo.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $This.Graphics | Select-Object -Unique | % Directory | % FullName
+        $Item.ShowDialog()
+        
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = [Main]::Logo
+        }
+
+        $Xaml.IO.LogoText.Text = $Item.FileName
+    })
+    
+    $Xaml.IO.AddBackground.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $This.Graphics | Select-Object -Unique | % Directory | % FullName
+        $Item.ShowDialog()
+        
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = [Main]::Background
+        }
+
+        $Xaml.IO.BackgroundText.Text = $Item.FileName
+    })
+
+    # Configuration Tab
+    $Xaml.IO.Services.ItemsSource = @( 
+        
+        $Win     = Get-WindowsFeature
+        $Reg     = "","\WOW6432Node" | % { "HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall\*" }
+    
+        ForEach ( $Item in "DHCP","DNS","AD-Domain-Services","WDS","Web-WebServer")
+        {
+            [DGList]::New($Item,($Win | ? Name -eq $Item | % Installed))
+        }
+    
+        ForEach ( $Item in "MDT","WinADK","WinPE")
+        {
+            Switch($Item)
+            {
+                MDT
+                {
+                    $Base = $Reg[0]
+                    $Tag  = "Microsoft Deployment Toolkit"
+                    $Ver  = "6.3.8456.1000"
+                }
+                
+                WinADK 
+                { 
+                    $Base  = $Reg[1]
+                    $Tag   = "Windows Assessment and Deployment Kit - Windows 10"
+                    $Ver   = "10.1.17763.1"
+                }
+                
+                WinPE  
+                {   
+                    $Base  = $Reg[1]
+                    $Tag   = "Preinstallation Environment Add-ons - Windows 10" 
+                    $Ver   = "10.1.17763.1"
+                }
+            }
+            
+            [DGList]::New($Item,[Bool](Get-ItemProperty $Base | ? DisplayName -match $Tag | ? DisplayVersion -ge $Ver))
+        }
+    )
+
+    # Final
+
+    # $Xaml.IO.PhoneText
+    # $Xaml.IO.HoursText
+    # $Xaml.IO.WebsiteText
+    # $Xaml.IO.LogoText
+    # $Xaml.IO.BackgroundText
+    # $Xaml.IO.LMUsernameText
+    # $Xaml.IO.LMPasswordText
+    # $Xaml.IO.LMConfirmText
+
     $Xaml.Invoke()
+}

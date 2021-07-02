@@ -120,7 +120,7 @@
                 </Style>
             </TabControl.Resources>
             <TabItem Header="Domain" BorderBrush="{x:Null}">
-                <Grid>
+                <Grid Width="590">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="160"/>
@@ -199,7 +199,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Network" BorderBrush="{x:Null}">
-                <Grid>
+                <Grid Width="590">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="160"/>
@@ -278,7 +278,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Imaging" BorderBrush="{x:Null}">
-                <Grid>
+                <Grid Width="590">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="120"/>
@@ -436,7 +436,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Configuration">
-                <Grid>
+                <Grid Width="590">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="240"/>
                         <RowDefinition Height="*"/>
@@ -444,8 +444,8 @@
                     <GroupBox Grid.Row="0" Header="[Snapshot]">
                         <DataGrid Name="Services">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name"  Binding="{Binding Name}"  Width="150"/>
-                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                                <DataGridTextColumn Header="Name"      Binding="{Binding Name}"  Width="150"/>
+                                <DataGridTextColumn Header="Installed/Meets minimum requirements" Binding="{Binding Value}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>

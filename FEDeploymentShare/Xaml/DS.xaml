@@ -372,8 +372,8 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Branding">
-                <Grid>
+            <TabItem Header="Branding" BorderBrush="{x:Null}">
+                <Grid Width="590">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="80"/>

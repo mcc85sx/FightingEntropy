@@ -18,6 +18,7 @@
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="30"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -54,6 +55,7 @@
             <Setter Property="Height" Value="24"/>
         </Style>
         <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="AlternationCount" Value="2"/>
@@ -82,6 +84,16 @@
         </Style>
         <Style TargetType="DataGridCell">
             <Setter Property="TextBlock.TextAlignment" Value="Left" />
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="PasswordChar" Value="*"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="24"/>
         </Style>
     </Window.Resources>
     <GroupBox Style="{StaticResource xGroupBox}" Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
@@ -114,7 +126,7 @@
                         <RowDefinition Height="160"/>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="200"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
@@ -131,7 +143,10 @@
                         <Button Grid.Column="2" Name="GetSitename" Content="Get Sitename"/>
                     </Grid>
                     <GroupBox Grid.Row="1" Header="[Sitemap (Aggregate)]">
-                        <DataGrid Name="Sitemap" Margin="5"                                        ScrollViewer.CanContentScroll="True"                                                ScrollViewer.IsDeferredScrollingEnabled="True"                                        ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                        <DataGrid Name="Sitemap"
+                                  ScrollViewer.CanContentScroll="True"
+                                  ScrollViewer.IsDeferredScrollingEnabled="True"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Location" Binding='{Binding Location}' Width="100"/>
                                 <DataGridTextColumn Header="Region"   Binding='{Binding Region}' Width="60"/>
@@ -158,13 +173,29 @@
                         <Button Grid.Column="2" Name="AddSitename" Content="Add Sitename"/>
                     </Grid>
                     <GroupBox Grid.Row="3" Header="[Sitename (Selected)]">
-                        <DataGrid Name="Sitename" Margin="5" HorizontalAlignment="Center">
+                        <DataGrid Name="Sitename">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name"   Binding='{Binding Name}' Width="125"/>
-                                <DataGridTextColumn Header="Value"   Binding='{Binding Value}' Width="*"/>
+                                <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="125"/>
+                                <DataGridTextColumn Header="Value" Binding='{Binding Value}' Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Domain Admin Username]">
+                            <TextBox Name="DCUsername"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="[Password]">
+                            <PasswordBox Name="DCPassword"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="2" Header="[Confirm]">
+                            <PasswordBox Name="DCConfirm"/>
+                        </GroupBox>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Network" BorderBrush="{x:Null}">
@@ -175,6 +206,7 @@
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="160"/>
+                        <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="[Network (Designation)]">
                         <Grid>
@@ -187,7 +219,10 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="[Network (Stack)]">
-                        <DataGrid Name="Stack" Margin="5"                                        ScrollViewer.CanContentScroll="True"                                                ScrollViewer.IsDeferredScrollingEnabled="True"                                        ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                        <DataGrid Name="Stack"
+                                  ScrollViewer.CanContentScroll="True" 
+                                  ScrollViewer.IsDeferredScrollingEnabled="True"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
                                 <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
@@ -199,7 +234,10 @@
                         </DataGrid>
                     </GroupBox>
                     <GroupBox Grid.Row="3" Header="[Network (Control)]">
-                        <DataGrid Name="Control" Margin="5"                                        ScrollViewer.CanContentScroll="True"                                                ScrollViewer.IsDeferredScrollingEnabled="True"                                        ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                        <DataGrid Name="Control" 
+                                  ScrollViewer.CanContentScroll="True"
+                                  ScrollViewer.IsDeferredScrollingEnabled="True"                                        
+                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
                                 <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
@@ -211,7 +249,10 @@
                         </DataGrid>
                     </GroupBox>
                     <GroupBox Grid.Row="4" Header="[Network (Subject)]">
-                        <DataGrid Name="Subject" Margin="5"                                        ScrollViewer.CanContentScroll="True"                                                ScrollViewer.IsDeferredScrollingEnabled="True"                                        ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                        <DataGrid Name="Subject" 
+                                  ScrollViewer.CanContentScroll="True"
+                                  ScrollViewer.IsDeferredScrollingEnabled="True"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
                                 <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
@@ -222,6 +263,18 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
+                    <Grid Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="[NetBIOS Name]">
+                            <TextBox Name="NetBIOSName"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="[DNS Name]">
+                            <TextBox Name="DNSName"/>
+                        </GroupBox>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Imaging" BorderBrush="{x:Null}">
@@ -248,7 +301,7 @@
                     </GroupBox>
                     <Grid Grid.Row="1">
                         <GroupBox Header="[ISO List (Detected)]">
-                            <DataGrid Name="IsoList" Margin="5">
+                            <DataGrid Name="IsoList">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Binding='{Binding Name}' Width="*"/>
                                     <DataGridTextColumn Header="Path" Binding='{Binding Fullname}' Width="2*"/>
@@ -266,7 +319,7 @@
                     </Grid>
                     <Grid Grid.Row="3">
                         <GroupBox Header="[Windows ISO (Viewer)]">
-                            <DataGrid Name="IsoView" Margin="5">
+                            <DataGrid Name="IsoView">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Index" Binding='{Binding Index}' Width="40"/>
                                     <DataGridTextColumn Header="Name"  Binding='{Binding Name}' Width="*"/>
@@ -298,7 +351,7 @@
                                     <Button Grid.Row="0" Name="WimIsoUp" Content="˄" Margin="0"/>
                                     <Button Grid.Row="1" Name="WimIsoDown" Content="˅" Margin="0"/>
                                 </Grid>
-                                <DataGrid Grid.Column="1" Name="WimIso" Margin="5">
+                                <DataGrid Grid.Column="1" Name="WimIso">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"  Binding='{Binding FullName}' Width="*"/>
                                         <DataGridTextColumn Header="Index" Binding='{Binding Index}' Width="100"/>
@@ -317,22 +370,129 @@
                             <Button Grid.Column="1" Name="WimExtract" Content="Extract"/>
                         </Grid>
                     </GroupBox>
-                    <Grid Grid.Row="7">
+                </Grid>
+            </TabItem>
+            <TabItem Header="Branding">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="[Phone]">
+                            <TextBox Name="PhoneText"/>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="[Hours]">
+                            <TextBox Name="HoursText"/>
+                        </GroupBox>
+                    </Grid>
+                    <GroupBox Grid.Row="1" Header="[Website]">
+                        <TextBox Name="WebsiteText"/>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[Logo 120x120 Bitmap/*.bmp]">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Name="LogoText"/>
+                            <Button Grid.Column="1" Name="AddLogo" Content="Select"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[Background (Common Image File)]">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Name="BackgroundText"/>
+                            <Button Grid.Column="1" Name="AddBackground" Content="Select"/>
+                        </Grid>
+                    </GroupBox>
+                    <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Local Admin Username]">
-                            <TextBox Name="_LMUsername"/>
+                            <TextBox Name="LMUsernameText"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Password]">
-                            <PasswordBox Name="_LMPassword" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                            <PasswordBox Name="LMPasswordText"/>
                         </GroupBox>
                         <GroupBox Grid.Column="2" Header="[Confirm]">
-                            <PasswordBox Name="_LMConfirm" Height="24" HorizontalContentAlignment="Left" Margin="5" PasswordChar="*"/>
+                            <PasswordBox Name="LMConfirmText"/>
                         </GroupBox>
                     </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Configuration">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="240"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="[Snapshot]">
+                        <DataGrid Name="Services">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name"  Binding="{Binding Name}"  Width="150"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="[Services]">
+                        <TabControl>
+                            <TabItem Header="DHCP">
+                                <GroupBox Header="Dynamic Host Control Protocol"/>
+                            </TabItem>
+                            <TabItem Header="DNS">
+                                <GroupBox Header="Domain Name Service"/>
+                            </TabItem>
+                            <TabItem Header="ADDS">
+                                <GroupBox Header="Active Directory Directory Service"/>
+                            </TabItem>
+                            <TabItem Header="WDS">
+                                <GroupBox Header="Windows Deployment Services"/>
+                            </TabItem>
+                            <TabItem Header="MDT">
+                                <GroupBox Header="Microsoft Deployment Toolkit"/>
+                            </TabItem>
+                            <TabItem Header="WinADK">
+                                <GroupBox Header="Windows Assessment and Deployment Toolkit"/>
+                            </TabItem>
+                            <TabItem Header="WinPE">
+                                <GroupBox Header="Windows Preinstallation Environment Kit"/>
+                            </TabItem>
+                            <TabItem Header="IIS">
+                                <GroupBox Header="Internet Information Services">
+                                    <Grid VerticalAlignment="Top">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox Name="IISInstall" Grid.Column="0" Margin="10" Height="24">
+                                            <ComboBoxItem Content="No" IsSelected="True"/>
+                                            <ComboBoxItem Content="Yes"/>
+                                        </ComboBox>
+                                        <TextBox Grid.Column="1" Name="IISServerName" IsEnabled="False"/>
+                                        <TextBox Grid.Column="2" Name="IISAppPoolName" IsEnabled="False"/>
+                                        <TextBox Grid.Column="3" Name="IISVirtualHostName" IsEnabled="False"/>
+                                    </Grid>
+                                </GroupBox>
+                            </TabItem>
+                        </TabControl>
+                    </GroupBox>
                 </Grid>
             </TabItem>
         </TabControl>

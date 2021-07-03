@@ -63,7 +63,7 @@ Function FEDeploymentShare
         # DNSName
 
     # Imaging
-        # IsoSelect()
+        # IsoSelect()            
         # IsoPath
         # IsoScan()
         # IsoList[DataGrid]
@@ -108,7 +108,10 @@ Function FEDeploymentShare
         # DSShare
         # DSInitialize()
 
-    # DataGrid ItemsSource Array Declarations
+    # --------------------------------------- #
+    # DataGrid ItemsSource Array Declarations #
+    # --------------------------------------- #
+
     # 1) Configuration
     $Xaml.IO.Services.ItemsSource  = @( )
 
@@ -128,7 +131,33 @@ Function FEDeploymentShare
 
     # 7) Share
     $Xaml.IO.DSShare.ItemsSource   = @( )
-    # end array declarations 
+
+    # ----------------- #
+    # Configuration Tab #
+    # ----------------- #
+
+    $Xaml.IO.Services.ItemsSource  = @( 
+        
+        $Win                       = Get-WindowsFeature
+        $Reg                       = "","\WOW6432Node" | % { "HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall\*" }
+        
+        ForEach ( $Item in "DHCP","DNS","AD-Domain-Services","WDS","Web-WebServer")
+        {
+            [DGList]::New( $Item, [Bool]( $Win | ? Name -eq $Item | % Installed ) )
+        }
+        
+        ForEach ( $Item in "MDT","WinADK","WinPE")
+        {
+            $Slot = Switch($Item)
+            {
+                MDT    { $Reg[0], "Microsoft Deployment Toolkit"                       , "6.3.8456.1000" }
+                WinADK { $Reg[1], "Windows Assessment and Deployment Kit - Windows 10" , "10.1.17763.1"  }
+                WinPE  { $Reg[1], "Preinstallation Environment Add-ons - Windows 10"   , "10.1.17763.1"  }
+            }
+                
+            [DGList]::New( $Item, [Bool]( Get-ItemProperty $Slot[0] | ? DisplayName -match $Slot[1] | ? DisplayVersion -ge $Slot[2] ) )
+        }
+    )
 
     # Domain Tab
     $Xaml.IO.GetSitename.Add_Click(
@@ -557,47 +586,6 @@ Function FEDeploymentShare
 
         $Xaml.IO.Background.Text = $Item.FileName
     })
-
-    # Configuration Tab
-    $Xaml.IO.Services.ItemsSource = @( 
-        
-        $Win     = Get-WindowsFeature
-        $Reg     = "","\WOW6432Node" | % { "HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall\*" }
-    
-        ForEach ( $Item in "DHCP","DNS","AD-Domain-Services","WDS","Web-WebServer")
-        {
-            [DGList]::New($Item,($Win | ? Name -eq $Item | % Installed))
-        }
-    
-        ForEach ( $Item in "MDT","WinADK","WinPE")
-        {
-            Switch($Item)
-            {
-                MDT
-                {
-                    $Base = $Reg[0]
-                    $Tag  = "Microsoft Deployment Toolkit"
-                    $Ver  = "6.3.8456.1000"
-                }
-                
-                WinADK 
-                { 
-                    $Base  = $Reg[1]
-                    $Tag   = "Windows Assessment and Deployment Kit - Windows 10"
-                    $Ver   = "10.1.17763.1"
-                }
-                
-                WinPE  
-                {   
-                    $Base  = $Reg[1]
-                    $Tag   = "Preinstallation Environment Add-ons - Windows 10" 
-                    $Ver   = "10.1.17763.1"
-                }
-            }
-            
-            [DGList]::New($Item,[Bool](Get-ItemProperty $Base | ? DisplayName -match $Tag | ? DisplayVersion -ge $Ver))
-        }
-    )
 
     # Final
 

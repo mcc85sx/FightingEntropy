@@ -494,22 +494,33 @@ Function FEDeploymentShare
     
     $Xaml.IO.WimExtract.Add_Click(
     {
-        If (Test-Path $Xaml.IO.WimSwap.Text)
+        If (Test-Path $Xaml.IO.WimPath.Text)
         {
-            Switch([System.Windows.MessageBox]::Show("Path [!] exists!","The path already exists, delete?","YesNo"))
+            $Children = Get-ChildItem $Xaml.IO.WimPath.Text *.wim -Recurse | % FullName
+
+            If ($Children.Count -gt 0)
             {
-                Yes 
-                { 
-                    Write-Host "Removing path... [$($Xaml.IO.WimSwap.Text)]"
-                    Remove-Item -Path $Xaml.IO.WimSwap.Text -Recurse -Force -Verbose
-                }
-                
-                No
-                { 
-                    Write-Host "No action taken"
-                    Break
+                Switch([System.Windows.MessageBox]::Show("Wim files detected at provided path.","Purge and rebuild?","YesNo"))
+                {
+                    Yes
+                    {
+                        ForEach ( $Child in $Children )
+                        {
+                            Remove-Item $Child -Force -Verbose
+                        }
+                    }
+
+                    No
+                    {
+                        Break
+                    }
                 }
             }
+        }
+
+        If (!(Test-Path $Xaml.IO.WimPath.Text))
+        {
+            New-Item -Path $Xaml.IO.WimPath.Text -ItemType Directory -Verbose
         }
     
         $Images = [ImageStore]::New($Xaml.IO.IsoPath.Text,$Xaml.IO.WimSwap.Text)
@@ -587,27 +598,144 @@ Function FEDeploymentShare
         $Xaml.IO.Background.Text = $Item.FileName
     })
 
-    # Final
+    # Share Tab
+    $Xaml.IO.DSInitialize.Add_Click(
+    {
+        If ( $Xaml.IO.Services.Items | ? Name -eq MDT | ? Value -ne $True )
+        {
+            Throw "Unable to initialize, MDT not installed"
+        }
 
-    # Textboxes
-    # ---------
-    # $Xaml.IO.DCUsername
-    # $Xaml.IO.NetBIOSName
-    # $Xaml.IO.DNSName
-    # $Xaml.IO.WimPath
-    # $Xaml.IO.Phone
-    # $Xaml.IO.Hours
-    # $Xaml.IO.Website
-    # $Xaml.IO.Logo
-    # $Xaml.IO.Background
-    # $Xaml.IO.LMUsername
+        If ( $PSVersionTable.PSEdition -ne "Desktop" )
+        {
+            Throw "Unable to initialize, use Windows PowerShell v5.1"
+        }
 
-    # Passwords
-    # ---------
-    # $Xaml.IO.DCPassword
-    # $Xaml.IO.DCConfirm
-    # $Xaml.IO.LMPassword
-    # $Xaml.IO.LMConfirm
+        If (!$Xaml.IO.DSDCUsername.Text)
+        {
+            [System.Windows.MessageBox]::Show("Missing the deployment share domain account name","Error")
+        }
+
+        If ($Xaml.IO.DSDCPassword.Password -notmatch $Xaml.IO.DSDCConfirm.Password)
+        {
+            [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
+        } 
+
+        If (!$Xaml.IO.DSLMUsername.Text)
+        {
+            [System.Windows.MessageBox]::Show("Missing the child item local account name","Error")
+        }
+
+        If ($Xaml.IO.DSLMPassword.Password -notmatch $Xaml.IO.DSLMConfirm.Password)
+        {
+            [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
+        }
+
+        $MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
+        Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
+
+        If (Get-MDTPersistentDrive)
+        {
+            $Persist = Restore-MDTPersistentDrive
+        }
+
+        $SMB     = Get-SMBShare
+        $PSD     = Get-PSDrive
+
+        If ($Xaml.IO.DSRootPath.Text -in $Persist.Root)
+        {
+            [System.Windows.MessageBox]::Show("That path belongs to an existing deployment share","Error")
+        }
+
+        ElseIf($Xaml.IO.DSShareName.Text -in $SMB.Name)
+        {
+            [System.Windows.MessageBox]::Show("That share name belongs to an existing SMB share","Error")
+        }
+
+        ElseIf ($Xaml.IO.DSDriveName.Text -in $PSD.Name)
+        {
+            [System.Windows.MessageBox]::Show("That (DSDrive|PSDrive) label is already being used","Error")
+        }
+
+        Else
+        {
+            If (!(Test-Path $Xaml.IO.DSRootPath.Text))
+            {
+                New-Item $Xaml.IO.DSRootPath.Text -ItemType Directory -Verbose
+            }
+
+            $SMB            = @{
+
+                Name        = $Xaml.IO.DSShareName.Text
+                Path        = $Xaml.IO.DSRootPath.Text
+                FullAccess  = "Administrators"
+            }
+
+            $PSD            = @{ 
+
+                Name        = $Xaml.IO.DSDriveName.Text
+                PSProvider  = "MDTProvider"
+                Root        = $Xaml.IO.DSRootPath.Text
+                Description = $Xaml.IO.DSDescription.Text
+                NetworkPath = "{0}\{1}" -f $Hostname, $Xaml.IO.DSShareName.Text
+            }
+
+            New-SMBShare @SMB
+            New-PSDrive  @PSD -Verbose | Add-MDTPersistentDrive -Verbose
+
+            # Load Module / Share Drive Mount
+            $Module                = Get-FEModule
+            $Root                  = "$($PSD.Name):\"
+            $Control               = "$($PSD.Root)\Control"
+            $Script                = "$($PSD.Root)\Scripts"
+
+            ForEach ($File in $Key.Background, $Key.Logo)
+            {
+                Copy-Item -Path $File -Destination $Script -Verbose
+            }
+
+            ForEach ( $File in $Module.Control | ? Extension -eq .png )
+            {
+                Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
+            }
+
+            ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
+            {
+                Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
+            }
+        }
+    })
+
+    # (Share) -----------------------------
+        ##$Xaml.IO.DSRootPath
+        ##$Xaml.IO.DSShareName
+        ##$Xaml.IO.DSDescription
+        ##$Xaml.IO.DSDCUsername
+        ##$Xaml.IO.DSDCPassword
+        ##$Xaml.IO.DSDCConfirm 
+        ##$Xaml.IO.DSLMPassword
+        ##$Xaml.IO.DSLMConfirm
+        ##$Xaml.IO.DSLMUsername
+
+    # (Network)
+        ##$Xaml.IO.NetBIOSName
+        ##$Xaml.IO.DNSName
+
+        # $Xaml.IO.DSType         = 0
+        # $Xaml.IO.DSOrganizationalUnit
+
+    # (Imaging)
+        # $Xaml.IO.WimPath
+
+    # (Branding)
+        # $Xaml.IO.Phone
+        # $Xaml.IO.Hours
+        # $Xaml.IO.Website
+        # $Xaml.IO.Logo
+        # $Xaml.IO.Background
+
+    $Xaml.IO.NetBIOSName.Text = $Env:UserDomain
+    $Xaml.IO.DNSName.Text     = @{0=$Env:ComputerName;1="$Env:ComputerName.$Env:UserDNSDomain"}[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
 
     $Xaml.Invoke()
 }

@@ -32,24 +32,102 @@ Function FEDeploymentShare
     
     $Xaml         = [XamlWindow][Main]::Tab
 
-    # Set list of array declarations here for itemssource objects
+    # ---------------------- #
+    # Variables and controls #
+    # ---------------------- #
 
-    # 1) Domain
+    # Configuration
+        # Services[DataGrid]
+        # IISInstall
+        # IISServerName
+        # IISAppPoolName
+        # IISVirtualHostName
+
+    # Domain
+        # Organization
+        # CommonName
+        # GetSiteName()
+        # SiteMap[DataGrid]
+        # AddSitenameZip
+        # AddSitenameTown
+        # AddSitename()
+        # Sitename[DataGrid]
+
+    # Network
+        # StackText
+        # StackLoad()
+        # Stack[DataGrid]
+        # Control[DataGrid]
+        # Subject[DataGrid]
+        # NetBIOSName
+        # DNSName
+
+    # Imaging
+        # IsoSelect()
+        # IsoPath
+        # IsoScan()
+        # IsoList[DataGrid]
+        # IsoMount()
+        # IsoDismount()
+        # IsoView[DataGrid]
+        # WimQueue()
+        # WimDequeue()
+        # WimIsoUp()
+        # WimIsoDown()
+        # WimIso[DataGrid]
+        # WimSelect()
+        # WimPath
+        # WimExtract()
+
+    # Updates
+        # $Null
+
+    # Branding
+        # Collect()
+        # Phone
+        # Hours
+        # Website
+        # LogoSelect()
+        # Logo
+        # BackgroundSelect()
+        # Background
+
+    # Share
+        # DSRootSelect()
+        # DSRootPath
+        # DSShareName
+        # DSDescription
+        # DSType
+        # DSDCUsername
+        # DSDCPassword
+        # DSDCConfirm
+        # DSLMUsername
+        # DSLMPassword
+        # DSLMConfirm
+        # DSOrganizationalUnit
+        # DSShare
+        # DSInitialize()
+
+    # DataGrid ItemsSource Array Declarations
+    # 1) Configuration
+    $Xaml.IO.Services.ItemsSource  = @( )
+
+    # 2) Domain
     $Xaml.IO.Sitemap.ItemsSource   = @( )
     $Xaml.IO.Sitename.ItemsSource  = @( )
 
-    # 2) Network
+    # 3) Network
     $Xaml.IO.Stack.ItemsSource     = @( )
     $Xaml.IO.Control.ItemsSource   = @( )
     $Xaml.IO.Subject.ItemsSource   = @( )
 
-    # 3) Imaging
+    # 4) Imaging
     $Xaml.IO.WimIso.ItemsSource    = @( )
     $Xaml.IO.IsoView.ItemsSource   = @( )
     $Xaml.IO.IsoList.ItemsSource   = @( )
 
-    # 5) Configuration
-    $Xaml.IO.Services.ItemsSource  = @( )
+    # 7) Share
+    $Xaml.IO.DSShare.ItemsSource   = @( )
     # end array declarations 
 
     # Domain Tab

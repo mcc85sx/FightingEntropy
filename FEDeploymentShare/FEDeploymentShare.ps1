@@ -809,7 +809,8 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                 Import-MDTTaskSequence @TaskSequence -Verbose
             }
 
-            Remove-Item $Xaml.IO.WimPath -Recurse -Force -Verbose
+            Write-Theme "OS/TS [+] Imported, removing Wim Swap directory" 11,3,15,0
+            Remove-Item -Path $Xaml.IO.WimPath.Text -Recurse -Force -Verbose
 
             $Install = "[Net.ServicePointManager]::SecurityProtocol = 3072",
             "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/master/Install.ps1?raw=true | Invoke-Expression",
@@ -818,6 +819,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
 
             Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
 
+            Write-Theme "Setting [~] Share properties [($Root)]"
             # Share Settings
             Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
             Set-ItemProperty $Root -Name MonitorHost -Value $HostName -Verbose
@@ -860,14 +862,14 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                                         SkipBitLocker        = "YES" 
                                         KeyboardLocale       = "en-US" 
                                         TimeZoneName         = "$(Get-TimeZone | % ID)"
-                                        EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
+                                        EventService         = ("http://{0}:9800" -f $Key.NetworkPath.Split("\")[2]) }
             } | % Output
 
             # Update FEShare(MDT)
             Update-MDTDeploymentShare -Path $Root -Force -Verbose
 
             # Update/Flush FEShare(Images)
-            $ImageLabel = Get-ItemProperty -Path "$($Xaml.IO.DSDriveName.Text):\" | % { 
+            $ImageLabel = Get-ItemProperty -Path $Root | % { 
 
                 @{  64 = $_.'Boot.x64.LiteTouchWIMDescription'
                     86 = $_.'Boot.x86.LiteTouchWIMDescription' }

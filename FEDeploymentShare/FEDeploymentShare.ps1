@@ -718,6 +718,16 @@ Function FEDeploymentShare
                 If (Test-Path $File)
                 {
                     Copy-Item -Path $File -Destination $Script -Verbose
+
+                    If ($File -eq $Key.Background)
+                    {
+                        $Key.Background = "$($Key.NetworkPath)\Scripts\$($Key.Background | Split-Path -Leaf)"
+                    }
+
+                    If ($File -eq $Key.Logo)
+                    {
+                        $Key.Logo       = "$($Key.NetworkPath)\Scripts\$($Key.Logo | Split-Path -Leaf)"
+                    }
                 }
             }
 
@@ -731,13 +741,14 @@ Function FEDeploymentShare
                 Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
             }
 
-            Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV)
+            Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV) -Verbose
 
             Write-Theme "Collecting [~] images"
             $Images      = @( )
             
             Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse *.wim | % { 
                 
+                Write-Host "Processing [$($_.FullName)]"
                 $Images += [WimFile]::New($Images.Count,$_.FullName) 
             }
 
@@ -797,6 +808,110 @@ Function FEDeploymentShare
 
                 Import-MDTTaskSequence @TaskSequence -Verbose
             }
+
+            $Install = "[Net.ServicePointManager]::SecurityProtocol = 3072",
+            "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/master/Install.ps1?raw=true | Invoke-Expression",
+            "`$Key = '$($Key | ConvertTo-Json)'",
+            "New-EnvironmentKey -Key `$Key | % Apply `n"
+
+            Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
+
+            # Share Settings
+            Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
+            Set-ItemProperty $Root -Name MonitorHost -Value $HostName -Verbose
+
+            # Image Names/Background
+            ForEach ($x in 64,86)
+            {
+                $Names  = $X | % { "Boot.x$_" } | % { "$_.Generate{0}ISO $_.{0}WIMDescription $_.{0}ISOName $_.BackgroundFile" -f "LiteTouch" -Split " " }
+                $Values = $X | % { "$($Module.Name)[$($Module.Version)](x$_)" } | % { "True;$_;$_.iso;%SCRIPTROOT%\$($Key.Background | Split-Path -Leaf)" -Split ";" }
+                0..3         | % { Set-ItemProperty -Path $Root -Name $Names[$_] -Value $Values[$_] -Verbose } 
+            }
+
+            # Bootstrap
+            Export-Ini -Path $Control\Bootstrap.ini -Value @{ 
+
+                Settings           = @{ Priority             = "Default"                      }
+                Default            = @{ DeployRoot           = $Key.NetworkPath
+                                        UserID               = $Xaml.IO.DSLMUserName.Text
+                                        UserPassword         = $Xaml.IO.DSLMPassword.Password
+                                        UserDomain           = $Xaml.IO.CommonName.Text
+                                        SkipBDDWelcome       = "YES"                          }
+            } | % Output
+
+            # CustomSettings
+            Export-Ini -Path $Control\CustomSettings.ini -Value @{
+
+                Settings           = @{ Priority             = "Default" 
+                                        Properties           = "MyCustomProperty" }
+                Default            = @{ _SMSTSOrgName        = $Xaml.IO.Organization.Text
+                                        JoinDomain           = $Xaml.IO.CommonName.Text
+                                        DomainAdmin          = $Xaml.IO.DSDCUserName.Text
+                                        DomainAdminPassword  = $Xaml.IO.DSDCPassword.Text
+                                        DomainAdminDomain    = $Key.CommonName
+                                        SkipDomainMembership = "YES"
+                                        OSInstall            = "Y"
+                                        SkipCapture          = "NO"
+                                        SkipAdminPassword    = "YES" 
+                                        SkipProductKey       = "YES" 
+                                        SkipComputerBackup   = "NO" 
+                                        SkipBitLocker        = "YES" 
+                                        KeyboardLocale       = "en-US" 
+                                        TimeZoneName         = "$(Get-TimeZone | % ID)"
+                                        EventService         = "http://{0}:9800" -f $Key.NetworkPath.Split("\")[2] }
+            } | % Output
+
+            # Update FEShare(MDT)
+            Update-MDTDeploymentShare -Path $Root -Force -Verbose
+
+            # Update/Flush FEShare(Images)
+            $ImageLabel = Get-ItemProperty -Path $Root | % { 
+
+                @{  64 = $_.'Boot.x64.LiteTouchWIMDescription'
+                    86 = $_.'Boot.x86.LiteTouchWIMDescription' }
+            }
+
+            Get-ChildItem -Path "$($Xaml.IO.DSRootPath.Text)\Boot" | ? Extension | % { 
+
+                $Label          = $ImageLabel[$(Switch -Regex ($_.Name) { 64 {64} 86 {86}})]
+                $Image          = @{ 
+
+                    Path        = $_.FullName
+                    Name        = $_.Name
+                    NewName     = "{0}{1}" -f $Label,$_.Extension
+                    Extension   = $_.Extension
+                }
+
+                If ( $Image.Name -match "LiteTouchPE_" )
+                {
+                    If ( Test-Path $Image.NewName )
+                    {
+                        Remove-Item -Path $Image.NewName -Force -Verbose
+                    }
+
+                    Rename-Item -Path $Image.Path -NewName $Image.NewName
+                }
+            }
+
+            If (!(Get-Service | ? Name -eq WDSServer))
+            {
+                Throw "WDS Server not installed"
+            }
+
+            # Update/Flush FEShare(WDS)
+            ForEach ( $Image in [BootImages]::New("$($Xaml.IO.DSRootPath.Text)\Boot").Images )
+            {        
+                If (Get-WdsBootImage -Architecture $Image.Type -ImageName $Image.Name )
+                {
+                    Write-Theme "Detected [!] $($Image.Name), removing..." 12,4,15,0
+                    Remove-WDSBootImage -Architecture $Image.Type -ImageName $Image.Name
+                }
+
+                Write-Theme "Importing [~] $($Image.Name)" 11,3,15,0
+                Import-WdsBootImage -Path $Image.Wim.FullName -NewDescription $Image.Name
+            }
+
+            Restart-Service -Name WDSServer
         }
     })
 

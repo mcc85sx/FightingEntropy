@@ -809,6 +809,8 @@ Function FEDeploymentShare
                 Import-MDTTaskSequence @TaskSequence -Verbose
             }
 
+            Remove-Item $Xaml.IO.WimPath -Recurse -Force -Verbose
+
             $Install = "[Net.ServicePointManager]::SecurityProtocol = 3072",
             "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/master/Install.ps1?raw=true | Invoke-Expression",
             "`$Key = '$($Key | ConvertTo-Json)'",

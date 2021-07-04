@@ -2,7 +2,7 @@ Function FEDeploymentShare
 {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
-    
+
     If ( (Get-CimInstance Win32_OperatingSystem).Caption -notmatch "Server" )
     {
         Throw "Must use Windows Server operating system"
@@ -735,7 +735,7 @@ Function FEDeploymentShare
 
             Write-Theme "Collecting [~] images"
             $X           = 0
-            $Images      = Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse -Filter *.wim | % { [ImageIndex]::New($X,$_.FullName) }
+            $Images      = Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse *.wim | % { [WimFile]::New($X,$_.FullName) }
 
             # Import OS/TS
             $OS          = "$($PSD.Name):\Operating Systems"

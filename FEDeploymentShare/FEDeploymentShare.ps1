@@ -19,18 +19,24 @@ Function FEDeploymentShare
 
     Class Main
     {
-        Static [String] $Base       = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy"
-        Static [String] $GFX        = "$([Main]::Base)\Graphics"
-        Static [String] $Icon       = "$([Main]::GFX)\icon.ico"
-        Static [String] $Logo       = "$([Main]::GFX)\sdplogo.png"
-        Static [String] $Background = "$([Main]::GFX)\background.jpg"
-        Static [String] $Tab        = (IWR github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/Xaml/DS.xaml?raw=true | % Content)
+        Static [String]       $Base = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy"
+        Static [String]        $GFX = "$([Main]::Base)\Graphics"
+        Static [String]       $Icon = "$([Main]::GFX)\icon.ico"
+        Static [String]       $Logo = "$([Main]::GFX)\OEMLogo.bmp"
+        Static [String] $Background = "$([Main]::GFX)\OEMbg.jpg"
+        Static [String]        $Tab = (IWR github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/Xaml/DS.xaml?raw=true | % Content)
+        [Object]               $Win 
+        [Object]               $Reg 
+        [Object]                $SM
         Main()
         {
+            $This.Win               = Get-WindowsFeature
+            $This.Reg               = "","\WOW6432Node" | % { "HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall\*" }
         }
     }
     
-    $Xaml         = [XamlWindow][Main]::Tab
+    $Main                           = [Main]::New()
+    $Xaml                           = [XamlWindow][Main]::Tab
 
     # ---------------------- #
     # Variables and controls #
@@ -138,12 +144,9 @@ Function FEDeploymentShare
 
     $Xaml.IO.Services.ItemsSource  = @( 
         
-        $Win                       = Get-WindowsFeature
-        $Reg                       = "","\WOW6432Node" | % { "HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall\*" }
-        
         ForEach ( $Item in "DHCP","DNS","AD-Domain-Services","WDS","Web-WebServer")
         {
-            [DGList]::New( $Item, [Bool]( $Win | ? Name -eq $Item | % Installed ) )
+            [DGList]::New( $Item, [Bool]( $Main.Win | ? Name -eq $Item | % Installed ) )
         }
         
         ForEach ( $Item in "MDT","WinADK","WinPE")
@@ -174,10 +177,11 @@ Function FEDeploymentShare
 
         Else
         {
-            $SM = [Control]::New($Xaml.IO.Organization.Text,$Xaml.IO.CommonName.Text)
-            $SM.Pull()
-            $Xaml.IO.Sitemap.ItemsSource   += $SM.Sitemap
+            $Main.SM = [Control]::New($Xaml.IO.Organization.Text,$Xaml.IO.CommonName.Text)
+            $Main.SM.Pull()
+            $Xaml.IO.Sitemap.ItemsSource   += $Main.SM.Sitemap
             $Xaml.IO.GetSitename.IsEnabled  = 0
+            $Xaml.IO.StackLoad.IsEnabled    = 1
         }
     })
 
@@ -190,8 +194,8 @@ Function FEDeploymentShare
 
         Else
         {
-            $Tmp  = $SM.NewCertificate()
-            $Item = $SM.ZipStack.ZipTown($Xaml.IO.AddSitenameZip.Text)
+            $Tmp  = $Main.SM.NewCertificate()
+            $Item = $Main.SM.ZipStack.ZipTown($Xaml.IO.AddSitenameZip.Text)
 
                 $Tmp[0].Location = $Item.Name
                 $Tmp[0].Postal   = $Item.Zip
@@ -224,11 +228,11 @@ Function FEDeploymentShare
 
         Else
         {
-            $SM.GetNetwork($Xaml.IO.StackText.Text)
+            $Main.SM.GetNetwork($Xaml.IO.StackText.Text)
             $Xaml.IO.Stack.ItemsSource   = $Null
             $Xaml.IO.Control.ItemsSource = $Null
             $Xaml.IO.Subject.ItemsSource = $Null
-            $Xaml.IO.Stack.ItemsSource   = $SM.Stack
+            $Xaml.IO.Stack.ItemsSource   = $Main.SM.Stack
         }
     })
 
@@ -236,12 +240,19 @@ Function FEDeploymentShare
     {
         If ( $Xaml.IO.Stack.SelectedIndex -ne -1 )
         {
-            $Network = $Xaml.IO.Stack.SelectedItem.Network
-            $Xaml.IO.Control.ItemsSource = $Null
-            $Xaml.IO.Subject.ItemsSource = $Null
+            $Network                         = $Xaml.IO.Stack.SelectedItem.Network
+            $Xaml.IO.Control.ItemsSource     = $Null
+            $Xaml.IO.Subject.ItemsSource     = $Null
 
-            $Xaml.IO.Control.ItemsSource = @( $SM.Stack | ? Network -match $Network )
-            $Xaml.IO.Subject.ItemsSource = @( $SM.Stack | ? Network -notmatch $Network )
+            $Control                         = $Main.SM.Stack | ? Network -match $Network
+
+            $Xaml.IO.Control.ItemsSource     = $Control
+
+            If ( $Control.Count -gt 1 )
+            {
+                $Subject                     = $Main.SM.Stack | ? Network -notmatch $Network
+                $Xaml.IO.Subject.ItemsSource = $Subject
+            }
         }
     })
 
@@ -631,6 +642,8 @@ Function FEDeploymentShare
             [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         }
 
+        Write-Theme "Creating [~] Deployment Share"
+
         $MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
         Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
 
@@ -659,15 +672,34 @@ Function FEDeploymentShare
 
         Else
         {
+            # Testing fields
+            $Xaml = @{ IO=@{ 
+                    DSDriveName   = @{ Text = "FE001"};
+                    DSRootPath    = @{ Text = "C:\FlightTest"};
+                    DSShareName   = @{ Text = "FlightTest$"};
+                    DSDescription = @{ Text = "[FightingEntropy(π)][(2021.7.0)]"};
+                    Organization  = @{ Text = "Secure Digits Plus LLC"};
+                    CommonName    = @{ Text = "securedigitsplus.com"};
+                    Background    = @{ Text = [Main]::Background};
+                    Logo          = @{ Text = [Main]::Logo};
+                    Phone         = @{ Text = "518-406-8569"};
+                    Hours         = @{ Text = "24h/d;7d/w;365.25d/y;"};
+                    Website       = @{ Text = "https://www.securedigitsplus.com"};
+                    WimPath       = @{ Text = "C:\ImageTest" };
+                } }
+
             If (!(Test-Path $Xaml.IO.DSRootPath.Text))
             {
                 New-Item $Xaml.IO.DSRootPath.Text -ItemType Directory -Verbose
             }
 
+            $Hostname       = @($Env:ComputerName,"$Env:ComputerName.$Env:UserDNSDomain")[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
+
             $SMB            = @{
 
                 Name        = $Xaml.IO.DSShareName.Text
                 Path        = $Xaml.IO.DSRootPath.Text
+                Description = $Xaml.IO.DSDescription.Text
                 FullAccess  = "Administrators"
             }
 
@@ -677,7 +709,7 @@ Function FEDeploymentShare
                 PSProvider  = "MDTProvider"
                 Root        = $Xaml.IO.DSRootPath.Text
                 Description = $Xaml.IO.DSDescription.Text
-                NetworkPath = "{0}\{1}" -f $Hostname, $Xaml.IO.DSShareName.Text
+                NetworkPath = ("\\{0}\{1}" -f $Hostname, $Xaml.IO.DSShareName.Text)
             }
 
             New-SMBShare @SMB
@@ -688,10 +720,22 @@ Function FEDeploymentShare
             $Root                  = "$($PSD.Name):\"
             $Control               = "$($PSD.Root)\Control"
             $Script                = "$($PSD.Root)\Scripts"
-
+            $DS                    = @($PSD.NetworkPath,
+                $Xaml.IO.Organization.Text,
+                $Xaml.IO.CommonName.Text,
+                $Xaml.IO.Background.Text,
+                $Xaml.IO.Logo.Text,
+                $Xaml.IO.Phone.Text,
+                $Xaml.IO.Hours.Text,
+                $Xaml.IO.Website.Text)
+            $Key                   = [Key]$DS
+            
             ForEach ($File in $Key.Background, $Key.Logo)
             {
-                Copy-Item -Path $File -Destination $Script -Verbose
+                If (Test-Path $File)
+                {
+                    Copy-Item -Path $File -Destination $Script -Verbose
+                }
             }
 
             ForEach ( $File in $Module.Control | ? Extension -eq .png )
@@ -702,6 +746,71 @@ Function FEDeploymentShare
             ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
             {
                 Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
+            }
+
+            Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV)
+
+            Write-Theme "Collecting [~] images"
+            $Images      = Get-FEImage $Xaml.IO.WimPath.Text
+
+            # Import OS/TS
+
+            $OS          = "$($PSD.Name):\Operating Systems"
+            $TS          = "$($PSD.Name):\Task Sequences"
+            $Comment     = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]"
+
+            # Import Operating Systems
+
+            # Create/Regenerate folders in MDT share
+            ForEach ( $Type in "Server","Client" )
+            {
+                ForEach ( $Version in $Images | ? InstallationType -eq $Type | % Version | Select-Object -Unique )
+                {
+                    ForEach ( $Slot in $OS, $TS )
+                    {
+                        If (!(Test-Path "$Slot\$Type"))
+                        {
+                            New-Item -Path $Slot -Enable True -Name $Type -Comments $Comment -ItemType Folder -Verbose
+                        }
+
+                        If (!(Test-Path "$Slot\$Type\$Version"))
+                        {
+                            New-Item -Path "$Slot\$Type" -Enable True -Name $Version -Comments $comment -ItemType Folder -Verbose
+                        }
+                    }
+                }
+            }
+
+            ForEach ( $Image in $Images )
+            {
+                $Type                   = $Image.InstallationType
+                $Path                   = "$OS\$Type\$($Image.Version)"
+
+                $OperatingSystem        = @{
+
+                    Path                = $Path
+                    SourceFile          = $Image.SourceImagePath
+                    DestinationFolder   = $Image.Label
+                }
+                
+                Import-MDTOperatingSystem @OperatingSystem -Move -Verbose
+
+                $TaskSequence           = @{ 
+                    
+                    Path                = "$TS\$Type\$($Image.Version)"
+                    Name                = $Image.ImageName
+                    Template            = "FE{0}Mod.xml" -f $Type
+                    Comments            = $Comment
+                    ID                  = $Image.Label
+                    Version             = "1.0"
+                    OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
+                    FullName            = $Admin
+                    OrgName             = $Company
+                    HomePage            = $WebSite
+                    AdminPassword       = $Password
+                }
+
+                Import-MDTTaskSequence @TaskSequence -Verbose
             }
         }
     })

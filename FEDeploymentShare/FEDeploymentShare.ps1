@@ -128,7 +128,7 @@ Function FEDeploymentShare
     # 3) Network
     $Xaml.IO.Stack.ItemsSource     = @( )
     $Xaml.IO.Control.ItemsSource   = @( )
-    $Xaml.IO.Subject.ItemsSource   = @( )
+    # $Xaml.IO.Subject.ItemsSource   = @( )
 
     # 4) Imaging
     $Xaml.IO.WimIso.ItemsSource    = @( )
@@ -231,7 +231,7 @@ Function FEDeploymentShare
             $Main.SM.GetNetwork($Xaml.IO.StackText.Text)
             $Xaml.IO.Stack.ItemsSource   = $Null
             $Xaml.IO.Control.ItemsSource = $Null
-            $Xaml.IO.Subject.ItemsSource = $Null
+            #$Xaml.IO.Subject.ItemsSource = $Null
             $Xaml.IO.Stack.ItemsSource   = $Main.SM.Stack
         }
     })
@@ -240,19 +240,14 @@ Function FEDeploymentShare
     {
         If ( $Xaml.IO.Stack.SelectedIndex -ne -1 )
         {
-            $Network                         = $Xaml.IO.Stack.SelectedItem.Network
             $Xaml.IO.Control.ItemsSource     = $Null
-            $Xaml.IO.Subject.ItemsSource     = $Null
+            $Xaml.IO.Control.ItemsSource     = $Main.SM.Stack | ? Network -match  $Xaml.IO.Stack.SelectedItem.Network
 
-            $Control                         = $Main.SM.Stack | ? Network -match $Network
-
-            $Xaml.IO.Control.ItemsSource     = $Control
-
-            If ( $Control.Count -gt 1 )
-            {
-                $Subject                     = $Main.SM.Stack | ? Network -notmatch $Network
-                $Xaml.IO.Subject.ItemsSource = $Subject
-            }
+            #If ( $Control.Count -gt 1 )
+            #{
+            #    $Subject                     = $Main.SM.Stack | ? Network -notmatch $Network
+            #    $Xaml.IO.Subject.ItemsSource = $Subject
+            #}
         }
     })
 
@@ -672,22 +667,6 @@ Function FEDeploymentShare
 
         Else
         {
-            # Testing fields
-            $Xaml = @{ IO=@{ 
-                    DSDriveName   = @{ Text = "FE001"};
-                    DSRootPath    = @{ Text = "C:\FlightTest"};
-                    DSShareName   = @{ Text = "FlightTest$"};
-                    DSDescription = @{ Text = "[FightingEntropy(π)][(2021.7.0)]"};
-                    Organization  = @{ Text = "Secure Digits Plus LLC"};
-                    CommonName    = @{ Text = "securedigitsplus.com"};
-                    Background    = @{ Text = [Main]::Background};
-                    Logo          = @{ Text = [Main]::Logo};
-                    Phone         = @{ Text = "518-406-8569"};
-                    Hours         = @{ Text = "24h/d;7d/w;365.25d/y;"};
-                    Website       = @{ Text = "https://www.securedigitsplus.com"};
-                    WimPath       = @{ Text = "C:\ImageTest" };
-                } }
-
             If (!(Test-Path $Xaml.IO.DSRootPath.Text))
             {
                 New-Item $Xaml.IO.DSRootPath.Text -ItemType Directory -Verbose
@@ -754,12 +733,9 @@ Function FEDeploymentShare
             $Images      = Get-FEImage $Xaml.IO.WimPath.Text
 
             # Import OS/TS
-
             $OS          = "$($PSD.Name):\Operating Systems"
             $TS          = "$($PSD.Name):\Task Sequences"
             $Comment     = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]"
-
-            # Import Operating Systems
 
             # Create/Regenerate folders in MDT share
             ForEach ( $Type in "Server","Client" )
@@ -815,34 +791,7 @@ Function FEDeploymentShare
         }
     })
 
-    # (Share) -----------------------------
-        ##$Xaml.IO.DSRootPath
-        ##$Xaml.IO.DSShareName
-        ##$Xaml.IO.DSDescription
-        ##$Xaml.IO.DSDCUsername
-        ##$Xaml.IO.DSDCPassword
-        ##$Xaml.IO.DSDCConfirm 
-        ##$Xaml.IO.DSLMPassword
-        ##$Xaml.IO.DSLMConfirm
-        ##$Xaml.IO.DSLMUsername
-
-    # (Network)
-        ##$Xaml.IO.NetBIOSName
-        ##$Xaml.IO.DNSName
-
-        # $Xaml.IO.DSType         = 0
-        # $Xaml.IO.DSOrganizationalUnit
-
-    # (Imaging)
-        # $Xaml.IO.WimPath
-
-    # (Branding)
-        # $Xaml.IO.Phone
-        # $Xaml.IO.Hours
-        # $Xaml.IO.Website
-        # $Xaml.IO.Logo
-        # $Xaml.IO.Background
-
+    # Set initial TextBox values
     $Xaml.IO.NetBIOSName.Text = $Env:UserDomain
     $Xaml.IO.DNSName.Text     = @{0=$Env:ComputerName;1="$Env:ComputerName.$Env:UserDNSDomain"}[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
 

@@ -155,9 +155,9 @@ Function FEDeploymentShare
         {
             $Slot = Switch($Item)
             {
-                MDT    { $Reg[0], "Microsoft Deployment Toolkit"                       , "6.3.8456.1000" }
-                WinADK { $Reg[1], "Windows Assessment and Deployment Kit - Windows 10" , "10.1.17763.1"  }
-                WinPE  { $Reg[1], "Preinstallation Environment Add-ons - Windows 10"   , "10.1.17763.1"  }
+                MDT    { $Main.Reg[0], "Microsoft Deployment Toolkit"                       , "6.3.8456.1000" }
+                WinADK { $Main.Reg[1], "Windows Assessment and Deployment Kit - Windows 10" , "10.1.17763.1"  }
+                WinPE  { $Main.Reg[1], "Preinstallation Environment Add-ons - Windows 10"   , "10.1.17763.1"  }
             }
                 
             [DGList]::New( $Item, [Bool]( Get-ItemProperty $Slot[0] | ? DisplayName -match $Slot[1] | ? DisplayVersion -ge $Slot[2] ) )

@@ -1,4 +1,4 @@
-Function FEDeploymentShare
+Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
 {
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
@@ -849,7 +849,7 @@ Function FEDeploymentShare
                 Default            = @{ _SMSTSOrgName        = $Xaml.IO.Organization.Text
                                         JoinDomain           = $Xaml.IO.CommonName.Text
                                         DomainAdmin          = $Xaml.IO.DSDCUserName.Text
-                                        DomainAdminPassword  = $Xaml.IO.DSDCPassword.Text
+                                        DomainAdminPassword  = $Xaml.IO.DSDCPassword.Password
                                         DomainAdminDomain    = $Key.CommonName
                                         SkipDomainMembership = "YES"
                                         OSInstall            = "Y"
@@ -867,7 +867,7 @@ Function FEDeploymentShare
             Update-MDTDeploymentShare -Path $Root -Force -Verbose
 
             # Update/Flush FEShare(Images)
-            $ImageLabel = Get-ItemProperty -Path $Root | % { 
+            $ImageLabel = Get-ItemProperty -Path "$($Xaml.IO.DSDriveName.Text):\" | % { 
 
                 @{  64 = $_.'Boot.x64.LiteTouchWIMDescription'
                     86 = $_.'Boot.x86.LiteTouchWIMDescription' }
@@ -903,14 +903,14 @@ Function FEDeploymentShare
             # Update/Flush FEShare(WDS)
             ForEach ( $Image in [BootImages]::New("$($Xaml.IO.DSRootPath.Text)\Boot").Images )
             {        
-                If (Get-WdsBootImage -Architecture $Image.Type -ImageName $Image.Name )
+                If (Get-WdsBootImage -Architecture $Image.Type -ImageName $Image.Name -EA 0)
                 {
                     Write-Theme "Detected [!] $($Image.Name), removing..." 12,4,15,0
-                    Remove-WDSBootImage -Architecture $Image.Type -ImageName $Image.Name
+                    Remove-WDSBootImage -Architecture $Image.Type -ImageName $Image.Name -Verbose
                 }
 
                 Write-Theme "Importing [~] $($Image.Name)" 11,3,15,0
-                Import-WdsBootImage -Path $Image.Wim.FullName -NewDescription $Image.Name
+                Import-WdsBootImage -Path $Image.Wim -NewDescription $Image.Name -Verbose
             }
 
             Restart-Service -Name WDSServer

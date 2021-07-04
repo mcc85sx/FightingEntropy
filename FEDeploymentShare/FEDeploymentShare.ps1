@@ -734,8 +734,8 @@ Function FEDeploymentShare
             Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV)
 
             Write-Theme "Collecting [~] images"
-            $X           = 0
-            $Images      = Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse *.wim | % { [WimFile]::New($X,$_.FullName) }
+            $X           = -1
+            $Images      = Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse *.wim | % { [WimFile]::New($X++,$_.FullName) }
 
             # Import OS/TS
             $OS          = "$($PSD.Name):\Operating Systems"

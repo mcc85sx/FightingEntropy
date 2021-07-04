@@ -16,3 +16,4 @@ DGList
 Domain
 Sitemap
 Key
+WimFile

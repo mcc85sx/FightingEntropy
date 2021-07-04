@@ -261,7 +261,7 @@
                         <GroupBox Grid.Row="0" Header="[Network (Designation)]">
                             <TextBox Grid.Column="0" Name="StackText"/>
                         </GroupBox>
-                        <Button Grid.Column="1" Name="StackLoad" Content="Load"/>
+                        <Button Grid.Column="1" Name="StackLoad" Content="Load" IsEnabled="False"/>
                     </Grid>
                     <GroupBox Grid.Row="1" Header="[Network (Stack)]">
                         <DataGrid Name="Stack"

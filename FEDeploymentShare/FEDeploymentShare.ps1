@@ -1,7 +1,8 @@
 Function FEDeploymentShare
 {
     Add-Type -AssemblyName PresentationFramework
-
+    Add-Type -AssemblyName System.Windows.Forms
+    
     If ( (Get-CimInstance Win32_OperatingSystem).Caption -notmatch "Server" )
     {
         Throw "Must use Windows Server operating system"
@@ -240,10 +241,11 @@ Function FEDeploymentShare
 
     $Xaml.IO.Stack.Add_MouseDoubleClick(
     {
-        If ( $Xaml.IO.Stack.SelectedIndex -ne -1 )
+        If ( $Xaml.IO.Stack.SelectedIndex -gt -1 )
         {
+            $Network                         = $Main.SM.Stack | ? Network -match $Xaml.IO.Stack.SelectedItem.Network
             $Xaml.IO.Control.ItemsSource     = $Null
-            $Xaml.IO.Control.ItemsSource     = $Main.SM.Stack | ? Network -match  $Xaml.IO.Stack.SelectedItem.Network
+            $Xaml.IO.Control.ItemsSource     = @( $Network )
 
             #If ( $Control.Count -gt 1 )
             #{

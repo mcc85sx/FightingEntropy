@@ -17,3 +17,5 @@ Domain
 Sitemap
 Key
 WimFile
+BootImage
+BootImages

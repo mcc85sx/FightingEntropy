@@ -1,5 +1,7 @@
 Function FEDeploymentShare
 {
+    Add-Type -AssemblyName PresentationFramework
+
     If ( (Get-CimInstance Win32_OperatingSystem).Caption -notmatch "Server" )
     {
         Throw "Must use Windows Server operating system"
@@ -781,10 +783,10 @@ Function FEDeploymentShare
                     ID                  = $Image.Label
                     Version             = "1.0"
                     OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
-                    FullName            = $Admin
-                    OrgName             = $Company
-                    HomePage            = $WebSite
-                    AdminPassword       = $Password
+                    FullName            = $Xaml.IO.LMUsername
+                    OrgName             = $Xaml.IO.Organization
+                    HomePage            = $Xaml.IO.Website
+                    AdminPassword       = $Xaml.IO.LMPassword.Password
                 }
 
                 Import-MDTTaskSequence @TaskSequence -Verbose

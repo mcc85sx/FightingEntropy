@@ -250,8 +250,7 @@
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="160"/>
                         <RowDefinition Height="20"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="160"/>
+                        <RowDefinition Height="120"/>
                         <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
@@ -279,7 +278,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
-                    <GroupBox Grid.Row="3" Header="[Network (Control)]">
+                    <GroupBox Grid.Row="3" Header="[Network (Selected)]">
                         <DataGrid Name="Control" 
                                   ScrollViewer.CanContentScroll="True"
                                   ScrollViewer.IsDeferredScrollingEnabled="True"                                        
@@ -294,22 +293,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
-                    <GroupBox Grid.Row="4" Header="[Network (Subject)]">
-                        <DataGrid Name="Subject" 
-                                  ScrollViewer.CanContentScroll="True"
-                                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
-                                <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
-                                <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
-                                <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
-                                <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
-                                <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
-                    <Grid Grid.Row="5">
+                    <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="2*"/>
@@ -499,10 +483,14 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="150"/>
                             </Grid.ColumnDefinitions>
                             <Button Name="DSRootSelect" Grid.Column="0" Content="Select"/>
                             <GroupBox Grid.Column="1" Header="[Root Path]">
                                 <TextBox Name="DSRootPath"/>
+                            </GroupBox>
+                            <GroupBox Grid.Column="2" Header="[Share Name]">
+                                <TextBox Name="DSShareName"/>
                             </GroupBox>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -511,8 +499,8 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="150"/>
                             </Grid.ColumnDefinitions>
-                            <GroupBox Grid.Column="0" Header="[Share Name]">
-                                <TextBox Name="DSShareName"/>
+                            <GroupBox Grid.Column="0" Header="[PSDrive Name]">
+                                <TextBox Name="DSDriveName"/>
                             </GroupBox>
                             <GroupBox Grid.Column="1" Header="[Description]">
                                 <TextBox Name="DSDescription"/>

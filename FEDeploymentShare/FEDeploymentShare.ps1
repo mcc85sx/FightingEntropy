@@ -529,7 +529,7 @@ Function FEDeploymentShare
             New-Item -Path $Xaml.IO.WimPath.Text -ItemType Directory -Verbose
         }
     
-        $Images = [ImageStore]::New($Xaml.IO.IsoPath.Text,$Xaml.IO.WimSwap.Text)
+        $Images = [ImageStore]::New($Xaml.IO.IsoPath.Text,$Xaml.IO.WimPath.Text)
     
         $X      = 0
         ForEach ( $Item in $Xaml.IO.WimIso.Items )
@@ -730,7 +730,8 @@ Function FEDeploymentShare
             Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV)
 
             Write-Theme "Collecting [~] images"
-            $Images      = Get-FEImage $Xaml.IO.WimPath.Text
+            $X           = 0
+            $Images      = Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse -Filter *.wim | % { [ImageIndex]::New($X,$_.FullName) }
 
             # Import OS/TS
             $OS          = "$($PSD.Name):\Operating Systems"

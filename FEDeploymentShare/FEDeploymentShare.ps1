@@ -1,13 +1,16 @@
 Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
 {
+    # Load Assemblies
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
 
+    # Check for server operating system
     If ( (Get-CimInstance Win32_OperatingSystem).Caption -notmatch "Server" )
     {
         Throw "Must use Windows Server operating system"
     }
 
+    # Prime the classes
     $Base  = "github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare"
     $Order = Invoke-RestMethod "$Base/Classes/index.txt?raw=true" | % Split "`n" | ? Length -gt 0
     $Xaml  = Invoke-WebRequest "$Base/Xaml/DS.xaml?raw=true" | % Content
@@ -18,8 +21,10 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
         $List += (Invoke-RestMethod "$Base/Classes/$Item.ps1?raw=true" -Verbose)
     }
 
+    # Instantiate the classes
     $List -join "`n" | Invoke-Expression
 
+    # Controller class
     Class Main
     {
         Static [String]       $Base = "$Env:ProgramData\Secure Digits Plus LLC\FightingEntropy"
@@ -38,6 +43,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
         }
     }
     
+    # These two variables do most of the work
     $Main                           = [Main]::New()
     $Xaml                           = [XamlWindow][Main]::Tab
 
@@ -703,6 +709,8 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             $Root                  = "$($PSD.Name):\"
             $Control               = "$($PSD.Root)\Control"
             $Script                = "$($PSD.Root)\Scripts"
+
+            # To propogate the environment keys to child item [server/client]
             $DS                    = @($PSD.NetworkPath,
                 $Xaml.IO.Organization.Text,
                 $Xaml.IO.CommonName.Text,
@@ -713,6 +721,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                 $Xaml.IO.Website.Text)
             $Key                   = [Key]$DS
             
+            # Copies the background and logo if they were selected
             ForEach ($File in $Key.Background, $Key.Logo)
             {
                 If (Test-Path $File)
@@ -731,33 +740,37 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                 }
             }
 
+            # For the little computer icon in PXE
             ForEach ( $File in $Module.Control | ? Extension -eq .png )
             {
                 Copy-Item -Path $File.Fullname -Destination $Script -Force -Verbose
             }
 
+            # Copies custom template for FightingEntropy to post install/configure
             ForEach ( $File in $Module.Control | ? Name -match Mod.xml )
             {
                 Copy-Item -Path $File.FullName -Destination "$env:ProgramFiles\Microsoft Deployment Toolkit\Templates" -Force -Verbose
             }
 
+            # Used to spawn the correct environment keys on child items
             Set-Content -Path "$($PSD.Root)\DSKey.csv" -Value ($Key | ConvertTo-CSV) -Verbose
 
             Write-Theme "Collecting [~] images"
             $Images      = @( )
             
+            # Extract/order the WIM files and prime for MDT Injection
             Get-ChildItem -Path $Xaml.IO.WimPath.Text -Recurse *.wim | % { 
                 
                 Write-Host "Processing [$($_.FullName)]"
                 $Images += [WimFile]::New($Images.Count,$_.FullName) 
             }
 
-            # Import OS/TS
+            # Import OS/TS to MDT Share
             $OS          = "$($PSD.Name):\Operating Systems"
             $TS          = "$($PSD.Name):\Task Sequences"
             $Comment     = Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]"
 
-            # Create/Regenerate folders in MDT share
+            # Create folders in the new MDT share
             ForEach ( $Type in "Server","Client" )
             {
                 ForEach ( $Version in $Images | ? InstallationType -eq $Type | % Version | Select-Object -Unique )
@@ -800,10 +813,10 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                     ID                  = $Image.Label
                     Version             = "1.0"
                     OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
-                    FullName            = $Xaml.IO.LMUsername
+                    FullName            = $Xaml.IO.DCLMUsername
                     OrgName             = $Xaml.IO.Organization
                     HomePage            = $Xaml.IO.Website
-                    AdminPassword       = $Xaml.IO.LMPassword.Password
+                    AdminPassword       = $Xaml.IO.DCLMPassword.Password
                 }
 
                 Import-MDTTaskSequence @TaskSequence -Verbose
@@ -812,14 +825,17 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             Write-Theme "OS/TS [+] Imported, removing Wim Swap directory" 11,3,15,0
             Remove-Item -Path $Xaml.IO.WimPath.Text -Recurse -Force -Verbose
 
-            $Install = "[Net.ServicePointManager]::SecurityProtocol = 3072",
-            "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/master/Install.ps1?raw=true | Invoke-Expression",
-            "`$Key = '$($Key | ConvertTo-Json)'",
-            "New-EnvironmentKey -Key `$Key | % Apply `n"
+            # FightingEntropy(π) Installation propogation
+            $Install = @("[Net.ServicePointManager]::SecurityProtocol = 3072",
+            "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | Invoke-Expression",
+            "`$Key = '$( $Key | ConvertTo-Json )'",
+            "New-EnvironmentKey -Key `$Key | % Apply"
+             -join ";")
 
             Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
 
             Write-Theme "Setting [~] Share properties [($Root)]"
+
             # Share Settings
             Set-ItemProperty $Root -Name Comments    -Value $("[FightingEntropy({0})]{1}" -f [Char]960,(Get-Date -UFormat "[%Y-%m%d (MCC/SDP)]") ) -Verbose
             Set-ItemProperty $Root -Name MonitorHost -Value $HostName -Verbose
@@ -832,27 +848,28 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                 0..3         | % { Set-ItemProperty -Path $Root -Name $Names[$_] -Value $Values[$_] -Verbose } 
             }
 
-            # Bootstrap
+            # Bootstrap.ini
             Export-Ini -Path $Control\Bootstrap.ini -Value @{ 
 
                 Settings           = @{ Priority             = "Default"                      }
                 Default            = @{ DeployRoot           = $Key.NetworkPath
-                                        UserID               = $Xaml.IO.DSLMUserName.Text
-                                        UserPassword         = $Xaml.IO.DSLMPassword.Password
+                                        UserID               = $Xaml.IO.DSDCUserName.Text
+                                        UserPassword         = $Xaml.IO.DSDCPassword.Password
                                         UserDomain           = $Xaml.IO.CommonName.Text
                                         SkipBDDWelcome       = "YES"                          }
             } | % Output
 
-            # CustomSettings
+            # CustomSettings.ini
             Export-Ini -Path $Control\CustomSettings.ini -Value @{
 
                 Settings           = @{ Priority             = "Default" 
                                         Properties           = "MyCustomProperty" }
                 Default            = @{ _SMSTSOrgName        = $Xaml.IO.Organization.Text
                                         JoinDomain           = $Xaml.IO.CommonName.Text
+                                        MachineObjectOU      = $Xaml.IO.DSOrganizationalUnit
                                         DomainAdmin          = $Xaml.IO.DSDCUserName.Text
                                         DomainAdminPassword  = $Xaml.IO.DSDCPassword.Password
-                                        DomainAdminDomain    = $Key.CommonName
+                                        DomainAdminDomain    = $Xaml.IO.CommonName.Text
                                         SkipDomainMembership = "YES"
                                         OSInstall            = "Y"
                                         SkipCapture          = "NO"
@@ -875,6 +892,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                     86 = $_.'Boot.x86.LiteTouchWIMDescription' }
             }
 
+            # Rename the Litetouch_ files
             Get-ChildItem -Path "$($Xaml.IO.DSRootPath.Text)\Boot" | ? Extension | % { 
 
                 $Label          = $ImageLabel[$(Switch -Regex ($_.Name) { 64 {64} 86 {86}})]
@@ -916,12 +934,17 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             }
 
             Restart-Service -Name WDSServer
+
+            Write-Theme -Flag
+
+            $Xaml.IO.DialogResult = $True
         }
     })
 
     # Set initial TextBox values
     $Xaml.IO.NetBIOSName.Text = $Env:UserDomain
     $Xaml.IO.DNSName.Text     = @{0=$Env:ComputerName;1="$Env:ComputerName.$Env:UserDNSDomain"}[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
-
+    
     $Xaml.Invoke()
+
 }

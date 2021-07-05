@@ -622,29 +622,34 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             Throw "Unable to initialize, MDT not installed"
         }
 
-        If ( $PSVersionTable.PSEdition -ne "Desktop" )
+        ElseIf ( $PSVersionTable.PSEdition -ne "Desktop" )
         {
             Throw "Unable to initialize, use Windows PowerShell v5.1"
         }
 
-        If (!$Xaml.IO.DSDCUsername.Text)
+        ElseIf (!$Xaml.IO.DSDCUsername.Text)
         {
             [System.Windows.MessageBox]::Show("Missing the deployment share domain account name","Error")
         }
 
-        If ($Xaml.IO.DSDCPassword.Password -notmatch $Xaml.IO.DSDCConfirm.Password)
+        ElseIf ($Xaml.IO.DSDCPassword.Password -notmatch $Xaml.IO.DSDCConfirm.Password)
         {
             [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         } 
 
-        If (!$Xaml.IO.DSLMUsername.Text)
+        ElseIf (!$Xaml.IO.DSLMUsername.Text)
         {
             [System.Windows.MessageBox]::Show("Missing the child item local account name","Error")
         }
 
-        If ($Xaml.IO.DSLMPassword.Password -notmatch $Xaml.IO.DSLMConfirm.Password)
+        ElseIf ($Xaml.IO.DSLMPassword.Password -notmatch $Xaml.IO.DSLMConfirm.Password)
         {
             [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
+        }
+
+        ElseIf (!(Get-ADObject -Filter * | ? DistinguishedName -eq $Xaml.IO.DSOrganizationalUnit.Text))
+        {
+            [System.Windows.MessageBox]::Show("Invalid OU specified","Error")
         }
 
         Write-Theme "Creating [~] Deployment Share"
@@ -826,11 +831,14 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             Remove-Item -Path $Xaml.IO.WimPath.Text -Recurse -Force -Verbose
 
             # FightingEntropy(π) Installation propogation
-            $Install = @("[Net.ServicePointManager]::SecurityProtocol = 3072",
+            $Install = @( 
+            "[Net.ServicePointManager]::SecurityProtocol = 3072",
             "Invoke-RestMethod https://github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | Invoke-Expression",
             "`$Key = '$( $Key | ConvertTo-Json )'",
-            "New-EnvironmentKey -Key `$Key | % Apply"
-             -join ";")
+            "New-EnvironmentKey -Key `$Key | % Apply",
+            "`$Module = Get-FEModule",
+            "`$Module.Role.Choco()",
+            "choco install pwsh vscode microsoft-edge microsoft-windows-terminal ccleaner -y" -join ";`n")
 
             Set-Content -Path $Script\Install.ps1 -Value $Install -Force -Verbose
 
@@ -866,10 +874,10 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
                                         Properties           = "MyCustomProperty" }
                 Default            = @{ _SMSTSOrgName        = $Xaml.IO.Organization.Text
                                         JoinDomain           = $Xaml.IO.CommonName.Text
-                                        MachineObjectOU      = $Xaml.IO.DSOrganizationalUnit
                                         DomainAdmin          = $Xaml.IO.DSDCUserName.Text
                                         DomainAdminPassword  = $Xaml.IO.DSDCPassword.Password
                                         DomainAdminDomain    = $Xaml.IO.CommonName.Text
+                                        MachineObjectOU      = $Xaml.IO.DSOrganizationalUnit.Text
                                         SkipDomainMembership = "YES"
                                         OSInstall            = "Y"
                                         SkipCapture          = "NO"

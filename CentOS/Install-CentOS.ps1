@@ -5,18 +5,10 @@
 # Software network boot image use this link
 # http://mirror.centos.org/centos/8/BaseOS/x86_64/os/
 
-$Zone     = "securedigitsplus.com"
-$ScopeID  = Get-DhcpServerv4Scope | % ScopeID
-$ID       = "mail"
-$Root     = Get-Credential "certsrv"
-
-# Time ~ 13:20 / VMDK 2.5GB [Reboot system]
-
-$VMSwitch = Get-VMSwitch | ? SwitchType -eq External | % Name
-$ISOPath  = "C:\Images\CentOS-8.4.2105-x86_64-boot.iso"
-$VMC      = Get-VMHost
-
-$Keys   = @{
+[Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
+[Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
+[Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
+[Object]    $Keys  = @{
 
     " " =  32; "˂" =  37; "˄" =  38; "˃" =  39; "˅" =  40; "0" =  48; 
     "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
@@ -29,7 +21,7 @@ $Keys   = @{
     "[" = 219; "\" = 220; "]" = 221; "'" = 222;
 }
 
-$SKey   = @{ 
+[Object]     $SKey = @{ 
 
     "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
     "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
@@ -41,50 +33,57 @@ $SKey   = @{
     "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
 }
 
-$Capital   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
-$Lower     = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
-$Special   = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
+$Zone     = "securedigitsplus.com"
+$ScopeID  = Get-DhcpServerv4Scope | % ScopeID
+$ID       = "mail"
+$Root     = Get-Credential "certsrv"
+
+# Time ~ 13:20 / VMDK 2.5GB [Reboot system]
+
+$VMSwitch = Get-VMSwitch | ? SwitchType -eq External | % Name
+$ISOPath  = "C:\Images\CentOS-8.4.2105-x86_64-boot.iso"
+$VMC      = Get-VMHost
 
 $Name       = "mail"
 $Time       = [System.Diagnostics.Stopwatch]::StartNew()
 
 $VM                    = @{  
 
-    Name               = $Name
-    MemoryStartupBytes = 2048MB
-    Path               = "{0}\{1}.vmx"  -f $VMC.VirtualMachinePath,  $Name
-    NewVHDPath         = "{0}\{1}.vhdx" -f $VMC.VirtualHardDiskPath, $Name
-    NewVHDSizeBytes    = 100GB
-    Generation         = 1
-    SwitchName         = $VMSwitch
+Name               = $Name
+MemoryStartupBytes = 2048MB
+Path               = "{0}\{1}.vmx"  -f $VMC.VirtualMachinePath,  $Name
+NewVHDPath         = "{0}\{1}.vhdx" -f $VMC.VirtualHardDiskPath, $Name
+NewVHDSizeBytes    = 100GB
+Generation         = 1
+SwitchName         = $VMSwitch
 }
 
 $Clear                 = Get-VM -Name $Name -EA 0
 
 If ($Clear -ne $Null)
 {
-    If ( $Clear.Status -ne "Stopped" )
-    {
-        Stop-VM $Clear -Force -Verbose
-    }
+If ( $Clear.Status -ne "Stopped" )
+{
+    Stop-VM $Clear -Force -Verbose
+}
 
-    $Clear | Remove-VM -Force -Verbose  
+$Clear | Remove-VM -Force -Verbose  
 }
 
 If (Test-Path $VM.Path) 
 {
-    Remove-Item $VM.Path -Recurse -Force -Verbose
+Remove-Item $VM.Path -Recurse -Force -Verbose
 }
 
 If (Test-Path $VM.NewVHDPath)
 {
-    Remove-Item $VM.NewVHDPath -Force -Verbose
+Remove-Item $VM.NewVHDPath -Force -Verbose
 }
 
 New-VM @VM -Verbose
-Set-VMDvdDrive -VMName $Name -Path $ISOPath
+Set-VMDvdDrive -VMName $Name -Path $ISOPath -Verbose
 Set-VM $Name -ProcessorCount 2 -Verbose
-$VMNet = Get-VMNetworkAdapter -VMName $Name
+$VMNet = Get-VMNetworkAdapter -VMName $Name 
 
 $Time      = [System.Diagnostics.Stopwatch]::StartNew()
 $Log       = @{ }
@@ -99,15 +98,15 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] Started [~] [$Name]")
 $C         = @( )
 Do
 {
-    Start-Sleep -Seconds 1
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Starting")
-    $Item     = Get-VM -Name $Name
-        
-    Switch($Item.CPUUsage)
-    {
-        0       { $C +=   1  }
-        Default { $C  = @( ) }
-    }
+Start-Sleep -Seconds 1
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Starting")
+$Item     = Get-VM -Name $Name
+    
+Switch($Item.CPUUsage)
+{
+    0       { $C +=   1  }
+    Default { $C  = @( ) }
+}
 }
 Until($C.Count -ge 3)
 
@@ -119,15 +118,15 @@ $KB.TypeKey(13)
 $C         = @( )
 Do
 {
-    Start-Sleep -Seconds 1
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Initializing")
-    $Item     = Get-VM -Name $Name
-        
-    Switch($Item.CPUUsage)
-    {
-        0       { $C +=   1  }
-        Default { $C  = @( ) }
-    }
+Start-Sleep -Seconds 1
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Initializing")
+$Item     = Get-VM -Name $Name
+    
+Switch($Item.CPUUsage)
+{
+    0       { $C +=   1  }
+    Default { $C  = @( ) }
+}
 }
 Until($C.Count -ge 5)
 
@@ -211,18 +210,18 @@ Start-Sleep -Milliseconds 10
 
 "http://mirror.centos.org/centos/8/BaseOS/x86_64/os/".ToCharArray() | % {
 
-    If ($_ -cin @($Special + $Capital))
-    {
-        $KB.PressKey(16)
-        $KB.TypeKey($SKey["$_"])
-        $KB.ReleaseKey(16)
-    }
+If ($_ -cin @($Special + $Capital))
+{
+    $KB.PressKey(16)
+    $KB.TypeKey($SKey["$_"])
+    $KB.ReleaseKey(16)
+}
 
-    Else
-    {
-        $KB.TypeKey($Keys["$_"])
-    }
-    Start-Sleep -Milliseconds 10
+Else
+{
+    $KB.TypeKey($Keys["$_"])
+}
+Start-Sleep -Milliseconds 10
 }
 
 $KB.PressKey(16)
@@ -290,40 +289,40 @@ Start-Sleep 1
 
 # Enter root password
 $Root.GetNetworkCredential().Password.ToCharArray() | % { 
-    
-    If ($_ -cin @($Special + $Capital))
-    {
-        $KB.PressKey(16)
-        $KB.TypeKey($SKey["$_"])
-        $KB.ReleaseKey(16)
-    }
 
-    Else
-    {
-        $KB.TypeKey($Keys["$_"])
-    }
+If ($_ -cin @($Special + $Capital))
+{
+    $KB.PressKey(16)
+    $KB.TypeKey($SKey["$_"])
+    $KB.ReleaseKey(16)
+}
 
-    Start-Sleep -Milliseconds 10
+Else
+{
+    $KB.TypeKey($Keys["$_"])
+}
+
+Start-Sleep -Milliseconds 10
 }
 
 $KB.TypeKey(9)
 
 # Enter root confirm
 $Root.GetNetworkCredential().Password.ToCharArray() | % { 
-    
-    If ($_ -cin @($Special + $Capital))
-    {
-        $KB.PressKey(16)
-        $KB.TypeKey($SKey["$_"])
-        $KB.ReleaseKey(16)
-    }
 
-    Else
-    {
-        $KB.TypeKey($Keys["$_"])
-    }
+If ($_ -cin @($Special + $Capital))
+{
+    $KB.PressKey(16)
+    $KB.TypeKey($SKey["$_"])
+    $KB.ReleaseKey(16)
+}
 
-    Start-Sleep -Milliseconds 10
+Else
+{
+    $KB.TypeKey($Keys["$_"])
+}
+
+Start-Sleep -Milliseconds 10
 }
 
 $KB.TypeKey(9)
@@ -343,14 +342,99 @@ $KB.Typekey(13)
 $C         = @( )
 Do
 {
-    Start-Sleep -Seconds 1
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installing...")
-    $Item     = Get-VM -Name $Name
-        
-    Switch($Item.CPUUsage)
+Start-Sleep -Seconds 1
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installing...")
+$Item     = Get-VM -Name $Name
+    
+Switch($Item.CPUUsage)
+{
+    0       { $C +=   1  }
+    Default { $C  = @( ) }
+}
+}
+Until($C.Count -ge 15)
+
+$KB.TypeKey(9)
+$KB.TypeKey(13)
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installed, Rebooting...")
+
+Do
+{
+$Item = Get-VM -Name $Name
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Rebooting...")
+}
+Until ($Item.Uptime.TotalSeconds -lt 5)
+
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Releasing DVD")
+Set-VMDvdDrive -VMName $Name -Path $Null -Verbose
+
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Booting...")
+Start-VM -VMName $Name
+
+$C = @( )
+Do
+{
+$Item = Get-VM -Name $Name
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Booting...")
+Switch($Item.CPUUsage)
+{
+    0 { $C += 1 } 
+    Default { $C = @( ) }
+}
+Start-Sleep 1
+}
+Until ($C.Count -gt 10)
+
+# First login
+"root".ToCharArray() | % { $KB.TypeKey($Keys["$_"]) }
+$KB.TypeKey(13)
+Start-Sleep -Milliseconds 10
+
+Function KeyEntry
+{
+[CmdLetBinding()]
+Param(
+[Parameter(Mandatory)][Object]$KB,
+[Parameter(Mandatory)][Object]$Object)
+
+ForEach ( $Key in $Object.ToCharArray() )
+{
+    If ($Key -cin @($Special + $Capital))
     {
-        0       { $C +=   1  }
-        Default { $C  = @( ) }
+        $KB.PressKey(16)
+        $KB.TypeKey($SKey["$Key"])
+        $KB.ReleaseKey(16)
+    }
+    Else
+    {
+        $KB.TypeKey($Keys["$Key"])
     }
 }
-Until($C.Count -ge 5)
+}
+
+$Root.GetNetworkCredential().Password.ToCharArray() | % { 
+
+    If ($_ -cin @($Special + $Capital))
+    {
+        $KB.PressKey(16)
+        $KB.TypeKey($SKey["$_"])
+        $KB.ReleaseKey(16)
+    }
+
+    Else
+    {
+        $KB.TypeKey($Keys["$_"])
+    }
+
+    Start-Sleep -Milliseconds 10
+}
+$KB.TypeKey(13)
+Start-Sleep -Milliseconds 10
+
+KeyEntry $KB "curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo"
+$KB.TypeKey(13)
+
+KeyEntry $KB @("yum install powershell wget tar net-tools realmd cifs-utils sssd oddjob oddjob-mkhomedir",
+           "adcli samba samba-common samba-common-tools krb5-workstation epel-release httpd httpd-tools",
+           "mariadb mariadb-server postfix dovecot -y" -join ' ')
+$KB.TypeKey(13)

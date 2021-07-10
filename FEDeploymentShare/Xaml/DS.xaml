@@ -431,7 +431,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Name="Collect" Content="Collect" Foreground="Black"/>
+                            <Button Name="Collect" Content="Collect" IsEnabled="True"/>
                             <GroupBox Grid.Column="1" Header="[Phone]">
                                 <TextBox Name="Phone"/>
                             </GroupBox>

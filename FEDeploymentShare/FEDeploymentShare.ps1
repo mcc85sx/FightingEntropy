@@ -295,14 +295,14 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             [System.Windows.MessageBox]::Show("Invalid image root path","Error")
         }
     
-        $Tmp = Get-ChildItem $Xaml.IO.IsoPath.Text *.iso
+        $Tmp = Get-ChildItem $Xaml.IO.IsoPath.Text *.iso | Select-Object Name, FullName
     
         If (!$Tmp)
         {
             [System.Windows.MessageBox]::Show("No images detected","Error")
         }
-        
-        $Xaml.IO.IsoList.ItemsSource = $Tmp | Select-Object Name, Fullname
+
+        $Xaml.IO.IsoList.ItemsSource = @( $Tmp )
     })
     
     $Xaml.IO.IsoList.Add_SelectionChanged(
@@ -586,6 +586,45 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
     })
 
     # Branding Tab
+
+    $Xaml.IO.Collect.Add_Click(
+    {
+        $OEM = Get-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\OEMInformation' -EA 0
+
+        If ($OEM)
+        {
+            If ($OEM.Logo)
+            {
+                $Xaml.IO.Logo.Text = $Oem.Logo
+            }
+
+            If ($OEM.SupportPhone)
+            {
+                $Xaml.IO.Phone.Text = $Oem.SupportPhone
+            }
+
+            If ($OEM.SupportHours)
+            {
+                $Xaml.IO.Hours.Text = $Oem.SupportHours
+            }
+
+            If ($OEM.SupportURL)
+            {
+                $Xaml.IO.Website.Text = $Oem.SupportURL
+            }
+        }
+
+        $OEM = Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System' -EA 0
+        
+        If ($OEM)
+        {
+            If ($OEM.Wallpaper)
+            {
+                $Xaml.IO.Background.Text = $OEM.Wallpaper
+            }
+        }
+    })
+
     $Xaml.IO.LogoSelect.Add_Click(
     {
         $Item                  = New-Object System.Windows.Forms.OpenFileDialog
@@ -615,6 +654,19 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
     })
 
     # Share Tab
+    $Xaml.IO.DSRootSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.FolderBrowserDialog
+        $Item.ShowDialog()
+        
+        If (!$Item.SelectedPath)
+        {
+            $Item.SelectedPath  = ""
+        }
+
+        $Xaml.IO.DSRootPath.Text = $Item.SelectedPath
+    })
+
     $Xaml.IO.DSInitialize.Add_Click(
     {
         If ( $Xaml.IO.Services.Items | ? Name -eq MDT | ? Value -ne $True )
@@ -632,7 +684,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             [System.Windows.MessageBox]::Show("Missing the deployment share domain account name","Error")
         }
 
-        ElseIf ($Xaml.IO.DSDCPassword.Password -notmatch $Xaml.IO.DSDCConfirm.Password)
+        ElseIf ($Xaml.IO.DSDCPassword.SecurePassword -notmatch $Xaml.IO.DSDCConfirm.SecurePassword)
         {
             [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         } 
@@ -642,7 +694,7 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             [System.Windows.MessageBox]::Show("Missing the child item local account name","Error")
         }
 
-        ElseIf ($Xaml.IO.DSLMPassword.Password -notmatch $Xaml.IO.DSLMConfirm.Password)
+        ElseIf ($Xaml.IO.DSLMPassword.SecurePassword -notmatch $Xaml.IO.DSLMConfirm.SecurePassword)
         {
             [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         }
@@ -652,10 +704,13 @@ Function FEDeploymentShare # https://github.com/mcc85sx/FightingEntropy/blob/mas
             [System.Windows.MessageBox]::Show("Invalid OU specified","Error")
         }
 
-        Write-Theme "Creating [~] Deployment Share"
+        Else
+        {
+            Write-Theme "Creating [~] Deployment Share"
 
-        $MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
-        Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
+            $MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
+            Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
+        }
 
         If (Get-MDTPersistentDrive)
         {

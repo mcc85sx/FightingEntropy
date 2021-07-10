@@ -526,8 +526,8 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <PasswordBox Grid.Column="0" Name="DSDCPassword"/>
-                                    <PasswordBox Grid.Column="1" Name="DSDCConfirm"/>
+                                    <PasswordBox Grid.Column="0" Name="DSDCPassword" HorizontalContentAlignment="Left"/>
+                                    <PasswordBox Grid.Column="1" Name="DSDCConfirm"  HorizontalContentAlignment="Left"/>
                                 </Grid>
                             </GroupBox>
                         </Grid>
@@ -545,8 +545,8 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <PasswordBox Grid.Column="0" Name="DSLMPassword"/>
-                                    <PasswordBox Grid.Column="1" Name="DSLMConfirm"/>
+                                    <PasswordBox Grid.Column="0" Name="DSLMPassword"  HorizontalContentAlignment="Left"/>
+                                    <PasswordBox Grid.Column="1" Name="DSLMConfirm"  HorizontalContentAlignment="Left"/>
                                 </Grid>
                             </GroupBox>
                         </Grid>

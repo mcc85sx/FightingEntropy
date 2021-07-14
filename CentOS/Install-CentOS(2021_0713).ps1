@@ -193,64 +193,73 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [+] IP Address / Network Engaged"
 
 9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 KeyEntry $KB "$ID.$Zone"
-9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
-Start-Sleep 5
+9,32 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
+Start-Sleep 2
+$KB.TypeKey(32)
+Start-Sleep 1
 
 9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [+] Hostname/Network configured")
-Start-Sleep 3
+Start-Sleep 6
 
 # Go to Installation destination
 0..1 | % { $KB.TypeKey([KeyEntry]::Keys["˄"]); Start-Sleep -Milliseconds 100 }
+Start-Sleep 6
+
 $KB.TypeKey(13)
-Start-Sleep 3
+Start-Sleep 6
+
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Auto-partitioning selected")
 $KB.TypeKey(13)
-Start-Sleep 10
 Write-Theme "Auto-Partition [+] Set"
+Start-Sleep 10
 
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installation Destination")
-9,9,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 10 }
+9,9,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 Start-Sleep 1
 
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installation Source")
-9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 10 }
+9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 
 KeyEntry $KB "http://mirror.centos.org/centos/8/BaseOS/x86_64/os/"
+Start-Sleep 1
 
 $KB.PressKey(16)
-Start-Sleep -Milliseconds 10
+Start-Sleep -Milliseconds 100
 
-9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 10 }
+9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 
 $KB.ReleaseKey(16)
+Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
-Start-Sleep -Milliseconds 10
+Start-Sleep -Milliseconds 100
 
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installation Source Selected")
-Start-Sleep 2
+Start-Sleep 3
 
-KeyEntry $KB ˅
+KeyEntry $KB "˅"
 $KB.TypeKey(13)
-Start-Sleep 2
+Start-Sleep 3
 
-9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 10 }
-KeyEntry $KB ˅˅
+9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
+KeyEntry $KB "˅˅"
 $KB.TypeKey(13)
 Start-Sleep -Milliseconds 100
 $KB.PressKey(16)
 Start-Sleep -Milliseconds 100
 
-9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 10 }
+9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
 
 $KB.ReleaseKey(16)
 $KB.TypeKey(13)
 Start-Sleep -Milliseconds 100
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Software Selected")
-Start-Sleep 2
+Start-Sleep 3
 
 # Root password
-KeyEntry $KB ˂˅˅
+KeyEntry $KB "˂˅˅"
+#0..10 | % { $KB.TypeKey(9); Start-Sleep -Milliseconds 100 }
+Start-Sleep 1
 $KB.TypeKey(13)
 Start-Sleep 1
 
@@ -277,7 +286,7 @@ Do
 }
 Until((Get-Item $VM.NewVHDPath).Length -ge 2500000000)
 
-$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [+] Installed")
+$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [+] Files sourced, now validating")
 Write-Host $Log[$Log.count-1]
 
 Do
@@ -293,7 +302,7 @@ Do
         Default { $C  = @( ) }
     }
 }
-Until($C.Count -gt 12)
+Until($C.Count -gt 20)
 
 $KB.TypeKey(9)
 $KB.TypeKey(13)
@@ -301,6 +310,7 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installed, Rebooting...")
 
 Do
 {
+    Start-Sleep -Seconds 1
     $Item = Get-VM -Name $Name
     $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Rebooting...")
     Write-Host $Log[$Log.Count-1]

@@ -1,9 +1,23 @@
-# CentOS [July 14th, 2020]@[16:00]
-# -----------------------------------------------
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯\\   
+#   //¯¯\\__[ Section    ]__________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯\\   
+#   //¯¯¯                                                                                                           //   
+#   \\       Install CentOS Server [2021-07-14]                                                                     \\   
+#   //                                                                                                              //   
+#   \\       Module: [FightingEntropy(π)][(2021.7.0)]                                                               \\   
+#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0714).ps1    //    
+#   \\         Name: mail.securedigitsplus.com                                                                      \\   
+#   //                                                                                                           ___//   
+#   \\___                                                                                                    ___//¯¯\\   
+#   //¯¯\\__________________________________________________________________________________________________//¯¯¯___//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Press enter to continue    ]__________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-# https://serverok.in/install-centos-8-from-net-boot-iso
-# Software network boot image use this link
-# http://mirror.centos.org/centos/8/BaseOS/x86_64/os/
+$Kerb = Get-Credential # Kerberos Administrator
+$Unix = Get-Credential # Unix Administrator
 
 Class KeyEntry
 {
@@ -55,7 +69,7 @@ Function KeyEntry
             $KB.TypeKey([KeyEntry]::Keys["$Key"])
         }
 
-        Start-Sleep -Milliseconds 100
+        Start-Sleep -Milliseconds 50
     }
 }
 
@@ -69,7 +83,6 @@ $Zone                  = "securedigitsplus.com"
 $ScopeID               = Get-DhcpServerv4Scope | % ScopeID
 $ID                    = "mail"
 
-$Root                  = Get-Credential certsrv
 $VMSwitch              = Get-VMSwitch | ? SwitchType -eq External | % Name
 $ISOPath               = "C:\Images\CentOS-8.4.2105-x86_64-boot.iso"
 $VMC                   = Get-VMHost
@@ -188,10 +201,11 @@ Start-Sleep 1
 Start-Sleep 6
 
 # Main menu -> Network
-# Left Left Down Down Enter
-# Or $KB.TypeKey(9) * 6
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Network configuration...")
-9,9,9,9,9,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
+$KB.PressKey(18)
+KeyEntry $KB n
+$KB.ReleaseKey(18)
+$KB.TypeKey(13)
 Start-Sleep 3
 
 #    ____                                                                                                    ________    
@@ -225,7 +239,10 @@ Start-Sleep 8
 #    ¯¯¯\\__[ Installation Destination   ]__________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-0..1 | % { $KB.TypeKey(38); Start-Sleep -Milliseconds 100 }
+$KB.PressKey(18)
+KeyEntry $KB d
+$KB.ReleaseKey(18)
+$KB.TypeKey(13)
 Start-Sleep 8
 
 $KB.TypeKey(13)
@@ -235,16 +252,19 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Auto-partitioning selected")
 $KB.TypeKey(13)
 Write-Theme "Auto-Partition [+] Set"
 Start-Sleep 10
-
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installation Destination")
-9,9,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
-Start-Sleep 1
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
 #    ¯¯¯\\__[ Installation Source    ]______________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+$KB.PressKey(18)
+KeyEntry $KB i
+$KB.ReleaseKey(18)
+$KB.TypeKey(13)
+Start-Sleep 1
 
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installation Source")
 9,9,9,9 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
@@ -271,7 +291,9 @@ Start-Sleep 3
 #    ¯¯¯\\__[ Software Selection ]__________________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-KeyEntry $KB "˅"
+$KB.PressKey(18)
+KeyEntry $KB ss
+$KB.ReleaseKey(18)
 $KB.TypeKey(13)
 Start-Sleep 3
 
@@ -296,16 +318,16 @@ Start-Sleep 4
 #    ¯¯¯\\__[ Root password  ]______________________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-0..10 | % { $KB.TypeKey(9); Start-Sleep -Milliseconds 100 }
-Start-Sleep 1
-
+$KB.PressKey(18)
+KeyEntry $KB r
+$KB.ReleaseKey(18)
 $KB.TypeKey(13)
 Start-Sleep 1
 
-KeyEntry $KB $Root.GetNetworkCredential().Password
+KeyEntry $KB $Unix.GetNetworkCredential().Password
 $KB.TypeKey(9)
 
-KeyEntry $KB $Root.GetNetworkCredential().Password
+KeyEntry $KB $Unix.GetNetworkCredential().Password
 $KB.TypeKey(9)
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
@@ -383,7 +405,7 @@ Do
     Switch($Item.CPUUsage) { 0 { $C += 1 } Default { $C = @( ) } }
     Start-Sleep 1
 }
-Until ($C.Count -gt 20)
+Until ($C.Count -gt 5)
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
@@ -391,13 +413,15 @@ Until ($C.Count -gt 20)
 #    ¯¯¯\\__[ First Login    ]______________________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-KeyEntry $KB root
+KeyEntry $KB "root"
+Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
-Start-Sleep -Milliseconds 10
+Sleep 1
 
-KeyEntry $KB $Root.GetNetworkCredential().Password
+KeyEntry $KB $Unix.GetNetworkCredential().Password
+Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
-Start-Sleep -Milliseconds 10
+Sleep 1
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
@@ -406,11 +430,90 @@ Start-Sleep -Milliseconds 10
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
 KeyEntry $KB "curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo"
+Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
+Sleep 1
 
 KeyEntry $KB @("yum install powershell wget tar net-tools realmd cifs-utils sssd oddjob oddjob-mkhomedir",
            "adcli samba samba-common samba-common-tools krb5-workstation epel-release httpd httpd-tools",
            "mariadb mariadb-server postfix dovecot mod_ssl -y" -join ' ')
+Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 
+$C = @( )
+Do
+{
+    $Item = Get-VM -Name $Name
+    Switch($Item.CPUUsage)
+    {
+        0 { $C += 1 }
+        Default { $C = @( ) }
+    }
+}
+Until ($C.Count -gt 5)
+
 KeyEntry $KB pwsh
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 2
+
+KeyEntry $KB "IRM github.com/mcc85sx/FightingEntropy/blob/master/CentOS/CentOSMailServer.ps1?raw=true | IEX"
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB '$Name       = "mail"'
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB '$Domain     = "securedigitsplus.com"'
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB '$ServerName = "$Name.$Domain"'
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB '_Content "/etc/sysconfig/selinux" "SELINUX=enforcing" "SELinux=disabled"'
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB "yum update -y"
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB '_Network $ServerName'
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB "_JoinRealm '$($Kerb.Username.ToUpper())'"
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+KeyEntry $KB $Kerb.GetNetworkCredential().Password
+Start-Sleep -Milliseconds 100
+$KB.TypeKey(13)
+Sleep 1
+
+_JoinShare certsrv dsc0.securedigitsplus.com cert
+
+# Copy Certicates 
+ForEach ( $Cert in @("securedigitsplus.com" | % { "ca.cer","fullchain.cer","$_.cer","$_.key","$_.pfx" }) )
+{
+    Copy-Item "/mnt/securedigitsplus.com/$Cert" "/etc/ssl/certs/$Cert" -Verbose
+}
+
+_Apache
+_Content "/etc/httpd/conf/httpd.conf" "#ServerName www.example.com" "ServerName $ServerName"
+_MariaDB
+_Postfix
+_Dovecot
+_PHP
+_Roundcube "1.4.11"

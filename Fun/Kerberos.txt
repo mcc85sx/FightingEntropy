@@ -1,0 +1,29 @@
+Kerberos, the hound of Hades... the 3 headed dog.
+But also, the moon of Pluto.
+Pluto happens to be the farthest of the original 9 planets...
+So... not trying to brag about it..? 
+But- that's how far out Kerberos truly is.
+ 
+Anyway, before I talk about Kerberos the network authentication protocol...
+I want to talk about the fabled beast that the protocol was named after.
+ 
+Because, the mere mentioning of the name "Kerberos" used to send chills 
+down people's spines.
+Back in Greek times, if the word Kerberos was even whispered, some people 
+would freak out.
+ 
+Because some guy would say the name, and then people would ask...
+ 
+Person: *gulp* You mean the hound of Hades?
+Some guy: *brief pause* ...Yeh. The hound of Hades.
+Person: *starts sweating* Ohhhh boy, I don't like the sound of that...
+Some guy: It's- just the name. No need to be afraid of it.
+Person: Yeah right pal, I've heard about this beast... the 3 headed dog 
+that guards the gates of the underworld.
+Some guy: Yeah...? Your point?
+Person: ...stands at the gate all the time to keep the dead from leaving.
+ 
+Anyway, in modern times, it doesn't cause as much dread because it's meant 
+to be a non-secure/secure transition layer for network communications. 
+There may be dread in how effective it is, but...
+...it's nothing to crap your pants over.

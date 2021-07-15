@@ -4,10 +4,10 @@
 #   //¯¯\\__[ Section    ]__________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯\\   
 #   //¯¯¯                                                                                                           //   
-#   \\       Install CentOS Server [2021-07-14]                                                                     \\   
+#   \\       Install CentOS Server [2021-07-15]                                                                     \\   
 #   //                                                                                                              //   
 #   \\       Module: [FightingEntropy(π)][(2021.7.0)]                                                               \\   
-#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0714).ps1    //    
+#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0715).ps1    //    
 #   \\         Name: mail.securedigitsplus.com                                                                      \\   
 #   //                                                                                                           ___//   
 #   \\___                                                                                                    ___//¯¯\\   

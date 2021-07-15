@@ -14,7 +14,7 @@ Function Get-FECheeks
         }
     }
 
-    $Stories = "&MicrosoftDeploymentToolkit","&TopShelfToolkit","&ShapedByFire","My&Briefcase","&ChaosEmeralds"
+    $Stories = "&MicrosoftDeploymentToolkit","&TopShelfToolkit","&ShapedByFire","My&Briefcase","&ChaosEmeralds","&Kerberos"
     $Titles  = $Stories -Replace "&","" 
 
     $Item    = @{ }
@@ -54,6 +54,13 @@ Function Get-FECheeks
         {
             $Cap = $Titles[4] | % { [_Fun]::New($_) }
             $Item.Add(1,@{"[Document]"= $Titles[4]})
+            $Item.Add(2,$Cap.Content -Split "`n")
+        }
+        
+        5
+        {
+            $Cap = $Titles[5] | % { [_Fun]::New($_) }
+            $Item.Add(1,@{"[Document]"= $Titles[5]})
             $Item.Add(2,$Cap.Content -Split "`n")
         }
 

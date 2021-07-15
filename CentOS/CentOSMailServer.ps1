@@ -352,7 +352,7 @@ Function _PostFix
     mynetworks = "$($Network.Network), 127.0.0.0/8"
 
     # [314] #relay_domains = $mydestination
-    #relay_domains = $mydestination
+    relay_domains = $Network.Host.DomainName
 
     # [331] #relayhost = $mydomain
     # [332] #relayhost = [gateway.my.domain]
@@ -387,6 +387,7 @@ Function _PostFix
     home_mailbox = "Maildir/"
 
     # [443] #mail_spool_directory = /var/mail
+    mail_spool_directory = "/var/mail"
     # [444] #mail_spool_directory = /var/spool/mail
     # [465] #mailbox_command = /some/where/procmail
     # [466] #mailbox_command = /some/where/procmail -a "$EXTENSION"
@@ -408,6 +409,7 @@ Function _PostFix
     # [566] #header_checks = regexp:/etc/postfix/header_checks
     # [579] #fast_flush_domains = $relay_domains
     # [590] #smtpd_banner = $myhostname ESMTP $mail_name
+    smtpd_banner = "`$myhostname ESMTP `$mail_name"
     # [591] #smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
     # [607] #local_destination_concurrency_limit = 2
     # [608] #default_destination_concurrency_limit = 20

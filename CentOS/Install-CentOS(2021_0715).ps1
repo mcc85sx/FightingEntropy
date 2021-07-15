@@ -428,9 +428,9 @@ Until($C.Count -gt 30)
 Write-Theme "Installed/Rebooting"
 
 $KB.TypeKey(9)
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installed, Rebooting...")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 
 Do
 {
@@ -471,9 +471,9 @@ Write-Theme "First Login"
 
 KeyEntry $KB "root"
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] First login")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 Sleep 1
 
 KeyEntry $KB $Unix.GetNetworkCredential().Password
@@ -504,9 +504,9 @@ KeyEntry $KB @("yum install powershell wget tar net-tools realmd cifs-utils sssd
            "adcli samba samba-common samba-common-tools krb5-workstation epel-release httpd httpd-tools",
            "mariadb mariadb-server postfix dovecot dovecot-mysql mod_ssl -y" -join ' ')
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Installing packages...")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 
 $C = @( )
 Do
@@ -538,9 +538,9 @@ Write-Theme "Enter [+] PowerShell"
 
 KeyEntry $KB pwsh
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] PowerShell Configuration...")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 Sleep 2
 
 # Source the installation functions
@@ -570,17 +570,17 @@ Sleep 1
 # SELinux
 KeyEntry $KB '_Content "/etc/sysconfig/selinux" "SELINUX=enforcing" "SELINUX=disabled"'
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] selinux/disabled")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 Sleep 1
 
 # Update
 KeyEntry $KB "yum update -y"
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] yum update")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 Sleep 1
 
 $C = @( )
@@ -626,18 +626,18 @@ ForEach ( $Cert in @("securedigitsplus.com" | % { "ca.cer","fullchain.cer","$_.c
 {
     KeyEntry $KB "cp /mnt/securedigitsplus.com/$Cert /etc/ssl/certs/$Cert"
     Start-Sleep -Milliseconds 100
-    $KB.TypeKey(13)
     $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Copying Certificate: [$Cert]")
     Write-Host $Log[$Log.Count-1]
+    $KB.TypeKey(13)
     Sleep 1
 }
 
 # Configure & Start Apache
 KeyEntry $KB "_Apache"
 Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting Apache")
 Write-Host $Log[$Log.Count-1]
+$KB.TypeKey(13)
 Sleep 5
 
 KeyEntry $KB "_Content `"/etc/httpd/conf/httpd.conf`" `"#ServerName www.example.com`" `"ServerName `$ServerName`""

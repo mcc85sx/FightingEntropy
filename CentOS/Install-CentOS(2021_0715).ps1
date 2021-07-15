@@ -64,13 +64,13 @@ Function KeyEntry
     {
         If ($Key -cin @([KeyEntry]::Special + [KeyEntry]::Capital))
         {
-            $KB.PressKey(16)
-            $KB.TypeKey([KeyEntry]::SKey["$Key"])
-            $KB.ReleaseKey(16)
+            $KB.PressKey(16) | Out-Null
+            $KB.TypeKey([KeyEntry]::SKey["$Key"]) | Out-Null
+            $KB.ReleaseKey(16) | Out-Null
         }
         Else
         {
-            $KB.TypeKey([KeyEntry]::Keys["$Key"])
+            $KB.TypeKey([KeyEntry]::Keys["$Key"]) | Out-Null
         }
 
         Start-Sleep -Milliseconds 50
@@ -568,7 +568,7 @@ $KB.TypeKey(13)
 Sleep 1
 
 # SELinux
-KeyEntry $KB '_Content "/etc/sysconfig/selinux" "SELINUX=enforcing" "SELinux=disabled"'
+KeyEntry $KB '_Content "/etc/sysconfig/selinux" "SELINUX=enforcing" "SELINUX=disabled"'
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] selinux/disabled")
@@ -640,7 +640,7 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting Apache
 Write-Host $Log[$Log.Count-1]
 Sleep 5
 
-KeyEntry $KB "_Content '/etc/httpd/conf/httpd.conf' '#ServerName www.example.com' 'ServerName $ServerName'"
+KeyEntry $KB "_Content `"/etc/httpd/conf/httpd.conf`" `"#ServerName www.example.com`" `"ServerName `$ServerName`""
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 Sleep 1

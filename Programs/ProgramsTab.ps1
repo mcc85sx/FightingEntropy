@@ -1,4 +1,4 @@
-class Program 
+class Program
 {
     Hidden [Object] $Item
     [String] $DisplayName
@@ -6,7 +6,7 @@ class Program
     [String] $InstallDate
     [String] $InstallSource
     [String] $UninstallString
-    [Object] $IdentifyingNumber
+    [String[]] $IdentifyingNumber
     Program([Object]$Item)
     {
         $This.Item              = $Item | Select *
@@ -15,7 +15,6 @@ class Program
         $This.InstallDate       = $Item.InstallDate
         $This.InstallSource     = $Item.InstallSource
         $This.UninstallString   = $Item.UninstallString
-        $This.IdentifyingNumber = @( )
     }
 }
 
@@ -23,17 +22,20 @@ Class DGList
 {
     [String] $Name
     [Object] $Value
-    DGList([String]$Name,[Object]$Value)
+    DGList([String]$Name,[Object[]]$Value)
     {
         $This.Name  = $Name
-        $This.Value = $Value
+        $This.Value = Switch -Regex ($Value.GetType().Name)
+        {
+            "(\w+\[\])" { $Value -join ', ' } Default { $Value }
+        }
     }
 }
 
 Class ProgramTab
 {
     Static [String] $Tab = @'
-    <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Applications" Width="960" Height="600" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Applications" Width="960" Height="720" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -106,16 +108,17 @@ Class ProgramTab
     <GroupBox Style="{StaticResource xGroupBox}" Grid.Row="0" Margin="10" Padding="5" Foreground="Black" Background="White">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="200"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <GroupBox Header="[Program (List)]" Grid.Row="0" Margin="5" Padding="5">
                 <DataGrid Name="ProgramList">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" Width="*"/>
-                        <DataGridTextColumn Header="Version" Binding="{Binding DisplayVersion}" Width="100"/>
-                        <DataGridTextColumn Header="Date" Binding="{Binding InstallDate}" Width="100"/>
+                        <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" Width="*"/>
+                        <DataGridTextColumn Header="DisplayVersion" Binding="{Binding DisplayVersion}" Width="100"/>
+                        <DataGridTextColumn Header="InstallDate" Binding="{Binding InstallDate}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -127,7 +130,15 @@ Class ProgramTab
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-            <Grid Grid.Row="2">
+            <GroupBox Header="[Program (Registry)]" Grid.Row="2" Margin="5" Padding="5">
+                <DataGrid Name="ProgramRegistry" Grid.Row="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="250"/>
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -141,7 +152,7 @@ Class ProgramTab
 '@
 }
 
-Class XamlWindow 
+Class XamlWindow
 {
     Hidden [Object]        $XAML
     Hidden [Object]         $XML
@@ -183,72 +194,119 @@ Class XamlWindow
     }
 }
 
+Class Control
+{
+    [Object]$Time
+    [Object]$WMI
+    [Object]$Product
+    [Object]$Stack
+    [Object]$Names
+    [Object]$Arch
+    [Object]$Path
+    [Object]$Reg
+    Control()
+    {
+        $This.Time = [System.Diagnostics.Stopwatch]::StartNew()
+        Write-Theme "wmic.exe [~] Scanning Win32/Product (~20s)"
+
+        # Object[] for installed programs
+        $This.WMI  = Get-WMIObject -Class Win32_Product
+        Write-Host "[$($This.Time.Elapsed)] WMI Stack [+]"
+
+        # Hashtable for program names
+        $This.Product = @{ }
+        ForEach ( $Item in $This.WMI)
+        {
+            If ( $Item.Name -ne $Null )
+            {
+                $This.Product.Add($This.Product.Count,$Item)
+            }
+        }
+        Write-Host "[$($This.Time.Elapsed)]"
+
+        # Index the values
+        $This.Stack   = $This.Product[0..($This.Product.Count-1)]
+
+        Write-Theme "wmic.exe [~] Get-WMIObject Win32-Product for installed programs/MSI applications"
+        $This.Names   = @{ }
+        ForEach ( $X in 0..($This.Stack.Count - 1))
+        {
+            $Item = $This.Stack[$X]
+
+            If ($Item.Name -notin $This.Names.Keys)
+            {
+                $This.Names.Add($Item.Name,@( ))
+            }
+
+            $This.Names[$Item.Name] += $X
+        }
+
+        Write-Theme "HKLM:\Software [~] Registry Uninstall Path"
+        $This.Arch    = @{ AMD64 = 0..1; x86 = 0 }[$Env:Processor_Architecture]
+        $This.Path    = @("","\WOW6432Node" | % {"HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall"})[$This.Arch]
+        $This.Reg     = $This.Path | % { Get-ItemProperty "$_\*" } | % { [Program]$_ }
+
+        ForEach ( $Item in $This.Reg )
+        {
+            If ($Item.DisplayName -in $This.Names.Keys)
+            {
+                $Item.IdentifyingNumber += $This.Stack[$This.Names[$Item.DisplayName]] | % IdentifyingNumber
+            }
+        }
+    }
+    SelectProgram([Object]$Xaml)
+    {
+        If ( $Xaml.IO.ProgramList.SelectedIndex -gt -1 )
+        {
+            $Item = $Xaml.IO.ProgramList.SelectedItem
+            $Tmp  = @( )
+            ForEach ( $ID in $Item | GM | ? Membertype -match Property | % Name )
+            {
+                If ( $Item.$ID.Count -gt 0 )
+                {
+                    $Tmp += [DGList]::New($ID,$Item.$ID)
+                }
+            }
+
+            $Xaml.IO.ProgramSelected.ItemsSource = @( )
+            $Xaml.IO.ProgramSelected.ItemsSource = @( $Tmp )
+
+            $Tmp  = @( )
+            ForEach ( $ID in $Item.Item | GM | ? Membertype -match Property | % Name )
+            {
+                If ( $Item.Item.$ID.Count -gt 0 )
+                {
+                    $Tmp += [DGList]::New($ID,$Item.Item.$ID)
+                }
+            }
+
+            $Xaml.IO.ProgramRegistry.ItemsSource = @( )
+            $Xaml.IO.ProgramRegistry.ItemsSource = @( $Tmp )
+        }
+    }
+}
+
+$Ctrl                                = [Control]::New()
 $Xaml                                = [XamlWindow][ProgramTab]::Tab
-$Xaml.IO.ProgramList.ItemsSource     = @( )
+
+$Xaml.IO.ProgramList.ItemsSource     = @( $Ctrl.Reg )
 $Xaml.IO.ProgramSelected.ItemsSource = @( )
+$Xaml.IO.ProgramRegistry.ItemsSource = @( )
 
 $Xaml.IO.Start.Add_Click(
 {
-    Write-Host "Getting [~] WMIObject: Win32_Product"
-    $Product = @{ }
-    ForEach ( $Item in Get-WMIObject -Class Win32_Product)
-    {
-        If ( $Item.Name -ne $Null )
-        {
-            $Product.Add($Product.Count,$Item)
-        }
-    }
-
-    $Stack   = $Product[0..($Product.Count-1)]
-
-    Write-Host "Indexing [~] WMIObject: Win32_Product"
-    $Names   = @{ }
-    ForEach ( $X in 0..($Stack.Count - 1))
-    {
-        $Item = $Stack[$X]
-
-        If ($Item.Name -notin $Names.Keys)
-        {
-            $Names.Add($Item.Name,@( ))
-        }
-
-        $Names[$Item.Name] += $X
-    }
-
-    Write-Host "Querying [~] Registry: Uninstall Path"
-    $Arch    = @{ AMD64 = 0..1; x86 = 0 }[$Env:Processor_Architecture]
-    $Path    = @("","\WOW6432Node" | % {"HKLM:\Software$_\Microsoft\Windows\CurrentVersion\Uninstall"})[$Arch]
-    $Reg     = $Path | % { Get-ItemProperty "$_\*" }
-
-    Write-Host "Priming [~] Installed program list"
-    $List    = $Reg | ? DisplayName -in $Stack.Name | % { [Program]$_ }
-
-    $Out     = @( )
-    ForEach ( $X in 0..($List.Count-1))
-    {
-        $Item = $List[$X]
-        $Item.IdentifyingNumber = $Stack | ? Name -eq $Item.DisplayName | % IdentifyingNumber
-        $Out += $Item
-    }
-
     $Xaml.IO.ProgramList.ItemsSource = @( )
-    $Xaml.IO.ProgramList.ItemsSource = $Out
+    $Xaml.IO.ProgramList.ItemsSource = @( $Ctrl.Reg )
 })
 
 $Xaml.IO.ProgramList.Add_MouseDoubleClick(
 {
-    If ( $Xaml.IO.ProgramList.SelectedIndex -gt -1 )
-    {
-        $Item = $Xaml.IO.ProgramList.SelectedItem 
-        $Tmp  = @( )
-        ForEach ( $ID in "DisplayName DisplayVersion InstallDate InstallSource UninstallString IdentifyingNumber".Split(" ") )
-        {
-            $Tmp += [DGList]::New($ID,$Item.$ID)
-        }
+    $Ctrl.SelectProgram($Xaml)
+})
 
-        $Xaml.IO.ProgramSelected.ItemsSource = @( )
-        $Xaml.IO.ProgramSelected.ItemsSource = @( $Tmp )
-    }
+$Xaml.IO.ProgramList.Add_SelectionChanged(
+{
+    $Ctrl.SelectProgram($Xaml)
 })
 
 $Xaml.IO.Cancel.Add_Click(

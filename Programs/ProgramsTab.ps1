@@ -35,7 +35,7 @@ Class DGList
 Class ProgramTab
 {
     Static [String] $Tab = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Applications" Width="960" Height="720" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://Applications" Width="960" Height="720" FontWeight="600" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\\Graphics\icon.ico" ResizeMode="NoResize" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="GroupBox" x:Key="xGroupBox">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -48,6 +48,10 @@ Class ProgramTab
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -91,15 +95,13 @@ Class ProgramTab
             <Style.Triggers>
                 <Trigger Property="AlternationIndex" Value="0">
                     <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
                 <Trigger Property="AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="#FFCDF7F7"/>
+                    <Setter Property="Background" Value="LightGray"/>
+                    <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
             </Style.Triggers>
-        </Style>
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="FontSize"   Value="12"/>
-            <Setter Property="FontWeight" Value="Normal"/>
         </Style>
         <Style TargetType="DataGridCell">
             <Setter Property="TextBlock.TextAlignment" Value="Left" />
@@ -113,7 +115,7 @@ Class ProgramTab
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <GroupBox Header="[Program (List)]" Grid.Row="0" Margin="5" Padding="5">
+            <GroupBox Header="[Program (List)]" Grid.Row="0">
                 <DataGrid Name="ProgramList">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" Width="*"/>
@@ -122,18 +124,18 @@ Class ProgramTab
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-            <GroupBox Header="[Program (Selected)]" Grid.Row="1" Margin="5" Padding="5">
+            <GroupBox Header="[Program (Selected)]" Grid.Row="1">
                 <DataGrid Name="ProgramSelected" Grid.Row="1">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="250"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="175"/>
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-            <GroupBox Header="[Program (Registry)]" Grid.Row="2" Margin="5" Padding="5">
+            <GroupBox Header="[Program (Registry)]" Grid.Row="2">
                 <DataGrid Name="ProgramRegistry" Grid.Row="1">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="250"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="175"/>
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>

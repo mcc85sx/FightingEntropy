@@ -229,7 +229,6 @@ Class Control
         # Index the values
         $This.Stack   = $This.Product[0..($This.Product.Count-1)]
 
-        Write-Theme "wmic.exe [~] Get-WMIObject Win32-Product for installed programs/MSI applications"
         $This.Names   = @{ }
         ForEach ( $X in 0..($This.Stack.Count - 1))
         {

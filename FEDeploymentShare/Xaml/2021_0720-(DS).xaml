@@ -59,7 +59,7 @@
             <Setter Property="Height" Value="24"/>
             <Setter Property="TextBlock.Effect">
                 <Setter.Value>
-                    <DropShadowEffect/>
+                    <DropShadowEffect ShadowDepth="1"/>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -77,7 +77,7 @@
             <Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
             <Setter Property="TextBlock.Effect">
                 <Setter.Value>
-                    <DropShadowEffect/>
+                    <DropShadowEffect ShadowDepth="1"/>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -88,7 +88,7 @@
                     <Setter Property="Background" Value="White"/>
                 </Trigger>
                 <Trigger Property="AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="#FFCDF7F7"/>
+                    <Setter Property="Background" Value="LightSlateGray"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -107,13 +107,18 @@
             <Setter Property="PasswordChar" Value="*"/>
             <Setter Property="TextBlock.Effect">
                 <Setter.Value>
-                    <DropShadowEffect/>
+                    <DropShadowEffect ShadowDepth="1"/>
                 </Setter.Value>
             </Setter>
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Height" Value="24"/>
+            <Setter Property="TextBlock.Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
     <Grid Background="LightYellow">
@@ -800,13 +805,14 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Name="DsSelectBootstrap" Content="Select"/>
-                                        <Button Grid.Column="2" Name="DsGetBootstrap" Content="Generate"/>
+                                        <Button Grid.Column="0" Name="DsGenerateBootstrap" Content="Generate"/>
+                                        <TextBox Grid.Column="1" Name="DsBootstrapPath"/>
+                                        <Button Grid.Column="2" Name="DsSelectBootstrap" Content="Select"/>
                                     </Grid>
                                     <GroupBox Grid.Row="1" Header="[Bootstrap.ini]">
                                         <TextBlock Grid.Row="1" Background="White" Name="DsBootstrap" Margin="5" Padding="5">
                                             <TextBlock.Effect>
-                                                <DropShadowEffect/>
+                                                <DropShadowEffect ShadowDepth="1"/>
                                             </TextBlock.Effect>
                                         </TextBlock>
                                     </GroupBox>
@@ -824,13 +830,14 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Name="DsSelectCustomSettings" Content="Select"/>
-                                        <Button Grid.Column="2" Name="DsGetCustomSettings" Content="Generate"/>
+                                        <Button Grid.Column="0" Name="DsGenerateCustomSettings" Content="Generate"/>
+                                        <TextBox Grid.Column="1" Name="DsCustomSettingsPath"/>
+                                        <Button Grid.Column="2" Name="DsSelectCustomSettings" Content="Select"/>
                                     </Grid>
                                     <GroupBox Grid.Row="1" Header="[CustomSettings.ini]">
                                         <TextBlock Grid.Row="1" Background="White" Name="DsCustomSettings" Margin="5" Padding="5">
                                             <TextBlock.Effect>
-                                                <DropShadowEffect/>
+                                                <DropShadowEffect ShadowDepth="1"/>
                                             </TextBlock.Effect>
                                         </TextBlock>
                                     </GroupBox>

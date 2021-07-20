@@ -127,7 +127,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="[CfgServices]://(Dependency Snapshot)">
+                    <GroupBox Grid.Row="0" Header="[CfgServices (Dependency Snapshot)]">
                         <DataGrid Name="CfgServices">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name"      Binding="{Binding Name}"  Width="150"/>
@@ -137,7 +137,7 @@
                     </GroupBox>
                     <TabControl Grid.Row="1">
                         <TabItem Header="Dhcp">
-                            <GroupBox Header="[CfgDhcp]://(Dynamic Host Control Protocol)">
+                            <GroupBox Header="[CfgDhcp (Dynamic Host Control Protocol)]">
                                 <DataGrid Name="CfgDhcp">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -147,7 +147,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="Dns">
-                            <GroupBox Header="[CfgDns]://(Domain Name Service)">
+                            <GroupBox Header="[CfgDns (Domain Name Service)]">
                                 <DataGrid Name="CfgDns">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -157,7 +157,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="Adds">
-                            <GroupBox Header="[CfgAdds]://(Active Directory Directory Service)">
+                            <GroupBox Header="[CfgAdds (Active Directory Directory Service)">
                                 <DataGrid Name="CfgAdds">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -167,7 +167,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="Wds">
-                            <GroupBox Header="[CfgWds]://(Windows Deployment Services)">
+                            <GroupBox Header="[CfgWds (Windows Deployment Services)]">
                                 <DataGrid Name="CfgWds">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -177,7 +177,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="Mdt">
-                            <GroupBox Header="[CfgMdt]://(Microsoft Deployment Toolkit)">
+                            <GroupBox Header="[CfgMdt (Microsoft Deployment Toolkit)]">
                                 <DataGrid Name="CfgMdt">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -187,7 +187,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="WinAdk">
-                            <GroupBox Header="[CfgWinAdk]://(Windows Assessment and Deployment Kit)">
+                            <GroupBox Header="[CfgWinAdk (Windows Assessment and Deployment Kit)]">
                                 <DataGrid Name="CfgWinAdk">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -197,7 +197,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="WinPE">
-                            <GroupBox Header="(CfgWinPE) [Windows Preinstallation Environment Kit]">
+                            <GroupBox Header="[CfgWinPE (Windows Preinstallation Environment Kit)]">
                                 <DataGrid Name="CfgWinPE">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -207,7 +207,7 @@
                             </GroupBox>
                         </TabItem>
                         <TabItem Header="IIS">
-                            <GroupBox Header="(CfgIIS) [Internet Information Services]">
+                            <GroupBox Header="[CfgIIS (Internet Information Services)]">
                                 <DataGrid Name="CfgIIS">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
@@ -388,8 +388,10 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="160"/>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="160"/>
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
@@ -419,7 +421,15 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
-                    <Grid Grid.Row="3">
+                    <GroupBox Grid.Row="4" Header="[GwSlated]">
+                        <DataGrid Name="GwSlated">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="200"/>
+                                <DataGridTextColumn Header="Value"   Binding="{Binding Netmask}"   Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <Grid Grid.Row="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -538,6 +548,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="[UpdPath (Updates)]">
@@ -554,6 +566,23 @@
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="[UpdList]">
                         <DataGrid Name="UpdList">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
+                                <DataGridCheckBoxColumn Header="Install" Binding="{Binding Install}" Width="50"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="[UpdSelected]">
+                        <DataGrid Name="UpdSelected">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding value}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="3" Header="[UpdWim]">
+                        <DataGrid Name="UpdWim">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
                                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
@@ -583,17 +612,17 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Button Name="BrCollect" Content="Collect" IsEnabled="True"/>
-                            <GroupBox Grid.Column="1" Header="[Phone]">
+                            <GroupBox Grid.Column="1" Header="[BrPhone (Support Phone)]">
                                 <TextBox Name="BrPhone"/>
                             </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[Hours]">
+                            <GroupBox Grid.Column="2" Header="[BrHours (Support Hours)]">
                                 <TextBox Name="BrHours"/>
                             </GroupBox>
                         </Grid>
-                        <GroupBox Grid.Row="1" Header="[Website]">
+                        <GroupBox Grid.Row="1" Header="[BrWebsite (Support Website)]">
                             <TextBox Name="BrWebsite"/>
                         </GroupBox>
-                        <GroupBox Grid.Row="2" Header="[Logo 120x120 Bitmap/*.bmp]">
+                        <GroupBox Grid.Row="2" Header="[BrLogo (120x120 Bitmap/*.bmp)]">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
@@ -603,7 +632,7 @@
                                 <TextBox Grid.Column="1" Name="BrLogo"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="3" Header="[Background (Common Image File)]">
+                        <GroupBox Grid.Row="3" Header="[BrBackground (Common Image File)]">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
@@ -631,10 +660,10 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Button Name="DsRootSelect" Grid.Column="0" Content="Select"/>
-                        <GroupBox Grid.Column="1" Header="[Root Path]">
+                        <GroupBox Grid.Column="1" Header="[DsRootPath (FileSystem Root)]">
                             <TextBox Name="DsRootPath"/>
                         </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Share Name]">
+                        <GroupBox Grid.Column="2" Header="[DsShareName (SAMBA)]">
                             <TextBox Name="DsShareName"/>
                         </GroupBox>
                     </Grid>
@@ -644,13 +673,13 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="[PSDrive Name]">
+                        <GroupBox Grid.Column="0" Header="[DsDriveName (PSDrive)]">
                             <TextBox Name="DsDriveName"/>
                         </GroupBox>
-                        <GroupBox Grid.Column="1" Header="[Description]">
+                        <GroupBox Grid.Column="1" Header="[DsDescription]">
                             <TextBox Name="DsDescription"/>
                         </GroupBox>
-                        <GroupBox Grid.Column="2" Header="[Legacy MDT/PSD]" Margin="5">
+                        <GroupBox Grid.Column="2" Header="[Legacy MDT/PSD]">
                             <ComboBox Name="DsType">
                                 <ComboBoxItem Content="MDT" IsSelected="True"/>
                                 <ComboBoxItem Content="PSD"/>
@@ -714,19 +743,16 @@
                                 <GroupBox Grid.Row="1" Header="[Dns Name]">
                                     <TextBox Name="DsDnsName"/>
                                 </GroupBox>
-                                <GroupBox Grid.Row="2" Header="[OU Name]">
-                                    <TextBox Name="DsOuName"/>
-                                </GroupBox>
-                                <GroupBox Grid.Row="3" Header="[DNS Name]">
-                                    <TextBox Name="Name"/>
+                                <GroupBox Grid.Row="2" Header="[Machine OU Name]">
+                                    <TextBox Name="DsMachineOuName"/>
                                 </GroupBox>
                             </Grid>
                         </TabItem>
                         <TabItem Header="Bootstrap.ini">
-                            <TextBlock Name="Bootstrap" Margin="5" Padding="5"/>
+                            <TextBlock Name="DsBootstrap" Margin="5" Padding="5"/>
                         </TabItem>
                         <TabItem Header="CustomSettings.ini">
-                            <TextBlock Name="CustomSettings" Margin="5" Padding="5"/>
+                            <TextBlock Name="DsCustomSettings" Margin="5" Padding="5"/>
                         </TabItem>
                     </TabControl>
                     <Grid Grid.Row="3">
@@ -734,8 +760,8 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Name="DSCreate" Content="Create"/>
-                        <Button Grid.Column="1" Name="DSUpdate" Content="Update"/>
+                        <Button Grid.Column="0" Name="DsCreate" Content="Create"/>
+                        <Button Grid.Column="1" Name="DsUpdate" Content="Update"/>
                     </Grid>
                 </Grid>
             </TabItem>

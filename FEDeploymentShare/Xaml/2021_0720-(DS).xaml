@@ -349,6 +349,7 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
                                     <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
+                                    <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
                                     <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
                                     <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
                                     <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>

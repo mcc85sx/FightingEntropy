@@ -773,10 +773,40 @@
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Bootstrap">
-                                <TextBlock Name="DsBootstrap" Margin="5" Padding="5"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="75"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Name="DsSelectBootstrap" Content="Select"/>
+                                        <Button Grid.Column="2" Name="DsGetBootstrap" Content="Generate"/>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Name="DsBootstrap" Margin="5" Padding="5"/>
+                                </Grid>
                             </TabItem>
                             <TabItem Header="CustomSettings">
-                                <TextBlock Name="DsCustomSettings" Margin="5" Padding="5"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="75"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Name="DsSelectCustomSettings" Content="Select"/>
+                                        <Button Grid.Column="2" Name="DsGetCustomSettings" Content="Generate"/>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Name="DsCustomSettings" Margin="5" Padding="5"/>
+                                </Grid>
                             </TabItem>
                         </TabControl>
                         <Grid Grid.Row="3">

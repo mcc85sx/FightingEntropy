@@ -2243,7 +2243,7 @@
 
     $Xaml.IO.NwGetSubnetName.Add_Click(
     {
-        $Networks     = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase "CN=Configuration,DC=securedigitsplus,DC=com"
+        $Networks     = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase $Main.SearchBase
         If (!$Networks)
         {
             Throw "No valid networks detected"
@@ -2258,7 +2258,7 @@
 
     $Xaml.IO.NwNewSubnetName.Add_Click(
     {
-        $Networks     = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase "CN=Configuration,DC=securedigitsplus,DC=com"
+        $Networks     = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase $Main.SearchBase
         If (!$Networks)
         {
             Throw "No valid networks detected"

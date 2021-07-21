@@ -1,4 +1,8 @@
-Add-Type -AssemblyName PresentationFramework
+#Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
+#{
+   
+    # Load Assemblies
+    Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
 
     # Check for server operating system
@@ -3154,3 +3158,11 @@ Add-Type -AssemblyName PresentationFramework
     
     $Xaml.Invoke()
 #}
+
+# Add-Type -AssemblyName PresentationFramework
+# ( GC $Home\Desktop\New-FEDeploymentShare.ps1 ) -join "`n" | IEX ; New-FEDeploymentShare
+
+# $Xaml.IO.Topography.ItemsSource 
+# $Xaml.IO.SiteMap.Items
+
+#$Xaml.IO.Stack.Items

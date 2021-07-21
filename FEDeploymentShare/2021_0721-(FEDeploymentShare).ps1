@@ -11,6 +11,11 @@
         Throw "Must use Windows Server operating system"
     }
 
+    If ($PSVersionTable.PSEdition -eq "Core")
+    {
+        Throw "Must use PowerShell v5 for MDT"
+    }
+
     Class States
     {
         Static [Hashtable] $List            = @{
@@ -456,33 +461,33 @@
         [String]$Organization
         [String]$CommonName
         [Object]$ZipStack
-        [Object]$SiteMap
-        [Object]$Stack
-        [Object]$Control
-        [Object]$Subject
+        [Object]$Domain
+        [Object]$Network
         [Object]$Gateway
         Control([String]$Organization,[String]$CommonName)
         {
             $This.Organization = $Organization
             $This.CommonName   = $CommonName
-            $This.ZipStack     = 
-            $This.SiteMap      = @( )
+            $This.ZipStack     = [ZipStack]::New("github.com/mcc85sx/FightingEntropy/blob/master/scratch/zcdb.txt?raw=true")
+            $This.Domain       = @( )
+            $This.Network      = @( )
+            $This.Gateway      = @( )
+            $This.Pull()
         }
         [Void] GetNetwork([String]$Network)
         {
-            $This.Stack        = [Network]::New($Network).Stack
+            $This.Network      = [Network]::New($Network).Aggregate
         }
         [Void] GetGateway()
         {
-            If ($This.Stack.Count -lt $This.Sitemap.Count)
+            If ($This.Network.Count -lt $This.Domain.Count)
             {
                 Throw "Insufficient networks"
             }
 
-            $This.Gateway = @( )
-            ForEach ($X in 0..($This.Sitemap.Count - 1))
+            ForEach ($X in 0..($This.Network.Count - 1))
             {
-                $This.Gateway += [Site]::New($This.Sitemap[$X],$This.Stack[$X])
+                $This.Gateway += [Site]::New($This.Domain[$X],$This.Network[$X])
             }
         }
         [Object] NewCertificate()
@@ -496,19 +501,19 @@
                 Throw "Item is null"
             }
 
-            ElseIf ( $Item.Sitelink -in $This.Sitemap.Sitelink )
+            ElseIf ( $Item.Sitelink -in $This.Domain.Sitelink )
             {
                 Throw "Item already exists"
             }
 
             Else
             {
-                $This.SiteMap += $Item
+                $This.Domain += $Item
             }
         }
         [Void]Pull()
         {
-            $This.Load([Certificate]::New($This))
+            $This.Load($This.NewCertificate())
         }
     }
     
@@ -935,7 +940,7 @@
     Class FEDeploymentShareGUI
     {
         Static [String] $Tab = @"
-        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -2066,10 +2071,10 @@
 
     $Xaml.IO.DcAggregate.Add_MouseDoubleClick(
     {
-        $Xaml.IO.DcViewer.ItemsSource = @( )
         $Object = $Xaml.IO.DcAggregate.SelectedItem
         If ( $Object )
         {
+            $Xaml.IO.DcViewer.ItemsSource = @( )
             $Xaml.IO.DcViewer.ItemsSource = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName" -Split " " )
             {
                 [DGList]::New($Item,$Object.$Item)
@@ -2079,10 +2084,10 @@
 
     $Xaml.IO.DcAggregate.Add_SelectionChanged(
     {
-        $Xaml.IO.DcViewer.ItemsSource = @( )
         $Object = $Xaml.IO.DcAggregate.SelectedItem
         If ( $Object )
         {
+            $Xaml.IO.DcViewer.ItemsSource = @( )
             $Xaml.IO.DcViewer.ItemsSource = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName" -Split " " )
             {
                 [DGList]::New($Item,$Object.$Item)
@@ -2097,7 +2102,7 @@
             [System.Windows.MessageBox]::Show("Zipcode text entry error","Error")
         }
 
-        Elseif($Xaml.IO.DcAddSitenameZip.Text -notin $Main.Control.ZipStack)
+        Elseif($Xaml.IO.DcAddSitenameZip.Text -notin $Main.Control.ZipStack.Stack)
         {
             [System.Windows.MessageBox]::Show("Not a valid zip code","Error")
         }
@@ -2127,10 +2132,16 @@
 
     $Xaml.IO.DcRemoveSitename.Add_Click(
     {
-        If ( $Xaml.IO.DcAggregate.SelectedIndex -ne -1 -and $Xaml.IO.DcAggregate.Count -gt 0)
+        If ( $Xaml.IO.DcAggregate.SelectedIndex -ne -1)
         {
             $Item                            = $Xaml.IO.DcAggregate.SelectedItem
-            $Main.Control.Sitemap            = @( $Main.Control.Sitemap | ? Postal -notmatch $Item.Postal )
+            $Main.Control.Sitemap            = ForEach ( $Object in $Main.Control.Sitemap )
+            {
+                If ( $Object.Postal -notmatch $Item.Postal )
+                {
+                    $Object
+                }
+            }
             $Xaml.IO.DeAggregate.ItemsSource = @( )
             $Xaml.IO.DeAggregate.ItemsSource = @( $Main.Control.Sitemap )
         }
@@ -2195,11 +2206,8 @@
             # $Main.Control.GetNetwork("172.16.0.1/19")
             $Main.GetNetwork($Xaml.IO.NwScope.Text)
             $Xaml.IO.NwAggregate.ItemsSource   = @( )
-            $Xaml.IO.NwAggregate.ItemsSource   = $Main.Control.Stack
-
-            $Xaml.IO.NwAggregate.SelectedIndex = 0
             $Xaml.IO.NwViewer.ItemsSource      = @( )
-            $Xaml.IO.NwViewer.ItemsSource      = $Main.Control.Stack | ? Network -match $Xaml.IO.NwStack.SelectedItem.Network
+            $Xaml.IO.NwAggregate.ItemsSource   = $Main.Control.Network
         }
     })
 

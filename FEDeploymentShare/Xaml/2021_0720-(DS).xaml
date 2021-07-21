@@ -88,7 +88,7 @@
                     <Setter Property="Background" Value="White"/>
                 </Trigger>
                 <Trigger Property="AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="LightSlateGray"/>
+                    <Setter Property="Background" Value="LightGray"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -248,9 +248,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="75"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="75"/>
-                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="225"/>
                             <RowDefinition Height="150"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="75"/>
@@ -270,38 +268,44 @@
                             <Button Grid.Column="2" Name="DcGetSitename" Content="Get Sitename"/>
                         </Grid>
                         <GroupBox Grid.Row="1" Header="[DcAggregate]">
-                            <DataGrid Name="DcAggregate"
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <DataGrid Grid.Row="0" Name="DcAggregate"
                                               ScrollViewer.CanContentScroll="True"
                                               ScrollViewer.IsDeferredScrollingEnabled="True"
                                               ScrollViewer.HorizontalScrollBarVisibility="Visible">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Location" Binding='{Binding Location}' Width="100"/>
-                                    <DataGridTextColumn Header="Region"   Binding='{Binding Region}' Width="60"/>
-                                    <DataGridTextColumn Header="Country"  Binding='{Binding Country}' Width="60"/>
-                                    <DataGridTextColumn Header="Postal"   Binding='{Binding Postal}' Width="60"/>
-                                    <DataGridTextColumn Header="SiteLink" Binding='{Binding SiteLink}' Width="120"/>
-                                    <DataGridTextColumn Header="TimeZone" Binding='{Binding TimeZone}' Width="120"/>
-                                    <DataGridTextColumn Header="SiteName" Binding='{Binding SiteName}' Width="Auto"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Location" Binding='{Binding Location}' Width="100"/>
+                                        <DataGridTextColumn Header="Region"   Binding='{Binding Region}' Width="60"/>
+                                        <DataGridTextColumn Header="Country"  Binding='{Binding Country}' Width="60"/>
+                                        <DataGridTextColumn Header="Postal"   Binding='{Binding Postal}' Width="60"/>
+                                        <DataGridTextColumn Header="SiteLink" Binding='{Binding SiteLink}' Width="120"/>
+                                        <DataGridTextColumn Header="TimeZone" Binding='{Binding TimeZone}' Width="120"/>
+                                        <DataGridTextColumn Header="SiteName" Binding='{Binding SiteName}' Width="Auto"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Grid Grid.Row="1" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="60"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="2" Name="DcAddSitename" Content="+"/>
+                                    <GroupBox Grid.Column="0" Header="[DcAddSitenameZip]">
+                                        <TextBox Name="DcAddSitenameZip"/>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="[DcAddSitenameTown]" IsEnabled="False">
+                                        <TextBox Name="DcAddSitenameTown"/>
+                                    </GroupBox>
+                                    <Button Grid.Column="3" Name="DcRemoveSitename" Content="-"/>
+                                </Grid>
+                            </Grid>
                         </GroupBox>
-                        <Grid Grid.Row="2" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="120"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Name="DcAddSitename" Content="Add"/>
-                            <GroupBox Grid.Column="1" Header="[DcAddSitenameZip]">
-                                <TextBox Name="DcAddSitenameZip"/>
-                            </GroupBox>
-                            <GroupBox Grid.Column="2" Header="[DcAddSitenameTown]" IsEnabled="False">
-                                <TextBox Name="DcAddSitenameTown"/>
-                            </GroupBox>
-                            <Button Grid.Column="3" Name="DcRemoveSitename" Content="Remove"/>
-                        </Grid>
-                        <GroupBox Grid.Row="3" Header="[DcViewer]">
+                        <GroupBox Grid.Row="2" Header="[DcViewer]">
                             <DataGrid Name="DcViewer">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name"  Binding='{Binding Name}'  Width="125"/>
@@ -309,7 +313,7 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
-                        <GroupBox Grid.Row="4" Header="[DcTopography]">
+                        <GroupBox Grid.Row="3" Header="[DcTopography]">
                             <DataGrid Name="DcTopography"
                                               ScrollViewer.CanContentScroll="True"
                                               ScrollViewer.IsDeferredScrollingEnabled="True"
@@ -345,9 +349,8 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="75"/>
+                            <RowDefinition Height="225"/>
                             <RowDefinition Height="150"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="75"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
@@ -361,47 +364,72 @@
                             </GroupBox>
                             <Button Grid.Column="1" Name="NwScopeLoad" Content="Load" IsEnabled="False"/>
                         </Grid>
-                        <GroupBox Grid.Row="1" Header="[NwStack]">
-                            <DataGrid Name="NwStack"
+                        <GroupBox Grid.Row="1" Header="[NwAggregate]">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <DataGrid Name="NwAggregate"
                                               ScrollViewer.CanContentScroll="True" 
                                               ScrollViewer.IsDeferredScrollingEnabled="True"
                                               ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
+                                        <DataGridTextColumn Header="Prefix"    Binding="{Binding Prefix}"    Width="*"/>
+                                        <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
+                                        <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
+                                        <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
+                                        <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
+                                        <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
+                                        <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Grid Grid.Row="1" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="60"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="1" Name="NwAddSubnetName" Content="+"/>
+                                    <GroupBox Grid.Column="0" Header="[NwSubnetName]">
+                                        <TextBox Name="NwSubnetName"/>
+                                    </GroupBox>
+                                    <Button Grid.Column="2" Name="NwRemoveSubnetname" Content="-"/>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Header="[NwViewer]">
+                            <DataGrid Name="NwViewer">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
-                                    <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
-                                    <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
-                                    <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
-                                    <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
-                                    <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
-                                    <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="125"/>
+                                    <DataGridTextColumn Header="Value"  Binding="{Binding Netmask}"   Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
-                        <GroupBox Grid.Row="2" Header="[NwSelected]">
-                            <DataGrid Name="NwSelected">
+                        <GroupBox Grid.Row="3" Header="[NwTopography]">
+                            <DataGrid Name="NwTopography"
+                                              ScrollViewer.CanContentScroll="True"
+                                              ScrollViewer.IsDeferredScrollingEnabled="True"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="200"/>
-                                    <DataGridTextColumn Header="Value"   Binding="{Binding Netmask}"   Width="*"/>
+                                    <DataGridTextColumn Header="Network" Binding="{Binding Network}" Width="150"/>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
+                                    <DataGridTemplateColumn Header="Exists" Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                    <ComboBoxItem Content="No"/>
+                                                    <ComboBoxItem Content="Yes"/>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Distinguished Name" Binding="{Binding DistinguishedName}" Width="400"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Name="NwAddNetwork" Content="Add"/>
-                            <Button Grid.Column="1" Name="NwRemoveNetwork" Content="Remove"/>
-                        </Grid>
-                        <GroupBox Grid.Row="4" Header="[NwSlated]">
-                            <DataGrid Name="NwSlated">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="*"/>
-                                    <DataGridTextColumn Header="Value"   Binding="{Binding Netmask}"   Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </GroupBox>
-                        <Grid Grid.Row="5">
+                        <Grid Grid.Row="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -415,9 +443,8 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="75"/>
+                            <RowDefinition Height="225"/>
                             <RowDefinition Height="150"/>
-                            <RowDefinition Height="150"/>
-                            <RowDefinition Height="75"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
@@ -425,6 +452,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="120"/>
                             </Grid.ColumnDefinitions>
                             <GroupBox Grid.Column="0" Header="[GwSiteCount]">
                                 <TextBox Name="GwSiteCount"></TextBox>
@@ -432,32 +460,53 @@
                             <GroupBox Grid.Column="1" Header="[GwNetworkCount]">
                                 <TextBox Name="GwNetworkCount"></TextBox>
                             </GroupBox>
+                            <Button Grid.Column="2" Name="GwLoadGateway" Content="Load"/>
                         </Grid>
-                        <GroupBox Grid.Row="1" Header="[GwAggregate)]">
-                            <DataGrid Name="GwAggregate">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name" Binding="{Binding Network}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                        <GroupBox Grid.Row="1" Header="[GwAggregate]">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="75"/>
+                                </Grid.RowDefinitions>
+                                <DataGrid Name="GwAggregate"
+                                              ScrollViewer.CanContentScroll="True" 
+                                              ScrollViewer.IsDeferredScrollingEnabled="True"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
+                                        <DataGridTextColumn Header="Prefix"    Binding="{Binding Prefix}"    Width="*"/>
+                                        <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
+                                        <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
+                                        <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
+                                        <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
+                                        <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
+                                        <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Grid Grid.Row="1" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="60"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="1" Name="GwAddGateway" Content="+"/>
+                                    <GroupBox Grid.Column="0" Header="[NwSubnetName]">
+                                        <TextBox Name="GwGateway"/>
+                                    </GroupBox>
+                                    <Button Grid.Column="2" Name="GwRemoveGateway" Content="-"/>
+                                </Grid>
+                            </Grid>
                         </GroupBox>
-                        <GroupBox Grid.Row="2" Header="[GwSelected]">
-                            <DataGrid Name="GwSelected">
+                        <GroupBox Grid.Row="2" Header="[GwViewer]">
+                            <DataGrid Name="GwViewer">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="200"/>
                                     <DataGridTextColumn Header="Value"   Binding="{Binding Netmask}"   Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Name="GwAddGateway" Content="Add"/>
-                            <Button Grid.Column="1" Name="GwRemoveGateway" Content="Remove"/>
-                        </Grid>
-                        <GroupBox Grid.Row="4" Header="[GwSlated]">
-                            <DataGrid Name="GwSlated">
+                        <GroupBox Grid.Row="3" Header="[GwTopography]">
+                            <DataGrid Name="GwTopography">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name"   Binding="{Binding Network}"   Width="200"/>
                                     <DataGridTextColumn Header="Value"   Binding="{Binding Netmask}"   Width="*"/>

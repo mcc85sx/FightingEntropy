@@ -1,8 +1,4 @@
-#Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
-#{
-   
-    # Load Assemblies
-    Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
 
     # Check for server operating system
@@ -1919,6 +1915,9 @@
         [Object]               $Reg
         [Object]           $Control
         [Object]            $Config
+        [Object]          $SiteList
+        [Object]        $SubnetList
+        [Object]            $OuList
         Main()
         {
             $This.Win               = Get-WindowsFeature
@@ -1945,11 +1944,13 @@
         }
         GetSiteMap([String]$Organization,[String]$CommonName)
         {
-            $This.Org        = $Organization
-            $This.CN         = $CommonName
-            $This.SearchBase = "CN=Configuration,DC=$( $CommonName.Split(".") -join ",DC=" )"
-            $This.Control    = [Control]::New($Organization,$CommonName)
-            $This.Control.Pull()
+            $This.Org           = $Organization
+            $This.CN            = $CommonName
+            $This.SearchBase    = "CN=Configuration,DC=$( $CommonName.Split(".") -join ",DC=" )"
+            $This.Control       = [Control]::New($Organization,$CommonName)
+            $This.SiteList      = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase $This.SearchBase
+            $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase $This.SearchBase
+            $this.OuList        = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -SearchBase $This.SearchBase
         }
         GetNetwork([String]$Prefix)
         {
@@ -2061,24 +2062,11 @@
 
         Else
         {   # $Main.GetSitemap("Secure Digits Plus LLC","securedigitsplus.com")
-            $Main.GetSiteMap($Xaml.IO.DcOrganization.Text,$Xaml.IO.DcCommonName.Text)
+            $Main.GetSitemap($Xaml.IO.DcOrganization.Text,$Xaml.IO.DcCommonName.Text)
             $Xaml.IO.DcAggregate.ItemsSource   = @( )
-            $Xaml.IO.DcAggregate.ItemsSource   = @( $Main.Control.Sitemap )
+            $Xaml.IO.DcAggregate.ItemsSource   = @( $Main.Control.Domain )
             $Xaml.IO.DcGetSitename.IsEnabled   = 0
             $Xaml.IO.NwScopeLoad.IsEnabled     = 1
-        }
-    })
-
-    $Xaml.IO.DcAggregate.Add_MouseDoubleClick(
-    {
-        $Object = $Xaml.IO.DcAggregate.SelectedItem
-        If ( $Object )
-        {
-            $Xaml.IO.DcViewer.ItemsSource = @( )
-            $Xaml.IO.DcViewer.ItemsSource = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName" -Split " " )
-            {
-                [DGList]::New($Item,$Object.$Item)
-            }
         }
     })
 
@@ -2107,7 +2095,7 @@
             [System.Windows.MessageBox]::Show("Not a valid zip code","Error")
         }
 
-        ElseIf($Xaml.IO.DcAddSitenameZip.Text -in $Main.Control.Sitemap.Postal)
+        ElseIf($Xaml.IO.DcAddSitenameZip.Text -in $Main.Control.Domain.Postal)
         {
             [System.Windows.MessageBox]::Show("Duplicate Zipcode entry","Error")
         }
@@ -2123,9 +2111,9 @@
 
             $Tmp.GetSiteLink()
 
-            $Main.Control.Sitemap            += $Tmp
+            $Main.Control.Domain             += $Tmp
             $Xaml.IO.DcAggregate.ItemsSource  = @( )
-            $Xaml.IO.DcAggregate.ItemsSource  = $Main.Control.Sitemap
+            $Xaml.IO.DcAggregate.ItemsSource  = $Main.Control.Domain
             $Xaml.IO.DcAddSitenameZip.Text    = ""
         }
     })
@@ -2134,16 +2122,27 @@
     {
         If ( $Xaml.IO.DcAggregate.SelectedIndex -ne -1)
         {
-            $Item                            = $Xaml.IO.DcAggregate.SelectedItem
-            $Main.Control.Sitemap            = ForEach ( $Object in $Main.Control.Sitemap )
+            Switch($Xaml.IO.DcAggregate.Count)
             {
-                If ( $Object.Postal -notmatch $Item.Postal )
+                0,1 
+                { 
+                    [System.Windows.MessageBox]::Show("Count cannot be zero","Last site remaining") 
+                }
+
+                Default
                 {
-                    $Object
+                    $Item                            = $Xaml.IO.DcAggregate.SelectedItem
+                    $Main.Control.Domain             = ForEach ( $Object in $Main.Control.Domain )
+                    {
+                        If ( $Object.Postal -notmatch $Item.Postal )
+                        {
+                            $Object
+                        }
+                    }
+                    $Xaml.IO.DcAggregate.ItemsSource = @( )
+                    $Xaml.IO.DcAggregate.ItemsSource = @( $Main.Control.Domain )
                 }
             }
-            $Xaml.IO.DeAggregate.ItemsSource = @( )
-            $Xaml.IO.DeAggregate.ItemsSource = @( $Main.Control.Sitemap )
         }
     })
 
@@ -2156,16 +2155,16 @@
     
     $Xaml.IO.DcNewTopography.Add_Click(
     {
-        $Sites      = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase $Main.SearchBase
+        $Xaml.IO.DcTopography.ItemsSource = @( )
+        $Xaml.IO.DcTopography.ItemsSource = $Main.SiteList
 
         ForEach ( $Item in $Xaml.IO.DcTopography.Items )
         {
-            If ($Item.Sitelink -notin $Sites.Name)
+            If ($Item.Sitelink -notin $Main.SiteList.Name)
             {
-                Switch((Host).UI.PromptForChoice("ADReplicationSite","Item $($Item.Sitelink) does not exist.",@("&Yes","&No"),0))
+                Switch([System.Windows.MessageBox]::Show("Create ADReplicationSite?","Item $($Item.Sitelink) does not exist.","YesNo")))
                 {
-                    0 { New-ADReplicationSite -Name $Item.Sitelink -Verbose }
-                    1 { Write-Host "Skipping $($Item.Sitelink)" }
+                    0 { New-ADReplicationSite -Name $Item.Sitelink -Verbose } 1 { Write-Host "Skipping $($Item.Sitelink)" }
                 }
             }
         }
@@ -3155,11 +3154,3 @@
     
     $Xaml.Invoke()
 #}
-
-# Add-Type -AssemblyName PresentationFramework
-# ( GC $Home\Desktop\New-FEDeploymentShare.ps1 ) -join "`n" | IEX ; New-FEDeploymentShare
-
-# $Xaml.IO.Topography.ItemsSource 
-# $Xaml.IO.SiteMap.Items
-
-#$Xaml.IO.Stack.Items

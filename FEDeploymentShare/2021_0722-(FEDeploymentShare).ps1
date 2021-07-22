@@ -2124,7 +2124,9 @@
                 Throw "Insufficient networks"
             }
 
-            ForEach ($X in 0..($This.Network.Count - 1))
+            $This.Gateway = @( )
+
+            ForEach ($X in 0..($This.Domain.Count - 1))
             {
                 $This.Gateway += [Site]::New($This.Domain[$X],$This.Network[$X])
             }
@@ -2141,7 +2143,7 @@
 
             Else
             {
-                [System.windows.MessageBox]::Show("Invalid operation, only one gateway remaining","Error")
+                [System.Windows.MessageBox]::Show("Invalid operation, only one gateway remaining","Error")
             }
         }
         [Object[]] GetGateway([Object]$List)
@@ -2542,7 +2544,7 @@
             
             $List = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName Name Network Prefix Netmask HostCount HostObject Start End Range Broadcast".Split(" ") )
             {     
-                [DGList]::New($Item,$Network.$Item) 
+                [DGList]::New($Item,$Gateway.$Item) 
             }
 
             $Xaml.IO.GwViewer.ItemsSource     = @( $List )
@@ -2565,8 +2567,57 @@
 
     $Xaml.IO.GwGetGateway.Add_Click(
     {
+        $Main.GetOuList()
+        $Xaml.IO.GwTopography.ItemsSource = @( )
 
+        ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource | % { [GwTopography]::New($Main.OuList,$_) } )
+        {
+            $Xaml.IO.GwTopography.ItemsSource += $Item 
+        }
     })
+
+    $Xaml.IO.GwNewGateway.Add_Click(
+    {
+        $Main.GetOuList()
+
+        ForEach ( $Item in $Xaml.IO.GwTopography.ItemsSource )
+        {
+            If (!$Item.Exists)
+            {
+                $Gateway = $Main.Gateway | ? Name -eq $Item.Name
+                $OU             = @{ 
+
+                    City        = $Gateway.Location
+                    Country     = $Gateway.Country
+                    Description = $Gateway.Hash.Network.Name
+                    DisplayName = $Gateway.SiteName
+                    PostalCode  = $Gateway.Postal
+                    State       = $Gateway.Region
+                    Name        = $Gateway.Name
+                    Path        = "DC=securedigitsplus,DC=com"
+                }
+                New-ADOrganizationalUnit @OU -Verbose
+
+                $OU.Path        = "OU={0},{1}" -f $OU.Name, $OU.Path
+
+                #0..4 | % { 
+                    
+                    $OU.Name        = "Gateway"#@("Gateway","Server","Computers","Users","Service")[$_]
+                    $OU.Description = "(Routing/Remote Access)" #@("Routing/Remote Access","Domain Servers","Workstations","Domain Users","Service Accounts")[$_]
+                    New-ADOrganizationalUnit @OU -Verbose
+                #}
+
+                New-ADComputer -Name $Gateway.Name -DNSHostName $Gateway.Sitename -Path "OU=Gateway,$($OU.Path)" -TrustedForDelegation $True -Verbose
+            }
+        }
+
+        $Tmp                              = @( $Main.GetGateway($Main.Gateway) | % { [GwTopography]::New($Main.OutList,$_) } )
+        $Xaml.IO.GwTopography.ItemsSource = @( )
+        $Xaml.IO.GwTopography.ItemsSource = @( $Tmp )
+
+        $Xaml.IO.GwNetworkCount.Text      = $Main.Network.Count 
+    })
+
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    

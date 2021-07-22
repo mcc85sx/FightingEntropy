@@ -420,7 +420,7 @@
         {
             $This.Name     = $Nw.Name
             $This.Network  = $Nw.Network
-            $Tmp           = $SubnetList | ? Name -match $Nw.Name
+            $Tmp           = $OuList | ? Name -match $Nw.Name
             If ($Tmp)
             {
                 $This.Exists = 1
@@ -512,6 +512,8 @@
 
     Class Site
     {
+        Hidden [Object] $Hash
+        [String]$Name
         [String]$Location
         [String]$Region
         [String]$Country
@@ -525,15 +527,17 @@
         [String]$End
         [String]$Range
         [String]$Broadcast
-        Site([Object]$Sitemap,[Object]$Network)
+        Site([Object]$Domain,[Object]$Network)
         {
-            $This.Location  = $Sitemap.Location
-            $This.Region    = $Sitemap.Region
-            $This.Country   = $Sitemap.Country
-            $This.Postal    = $Sitemap.Postal
-            $This.Timezone  = $Sitemap.Timezone
-            $This.Sitelink  = $Sitemap.Sitelink
-            $This.Sitename  = $Sitemap.Sitename
+            $This.Hash      = @{ Domain = $Domain; Network = $Network }
+            $This.Name      = $Domain.SiteLink
+            $This.Location  = $Domain.Location
+            $This.Region    = $Domain.Region
+            $This.Country   = $Domain.Country
+            $This.Postal    = $Domain.Postal
+            $This.TimeZone  = $Domain.TimeZone
+            $This.SiteLink  = $Domain.SiteLink
+            $This.Sitename  = $Domain.Sitename
             $This.Network   = $Network.Network
             $This.Netmask   = $Network.Netmask
             $This.Start     = $Network.Start
@@ -966,7 +970,7 @@
     Class FEDeploymentShareGUI
     {
         Static [String] $Tab = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Topmost="True" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -1457,14 +1461,10 @@
                                                   ScrollViewer.IsDeferredScrollingEnabled="True"
                                                   ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
-                                            <DataGridTextColumn Header="Prefix"    Binding="{Binding Prefix}"    Width="*"/>
-                                            <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
-                                            <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
-                                            <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
-                                            <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
-                                            <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
-                                            <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
+                                            <DataGridTextColumn Header="Name"      Binding="{Binding Name}"     Width="*"/>
+                                            <DataGridTextColumn Header="Location"  Binding="{Binding Location}" Width="*"/>
+                                            <DataGridTextColumn Header="Sitename"  Binding="{Binding SiteName}" Width="*"/>
+                                            <DataGridTextColumn Header="Network"   Binding="{Binding Network}"  Width="*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <Grid Grid.Row="1" Margin="5">
@@ -1980,19 +1980,19 @@
             $This.Network = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Gateway = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
         }
-        GetSiteList()
+        [Void] GetSiteList()
         {
             $This.Sitelist      = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase $This.SearchBase
         }
-        GetSubnetList()
+        [Void] GetSubnetList()
         {
             $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase $This.SearchBase
         }
-        GetOuList()
+        [Void] GetOuList()
         {
             $This.OuList        = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -SearchBase $This.SearchBase
         }
-        GetLists()
+        [Void] GetLists()
         {
             $This.GetSiteList()
             $This.GetSubnetList()
@@ -2002,7 +2002,7 @@
         {
             Return @( [Certificate]::New($This.Org,$This.CN) )
         }
-        LoadSitemap([String]$Organization,[String]$CommonName)
+        [Void] LoadSitemap([String]$Organization,[String]$CommonName)
         {   # $Organization = "Secure Digits Plus LLC"; $CommonName = "securedigitsplus.com"
             $This.Org           = $Organization
             $This.CN            = $CommonName
@@ -2012,7 +2012,7 @@
             $This.AddSiteName($This.Template.Postal)
             $This.GetLists()
         }
-        AddSitename([String]$Zip)
+        [Void] AddSitename([String]$Zip)
         {
             If ( $Zip -notin $This.Domain.Postal )
             {
@@ -2028,7 +2028,7 @@
                 $This.Domain       += @( $Tmp )
             }
         }
-        RemoveSitename([String]$Zip)
+        [Void] RemoveSitename([String]$Zip)
         {
             If ( $This.Domain.Count -gt 1 )
             {
@@ -2058,7 +2058,7 @@
                 }
             }
         }
-        LoadNetwork([String]$Prefix)
+        [Void] LoadNetwork([String]$Prefix)
         {
             If ( $Prefix -notmatch "((\d+\.+){3}\d+\/\d+)" )
             {
@@ -2072,7 +2072,7 @@
                 $This.Network    = @( $Tmp )
             }
         }
-        AddSubnet([String]$Prefix)
+        [Void] AddSubnet([String]$Prefix)
         {
             If ( $Prefix -notmatch "((\d+\.+){3}\d+\/\d+)" )
             {
@@ -2085,7 +2085,7 @@
                 $This.Network   += @( $Tmp )
             }
         }
-        RemoveSubnet([String]$Prefix)
+        [Void] RemoveSubnet([String]$Prefix)
         {
             If ( $Prefix -notmatch "((\d+\.+){3}\d+\/\d+)" )
             {
@@ -2117,7 +2117,7 @@
                 }
             }
         }
-        GetGateway()
+        [Void] LoadGateway()
         {
             If ($This.Network.Count -lt $This.Domain.Count)
             {
@@ -2128,6 +2128,26 @@
             {
                 $This.Gateway += [Site]::New($This.Domain[$X],$This.Network[$X])
             }
+        }
+        [Void] RemoveGateway([String]$Name)
+        {
+            If ( $This.Gateway.Count -gt 1 )
+            {
+                If ($Name -in $This.Gateway.Name)
+                {
+                    $This.Gateway = @( $This.Gateway | ? Name -ne $Name )
+                }
+            }
+
+            Else
+            {
+                [System.windows.MessageBox]::Show("Invalid operation, only one gateway remaining","Error")
+            }
+        }
+        [Object[]] GetGateway([Object]$List)
+        {
+            $This.GetOuList()
+            Return @( $List | % { [GwTopography]::New($This.OuList,$_) } )
         }
         [Void]Load([Object]$Item)
         {
@@ -2324,6 +2344,8 @@
         $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopography]::New($Main.SiteList,$_) } )
         $Xaml.IO.DcTopography.ItemsSource = @( )
         $Xaml.IO.DcTopography.ItemsSource = @( $Tmp )
+
+        $Xaml.IO.GwSiteCount.Text         = $Main.Domain.Count
     })
     
     $Xaml.IO.DcNewTopography.Add_Click(
@@ -2339,6 +2361,8 @@
         $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopography]::New($Main.SiteList,$_) } )
         $Xaml.IO.DcTopography.ItemsSource = @( )
         $Xaml.IO.DcTopography.ItemsSource = @( $Tmp )
+
+        $Xaml.IO.GwSiteCount.Text         = $Main.Domain.Count
     })
 
 #    ____                                                                                                    ________    
@@ -2448,6 +2472,8 @@
             $Xaml.IO.NwTopography.ItemsSource += $Item 
             #[DGList]::New($Item.Name,$Item.DistinguishedName)
         }
+
+        $Xaml.IO.GwNetworkCount.Text      = $Main.Network.Count 
     })
 
     $Xaml.IO.NwNewSubnetName.Add_Click(
@@ -2460,9 +2486,11 @@
             }
         }
 
-        $Tmp                              = @( $Main.GetNetwork($Main.Network) | % { [NwTopography]::New($Main.SiteList,$_) } )
+        $Tmp                              = @( $Main.GetNetwork($Main.Network) | % { [NwTopography]::New($Main.SubnetList,$_) } )
         $Xaml.IO.NwTopography.ItemsSource = @( )
         $Xaml.IO.NwTopography.ItemsSource = @( $Tmp )
+
+        $Xaml.IO.GwNetworkCount.Text      = $Main.Network.Count 
     })
 
 #    ____                                                                                                    ________    
@@ -2489,6 +2517,56 @@
     $Xaml.IO.GwViewer.ItemsSource       = @()
     $Xaml.IO.GwTopography.ItemsSource   = @()
 
+    $Xaml.IO.GwLoadGateway.Add_Click(
+    {
+        If ( $Main.Network.Count -lt $Main.Domain.Count )
+        {
+            [System.Windows.MessageBox]::Show("Insufficient networks","Error: Network count")
+        }
+
+        Else
+        {
+            $Main.LoadGateway()
+            $Xaml.IO.GwAggregate.ItemsSource = @( )
+            $Xaml.IO.GwAggregate.ItemsSource = @( $Main.Gateway )
+        }
+    })
+
+    $Xaml.IO.GwAggregate.Add_SelectionChanged(
+    {
+        $Xaml.IO.GwViewer.ItemsSource     = @( )
+
+        If ( $Xaml.IO.GwAggregate.SelectedIndex -gt -1 )
+        {
+            $Gateway                           = @( $Main.Gateway | ? Network -match $Xaml.IO.GwAggregate.SelectedItem.Network )
+            
+            $List = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName Name Network Prefix Netmask HostCount HostObject Start End Range Broadcast".Split(" ") )
+            {     
+                [DGList]::New($Item,$Network.$Item) 
+            }
+
+            $Xaml.IO.GwViewer.ItemsSource     = @( $List )
+        }
+    })
+
+    $Xaml.IO.GwRemoveGateway.Add_Click(
+    {
+        If ( $Xaml.IO.GwAggregate.SelectedIndex -gt -1)
+        {
+            $Tmp = $Xaml.IO.GwAggregate.SelectedItem
+            If ( $Tmp.Name -in $Main.Gateway.Name)
+            {
+                $Main.RemoveGateway($Tmp.Name)
+                $Xaml.IO.GwAggregate.ItemsSource = @( )
+                $Xaml.IO.GwAggregate.ItemsSource = @( $Main.Gateway )
+            }
+        }
+    })
+
+    $Xaml.IO.GwGetGateway.Add_Click(
+    {
+
+    })
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    

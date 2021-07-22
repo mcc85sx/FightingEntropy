@@ -489,14 +489,10 @@
                                               ScrollViewer.IsDeferredScrollingEnabled="True"
                                               ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Network"   Binding="{Binding Network}"   Width="*"/>
-                                        <DataGridTextColumn Header="Prefix"    Binding="{Binding Prefix}"    Width="*"/>
-                                        <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="*"/>
-                                        <DataGridTextColumn Header="HostCount" Binding="{Binding HostCount}" Width="*"/>
-                                        <DataGridTextColumn Header="Start"     Binding="{Binding Start}"     Width="*"/>
-                                        <DataGridTextColumn Header="End"       Binding="{Binding End}"       Width="*"/>
-                                        <DataGridTextColumn Header="Range"     Binding="{Binding Range}"     Width="*"/>
-                                        <DataGridTextColumn Header="Broadcast" Binding="{Binding Broadcast}" Width="Auto"/>
+                                        <DataGridTextColumn Header="Name"      Binding="{Binding Name}"     Width="*"/>
+                                        <DataGridTextColumn Header="Location"  Binding="{Binding Location}" Width="*"/>
+                                        <DataGridTextColumn Header="Sitename"  Binding="{Binding SiteName}" Width="*"/>
+                                        <DataGridTextColumn Header="Network"   Binding="{Binding Network}"  Width="*"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="1" Margin="5">

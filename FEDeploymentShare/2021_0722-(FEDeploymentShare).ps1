@@ -416,11 +416,12 @@
         [String]          $SiteName
         [UInt32]            $Exists
         [Object] $DistinguishedName
-        GwTopography([Object]$OuList,[Object]$NW)
+        GwTopography([Object]$OuList,[Object]$Gw)
         {
-            $This.Name     = $Nw.Name
-            $This.Network  = $Nw.Network
-            $Tmp           = $OuList | ? Name -match $Nw.Name
+            $This.Name     = $Gw.Name
+            $This.Network  = $Gw.Network
+            $This.Sitename = $Gw.Sitename
+            $Tmp           = $OuList | ? Name -match $Gw.Name
             If ($Tmp)
             {
                 $This.Exists = 1
@@ -970,7 +971,7 @@
     Class FEDeploymentShareGUI
     {
         Static [String] $Tab = @"
-        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -1982,11 +1983,11 @@
         }
         [Void] GetSiteList()
         {
-            $This.Sitelist      = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase $This.SearchBase
+            $This.Sitelist      = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase "CN=Configuration,$($This.SearchBase)"
         }
         [Void] GetSubnetList()
         {
-            $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase $This.SearchBase
+            $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase "CN=Configuration,$($This.SearchBase)"
         }
         [Void] GetOuList()
         {
@@ -2007,7 +2008,7 @@
             $This.Org           = $Organization
             $This.CN            = $CommonName
             $This.Template      = $This.NewCertificate()
-            $This.SearchBase    = "CN=Configuration,DC=$( $CommonName.Split(".") -join ",DC=" )"
+            $This.SearchBase    = "DC=$( $CommonName.Split(".") -join ",DC=" )"
 
             $This.AddSiteName($This.Template.Postal)
             $This.GetLists()
@@ -2572,7 +2573,7 @@
 
         ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource | % { [GwTopography]::New($Main.OuList,$_) } )
         {
-            $Xaml.IO.GwTopography.ItemsSource += $Item 
+            $Xaml.IO.GwTopography.ItemsSource += $Item
         }
     })
 
@@ -2580,7 +2581,7 @@
     {
         $Main.GetOuList()
 
-        ForEach ( $Item in $Xaml.IO.GwTopography.ItemsSource )
+        ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource | % { [GwTopography]::New($Main.OuList,$_) } )
         {
             If (!$Item.Exists)
             {
@@ -2611,7 +2612,7 @@
             }
         }
 
-        $Tmp                              = @( $Main.GetGateway($Main.Gateway) | % { [GwTopography]::New($Main.OutList,$_) } )
+        $Tmp                              = @( $Main.Gateway | % { [GwTopography]::New($Main.OuList,$_) } )
         $Xaml.IO.GwTopography.ItemsSource = @( )
         $Xaml.IO.GwTopography.ItemsSource = @( $Tmp )
 

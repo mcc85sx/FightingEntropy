@@ -5,7 +5,7 @@ Class KeyEntry
     Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
     Static [Object]    $Keys  = @{
 
-        " " =  32; "˂" =  37; "˄" =  38; "˃" =  39; "˅" =  40; "0" =  48; 
+        " " =  32; [Char]706 =  37; [char]708 =  38; [char]707 =  39; [char]709 =  40; "0" =  48; 
         "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
         "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
         "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
@@ -39,7 +39,6 @@ Function KeyEntry
     {
         $Object = $Object.ToCharArray()
     }
-
     ForEach ( $Key in $Object )
     {
         If ($Key -cin @([KeyEntry]::Special + [KeyEntry]::Capital))

@@ -2,7 +2,8 @@
 # FEDeploymentShare -> OPNsense gateway [July 23rd, 2021] @ [1:20PM] 
 #                                     | [July 24th, 2021] @ [5:10PM]
 #                                     | [July 25th, 2021] @ [7:00AM]
-
+#                                     | [August 2nd, 2021] @ [9:00AM] (changed to 21.7)
+#                                     | [August 3rd, 2021] @ [9:00AM] (Inter VLan Routing)
 # Assemblies
 Add-Type @"
 using System;
@@ -28,24 +29,31 @@ public struct WindowPosition
 "@
 
 $KeyEntry = @'
-Class KeyEntry
+Function KeyEntry
 {
-    Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
-    Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
-    Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
-    Static [Object]    $Keys  = @{
+    [CmdLetBinding()]
+    Param(
+    [Parameter(Mandatory)][Object]$KB,
+    [Parameter(Mandatory)][Object]$Object)
 
-        " " =  32; [Char]706 =  37; [char]708 =  38; [char]707 =  39; [char]709 =  40; "0" =  48; 
-        "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
-        "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
-        "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
-        "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
-        "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
-        "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
-        "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
-        "[" = 219; "\" = 220; "]" = 221; "'" = 222;
-    }
-    Static [Object]     $SKey = @{ 
+    Class KeyEntry
+    {
+        Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
+        Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
+        Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
+        Static [Object]    $Keys  = @{
+
+            " " =  32; [Char]706 =  37; [char]708 =  38; [char]707 =  39; [char]709 =  40; "0" =  48; 
+            "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
+            "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
+            "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
+            "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
+            "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
+            "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
+            "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
+            "[" = 219; "\" = 220; "]" = 221; "'" = 222;
+        }
+        Static [Object]     $SKey = @{ 
 
         "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
         "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
@@ -55,16 +63,8 @@ Class KeyEntry
         "$" =  52; "%" =  53; "^" =  54; "&" =  55; "*" =  56; "(" =  57; 
         ":" = 186; "+" = 187; "<" = 188; "_" = 189; ">" = 190; "?" = 191; 
         "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
+        }
     }
-}
-
-Function KeyEntry
-{
-    [CmdLetBinding()]
-    Param(
-    [Parameter(Mandatory)][Object]$KB,
-    [Parameter(Mandatory)][Object]$Object)
-
     If ( $Object.Length -gt 1 )
     {
         $Object = $Object.ToCharArray()
@@ -134,11 +134,11 @@ Class VMSilo
         $This.Name     = $Name
         $This.VMHost   = Get-VMHost
         $This.Switch   = Get-VMSwitch
-        $This.Internal = $This.Switch | ? SwitchType -eq Private
+        $This.Internal = $This.Switch | ? SwitchType -eq Internal
         $This.External = $This.Switch | ? SwitchType -eq External
         $This.Gateway  = ForEach ( $X in 0..($Gateway.Count - 1))
         {        
-            $Item            = [VMGateway]::New($Gateway[$X],1024MB,20GB,1,$This.External.Name)
+            $Item            = [VMGateway]::New($Gateway[$X],2048MB,20GB,1,$This.External.Name)
             $Item.Path       = $Item.Path       -f $This.VMHost.VirtualMachinePath
             $Item.NewVhdPath = $Item.NewVhdPath -f $This.VMHost.VirtualHardDiskPath
             $Item
@@ -231,9 +231,9 @@ $Date       = Get-Date -UFormat %Y%m%d
 $Path       = "$Scratch\Lab($Date)"
 $GWList     = Get-ChildItem $Path | ? Name -match "\(\d+\).+(\.txt)"
 $Gateway    = $GWList | % { Get-Content $_.FullName | ConvertFrom-Json }
-$IsoPath    = "C:\Images\OPNsense-21.1-OpenSSL-dvd-amd64.iso"
+$IsoPath    = "C:\Images\OPNsense-21.7-OpenSSL-dvd-amd64.iso"
 
-# [Temp settings]######
+# [Temp settings] ######
 $Silo       = [VMSilo]::New("New VMSilo [$Date][$(Get-Date -UFormat %H%M%S)]",$Gateway)
 $Silo.Clear()
 $Silo.Create($IsoPath)
@@ -277,16 +277,15 @@ If ( $Gateway.Count -gt 1 )
     }
 }
 
+Invoke-Expression $KeyEntry
 ######
-0..($GWList.Count-1) | Start-RSJob -Name {$GWList[$_].Name} -Throttle 4 -ScriptBlock {
+0..($GWList.Count-1) | Start-RSJob -Name {$GWList[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
 
     $Credential = $Using:Credential
     $Path       = $Using:Path
     $VMDisk     = $Using:VMDisk
-    $KeyEntry   = $Using:KeyEntry
-    Invoke-Expression $KeyEntry
-
     $X          = $_
+
     $File       = Get-ChildItem $Path | ? Name -match "\($X\).+(\.txt)" | % FullName
     $VM         = Get-Content $File | ConvertFrom-Json 
 
@@ -301,26 +300,7 @@ If ( $Gateway.Count -gt 1 )
     $Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
     $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
 
-    $C         = @( )
-    Do
-    {
-        Start-Sleep -Seconds 1
-        $Item     = Get-VM -Name $ID
-        Switch($Item.CPUUsage)
-        {
-            Default { $C  = @( ) } 0 { $C += 1 } 1 { $C += 1 }
-        }
-
-        $Sum = @( Switch($C.Count)
-        {
-            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
-        } ) | Invoke-Expression
-
-        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Initializing [Inactivity:($($Sum))]")
-        Write-Host $Log[$Log.Count-1]
-    }
-    Until ($Sum -ge 250) # Initial config script import... (250)
-    
+    Start-Sleep 60
     $C         = @( )
     Do
     {
@@ -347,7 +327,6 @@ If ( $Gateway.Count -gt 1 )
     Start-Sleep 1
 
     # Configure VLans Now?
-    
     KeyEntry $KB "n"
     $KB.TypeKey(13)
     Start-Sleep 1
@@ -391,7 +370,7 @@ If ( $Gateway.Count -gt 1 )
 
         Start-Sleep -Seconds 1
     }
-    Until($Sum -gt 250) # Initial login, must account for machine delay
+    Until($Sum -ge 100) # Initial login, must account for machine delay
 
     # Login
     KeyEntry $KB "installer"
@@ -401,13 +380,13 @@ If ( $Gateway.Count -gt 1 )
     # Password
     KeyEntry $KB "opnsense"
     $KB.PressKey(13)
-    Start-Sleep 6
+    Start-Sleep 3
 
-    # Welcome
-    $KB.TypeKey(13)
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Installer")
-    Write-Host $Log[$Log.Count-1]
-    Start-Sleep 2
+    # [21.1] Welcome
+    # $KB.TypeKey(13)
+    # $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Installer")
+    # Write-Host $Log[$Log.Count-1]
+    # Start-Sleep 2
 
     # Continue with default keymap
     $KB.TypeKey(13)
@@ -415,24 +394,47 @@ If ( $Gateway.Count -gt 1 )
     Write-Host $Log[$Log.Count-1]
     Start-Sleep 2
 
-    # Guided installation
+    # [21.1] Guided installation
+    # $KB.TypeKey(13)
+    # $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Guided installation")
+    # Write-Host $Log[$Log.Count-1]
+    # Start-Sleep 2
+
+    # Install (ZFS)
+    $KB.TypeKey(40)
+    Start-Sleep -M 100
     $KB.TypeKey(13)
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Guided installation")
+    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Install (ZFS)")
+    Write-Host $Log[$Log.Count-1]
+    Start-Sleep 6
+
+    # ZFS Configuration (stripe)
+    $KB.TypeKey(13)
+    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] ZFS Configuration (stripe)")
     Write-Host $Log[$Log.Count-1]
     Start-Sleep 2
 
     # Select a disk
+    $KB.TypeKey(32)
+    Start-Sleep -M 100
     $KB.TypeKey(13)
     $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Disk select")
     Write-Host $Log[$Log.Count-1]
-    Start-Sleep 3
+    Start-Sleep 2
 
     # Install mode
+    $KB.TypeKey(9)
+    Start-Sleep -M 100
     $KB.TypeKey(13)
     $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Install mode")
     Write-Host $Log[$Log.Count-1]
 
-    While((Get-Item "$VMDisk\$ID.vhdx").Length -lt 3.65GB)
+    If (!($VMDisk))
+    {
+        $VMDisk = Get-VMHost | % VirtualHardDiskPath
+    }
+
+    While((Get-Item $VMDisk\$ID.vhdx).Length -lt 1.5GB)
     {
         $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Installing")
         Write-Host $Log[$Log.Count-1]
@@ -441,9 +443,9 @@ If ( $Gateway.Count -gt 1 )
         Start-Sleep -Seconds 10
     }
 
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense wrapping up installation")
+    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense validating")
     Write-Host $Log[$Log.Count-1]
-    Start-Sleep 1
+    Start-Sleep 240
 
     $C = @( )
     Do
@@ -459,12 +461,18 @@ If ( $Gateway.Count -gt 1 )
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Installing [Inactivity:($($Sum))]")
+        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] finalizing [Inactivity:($($Sum))]")
         Write-Host $Log[$Log.Count-1]
         
         Start-Sleep 1
     }
-    Until ($Sum -gt 300)
+    Until ($Sum -ge 500)
+
+    # Change root password
+    $KB.TypeKey(40)
+    Start-Sleep -M 100
+    $KB.TypeKey(13)
+    Start-Sleep 2
 
     # Enter root password
     KeyEntry $KB $Credential.GetNetworkCredential().Password
@@ -482,9 +490,9 @@ If ( $Gateway.Count -gt 1 )
     Write-Host $Log[$Log.Count-1]
     Start-Sleep 5
 
-    # Reboot
-    $KB.TypeKey(13)
-    Start-Sleep 5
+    # [21.1] Reboot
+    # $KB.TypeKey(13)
+    # Start-Sleep 5
 
     Do
     {
@@ -502,12 +510,16 @@ If ( $Gateway.Count -gt 1 )
     Set-VMDvdDrive -VMName $ID -Path $Null -Verbose
 
     Start-VM -Name $ID 
+    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] First boot...")
+    Write-Host $Log[$Log.Count-1]
+
+    Start-Sleep 30
 
     $C         = @( )
     Do
     {
-        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] First boot...")
-        Write-Host $Log[$Log.Count-1]
+        Start-Sleep 1
+
         $Item     = Get-VM -Name $ID
 
         Switch($Item.CPUUsage)
@@ -522,10 +534,8 @@ If ( $Gateway.Count -gt 1 )
 
         $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] First boot... [Inactivity:($($Sum))]")
         Write-Host $Log[$Log.Count-1]
-
-        Start-Sleep 1
     }
-    Until($Sum -gt 200)
+    Until($Sum -ge 250)
 
     KeyEntry $KB "root"
     $KB.TypeKey(13)
@@ -573,7 +583,7 @@ If ( $Gateway.Count -gt 1 )
     Start-Sleep 1
 
     # Revert to HTTP as the web GUI protocol? (No)
-    $KB.TypeText("n")
+    KeyEntry $KB "n"
     $KB.TypeKey(13)
     Start-Sleep 1
 
@@ -609,6 +619,9 @@ Do
 }
 Until ($Complete.Count -ge $Gateway.Count)
 
+Get-RSJob | Remove-RSJob -Verbose
+Write-Theme "Complete [+] Gateway Installation"
+
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
@@ -618,23 +631,52 @@ Until ($Complete.Count -ge $Gateway.Count)
 # $Credential = Get-Credential root
 $ID        = "dsc1"
 $Switch    = Get-VMSwitch
-$Internal  = $Switch | ? SwitchType -eq Private | % Name
+$Internal  = $Switch | ? SwitchType -eq Internal | % Name
 $External  = $Switch | ? SwitchType -eq External | % Name
 $VM        = Get-VM -Name $ID
 $DHCP      = Get-DHCPServerV4OptionValue 
 $DNS       = $DHCP | ? OptionID -eq 6 | % Value
-$Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
-$KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+$Control   = "172.16.0.0/19"
+[String]$Network, [UInt32]$Prefix = $Control.Split("/")
+
 Invoke-Expression $KeyEntry
 Add-Type $WindowObject
 
-$VMC       = Start-Process vmconnect -ArgumentList @($Server,$ID) -PassThru
+Get-VM -Name $ID | ? State -ne Off | Stop-VM -Confirm:$False -Verbose
+Start-VM -Name $ID -Verbose
+$Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+$KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
 
+$VMC       = Start-Process vmconnect -ArgumentList @($Server,$ID) -PassThru
+$C         = @()
+Do
+{
+    Start-Sleep 1
+    $Item = Get-VM -Name $ID
+
+    Switch($Item.CPUUsage)
+    {
+        0 { $C += 1 } 1 { $C += 1 } Default { $C = @( ) }
+    }
+
+    $Sum = @( Switch($C.Count)
+    {
+        0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+    } ) | Invoke-Expression
+
+    Write-Host ("Booting [~] CFGSRV [{0}]" -f $Sum )
+}
+Until ($Sum -gt 35)
 $KB.TypeCtrlAltDel()
 Start-Sleep 3
 KeyEntry $KB $Credential.GetNetworkCredential().Password
 $KB.TypeKey(13)
 Start-Sleep 12
+
+$KB.PressKey(18)
+$KB.TypeKey(114)
+$KB.ReleaseKey(18)
+Start-Sleep 1
 
 $KB.PressKey(91)
 $KB.TypeKey(82)
@@ -648,7 +690,7 @@ $KB.TypeKey(82)
 $KB.ReleaseKey(91)
 $KB.TypeText("taskmgr")
 $KB.TypeKey(13)
-Start-Sleep 1
+Start-Sleep 2
 
 $KB.PressKey(18)
 $KB.TypeKey(70)
@@ -664,6 +706,7 @@ Start-Sleep 12
 
 $KB.TypeText('"ServerManager","TaskMgr" | % { Stop-Process -Name $_ -EA 0 }')
 $KB.TypeKey(13)
+Start-Sleep 1
 
 $KB.TypeText("Add-Type @'")
 $KB.TypeKey(13)
@@ -674,22 +717,10 @@ $KB.TypeKey(13)
 $KB.TypeText("'@")
 $KB.TypeKey(13)
 
-$KB.TypeText('$Date = Get-Date -UFormat %Y%m%d')
+$KB.TypeText('$Date = Get-Date -UFormat %Y%m%d;$Path = "$Home\Desktop\IP-($Date).ps1";$Start = Get-NetIPAddress -AddressFamily IPV4 | ? PrefixOrigin -eq Manual')
 $KB.TypeKey(13)
 
-$KB.TypeText('$Path = "$Home\Desktop\IP-($Date).ps1"')
-$KB.TypeKey(13)
-
-$KB.TypeText('$Start = Get-NetIPAddress -AddressFamily IPV4 | ? PrefixOrigin -eq Manual')
-$KB.TypeKey(13)
-
-$KB.TypeText('$ifIndex = $Start.InterfaceIndex')
-$KB.TypeKey(13)
-
-$KB.TypeText('$Ip = $Start.IPAddress')
-$KB.TypeKey(13)
-
-$KB.TypeText('$pfLength = $Start.PrefixLength')
+$KB.TypeText('$ifIndex = $Start.InterfaceIndex;$Ip = $Start.IPAddress;$pfLength = $Start.PrefixLength')
 $KB.TypeKey(13)
 
 $KB.TypeText('$Gw = Get-NetRoute -InterfaceIndex $ifIndex | ? DestinationPrefix -eq 0.0.0.0/0 | % NextHop')
@@ -701,32 +732,27 @@ $KB.TypeKey(13)
 $KB.TypeText('If ($Dns.Count -gt 1) { $Dns = "`"$($Dns -join "``",``"")`"" } Else { $Dns = "`"$Dns`"" }')
 $KB.TypeKey(13)
 
-$KB.TypeText('$Content = "`$ifIndex=`"$ifIndex`";`$IP=`"$IP`";`$pfLength=`"$pfLength`";`$Dns=$Dns;`$Gw=`"$Gw`""')
+$KB.TypeText('$Content = "`$ifIndex=`"$ifIndex`";`$IP=`"$IP`";`$pfLength=`"$pfLength`";`$Dns=$Dns;`$Gw=`"$Gw`"";Set-Content -Path $Path -Value $Content -Verbose')
 $KB.TypeKey(13)
-
-$KB.TypeText('Set-Content -Path $Path -Value $Content -Verbose')
-$KB.TypeKey(13)
+Start-Sleep 30
 
 $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Internal
 
-ForEach ( $X in 0 )#..($Gateway.Count-1))
+$X = 0
+Do
 {
     $Item  = $Gateway[$X]
-    $Names = "Hash Name Location Region Country Postal Timezone SiteLink SiteName Network Prefix Netmask Start End Range Broadcast"
+    $Names = "Hash Name Location Region Country Postal Timezone SiteLink SiteName Network Prefix Netmask Start End Range Broadcast".Split(" ")
 
     $KB.TypeText('$Item = @{}')
     $KB.TypeKey(13)
 
-    ForEach ($Name in $Names -Split " ") 
-    { 
-        $KB.TypeText("`$Item.Add('$Name','$($Item.$Name)')")
-        $KB.TypeKey(13)
-    }
+    $List  = @( $Names | % { "('$_','$($Item.$_)')" } ) -join "," 
 
-    $KB.TypeText('$Temp     = $Item.Start -Split "\."')
+    $KB.TypeText("$List | % { `$Item.Add(`$_[0],`$_[1]) }")
     $KB.TypeKey(13)
 
-    $KB.TypeText('$Temp[-1] = [UInt32]($Temp[-1]) + 1')
+    $KB.TypeText('$Temp = $Item.Start -Split "\.";$Temp[-1] = [UInt32]($Temp[-1]) + 1')
     $KB.TypeKey(13)
 
     $KB.TypeText('$Hash = @{ InterfaceIndex = $ifIndex; AddressFamily="IPV4"; IPAddress=$Temp -join "."; PrefixLength=$pfLength; DefaultGateway=$Item.Start}')
@@ -745,7 +771,7 @@ ForEach ( $X in 0 )#..($Gateway.Count-1))
     $KB.TypeKey(13)
 
     # Alt-Tab
-    Start-Sleep 25
+    Start-Sleep 30
     $KB.PressKey(18)
     $KB.TypeKey(9)
     $KB.ReleaseKey(18)
@@ -754,6 +780,7 @@ ForEach ( $X in 0 )#..($Gateway.Count-1))
     $KB.PressKey(17)
     $KB.TypeKey(76)
     $KB.ReleaseKey(17)
+    Start-Sleep 1
     $KB.TypeText("https://$($Item.Start)")
     $KB.TypeKey(13)
     Start-Sleep 5
@@ -839,41 +866,52 @@ ForEach ( $X in 0 )#..($Gateway.Count-1))
 
     # Reload Configuration
     $KB.PressKey(16)
-    0..2 | % { $KB.TypeKey(9) }
+    0..2 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
     $KB.ReleaseKey(16)
     $KB.TypeKey(32)
     Start-Sleep 10
 
-    # Finished Initial configuration | NOT UPDATE SCREEN
-    $KB.PressKey(16)
-    0..2 | % { $KB.TypeKey(9) }
-    $KB.ReleaseKey(16)
+    # Get to firewall rules
+    $KB.PressKey(17)
+    $KB.TypeKey(76)
+    $KB.ReleaseKey(17)
+    Start-Sleep 1
+    0..6 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+    $KB.TypeText("rules")
+    Start-Sleep 1
     $KB.TypeKey(13)
-    Start-Sleep 15
-    $KB.TypeKey(13)
-    Start-Sleep 25
-
-    # Firmware - Check for updates
-    $KB.PressKey(16)
-    $KB.TypeKey(9)
-    $KB.ReleaseKey(16)
-    $KB.TypeKey(32)
-    Start-Sleep 35
-
-    # Updates
-    $KB.TypeKey(9)
-    $KB.TypeKey(32)
     Start-Sleep 1
 
-    # Confirm
+    # Firewall Rules
     $KB.PressKey(16)
-    0..8 | % { $KB.TypeKey(9) }
+    0..7 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
     $KB.ReleaseKey(16)
-    $KB.TypeKey(32)
+    $KB.TypeKey(13)
+    Start-Sleep 2
+
+    $KB.PressKey(16)
+    0..24 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+    $KB.ReleaseKey(16)
+    $KB.TypeKey(38)
+    $KB.TypeText("Network")
+    $KB.TypeKey(13)
     Start-Sleep 1
     $KB.TypeKey(9)
+    $KB.TypeText($Network)
+    Start-Sleep 1
     $KB.TypeKey(9)
+    0..(32-($Prefix+1))|%{$KB.TypeKey(40); Start-Sleep -M 100}
+    $KB.TypeKey(13)
+    Start-Sleep 1
+    0..20|%{$KB.TypeKey(9); Start-Sleep -M 100}
     $KB.TypeKey(32)
+    Start-Sleep 2
+
+    # Apply Firewall Rules
+    $KB.PressKey(16)
+    0..13 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+    $KB.ReleaseKey(16)
+    $KB.TypeKey(13)
     Start-Sleep 3
 
     # Alt-Tab
@@ -881,7 +919,9 @@ ForEach ( $X in 0 )#..($Gateway.Count-1))
     $KB.TypeKey(9)
     $KB.ReleaseKey(18)
     Start-Sleep 1
+    $X ++
 }
+Until ($X -eq $Gateway.Count)
 
 $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $External
 
@@ -912,5 +952,58 @@ $KB.TypeKey(13)
 $KB.TypeText('Set-DNSClientServerAddress -InterfaceIndex $ifIndex -ServerAddresses @($Dns) -Verbose')
 $KB.TypeKey(13)
 
-# [Restart] #----------# 
-91,9,40,40,40,32,40,13,40,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
+$KB.TypeText('Get-Process -Name msedge | Stop-Process; Stop-Computer')
+$KB.TypeKey(13)
+
+Write-Theme "Complete [+] Gateway Configuration"
+
+#    ____    ____________________________________________________________________________________________________        
+#   //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
+#   \\__//¯¯¯ Updates [~] Initializing                                                                       ___//¯¯\\   
+#    ¯¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
+
+# Update from console
+0..($Gateway.Count-1) | Start-RSJob -Name {$Gateway[$_].Name} -Throttle 4 -ScriptBlock {
+
+    $Gateway = $Using:Gateway
+    $VM   = Get-VM -Name $Gateway[$_].Name
+    $ID   = $VM.Name
+    $Ctrl = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+    $KB   = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+
+    $KB.TypeKey(49)
+    $KB.TypeKey(50)
+    $KB.TypeKey(13)
+
+    Start-Sleep 10
+    $KB.TypeKey(89)
+    $KB.TypeKey(13)
+}
+
+# Reboot system
+# 0..($Gateway.Count-1) | Start-RSJob -Name {$Gateway[$_].Name} -Throttle 4 -ScriptBlock {
+
+#    $Gateway = $Using:Gateway
+#    $VM   = Get-VM -Name $Gateway[$_].Name
+#    $ID   = $VM.Name
+#    $Ctrl = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+#    $KB   = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+
+#    $KB.TypeKey(54)
+#    $KB.TypeKey(13)
+#}
+
+$Complete = @( )
+Do
+{
+    Clear-Host
+
+    $RS = Get-RSJob
+    $RS
+    $Complete = $RS | ? State -eq Completed
+    Start-Sleep 1
+}
+Until($Complete.Count -eq $Gateway.Count)
+
+Get-RSJob | Remove-RSJob -Verbose

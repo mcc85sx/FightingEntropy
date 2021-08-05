@@ -568,44 +568,41 @@ public struct WindowPosition
         }
     }
 
-    # Classes
-    Class KeyEntry
-    {
-        Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
-        Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
-        Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
-        Static [Object]    $Keys  = @{
-
-            " " =  32; "˂" =  37; "˄" =  38; "˃" =  39; "˅" =  40; "0" =  48; 
-            "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
-            "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
-            "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
-            "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
-            "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
-            "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
-            "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
-            "[" = 219; "\" = 220; "]" = 221; "'" = 222;
-        }
-        Static [Object]     $SKey = @{ 
-
-            "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
-            "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
-            "M" =  77; "N" =  78; "O" =  79; "P" =  80; "Q" =  81; "R" =  82; 
-            "S" =  83; "T" =  84; "U" =  85; "V" =  86; "W" =  87; "X" =  88;
-            "Y" =  89; "Z" =  90; ")" =  48; "!" =  49; "@" =  50; "#" =  51; 
-            "$" =  52; "%" =  53; "^" =  54; "&" =  55; "*" =  56; "(" =  57; 
-            ":" = 186; "+" = 187; "<" = 188; "_" = 189; ">" = 190; "?" = 191; 
-            "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
-        }
-    }
-
     Function KeyEntry
     {
         [CmdLetBinding()]
         Param(
         [Parameter(Mandatory)][Object]$KB,
         [Parameter(Mandatory)][Object]$Object)
-
+        Class KeyEntry
+        {
+            Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
+            Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
+            Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
+            Static [Object]    $Keys  = @{
+    
+                " " =  32; "˂" =  37; "˄" =  38; "˃" =  39; "˅" =  40; "0" =  48; 
+                "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
+                "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
+                "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
+                "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
+                "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
+                "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
+                "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
+                "[" = 219; "\" = 220; "]" = 221; "'" = 222;
+            }
+            Static [Object]     $SKey = @{ 
+    
+                "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
+                "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
+                "M" =  77; "N" =  78; "O" =  79; "P" =  80; "Q" =  81; "R" =  82; 
+                "S" =  83; "T" =  84; "U" =  85; "V" =  86; "W" =  87; "X" =  88;
+                "Y" =  89; "Z" =  90; ")" =  48; "!" =  49; "@" =  50; "#" =  51; 
+                "$" =  52; "%" =  53; "^" =  54; "&" =  55; "*" =  56; "(" =  57; 
+                ":" = 186; "+" = 187; "<" = 188; "_" = 189; ">" = 190; "?" = 191; 
+                "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
+            }
+        }
         If ( $Object.Length -gt 1 )
         {
             $Object = $Object.ToCharArray()
@@ -2833,14 +2830,16 @@ public struct WindowPosition
 
                 $OU.Path        = "OU={0},{1}" -f $OU.Name, $OU.Path
 
-                #0..4 | % { 
+                0..4 | % { 
                     
-                    $OU.Name        = "Gateway"                 #@("Gateway","Server","Computers","Users","Service")[$_]
-                    $OU.Description = "(Routing/Remote Access)" #@("Routing/Remote Access","Domain Servers","Workstations","Domain Users","Service Accounts")[$_]
+                    $OU.Name        = "Gateway","Server","Computers","Users","Service")[$_]
+                    $OU.Description = "(Routing/Remote Access)","(Domain Servers)","(Workstations)","(Domain Users)","(Service Accounts)")[$_]
                     New-ADOrganizationalUnit @OU -Verbose
-                #}
+                }
 
-                New-ADComputer -Name $Gateway.Name -DNSHostName $Gateway.Sitename -Path "OU=Gateway,$($OU.Path)" -TrustedForDelegation $True -Verbose
+                New-ADComputer -Name $Gateway.Name -DNSHostName $Gateway.Sitename -Path "OU=Gateway,$($OU.Path)" -TrustedForDelegation:$True -Verbose
+                New-ADComputer -Name "dc1-$($Gateway.Postal)"                     -Path "OU=Server,$($OU.Path)"  -TrustedForDelegation:$True -Verbose
+                New-ADUser     -Name "svc1-$($Gateway.Postal)" -Path "OU=Service,$($OU.Path)"
             }
         }
 
@@ -2848,6 +2847,17 @@ public struct WindowPosition
         $Tmp                              = @( $Main.Gateway | % { [GwTopography]::New($Main.OuList,$_) } )
         $Xaml.IO.GwTopography.ItemsSource = @( )
         $Xaml.IO.GwTopography.ItemsSource = @( $Tmp )
+    })
+
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Sites Tab  ]__________________________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+    $Xaml.IO.SLLoadSiteList.Add_Click(
+    {
+
     })
 
 #    ____                                                                                                    ________    

@@ -174,6 +174,9 @@ $DhcpOpt    = Get-DhcpServerv4OptionValue | Sort-Object OptionID
 $X = 0
 Do
 {
+    $Time      = [System.Diagnostics.Stopwatch]::StartNew()
+    $Log       = @{ }
+
     $Item      = $Servers[$X]
     $Switch    = $Item.Sitelink
     $ID        = $Item.Name
@@ -211,6 +214,8 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
+        $Log.Add($Log.Count,"[Initializing Setup][$($Time.Elapsed)][Inactivity:($($Sum)/35)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 35)
@@ -236,6 +241,7 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
+        Write-Host "[$($Time.Elapsed)][Inactivity:($($Sum)/35)]"
         Start-Sleep 1
     }
     Until ($Sum -gt 35)
@@ -244,14 +250,12 @@ Do
     32,  9, 13,  9, 13     | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 3
      9,  9,  9,  9, 13     | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 1
 
-    $Time = [System.Diagnostics.Stopwatch]::StartNew()
-
     $C = @( )
     Do
     {
         $Disk = Get-Item $VMDisk\$ID.vhdx | % { $_.Length }
 
-        Write-Host ("[{0}][({1:n3}/9.000 GB)]" -f $Time.Elapsed, [Float]($Disk/1GB) )
+        Write-Host ("[{0}][Installing [~] ({1:n3}/9.000 GB)]" -f $Time.Elapsed, [Float]($Disk/1GB) )
         Start-Sleep 1
     }
     Until ($Disk -gt 9GB)
@@ -271,10 +275,14 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][Inactivity:($($Sum)/250)]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Finalizing [~] Inactivity:($Sum/250)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 250)
+
+    $Log.Add($Log.count,"[$($Time.Elapsed)][First login]")
+    Write-Host $Log[$Log.Count-1]
 
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     Start-Sleep 1
@@ -282,10 +290,10 @@ Do
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     Start-Sleep 1
     $KB.TypeKey(13)
-    Start-Sleep 20
+    Start-Sleep 15
 
     $KB.TypeCtrlAltDel()
-    Start-Sleep 3
+    Start-Sleep 5
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
     Start-Sleep 60
@@ -304,18 +312,23 @@ Do
 
     $KB.TypeText("`$ifIndex = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1 | % InterfaceIndex;`$pfLength='$($Server.Item.Prefix)'")
     $KB.TypeKey(13)
+    Start-Sleep 5
 
     $KB.TypeText("`$Start = `"$($Server.Item.Start)`";`$Temp = `$Start.Split('.'); `$Temp[-1] = [UInt32]`$Temp[-1] + 1;")
     $KB.TypeKey(13)
+    Start-Sleep 5
 
     $KB.TypeText("`$Hash = @{ InterfaceIndex = `$ifIndex; AddressFamily='IPV4'; IPAddress=`$Temp -join '.'; PrefixLength=`$pfLength; DefaultGateway='$($Server.Item.Start)'}")
     $KB.TypeKey(13)
+    Start-Sleep 5
 
     $KB.TypeText("New-NetIPAddress @Hash -Verbose -EA 0")
     $KB.TypeKey(13)
+    Start-Sleep 5
 
     $KB.TypeText("Set-DNSclientServerAddress -InterfaceIndex `$ifIndex -ServerAddresses $DNS -Verbose;Start-Sleep 1")
     $KB.TypeKey(13)
+    Start-Sleep 5
 
     # Deposit the created scope to text file
     $CSV     = $Servers[$X] | ConvertTo-CSV
@@ -324,7 +337,7 @@ Do
     $Content = @("@(`"```$Hash = @{`""; 0..($Names.Count-1) | % { "'{0} = {1}'" -f $Names[$_], $Values[$_] }; "`"};`")") -join "`n"
     $KB.TypeText("`$Content = $Content")
     $KB.TypeKey(13)
-    Start-Sleep 1
+    Start-Sleep 10
 
     $KB.TypeText("Set-Content -Path `$Home\Desktop\server.txt -Value `$Content -Verbose")
     $KB.TypeKey(13)
@@ -335,6 +348,7 @@ Do
 
     $KB.TypeText("IRM github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | IEX")
     $KB.TypeKey(13)
+
     $C = @( )
     Do
     {
@@ -350,10 +364,11 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][$($Sum)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
-    Until ($Sum -gt 75)
+    Until ($Sum -gt 500)
 
     $KB.PressKey(91)
     $KB.TypeKey(82)
@@ -384,6 +399,9 @@ Do
     13,13,27,9,38,9 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
     $KB.TypeText($Domain)
     $KB.TypeKey(9)
+
+    # If ( Get-ADObject -Filter * | ? Name -match $Server.Name )
+
     $KB.TypeKey(13)
     Start-Sleep 10
     $KB.TypeText("$($Credential.Username)@$Domain")
@@ -393,6 +411,8 @@ Do
     $KB.TypeKey(9)
     Start-Sleep 1
 
+    $Log.Add($Log.Count,"[$($Time.Elapsed)][Joining domain...]")
+    Write-Host $Log[$Log.Count-1]
     $KB.TypeKey(13)
     Start-Sleep 25
 
@@ -546,7 +566,7 @@ Do
 
     $KB.TypeText('$Features = [_ServerFeatures]::New().Output')
     $KB.TypeKey(13)
-    Start-Sleep 30
+    Start-Sleep 5
 
     $KB.TypeText('$Features | ? { !($_.Installed) } | % { $_.Name.Replace("_","-") } | Install-WindowsFeature -Verbose')
     $KB.TypeKey(13)
@@ -556,11 +576,11 @@ Do
     {
         $Item = Get-VM -Name $ID
         Start-Sleep 1
-        Write-Host "[$($Time.Elapsed)]"
+        Write-Host "[$($Time.Elapsed)][Installing (Adds/Rsat/Dhcp/Dns) Suite]"
 
         $C += 1
     }
-    Until ($C -gt 150)
+    Until ($C -gt 250)
 
     $C = @( )
     Do
@@ -649,25 +669,14 @@ Do
     $KB.ReleaseKey(18)
     Start-Sleep -M 500
     $KB.TypeText("powershell")
-    Start-Sleep -M 500
-      9, 32,  9, 13 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
-    $KB.PressKey(18)
-    Start-Sleep -M 500
     $KB.TypeKey(9)
-    $KB.ReleaseKey(18)
-    Start-Sleep -M 500
-    $KB.PressKey(18)
-    $KB.TypeKey(68)
-    Start-Sleep -M 500
-    $KB.TypeKey(9)
-    $KB.ReleaseKey(18)
+    $KB.TypeKey(32)
+    $KB.TypeKey(13)
     Start-Sleep 12
 
-    $KB.TypeText("'ServerManager','TaskMgr' | % { Stop-Process -Name `$_ -EA 0 }")
+    $KB.TypeText("'ServerManager','TaskMgr' | % { Stop-Process -Name `$_ -EA 0 };Remove-Item HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager -EA 0")
     $KB.TypeKey(13)
-
-    $KB.TypeText('Remove-Item HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager')
-    $KB.TypeKey(13)
+    Start-Sleep 4
 
     # Remove from domain for recycling
     $KB.TypeText("`$Pw = Read-Host 'Enter password' -AsSecureString")
@@ -676,7 +685,7 @@ Do
 
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
-    Start-Sleep 4
+    Start-Sleep 2
 
     $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$($Credential.Username)@$Domain`",`$Pw)")
     $KB.TypeKey(13)
@@ -684,8 +693,19 @@ Do
 
     $KB.TypeText("Uninstall-ADDSDomainController -LocalAdministratorPassword `$Pw -DemoteOperationMasterRole:`$True -ForceRemoval:`$True -Credential `$Credential -Force -Confirm:`$False")
     $KB.TypeKey(13)
+    Start-Sleep 3
 
-    Start-Sleep 120
+    $C = @( )
+    Do
+    {
+        $Item = Get-VM -Name $ID
+        Write-Host "[$($Time.Elapsed)][Removing Domain Controller ($ID)]"
+        Start-Sleep 1
+    }
+    Until ($Item.Uptime.TotalSeconds -le 2)
+
+    Get-ADComputer -Filter * | ? Name -match $Server.Name | Remove-ADComputer -Confirm:$False -Recursive -Force -Verbose
+
     $C = @( )
     Do
     {

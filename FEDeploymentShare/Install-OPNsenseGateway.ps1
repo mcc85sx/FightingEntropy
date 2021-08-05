@@ -128,6 +128,7 @@ Class VMSilo
     [Object] $Internal
     [Object] $External
     [Object] $Gateway
+    [Object] $Server
     [Object] $VMC
     VMSilo([String]$Name,[Object[]]$Gateway)
     {
@@ -189,7 +190,7 @@ Class VMSilo
             }
             
             New-VM @Item -Verbose
-            Add-VMNetworkAdapter -VMName $Item.Name -SwitchName $This.Internal.Name -Verbose
+            Add-VMNetworkAdapter -VMName $Item.Name -SwitchName $Item.Name -Verbose
             Switch -Regex ($IsoPath.GetType().Name)
             {
                 "\[\]"
@@ -231,6 +232,16 @@ $Date       = Get-Date -UFormat %Y%m%d
 $Path       = "$Scratch\Lab($Date)"
 $GWList     = Get-ChildItem $Path | ? Name -match "\(\d+\).+(\.txt)"
 $Gateway    = $GWList | % { Get-Content $_.FullName | ConvertFrom-Json }
+
+# Create Virtual Switches
+ForEach ( $Name in $Gateway.Name )
+{
+    If (!(Get-VMSwitch -Name $Name -EA 0))
+    {
+        New-VMSwitch -Name $Name -SwitchType Internal -Verbose
+    }
+}
+
 $IsoPath    = "C:\Images\OPNsense-21.7-OpenSSL-dvd-amd64.iso"
 
 # [Temp settings] ######
@@ -982,7 +993,7 @@ Write-Theme "Complete [+] Gateway Configuration"
 }
 
 # Reboot system
-# 0..($Gateway.Count-1) | Start-RSJob -Name {$Gateway[$_].Name} -Throttle 4 -ScriptBlock {
+#0..($Gateway.Count-1) | Start-RSJob -Name {$Gateway[$_].Name} -Throttle 4 -ScriptBlock {
 
 #    $Gateway = $Using:Gateway
 #    $VM   = Get-VM -Name $Gateway[$_].Name

@@ -79,7 +79,7 @@ Class VMServer
     }
     Stop()
     {
-        Get-VM -Name $This.Name | ? State -ne Off | Stop-VM -Verbose
+        Get-VM -Name $This.Name | ? State -ne Off | Stop-VM -Verbose -Force
     }
     LoadISO([String]$Path)
     {
@@ -251,7 +251,7 @@ Do
     {
         $Disk = Get-Item $VMDisk\$ID.vhdx | % { $_.Length }
 
-        Write-Host ("[{0}][({1:n3}/9.000)GB]" -f $Time.Elapsed, [Float]($Disk/1GB) )
+        Write-Host ("[{0}][({1:n3}/9.000 GB)]" -f $Time.Elapsed, [Float]($Disk/1GB) )
         Start-Sleep 1
     }
     Until ($Disk -gt 9GB)
@@ -271,7 +271,7 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        Write-Host "[$($Time.Elapsed)][Inactivity:($($Sum)/250)]"
         Start-Sleep 1
     }
     Until ($Sum -gt 250)
@@ -282,7 +282,8 @@ Do
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     Start-Sleep 1
     $KB.TypeKey(13)
-    Start-Sleep 15
+    Start-Sleep 20
+
     $KB.TypeCtrlAltDel()
     Start-Sleep 3
     $KB.TypeText($Credential.GetNetworkCredential().Password)
@@ -295,7 +296,7 @@ Do
     Start-Sleep 1
     $KB.TypeText("powershell")
     $KB.TypeKey(13)
-    Start-Sleep 15
+    Start-Sleep 30
 
     $KB.TypeText("Stop-Process -Name ServerManager")
     $KB.TypeKey(13)
@@ -352,71 +353,63 @@ Do
         Write-Host "[$($Time.Elapsed)][$($Sum)]"
         Start-Sleep 1
     }
-    Until ($Sum -gt 35)
+    Until ($Sum -gt 75)
 
-    $KB.TypeText('Show-ControlPanelItem -Name System')
+    $KB.PressKey(91)
+    $KB.TypeKey(82)
+    $KB.ReleaseKey(91)
+    Start-Sleep 1
+    $KB.TypeText("control panel")
     $KB.TypeKey(13)
-    Start-Sleep 20
-
+    Start-Sleep 3
+    $KB.PressKey(17)
+    $KB.TypeKey(76)
+    $KB.ReleaseKey(17)
+    Start-Sleep 1
+    $KB.TypeText("Control Panel\System and Security\System")
+    $KB.TypeKey(13)
+    Start-Sleep 1
     $KB.TypeKey(32)
     Start-Sleep 1
-
     $KB.TypeText("[$ID]://($($Server.Item.SiteLink))")
     $KB.TypeKey(9)
     $KB.TypeKey(32)
     Start-Sleep 1
-
     $KB.TypeText($Server.Name)
     Start-Sleep 1
     $KB.TypeKey(9)
     $KB.TypeKey(32)
+    Start-Sleep 1
     $KB.TypeText($Domain)
-    $KB.TypeKey(13)
-    $KB.TypeKey(13)
-    $KB.TypeKey(27)
-    $KB.TypeKey(9)
-    $KB.TypeKey(38)
-    $KB.TypeKey(9)
+    13,13,27,9,38,9 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
     $KB.TypeText($Domain)
     $KB.TypeKey(9)
     $KB.TypeKey(13)
-    Start-Sleep 5
-    
+    Start-Sleep 10
     $KB.TypeText("$($Credential.Username)@$Domain")
     $KB.TypeKey(9)
     Start-Sleep 1
-
     $KB.TypeText("$($Credential.GetNetworkCredential().Password)")
     $KB.TypeKey(9)
-    Start-Sleep 1
-
-    $KB.TypeKey(13)
     Start-Sleep 1
 
     $KB.TypeKey(13)
     Start-Sleep 25
 
     $KB.TypeKey(13)
-    Start-Sleep 5
+    Start-Sleep 10
+
+    $KB.TypeKey(13)
+    Start-Sleep 1
 
     $KB.TypeKey(13)
     Start-Sleep 1
 
     $KB.TypeKey(9)
     $KB.TypeKey(13)
-    $KB.TypeKey(9)
-    $KB.TypeKey(13)
     Start-Sleep 1
 
-    $KB.PressKey(18)
-    $KB.TypeKey(115)
-    $KB.ReleaseKey(18)
-    Start-Sleep 1
-
-    # Reboot the computer
-    $KB.TypeText("Restart-Computer")
     $KB.TypeKey(13)
-
     # Wait for login
     Do
     {
@@ -558,6 +551,17 @@ Do
     $KB.TypeText('$Features | ? { !($_.Installed) } | % { $_.Name.Replace("_","-") } | Install-WindowsFeature -Verbose')
     $KB.TypeKey(13)
 
+    $C = 0
+    Do
+    {
+        $Item = Get-VM -Name $ID
+        Start-Sleep 1
+        Write-Host "[$($Time.Elapsed)]"
+
+        $C += 1
+    }
+    Until ($C -gt 150)
+
     $C = @( )
     Do
     {
@@ -580,29 +584,28 @@ Do
 
     $KB.TypeText('Import-Module ADDSDeployment')
     $KB.TypeKey(13)
+    Start-Sleep 10
 
-    $KB.TypeText("`$Credential=Get-Credential $($Credential.Username)@$domain")
+    $KB.TypeText("`$Pw = Read-Host 'Enter password' -AsSecureString")
     $KB.TypeKey(13)
     Start-Sleep 2
 
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
+    Start-Sleep 2
 
-    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Domain)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Server.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1}")
+    $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$($Credential.Username)@$Domain`",`$Pw)")
     $KB.TypeKey(13)
+    Start-Sleep 2
+
+    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Domain)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Server.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
+    $KB.TypeKey(13)
+    Start-Sleep 8
 
     $KB.TypeText("Install-ADDSDomainController @ADDS -Verbose")
     $KB.TypeKey(13)
-    Start-Sleep 1
-
-    0..1 | % { 
-
-        $KB.TypeText($Credential.GetNetworkCredential().Password)
-        $KB.TypeKey(13)
-        Start-Sleep 1 
-    }
-    
     Start-Sleep 120
+
     $C = @( )
     Do
     {
@@ -625,10 +628,7 @@ Do
 
     $KB.TypeCtrlAltDel()
     Start-Sleep 3
-    $KB.TypeKey(9)
-    $KB.TypeKey(9)
-    $KB.TypeKey(9)
-    $KB.TypeKey(13)
+    9,9,9,13|%{$KB.TypeKey($_); Start-Sleep -M 100 }
     Start-Sleep 1
     $KB.TypeText($Credential.Username+"@$Domain")
     $KB.TypeKey(9)
@@ -645,22 +645,66 @@ Do
     Start-Sleep 2
     
     $KB.PressKey(18)
-    $KB.TypeKey(70)
-    $KB.TypeKey(78)
+     68, 70, 78     | % { $KB.TypeKey($_); Start-Sleep -M 100 }
     $KB.ReleaseKey(18)
-    Start-Sleep 1
+    Start-Sleep -M 500
     $KB.TypeText("powershell")
+    Start-Sleep -M 500
+      9, 32,  9, 13 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
+    $KB.PressKey(18)
+    Start-Sleep -M 500
     $KB.TypeKey(9)
-    $KB.TypeKey(32)
+    $KB.ReleaseKey(18)
+    Start-Sleep -M 500
+    $KB.PressKey(18)
+    $KB.TypeKey(68)
+    Start-Sleep -M 500
     $KB.TypeKey(9)
-    $KB.TypeKey(13)
+    $KB.ReleaseKey(18)
     Start-Sleep 12
 
     $KB.TypeText("'ServerManager','TaskMgr' | % { Stop-Process -Name `$_ -EA 0 }")
     $KB.TypeKey(13)
 
+    $KB.TypeText('Remove-Item HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager')
+    $KB.TypeKey(13)
+
     # Remove from domain for recycling
-    # $KB.TypeText("Uninstall-ADDSDomainController -Confirm:`$False");$KB.TypeKey(13);Start-Sleep 1;0..1 | % {$KB.TypeText($Credential.GetNetworkCredential().Password);$KB.TypeKey(13);Start-Sleep 1}
+    $KB.TypeText("`$Pw = Read-Host 'Enter password' -AsSecureString")
+    $KB.TypeKey(13)
+    Start-Sleep 1
+
+    $KB.TypeText($Credential.GetNetworkCredential().Password)
+    $KB.TypeKey(13)
+    Start-Sleep 4
+
+    $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$($Credential.Username)@$Domain`",`$Pw)")
+    $KB.TypeKey(13)
+    Start-Sleep 2
+
+    $KB.TypeText("Uninstall-ADDSDomainController -LocalAdministratorPassword `$Pw -DemoteOperationMasterRole:`$True -ForceRemoval:`$True -Credential `$Credential -Force -Confirm:`$False")
+    $KB.TypeKey(13)
+
+    Start-Sleep 120
+    $C = @( )
+    Do
+    {
+        $Item = Get-VM -Name $ID
+
+        Switch($Item.CPUUsage)
+        {
+            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+        }
+
+        $Sum = @( Switch($C.Count)
+        {
+            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+        } ) | Invoke-Expression
+
+        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        Start-Sleep 1
+    }
+    Until ($Sum -gt 100)
 
     $X ++
 }

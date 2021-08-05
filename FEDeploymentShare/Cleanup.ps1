@@ -30,3 +30,6 @@ If (Test-Path $Path)
 {
     Get-ChildItem $Path | ? Extension -match "log|txt" | Remove-Item -Verbose
 }
+
+# VM Network Switch Cleanup
+# -------------------------

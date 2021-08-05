@@ -174,32 +174,45 @@ $DhcpOpt    = Get-DhcpServerv4OptionValue | Sort-Object OptionID
 $X = 0
 Do
 {
-    $Time      = [System.Diagnostics.Stopwatch]::StartNew()
+    # Time and logging
+    $T1        = [System.Diagnostics.Stopwatch]::StartNew()
+    $T2        = [System.Diagnostics.Stopwatch]::New()
     $Log       = @{ }
 
+    # Grab server manifest
     $Item      = $Servers[$X]
+
+    # Get switch, ID
     $Switch    = $Item.Sitelink
     $ID        = $Item.Name
+
+    # Instantiate actionable VM object
     $Server    = [VMServer]::New($Item,4096MB,50GB,2,$Switch)
     $Server.New($VMDisk)
     $Server.LoadISO($IsoPath)
+
+    # Get Virtual network interface DNS local address
     $DNS       = Get-NetAdapter | ? Name -match "($External)" | Get-NetIPAddress | % IPAddress
 
+    # Set boot settings
     $VM        = Get-VM -Name $ID
     $BootOrder = $VM | Get-VMFirmware | % { $_.BootOrder[2,0,1] }
     $VM        | Set-VMFirmware -BootOrder $BootOrder -Verbose
 
+    # Start
     $Server.Start()
 
+    # Set Msvm keyboard controls
     $Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
     $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
 
+    # Connect to the VM
     Start-Process -FilePath vmconnect -ArgumentList @("dsc0",$ID) -Verbose -Passthru
     $KB.TypeKey(13)
 
-    # Get-VM -Name $ID | Stop-VM -Force -Verbose; Start-VM -Name $ID
-    Start-Sleep 15
-    $C = @( )
+    # Timer to initialize setup
+    $T2.Start()
+    $C         = @( )
     Do
     {
         $Item = Get-VM -Name $ID
@@ -214,11 +227,12 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        $Log.Add($Log.Count,"[Initializing Setup][$($Time.Elapsed)][Inactivity:($($Sum)/35)]")
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Initializing [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/35)]")
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 35)
+    $T2.Reset()
     
     0..2 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
     $KB.TypeKey(13)
@@ -226,6 +240,7 @@ Do
 
     $KB.TypeKey(13)
 
+    $T2.Start()
     $C = @( )
     Do
     {
@@ -241,25 +256,32 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][Inactivity:($($Sum)/35)]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Starting [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/35)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 35)
+    $T2.Reset()
 
     40, 40, 40, 40,  9, 13 | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 5
     32,  9, 13,  9, 13     | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 3
      9,  9,  9,  9, 13     | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 1
 
+    # Commence main installation
+    $T2.Start()
     $C = @( )
     Do
     {
         $Disk = Get-Item $VMDisk\$ID.vhdx | % { $_.Length }
 
-        Write-Host ("[{0}][Installing [~] ({1:n3}/9.000 GB)]" -f $Time.Elapsed, [Float]($Disk/1GB) )
+        $Log.Add($Log.Count,("[$($Time.Elapsed)][Installing [~] Windows Server 2019 ($($T2.Elapsed))][({0:n3}/9.000 GB)]" -f [Float]($Disk/1GB))
         Start-Sleep 1
     }
     Until ($Disk -gt 9GB)
+    $T2.Reset()
 
+    # Set idle timer for first login
+    $T2.Start()
     $C = @( )
     Do
     {
@@ -275,15 +297,18 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        $Log.Add($Log.Count,"[$($Time.Elapsed)][Finalizing [~] Inactivity:($Sum/250)]")
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Finalizing [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/250)]")
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 250)
+    $T2.Reset()
 
-    $Log.Add($Log.count,"[$($Time.Elapsed)][First login]")
+    # Log and begin interacting with VM
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Complete [+] Setup (First login)]")
     Write-Host $Log[$Log.Count-1]
 
+    # First PW Screen
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     Start-Sleep 1
     $KB.TypeKey(9)
@@ -292,11 +317,24 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 15
 
+    # First Login screen
     $KB.TypeCtrlAltDel()
     Start-Sleep 5
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
+
+    $Log.Add($Log.count,"[$($Time.Elapsed)][First Login [@] ($(Get-Date))]")
+    Write-Host $Log[$Log.Count-1]
     Start-Sleep 60
+
+    # For the 'join network' 
+    $KB.TypeKey(27)
+    Start-Sleep 1
+
+    # Run PowerShell
+    $T2.Start()
+    $Log.Add($Log.count,"[$($Time.Elapsed)][PowerShell [~] Setup ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
 
     $KB.PressKey(91)
     $KB.TypeKey(82)
@@ -306,9 +344,13 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 30
 
+    # Stop ServerManager, get manifest, set static IP
     $KB.TypeText("Stop-Process -Name ServerManager")
     $KB.TypeKey(13)
     Start-Sleep 15
+
+    $Log.Add($Log.count,"[$($Time.Elapsed)][PowerShell [~] Setup (IP/Gateway/DNS) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
 
     $KB.TypeText("`$ifIndex = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1 | % InterfaceIndex;`$pfLength='$($Server.Item.Prefix)'")
     $KB.TypeKey(13)
@@ -330,7 +372,10 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 5
 
-    # Deposit the created scope to text file
+    # Deposit the manifest to a text file
+    $Log.Add($Log.count,"[$($Time.Elapsed)][PowerShell [~] Setup (Transfer Server Manifest) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+
     $CSV     = $Servers[$X] | ConvertTo-CSV
     $Names   = $CSV[1].Split(",")
     $Values  = $CSV[2].Split(",")
@@ -342,13 +387,19 @@ Do
     $KB.TypeText("Set-Content -Path `$Home\Desktop\server.txt -Value `$Content -Verbose")
     $KB.TypeKey(13)
     Start-Sleep 3
+    $T2.Reset()
 
     $KB.TypeText("Invoke-Expression (`$Content -join `"``n`")")
     $KB.TypeKey(13)
 
+    $T2.Start()
+    $Log.Add($Log.count,"[$($Time.Elapsed)][PowerShell [~] Setup (FightingEntropy) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+
     $KB.TypeText("IRM github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | IEX")
     $KB.TypeKey(13)
 
+    $FETime = [System.Diagnostics.Stopwatch]::StartNew()
     $C = @( )
     Do
     {
@@ -364,12 +415,15 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        $Log.Add($Log.Count,"[$($Time.Elapsed)][$($Sum)]")
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][PowerShell [~] Setup (FightingEntropy) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
-    Until ($Sum -gt 500)
+    Until ($Sum -gt 100)
+    $T2.Reset()
 
+    $Log.Add($Log.count,"[$($Time.Elapsed)][System [~] (Hostname/Network/Domain) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
     $KB.PressKey(91)
     $KB.TypeKey(82)
     $KB.ReleaseKey(91)
@@ -399,9 +453,6 @@ Do
     13,13,27,9,38,9 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
     $KB.TypeText($Domain)
     $KB.TypeKey(9)
-
-    # If ( Get-ADObject -Filter * | ? Name -match $Server.Name )
-
     $KB.TypeKey(13)
     Start-Sleep 10
     $KB.TypeText("$($Credential.Username)@$Domain")
@@ -411,7 +462,7 @@ Do
     $KB.TypeKey(9)
     Start-Sleep 1
 
-    $Log.Add($Log.Count,"[$($Time.Elapsed)][Joining domain...]")
+    $Log.Add($Log.count,"[$($Time.Elapsed)][System [~] (Joining domain...) ($($T2.Elapsed))]")
     Write-Host $Log[$Log.Count-1]
     $KB.TypeKey(13)
     Start-Sleep 25
@@ -422,14 +473,16 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 1
 
-    $KB.TypeKey(13)
+    $KB.PressKey(18)
+    $KB.TypeKey(65)
+    $KB.ReleaseKey(18)
     Start-Sleep 1
 
-    $KB.TypeKey(9)
     $KB.TypeKey(13)
-    Start-Sleep 1
+    $Log.Add($Log.count,"[$($Time.Elapsed)][System [+] (Hostname/Network/Domain) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    $T2.Reset()
 
-    $KB.TypeKey(13)
     # Wait for login
     Do
     {
@@ -438,6 +491,7 @@ Do
     }
     Until ($Item.Uptime.TotalSeconds -lt 2)
 
+    $T2.Start()
     $C = @( )
     Do
     {
@@ -453,16 +507,25 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        $Log.Add($Log.count,"[$($Time.Elapsed)][Domain [~] Restarting ($($T2.Elapsed))]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 100)
+
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Domain [+] (Joined to domain) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    $T2.Reset()
 
     $KB.TypeCtrlAltDel()
     Start-Sleep 5
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
     Start-Sleep 15
+
+    $T2.Start()
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
 
     $KB.PressKey(91)
     $KB.TypeKey(82)
@@ -495,10 +558,15 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        $Log.Add($Log.count,"[$($Time.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 100)
+
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Services [+] (Deploy Dhcp) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    $T2.Reset()
 
     # Reload the gateway/server variables
     $KB.TypeText("(Get-Content `$Home\Desktop\server.txt) -join `"``n`" | Invoke-Expression")
@@ -556,6 +624,14 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 2
 
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Services [+] (Dhcp Configured) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    $T2.Reset()
+
+    $T2.Start()
+    $Log.Add($Log.count,"[$($Time.Elapsed)][Services [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+
     $KB.TypeText('$Module = Get-FEModule')
     $KB.TypeKey(13)
     Start-Sleep 5
@@ -576,11 +652,12 @@ Do
     {
         $Item = Get-VM -Name $ID
         Start-Sleep 1
-        Write-Host "[$($Time.Elapsed)][Installing (Adds/Rsat/Dhcp/Dns) Suite]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Inactivity:$C/120)]")
+        Write-Host $Log[$Log.Count-1]
 
-        $C += 1
+        $C ++
     }
-    Until ($C -gt 250)
+    Until ($C -gt 120)
 
     $C = @( )
     Do
@@ -597,10 +674,19 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)]Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 100)
+
+    $Log.Add($Log.Count,"[$($Time.Elapsed)][Installed [+] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    $T2.Reset()
+
+    $T2.Start()
+    $Log.Add($Log.Count,"[$($Time.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
 
     $KB.TypeText('Import-Module ADDSDeployment')
     $KB.TypeKey(13)
@@ -622,9 +708,21 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 8
 
+
     $KB.TypeText("Install-ADDSDomainController @ADDS -Verbose")
     $KB.TypeKey(13)
-    Start-Sleep 120
+    $Log.Add($Log.Count,"[$($Time.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+
+    $T2.Start()
+    Do
+    {
+        $Item = Get-VM -Name $ID
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+        Write-Host $Log[$Log.Count-1]
+        Start-Sleep 1
+    }
+    Until($Item.Uptime.TotalSeconds -le 2)
 
     $C = @( )
     Do
@@ -641,11 +739,18 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
+        $Log.Add($Log.Count,"[$($Time.Elapsed)][Booting [~] Domain Controller ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
     Until ($Sum -gt 100)
 
+    $T2.Stop()
+    $Log.Add($Log.Count,"[$($Time.Elapsed)][Deployed [+] (Domain Controller) ($($T2.Elapsed))]")
+    Write-Host $Log[$Log.Count-1]
+    
+    Set-Content -Path "$Home\Desktop\($ID)($Date).txt" -value $Log[0..($Log.Count-1)] -Verbose
+    <# Recycling
     $KB.TypeCtrlAltDel()
     Start-Sleep 3
     9,9,9,13|%{$KB.TypeKey($_); Start-Sleep -M 100 }
@@ -678,7 +783,6 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 4
 
-    # Remove from domain for recycling
     $KB.TypeText("`$Pw = Read-Host 'Enter password' -AsSecureString")
     $KB.TypeKey(13)
     Start-Sleep 1
@@ -704,27 +808,12 @@ Do
     }
     Until ($Item.Uptime.TotalSeconds -le 2)
 
-    Get-ADComputer -Filter * | ? Name -match $Server.Name | Remove-ADComputer -Confirm:$False -Recursive -Force -Verbose
+    Get-ADObject -LDAPFilter "(objectClass=server)"   -SearchBase "CN=Configuration,$Base" | ? Name -match $Server.Name
+    Get-ADObject -LDAPFilter "(objectClass=computer)" -SearchBase $Base | ? Name -match $Server.Name | Remove-ADObject -Confirm:$False -Recursive -Verbose
 
-    $C = @( )
-    Do
-    {
-        $Item = Get-VM -Name $ID
-
-        Switch($Item.CPUUsage)
-        {
-            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
-        }
-
-        $Sum = @( Switch($C.Count)
-        {
-            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
-        } ) | Invoke-Expression
-
-        Write-Host "[$($Time.Elapsed)][$($Sum)]"
-        Start-Sleep 1
-    }
-    Until ($Sum -gt 100)
+    $Server.Stop()
+    $Server.Remove()
+    #>
 
     $X ++
 }

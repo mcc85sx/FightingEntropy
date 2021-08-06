@@ -68,6 +68,7 @@ Class VMServer
         }
 
         New-VM @Object -Verbose | Add-VMDVDDrive -Verbose
+        Set-VMProcessor -VMName $This.Name -Count 2 -Verbose
     }
     Start()
     {
@@ -593,7 +594,7 @@ Do
             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
         } ) | Invoke-Expression
 
-        $Log.Add($Log.count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))]")
+        $Log.Add($Log.count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
@@ -687,7 +688,7 @@ Do
     {
         $Item = Get-VM -Name $ID
         Start-Sleep 1
-        $Log.Add($Log.Count,"[$($T1.Elapsed)][Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Inactivity:$C/120)]")
+        $Log.Add($Log.Count,"[$($T1.Elapsed)][Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Timer:$C/120)]")
         Write-Host $Log[$Log.Count-1]
 
         $C ++

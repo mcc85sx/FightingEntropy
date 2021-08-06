@@ -352,6 +352,14 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 15
 
+    $KB.TypeText("Set-DisplayResolution -Width 1280 -Height 720")
+    $KB.TypeKey(13)
+    Start-Sleep 5
+
+    $KB.TypeText("y")
+    $KB.TypeKey(13)
+    Start-Sleep 1
+
     $Log.Add($Log.count,"[$($T1.Elapsed)][PowerShell [~] Setup (IP/Gateway/DNS) ($($T2.Elapsed))]")
     Write-Host $Log[$Log.Count-1]
 
@@ -765,9 +773,11 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 40
 
+    $KB.TypeKey(27)
     $KB.PressKey(91)
     $KB.TypeKey(82)
     $KB.ReleaseKey(91)
+    Start-Sleep 1
     $KB.TypeText("taskmgr")
     $KB.TypeKey(13)
     Start-Sleep 2
@@ -782,7 +792,7 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 12
 
-    $KB.TypeText("'ServerManager','TaskMgr' | % { Stop-Process -Name `$_ -EA 0 };Remove-Item HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager -EA 0")
+    $KB.TypeText("'ServerManager','TaskMgr','Shutdown' | % { Stop-Process -Name `$_ -EA 0 }; Remove-Item HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager -EA 0")
     $KB.TypeKey(13)
     Start-Sleep 4
 

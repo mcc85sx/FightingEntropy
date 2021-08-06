@@ -276,7 +276,7 @@ Do
     {
         $Disk = Get-Item $VMDisk\$ID.vhdx | % { $_.Length }
 
-        $Log.Add($Log.Count,("[$($T1.Elapsed)][Installing [~] Windows Server 2019 ($($T2.Elapsed))][({0:n3}/9.000 GB)]" -f [Float]($Disk/1GB)))
+        $Log.Add($Log.Count,("[$($T1.Elapsed)][Installing [~] Windows Server 2019 ($($T2.Elapsed))][({0:n3}/8.500 GB)]" -f [Float]($Disk/1GB)))
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
@@ -354,7 +354,7 @@ Do
 
     $KB.TypeText("Set-DisplayResolution -Width 1280 -Height 720")
     $KB.TypeKey(13)
-    Start-Sleep 5
+    Start-Sleep 10
 
     $KB.TypeText("y")
     $KB.TypeKey(13)

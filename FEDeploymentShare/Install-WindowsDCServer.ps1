@@ -629,6 +629,19 @@ Do
     $KB.TypeKey(13)
     Start-Sleep 10
 
+    $KB.TypeText('$Arp = arp -a | ? { $_ -match "dynamic" -and $_ -match "$($Hash.Start) "};$ClientID=[Regex]::Matches($Arp,"([a-f0-9]{2}\-){5}([a-f0-9]){2}").Value -Replace "-|:",""')
+    $KB.TypeKey(13)
+    Start-Sleep 6
+
+    # Set Initial DHCP Reservations
+    $KB.TypeText('Add-DhcpServerv4Reservation -ScopeID $Hash.Network -IPAddress $Hash.Start -ClientID $ClientID -Name Router -Verbose')
+    $KB.TypeKey(13)
+    Start-Sleep 4
+
+    $KB.TypeText('Add-DhcpServerv4Reservation -ScopeID $Hash.Network -IPAddress $Config.IPv4Address.IPAddress -ClientID $Config.NetAdapter.LinkLayerAddress.Replace("-","").ToLower() -Name Server -Verbose')
+    $KB.TypeKey(13)
+    Start-Sleep 6
+
     # Set Dhcp Scope Options
     $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 3 -Value `$Config.IPV4DefaultGateway.NextHop -Verbose") # (Router)
     $KB.TypeKey(13)
@@ -786,6 +799,8 @@ Do
     Write-Host $Log[$Log.Count-1]
     
     Set-Content -Path "$Home\Desktop\($ID)($Date).txt" -value $Log[0..($Log.Count-1)] -Verbose
+
+    # !!!!!! Set up (Sitelink/Bridge/Replication)
     <# Recycling
     $KB.TypeCtrlAltDel()
     Start-Sleep 3

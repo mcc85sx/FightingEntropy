@@ -188,6 +188,8 @@ Do
     $Switch    = $Item.Sitelink
     $ID        = $Item.Name
 
+    Get-ADObject -LDAPFilter "(objectClass=server)" -SearchBase "CN=Configuration,$Base" | ? Name -match $ID | Remove-ADObject -Recursive -Confirm:$False -Verbose
+
     # Instantiate actionable VM object
     $Server    = [VMServer]::New($Item,4096MB,50GB,2,$Switch)
     $Server.New($VMDisk)

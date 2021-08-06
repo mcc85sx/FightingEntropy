@@ -277,9 +277,10 @@ Do
         $Disk = Get-Item $VMDisk\$ID.vhdx | % { $_.Length }
 
         $Log.Add($Log.Count,("[$($T1.Elapsed)][Installing [~] Windows Server 2019 ($($T2.Elapsed))][({0:n3}/9.000 GB)]" -f [Float]($Disk/1GB)))
+        Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
-    Until ($Disk -gt 9GB)
+    Until ($Disk -gt 8.5GB)
     $T2.Reset()
 
     # Set idle timer for first login

@@ -280,7 +280,7 @@ Do
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
-    Until ($Disk -gt 8.5GB)
+    Until ($Disk -ge 8.5GB)
     $T2.Reset()
 
     # Set idle timer for first login
@@ -304,11 +304,34 @@ Do
         Write-Host $Log[$Log.Count-1]
         Start-Sleep 1
     }
-    Until ($Sum -gt 250)
+    Until ($Item.Uptime.TotalSeconds -le 2)
+    $T2.Reset()
+
+    $T2.Start()
+    $C = @( )
+    Do
+    {
+        $Item = Get-VM -Name $ID
+
+        Switch($Item.CPUUsage)
+        {
+            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+        }
+
+        $Sum = @( Switch($C.Count)
+        {
+            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+        } ) | Invoke-Expression
+
+        $Log.Add($Log.Count,"[$($T1.Elapsed)][Preparing [~] System ($($T2.Elapsed))][(Inactivity:$Sum/250)]")
+        Write-Host $Log[$Log.Count-1]
+        Start-Sleep 1
+    }
+    Until ($Sum -ge 250)
     $T2.Reset()
 
     # Log and begin interacting with VM
-    $Log.Add($Log.count,"[$($T1.Elapsed)][Complete [+] Setup (First login)]")
+    $Log.Add($Log.count,"[$($T1.Elapsed)][Ready [+] System (First login)]")
     Write-Host $Log[$Log.Count-1]
 
     # First PW Screen
@@ -326,7 +349,7 @@ Do
     $KB.TypeText($Credential.GetNetworkCredential().Password)
     $KB.TypeKey(13)
 
-    $Log.Add($Log.count,"[$($T1.Elapsed)][First Login [@] ($(Get-Date))]")
+    $Log.Add($Log.Count,"[$($T1.Elapsed)][First Login [@] ($(Get-Date))]")
     Write-Host $Log[$Log.Count-1]
     Start-Sleep 60
 
@@ -336,7 +359,7 @@ Do
 
     # Run PowerShell
     $T2.Start()
-    $Log.Add($Log.count,"[$($T1.Elapsed)][PowerShell [~] Setup ($($T2.Elapsed))]")
+    $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup ($($T2.Elapsed))]")
     Write-Host $Log[$Log.Count-1]
 
     $KB.PressKey(91)
@@ -354,7 +377,7 @@ Do
 
     $KB.TypeText("Set-DisplayResolution -Width 1280 -Height 720")
     $KB.TypeKey(13)
-    Start-Sleep 10
+    Start-Sleep 12
 
     $KB.TypeText("y")
     $KB.TypeKey(13)
@@ -410,7 +433,6 @@ Do
     $KB.TypeText("IRM github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | IEX")
     $KB.TypeKey(13)
 
-    $FETime = [System.Diagnostics.Stopwatch]::StartNew()
     $C = @( )
     Do
     {
@@ -779,13 +801,14 @@ Do
     $KB.ReleaseKey(91)
     Start-Sleep 1
     $KB.TypeText("taskmgr")
+    Start-Sleep -M 100
     $KB.TypeKey(13)
     Start-Sleep 2
     
     $KB.PressKey(18)
      68, 70, 78     | % { $KB.TypeKey($_); Start-Sleep -M 100 }
     $KB.ReleaseKey(18)
-    Start-Sleep -M 500
+    Start-Sleep 1
     $KB.TypeText("powershell")
     $KB.TypeKey(9)
     $KB.TypeKey(32)

@@ -1,6 +1,5 @@
-#Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
-#{
-   
+Function New-FEDeploymentShare
+{
     # Load Assemblies
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
@@ -491,6 +490,33 @@ public struct WindowPosition
             $This.Files = @( $This.Items | % { [GwFile]::New($_) } )
         }
     }
+
+    Class DsShare
+    {
+        [String]$Name
+        [String]$Root
+        [Object]$Share
+        [String]$Description
+        DsShare([Object]$Drive)
+        {
+            $This.Name        = $Drive.Name
+            $This.Root        = $Drive.Path
+            $This.Share       = Get-SMBShare | ? Path -eq $Drive.Path | % Name
+            $This.Description = $Drive.Description
+        }
+        DsShare([String]$Name,[String]$Root,[String]$Share,[String]$Description)
+        {
+            If (Get-SMBShare -Name $Share)
+            {
+                Throw "Share name is already assigned"
+            }
+
+            $This.Name        = $Name
+            $This.Root        = $Root
+            $This.Share       = $Share
+            $This.Description = $Description
+        }
+    }
     
     Class Certificate
     {
@@ -581,8 +607,8 @@ public struct WindowPosition
             Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
             Static [Object]    $Keys  = @{
     
-                " " =  32; "˂" =  37; "˄" =  38; "˃" =  39; "˅" =  40; "0" =  48; 
-                "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
+                " " =  32; [Char]706 =  37; [Char]708 =  38; [char]707 =  39; [Char]709 =  40; 
+                "0" =  48; "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
                 "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
                 "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
                 "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
@@ -644,6 +670,98 @@ public struct WindowPosition
             $This.NewVhdSizeBytes    = $HD
             $This.Generation         = $Gen
             $This.SwitchName         = $Switch
+        }
+    }
+
+    Class VMServer
+    {
+        Hidden [Object]$Item
+        [Object]$Name
+        [Object]$MemoryStartupBytes
+        [Object]$Path
+        [Object]$NewVHDPath
+        [Object]$NewVHDSizeBytes
+        [Object]$Generation
+        [Object]$SwitchName
+        VMServer([Object]$Item,[Object]$Mem,[Object]$HD,[UInt32]$Gen,[String]$Switch)
+        {
+            $This.Item               = $Item
+            $This.Name               = $Item.Name
+            $This.MemoryStartupBytes = $Mem
+            $This.Path               = "{0}\$($Item.Name).vmx"
+            $This.NewVhdPath         = "{0}\$($Item.Name).vhdx"
+            $This.NewVhdSizeBytes    = $HD
+            $This.Generation         = $Gen
+            $This.SwitchName         = $Switch
+        }
+        New([Object]$Path)
+        {
+            If (!(Test-Path $Path))
+            {
+                Throw "Invalid path"
+            }
+
+            ElseIf (Get-VM -Name $This.Name -EA 0)
+            {
+                Write-Host "VM exists..."
+                If (Get-VM -Name $This.Name | ? Status -ne Off)
+                {
+                    $This.Stop()
+                }
+
+                $This.Remove()
+            }
+
+            $This.Path             = $This.Path -f $Path
+            $This.NewVhdPath       = $This.NewVhdPath -f $Path
+
+            If (Test-Path $This.Path)
+            {
+                Remove-Item $This.Path -Recurse -Confirm:$False -Verbose
+            }
+
+            If (Test-Path $This.NewVhdPath)
+            {
+                Remove-Item $This.NewVhdPath -Recurse -Confirm:$False -Verbose
+            }
+
+            $Object                = @{
+
+                Name               = $This.Name
+                MemoryStartupBytes = $This.MemoryStartupBytes
+                Path               = $This.Path
+                NewVhdPath         = $This.NewVhdPath
+                NewVhdSizeBytes    = $This.NewVhdSizebytes
+                Generation         = $This.Generation
+                SwitchName         = $This.SwitchName
+            }
+
+            New-VM @Object -Verbose | Add-VMDVDDrive -Verbose
+            Set-VMProcessor -VMName $This.Name -Count 2 -Verbose
+        }
+        Start()
+        {
+            Get-VM -Name $This.Name | ? State -eq Off | Start-VM -Verbose
+        }
+        Remove()
+        {
+            Get-VM -Name $This.Name | Remove-VM -Force -Confirm:$False -Verbose
+        }
+        Stop()
+        {
+            Get-VM -Name $This.Name | ? State -ne Off | Stop-VM -Verbose -Force
+        }
+        LoadISO([String]$Path)
+        {
+            If (!(Test-Path $Path))
+            {
+                Throw "Invalid ISO path"
+            }
+
+            Else
+            {
+                Get-VM -Name $This.Name | % { Set-VMDVDDrive -VMName $_.Name -Path $Path -Verbose }
+            }
         }
     }
 
@@ -1488,11 +1606,10 @@ public struct WindowPosition
                                         <RowDefinition Height="80"/>
                                     </Grid.RowDefinitions>
                                     <DataGrid Grid.Row="0" Name="DcAggregate"
-                                                  ScrollViewer.CanContentScroll="True"
-                                                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                                      ScrollViewer.CanContentScroll="True"
+                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
-    
                                             <DataGridTextColumn Header="Name"     Binding='{Binding SiteLink}' Width="120"/>
                                             <DataGridTextColumn Header="Location" Binding='{Binding Location}' Width="100"/>
                                             <DataGridTextColumn Header="Region"   Binding='{Binding Region}' Width="60"/>
@@ -1535,9 +1652,9 @@ public struct WindowPosition
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
                                     <DataGrid Grid.Row="0" Name="DcTopography"
-                                                  ScrollViewer.CanContentScroll="True"
-                                                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                                      ScrollViewer.CanContentScroll="True"
+                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Name" Binding="{Binding SiteLink}" Width="150"/>
                                             <DataGridTextColumn Header="Sitename" Binding="{Binding SiteName}" Width="200"/>
@@ -1564,7 +1681,7 @@ public struct WindowPosition
                                     </Grid>
                                 </Grid>
                             </GroupBox>
-                            
+    
                         </Grid>
                     </TabItem>
                     <TabItem Header="Network" BorderBrush="{x:Null}">
@@ -1592,9 +1709,9 @@ public struct WindowPosition
                                         <RowDefinition Height="80"/>
                                     </Grid.RowDefinitions>
                                     <DataGrid Name="NwAggregate"
-                                                  ScrollViewer.CanContentScroll="True" 
-                                                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                                      ScrollViewer.CanContentScroll="True" 
+                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Name"      Binding="{Binding Network}"   Width="100"/>
                                             <DataGridTextColumn Header="Netmask"   Binding="{Binding Netmask}"   Width="100"/>
@@ -1633,9 +1750,9 @@ public struct WindowPosition
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
                                     <DataGrid Grid.Row="0" Name="NwTopography"
-                                                      ScrollViewer.CanContentScroll="True"
-                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
-                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                                          ScrollViewer.CanContentScroll="True"
+                                                          ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                          ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Name"    Binding="{Binding Name}" Width="150"/>
                                             <DataGridTextColumn Header="Network" Binding="{Binding Network}" Width="200"/>
@@ -1693,9 +1810,9 @@ public struct WindowPosition
                                         <RowDefinition Height="80"/>
                                     </Grid.RowDefinitions>
                                     <DataGrid Name="GwAggregate"
-                                                  ScrollViewer.CanContentScroll="True" 
-                                                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                                      ScrollViewer.CanContentScroll="True" 
+                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Name"      Binding="{Binding Name}"     Width="*"/>
                                             <DataGridTextColumn Header="Location"  Binding="{Binding Location}" Width="*"/>
@@ -1758,6 +1875,24 @@ public struct WindowPosition
                                     </Grid>
                                 </Grid>
                             </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Sites">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="200"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="[SLSiteList]">
+                                    <TextBox Name="SLSiteList"/>
+                                </GroupBox>
+                                <Button Grid.Column="1" Name="SLLoadSiteList" Content="Load"/>
+                            </Grid>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Imaging" BorderBrush="{x:Null}">
@@ -1908,14 +2043,14 @@ public struct WindowPosition
                                 </Grid>
                             </GroupBox>
                             <GroupBox Grid.Row="2" Header="[UpdViewer]">
-                                    <DataGrid Name="UpdViewer">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
-                                            <DataGridCheckBoxColumn Header="Install" Binding="{Binding Install}" Width="50"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </GroupBox>
+                                <DataGrid Name="UpdViewer">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
+                                        <DataGridCheckBoxColumn Header="Install" Binding="{Binding Install}" Width="50"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
                             <GroupBox Grid.Row="3" Header="[UpdWim]">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -1944,43 +2079,76 @@ public struct WindowPosition
                     <TabItem Header="Share">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="80"/>
-                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="310"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="150"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Name="DsRootSelect" Grid.Column="0" Content="Select"/>
-                                <GroupBox Grid.Column="1" Header="[DsRootPath (Root)]">
-                                    <TextBox Name="DsRootPath"/>
-                                </GroupBox>
-                                <GroupBox Grid.Column="2" Header="[DsShareName (SMB)]">
-                                    <TextBox Name="DsShareName"/>
-                                </GroupBox>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="150"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="150"/>
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column="0" Header="[DsDriveName]">
-                                    <TextBox Name="DsDriveName"/>
-                                </GroupBox>
-                                <GroupBox Grid.Column="1" Header="[DsDescription]">
-                                    <TextBox Name="DsDescription"/>
-                                </GroupBox>
-                                <GroupBox Grid.Column="2" Header="[Legacy MDT/PSD]">
-                                    <ComboBox Name="DsType">
-                                        <ComboBoxItem Content="MDT" IsSelected="True"/>
-                                        <ComboBoxItem Content="PSD"/>
-                                    </ComboBox>
-                                </GroupBox>
-                            </Grid>
+                            <GroupBox Header="[DsAggregate]">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="120"/>
+                                        <RowDefinition Height="180"/>
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Grid.Row="0" Name="DsAggregate"
+                                                    ScrollViewer.CanContentScroll="True" 
+                                                    ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                    ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="60"/>
+                                            <DataGridTextColumn Header="Root" Binding="{Binding Root}" Width="*"/>
+                                            <DataGridTextColumn Header="Share" Binding="{Binding Share}" Width="150"/>
+                                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="Auto"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="80"/>
+                                            <RowDefinition Height="80"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="50"/>
+                                            </Grid.ColumnDefinitions>
+                                            <GroupBox Grid.Column="0" Header="[DsDriveName]">
+                                                <TextBox Name="DsDriveName"/>
+                                            </GroupBox>
+                                            <GroupBox Grid.Column="1" Header="[DsRootPath (Root)]">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button Grid.Column="0" Name="DsRootSelect" Content="Select"/>
+                                                    <TextBox Grid.Column="1" Name="DsRootPath"/>
+                                                </Grid>
+                                            </GroupBox>
+                                            <Button Grid.Column="2" Name="DsAddShare" Content="+"/>
+                                            <Button Grid.Column="3" Name="DcRemoveShare" Content="-"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="150"/>
+                                            </Grid.ColumnDefinitions>
+                                            <GroupBox Grid.Column="0" Header="[DsShareName (SMB)]">
+                                                <TextBox Name="DsShareName"/>
+                                            </GroupBox>
+                                            <GroupBox Grid.Column="1" Header="[DsDescription]">
+                                                <TextBox Name="DsDescription"/>
+                                            </GroupBox>
+                                            <GroupBox Grid.Column="2" Header="[Legacy MDT/PSD]">
+                                                <ComboBox Name="DsType">
+                                                    <ComboBoxItem Content="MDT" IsSelected="True"/>
+                                                    <ComboBoxItem Content="PSD"/>
+                                                </ComboBox>
+                                            </GroupBox>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </GroupBox>
                             <GroupBox Grid.Row="2" Header="[DsShareConfig]">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -1988,7 +2156,25 @@ public struct WindowPosition
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
                                     <TabControl Grid.Row="0">
-                                        <TabItem Header="Domain Admin">
+                                        <TabItem Header="Network">
+                                            <Grid VerticalAlignment="Top">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="80"/>
+                                                    <RowDefinition Height="80"/>
+                                                    <RowDefinition Height="80"/>
+                                                </Grid.RowDefinitions>
+                                                <GroupBox Grid.Row="0" Header="[DsNwNetBiosName]">
+                                                    <TextBox Name="DsNwNetBiosName"/>
+                                                </GroupBox>
+                                                <GroupBox Grid.Row="1" Header="[DsNwDnsName]">
+                                                    <TextBox Name="DsNwDnsName"/>
+                                                </GroupBox>
+                                                <GroupBox Grid.Row="2" Header="[DsNwMachineOuName]">
+                                                    <TextBox Name="DsNwMachineOuName"/>
+                                                </GroupBox>
+                                            </Grid>
+                                        </TabItem>
+                                        <TabItem Header="Domain">
                                             <Grid  VerticalAlignment="Top">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="80"/>
@@ -2009,7 +2195,7 @@ public struct WindowPosition
                                                 </GroupBox>
                                             </Grid>
                                         </TabItem>
-                                        <TabItem Header="Local Admin">
+                                        <TabItem Header="Local">
                                             <Grid VerticalAlignment="Top">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="80"/>
@@ -2036,26 +2222,26 @@ public struct WindowPosition
                                                     <RowDefinition Height="80"/>
                                                     <RowDefinition Height="80"/>
                                                     <RowDefinition Height="80"/>
-                                                    <RowDefinition Height="80"/>
                                                 </Grid.RowDefinitions>
                                                 <Grid Grid.Row="0">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="100"/>
-                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="50"/>
+                                                        <ColumnDefinition Width="150"/>
+                                                        <ColumnDefinition Width="150"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Button Name="DsBrCollect" Content="Collect" IsEnabled="True"/>
-                                                    <GroupBox Grid.Column="1" Header="[BrPhone (Support Phone)]">
+                                                    <Button Name="DsBrCollect" Content="~" IsEnabled="True"/>
+                                                    <GroupBox Grid.Column="1" Header="[BrPhone]">
                                                         <TextBox Name="DsBrPhone"/>
                                                     </GroupBox>
-                                                    <GroupBox Grid.Column="2" Header="[BrHours (Support Hours)]">
+                                                    <GroupBox Grid.Column="2" Header="[BrHours]">
                                                         <TextBox Name="DsBrHours"/>
                                                     </GroupBox>
+                                                    <GroupBox Grid.Column="3" Header="[BrWebsite]">
+                                                        <TextBox Name="DsBrWebsite"/>
+                                                    </GroupBox>
                                                 </Grid>
-                                                <GroupBox Grid.Row="1" Header="[BrWebsite (Support Website)]">
-                                                    <TextBox Name="DsBrWebsite"/>
-                                                </GroupBox>
-                                                <GroupBox Grid.Row="2" Header="[BrLogo (120x120 Bitmap/*.bmp)]">
+                                                <GroupBox Grid.Row="1" Header="[BrLogo (120x120 Bitmap/*.bmp)]">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="100"/>
@@ -2065,7 +2251,7 @@ public struct WindowPosition
                                                         <TextBox Grid.Column="1" Name="DsBrLogo"/>
                                                     </Grid>
                                                 </GroupBox>
-                                                <GroupBox Grid.Row="3" Header="[BrBackground (Common Image File)]">
+                                                <GroupBox Grid.Row="2" Header="[BrBackground (Common Image File)]">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="100"/>
@@ -2074,24 +2260,6 @@ public struct WindowPosition
                                                         <Button Grid.Column="0" Name="DsBrBackgroundSelect" Content="Select"/>
                                                         <TextBox Grid.Column="1" Name="DsBrBackground"/>
                                                     </Grid>
-                                                </GroupBox>
-                                            </Grid>
-                                        </TabItem>
-                                        <TabItem Header="Network">
-                                            <Grid VerticalAlignment="Top">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="80"/>
-                                                    <RowDefinition Height="80"/>
-                                                    <RowDefinition Height="80"/>
-                                                </Grid.RowDefinitions>
-                                                <GroupBox Grid.Row="0" Header="[DsNwNetBiosName]">
-                                                    <TextBox Name="DsNwNetBiosName"/>
-                                                </GroupBox>
-                                                <GroupBox Grid.Row="1" Header="[DsNwDnsName]">
-                                                    <TextBox Name="DsNwDnsName"/>
-                                                </GroupBox>
-                                                <GroupBox Grid.Row="2" Header="[DsNwMachineOuName]">
-                                                    <TextBox Name="DsNwMachineOuName"/>
                                                 </GroupBox>
                                             </Grid>
                                         </TabItem>
@@ -2187,6 +2355,7 @@ public struct WindowPosition
         [Object]            $Domain
         [Object]           $Network
         [Object]           $Gateway
+        [Object]            $Server
         [Object]             $Image
         [Object]            $Update
         [Object]             $Share
@@ -2218,6 +2387,7 @@ public struct WindowPosition
             $This.Domain  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Network = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Gateway = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Server  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Image   = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Update  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Share   = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
@@ -2314,7 +2484,7 @@ public struct WindowPosition
                 $This.Network    = @( $Tmp )
             }
         }
-        [Void] AddSubnet([String]$Prefix)
+        [Void] AddSubnet([String]$Prefix) # Add further error handling on input
         {
             If ( $Prefix -notmatch "((\d+\.+){3}\d+\/\d+)" )
             {
@@ -2437,6 +2607,9 @@ public struct WindowPosition
     $Xaml.IO.CfgWinPE.ItemsSource       = @( )
     $Xaml.IO.CfgIIS.ItemsSource         = @( )
 
+    # [DataGrid]://PersistentDrives
+    $Xaml.IO.DsAggregate.ItemsSource    = @( )
+
     # [CfgServices]://$Main.Config
     $Xaml.IO.CfgServices.ItemsSource    = @( $Main.Config )
 
@@ -2449,10 +2622,13 @@ public struct WindowPosition
         If (Get-MDTPersistentDrive)
         {
             Restore-MDTPersistentDrive
-            $Persist = Get-MDTPersistentDrive
+            ForEach ($Drive in Get-MDTPersistentDrive)
+            {
+                $Xaml.IO.DsAggregate.ItemsSource += [DsShare]$Drive
+            }
         }
 
-        $Xaml.IO.DsDriveName.Text = ("FE{0:d3}" -f @($Persist.Count + 1))
+        $Xaml.IO.DsAggregate.ItemsSource += [DsShare]@{ Name = "<New>"; Root = "-"; Share = "-"; Description = "-" }
     }
 
 #    ____                                                                                                    ________    
@@ -2832,8 +3008,8 @@ public struct WindowPosition
 
                 0..4 | % { 
                     
-                    $OU.Name        = "Gateway","Server","Computers","Users","Service")[$_]
-                    $OU.Description = "(Routing/Remote Access)","(Domain Servers)","(Workstations)","(Domain Users)","(Service Accounts)")[$_]
+                    $OU.Name        = ("Gateway","Server","Computers","Users","Service")[$_]
+                    $OU.Description = ("(Routing/Remote Access)","(Domain Servers)","(Workstations)","(Domain Users)","(Service Accounts)")[$_]
                     New-ADOrganizationalUnit @OU -Verbose
                 }
 
@@ -2855,10 +3031,10 @@ public struct WindowPosition
 #    ¯¯¯\\__[ Sites Tab  ]__________________________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-    $Xaml.IO.SLLoadSiteList.Add_Click(
-    {
+    #$Xaml.IO.SLLoadSiteList.Add_Click(
+    #{
 
-    })
+    #})
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
@@ -3262,6 +3438,8 @@ public struct WindowPosition
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
     
     # [Share]://Variables
+    # $Xaml.IO.DsAggregate              # DataGrid
+
     # $Xaml.IO.DsRootSelect             # Button
     # $Xaml.IO.DsRootPath               # Text
     # $Xaml.IO.DsShareName              # Text
@@ -3295,6 +3473,71 @@ public struct WindowPosition
     # $Xaml.IO.DsUpdate                  # Button
 
     # [Share]://Events
+    $Xaml.IO.DsAggregate.Add_SelectionChanged(
+    {
+        $Item = $Xaml.IO.DsAggregate.SelectedItem
+        If ( $Item.Name -match "(\<New\>)" )
+        {
+            $Xaml.IO.DsDriveName.Text     = ("FE{0:d3}" -f $Xaml.IO.DsAggregate.Items.Count)
+            $Xaml.IO.DsRootPath.Text      = ""
+            $Xaml.IO.DsShareName.Text     = ""
+            $Xaml.IO.DsDescription.Text   = ("[FightingEntropy({0})][(2021.7.0)]" -f [char]960)
+            $Xaml.IO.DsType.SelectedIndex = 0
+        }
+
+        Else
+        {
+            $Xaml.IO.DsDriveName.Text     = $Item.Name
+            $Xaml.IO.DsRootPath.Text      = $Item.Root
+            $Xaml.IO.DsShareName.Text     = $Item.Share
+            $Xaml.IO.DsDescription.Text   = $Item.Description
+            $Xaml.IO.DsType.SelectedIndex = 0 # Write logic for PSD share here
+        }
+    })
+
+    $Xaml.IO.DsAddShare.Add_Click(
+    {
+        If ($Xaml.IO.DsDriveName.Text -notmatch "(\w|\d)+")
+        {
+            Return [System.Windows.MessageBox]::Show("Drive label can only contain alphanumeric characters","Error")
+        }
+
+        ElseIf ($Xaml.IO.DsRootPath.Text -in $Xaml.IO.DsAggregate.Items.Root )
+        {
+            Return [System.Windows.MessageBox]::Show("Selected path is already assigned to another deployment share","Error")
+        }
+
+        ElseIf ($Xaml.IO.DsRootPath | ? Text -in @("",$Null) )
+        {
+            Return [System.Windows.MessageBox]::Show("Selected path is invalid","Error")
+        }
+
+        ElseIf ($Xaml.IO.DsShareName.Text -in $Xaml.IO.DsAggregate.Items.Share)
+        {
+            Return [System.Windows.MessageBox]::Show("Selected share name is already assigned to another deployment share","Error")
+        }
+
+        Else
+        {
+            $Xaml.IO.DsAggregate.ItemsSource += [DsShare]::New($Xaml.IO.DsDriveName.Text,$Xaml.IO.DsRootPath.Text,$Xaml.IO.DsShareName.Text,$Xaml.IO.DsDescription.Text)
+        }
+    })
+
+    $Xaml.IO.DsRemoveShare.Add_Click(
+    {
+        If ( $Xaml.IO.DsAggregate.SelectedIndex -eq -1 )
+        {
+            Return [System.Windows.MessageBox]::Show("No share to remove is even selected","Error")
+        }
+
+        Else
+        {
+            $Items = @( $Xaml.IO.DsAggregate.ItemsSource | ? Name -ne $Xaml.IO.DsAggregate.SelectedItem.Name )
+            $Xaml.IO.DsAggregate.ItemsSource = @( )
+            $Xaml.IO.DsAggregate.ItemsSource = @( $Items )
+        }
+    })
+
     $Xaml.IO.DsBrCollect.Add_Click(
     {
         $OEM = Get-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\OEMInformation' -EA 0
@@ -3396,27 +3639,27 @@ public struct WindowPosition
 
         ElseIf (!$Xaml.IO.DsDcUsername.Text)
         {
-            [System.Windows.MessageBox]::Show("Missing the deployment share domain account name","Error")
+            Return [System.Windows.MessageBox]::Show("Missing the deployment share domain account name","Error")
         }
 
-        ElseIf ($Xaml.IO.DsDCPassword.SecurePassword -notmatch $Xaml.IO.DsDCConfirm.SecurePassword)
+        ElseIf ($Xaml.IO.DsDcPassword.SecurePassword -notmatch $Xaml.IO.DsDcConfirm.SecurePassword)
         {
-            [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         } 
 
         ElseIf (!$Xaml.IO.DsLmUsername.Text)
         {
-            [System.Windows.MessageBox]::Show("Missing the child item local account name","Error")
+            Return [System.Windows.MessageBox]::Show("Missing the child item local account name","Error")
         }
 
         ElseIf ($Xaml.IO.DsLmPassword.SecurePassword -notmatch $Xaml.IO.DsLmConfirm.SecurePassword)
         {
-            [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         }
 
-        ElseIf (!(Get-ADObject -Filter * | ? DistinguishedName -eq $Xaml.IO.DsMachineOuName.Text))
+        ElseIf (!(Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" | ? DistinguishedName -eq $Xaml.IO.DsNwMachineOuName.Text))
         {
-            [System.Windows.MessageBox]::Show("Invalid OU specified","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid OU specified","Error")
         }
 
         Else
@@ -3437,17 +3680,17 @@ public struct WindowPosition
 
         If ($Xaml.IO.DsRootPath.Text -in $Persist.Root)
         {
-            [System.Windows.MessageBox]::Show("That path belongs to an existing deployment share","Error")
+            Return [System.Windows.MessageBox]::Show("That path belongs to an existing deployment share","Error")
         }
 
         ElseIf($Xaml.IO.DsShareName.Text -in $SMB.Name)
         {
-            [System.Windows.MessageBox]::Show("That share name belongs to an existing SMB share","Error")
+            Return [System.Windows.MessageBox]::Show("That share name belongs to an existing SMB share","Error")
         }
 
         ElseIf ($Xaml.IO.DsDriveName.Text -in $PSD.Name)
         {
-            [System.Windows.MessageBox]::Show("That (DSDrive|PSDrive) label is already being used","Error")
+            Return [System.Windows.MessageBox]::Show("That (DSDrive|PSDrive) label is already being used","Error")
         }
 
         Else
@@ -3588,10 +3831,10 @@ public struct WindowPosition
                     ID                  = $Image.Label
                     Version             = "1.0"
                     OperatingSystemPath = Get-ChildItem -Path $Path | ? Name -match $Image.Label | % { "{0}\{1}" -f $Path, $_.Name }
-                    FullName            = $Xaml.IO.DCLMUsername
-                    OrgName             = $Xaml.IO.Organization
-                    HomePage            = $Xaml.IO.Website
-                    AdminPassword       = $Xaml.IO.DCLMPassword.Password
+                    FullName            = $Xaml.IO.DcLmUsername
+                    OrgName             = $Xaml.IO.DcOrganization
+                    HomePage            = $Xaml.IO.DcBrWebsite
+                    AdminPassword       = $Xaml.IO.DcLmPassword.Password
                 }
 
                 Import-MDTTaskSequence @TaskSequence -Verbose
@@ -3647,7 +3890,7 @@ public struct WindowPosition
                                         DomainAdmin          = $Xaml.IO.DsDcUserName.Text
                                         DomainAdminPassword  = $Xaml.IO.DsDcPassword.Password
                                         DomainAdminDomain    = $Xaml.IO.DsCommonName.Text
-                                        MachineObjectOU      = $Xaml.IO.DsMachineOuName.Text
+                                        MachineObjectOU      = $Xaml.IO.DsNwMachineOuName.Text
                                         SkipDomainMembership = "YES"
                                         OSInstall            = "Y"
                                         SkipCapture          = "NO"
@@ -3671,7 +3914,7 @@ public struct WindowPosition
             }
 
             # Rename the Litetouch_ files
-            Get-ChildItem -Path "$($Xaml.IO.DSRootPath.Text)\Boot" | ? Extension | % { 
+            Get-ChildItem -Path "$($Xaml.IO.DsRootPath.Text)\Boot" | ? Extension | % { 
 
                 $Label          = $ImageLabel[$(Switch -Regex ($_.Name) { 64 {64} 86 {86}})]
                 $Image          = @{ 
@@ -3693,13 +3936,15 @@ public struct WindowPosition
                 }
             }
 
-            If (!(Get-Service | ? Name -eq WDSServer))
+            If (!(Get-Service -Name WDSServer))
             {
                 Throw "WDS Server not installed"
             }
 
+            Get-Service -Name WDSServer | ? Status -ne Running | Start-Service -Verbose
+
             # Update/Flush FEShare(WDS)
-            ForEach ( $Image in [BootImages]::New("$($Xaml.IO.DSRootPath.Text)\Boot").Images )
+            ForEach ( $Image in [BootImages]::New("$($Xaml.IO.DsRootPath.Text)\Boot").Images )
             {        
                 If (Get-WdsBootImage -Architecture $Image.Type -ImageName $Image.Name -EA 0)
                 {
@@ -3722,39 +3967,44 @@ public struct WindowPosition
     # Set initial TextBox values
     $Xaml.IO.DsNwNetBIOSName.Text = $Env:UserDomain
     $Xaml.IO.DsNwDNSName.Text     = @{0=$Env:ComputerName;1="$Env:ComputerName.$Env:UserDNSDomain"}[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
-    $Xaml.IO.DsDescription.Text   = "[FightingEntropy({0})][(2021.7.0)]" -f [char]960
     $Xaml.IO.DsLmUsername.Text    = "Administrator"
     
     $Xaml.Invoke()
-#}
 
-# [Gateway - Prepping Section II]
-If ($Main.Gateway)
-{
-    $Gateway = $Main.Gateway
-    $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
-    $Date    = Get-Date -UFormat %Y%m%d
-    $Path    = "$Scratch\Lab($Date)"
-    If (!(Test-Path $Scratch))
+    # [Gateway - Prepping Section II]
+    If ($Main.Gateway)
     {
-        New-Item -Path $Scratch -ItemType Directory -Verbose
+        $Gateway = $Main.Gateway
+        $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
+        $Date    = Get-Date -UFormat %Y%m%d
+        $Path    = "$Scratch\Lab($Date)"
+        If (!(Test-Path $Scratch))
+        {
+            New-Item -Path $Scratch -ItemType Directory -Verbose
+        }
+        If (!(Test-Path $Path))
+        {
+            New-Item -Path $Path -ItemType Directory -Verbose 
+        }
+
+        Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
+
+        ForEach ( $X in 0..($Gateway.Count - 1 ))
+        {
+            $Item = $Gateway[$X]
+            $Item.Hash.Network.HostObject = $Null 
+            $Item.Hash.Network.Network_   = $Null 
+            $Item.Hash.Network.Netmask_   = $Null
+            $Item.Hash.Domain.Ping        = $Null
+
+            Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
+        }
     }
-    If (!(Test-Path $Path))
+
+    # [Server]
+    If ($Main.Server)
     {
-        New-Item -Path $Path -ItemType Directory -Verbose 
-    }
-
-    Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
-
-    ForEach ( $X in 0..($Gateway.Count - 1 ))
-    {
-        $Item = $Gateway[$X]
-        $Item.Hash.Network.HostObject = $Null 
-        $Item.Hash.Network.Network_   = $Null 
-        $Item.Hash.Network.Netmask_   = $Null
-        $Item.Hash.Domain.Ping        = $Null
-
-        Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
+        
     }
 }
 

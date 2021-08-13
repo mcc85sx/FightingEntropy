@@ -1358,7 +1358,7 @@ public struct WindowPosition
     Class FEDeploymentShareGUI
     {
         Static [String] $Tab = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -1558,6 +1558,16 @@ public struct WindowPosition
                                 <TabItem Header="Adds">
                                     <GroupBox Header="[CfgAdds (Active Directory Directory Service)">
                                         <DataGrid Name="CfgAdds">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </GroupBox>
+                                </TabItem>
+                                <TabItem Header="Hyper-V">
+                                    <GroupBox Header="[CfgHyperV (Veridian)">
+                                        <DataGrid Name="CfgHyperV">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
                                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
@@ -2063,6 +2073,192 @@ public struct WindowPosition
                                     </Grid>
                                 </Grid>
                             </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Virtual" BorderBrush="{x:Null}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="80"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[VmSelect]">
+                                <DataGrid Name="VmSelect">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"/>
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                        <DataGridTemplateColumn Header="Create" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                        <ComboBoxItem Content="No"/>
+                                                        <ComboBoxItem Content="Yes"/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[VmHost]">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Name="VmHostSelect" Content="Select"/>
+                                    <TextBox Grid.Column="1" Name="VmHost"/>
+                                </Grid>
+                            </GroupBox>
+                            <TabControl Grid.Row="2">
+                                <TabItem Header="Gateway">
+                                    <GroupBox Header="[VmGateway]">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="160"/>
+                                            </Grid.RowDefinitions>
+                                            <DataGrid Grid.Row="0" Name="VmGateway">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                                    <DataGridTemplateColumn Header="Exists" Width="100">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                                    <ComboBoxItem Content="No"/>
+                                                                    <ComboBoxItem Content="Yes"/>
+                                                                </ComboBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <Grid Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Grid.Column="0">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <GroupBox Grid.Row="0" Header="[VmGatewayScript]">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="100"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button Grid.Column="0" Name="VmGatewayScriptSelect" Content="Select"/>
+                                                            <TextBox Grid.Column="1" Name="VmGatewayScript"/>
+                                                        </Grid>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="1" Header="[VmGatewayImage]">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="100"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button Grid.Column="0" Name="VmGatewayImageSelect" Content="Select"/>
+                                                            <TextBox Grid.Column="1" Name="VmGatewayImage"/>
+                                                        </Grid>
+                                                    </GroupBox>
+                                                </Grid>
+                                                <Grid Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <GroupBox Grid.Row="0" Header="[RAM]">
+                                                        <TextBox Name="VmGatewayMemory"/>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="1" Header="[HDD]">
+                                                        <TextBox Name="VmGatewayDrive"/>
+                                                    </GroupBox>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </GroupBox>
+                                </TabItem>
+                                <TabItem Header="Server">
+                                    <GroupBox Header="[VmServer]">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="160"/>
+                                            </Grid.RowDefinitions>
+                                            <DataGrid Grid.Row="0" Name="VmServer">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                                    <DataGridTemplateColumn Header="Exists" Width="100">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                                    <ComboBoxItem Content="No"/>
+                                                                    <ComboBoxItem Content="Yes"/>
+                                                                </ComboBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <Grid Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="120"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Grid.Column="0">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <GroupBox Grid.Row="0" Header="[VmServerScript]">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="100"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button Grid.Column="0" Name="VmServerScriptSelect" Content="Select"/>
+                                                            <TextBox Grid.Column="1" Name="VmServerScript"/>
+                                                        </Grid>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="1" Header="[VmServerImage]">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="100"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button Grid.Column="0" Name="VmServerImageSelect" Content="Select"/>
+                                                            <TextBox Grid.Column="1" Name="VmServerImage"/>
+                                                        </Grid>
+                                                    </GroupBox>
+                                                </Grid>
+                                                <Grid Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <GroupBox Grid.Row="0" Header="[RAM]">
+                                                        <TextBox Name="VmServerMemory"/>
+                                                    </GroupBox>
+                                                    <GroupBox Grid.Row="1" Header="[HDD]">
+                                                        <TextBox Name="VmServerDrive"/>
+                                                    </GroupBox>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </GroupBox>
+                                </TabItem>
+                            </TabControl>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Name="VmGetArchitecture" Content="Get"/>
+                                <Button Grid.Column="1" Name="VmNewArchitecture" Content="New"/>
+                            </Grid>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Imaging" BorderBrush="{x:Null}">
@@ -4264,35 +4460,40 @@ public struct WindowPosition
     
     $Xaml.Invoke()
 
-    # [Gateway - Prepping Section II]
-    #If ($Main.Gateway)
-    #{
-    #    $Gateway = $Main.Gateway
-    #    $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
-    #    $Date    = Get-Date -UFormat %Y%m%d
-    #    $Path    = "$Scratch\Lab($Date)"
-    #    If (!(Test-Path $Scratch))
-    #    {
-    #        New-Item -Path $Scratch -ItemType Directory -Verbose
-    #    }
-    #    If (!(Test-Path $Path))
-    #    {
-    #        New-Item -Path $Path -ItemType Directory -Verbose 
-    #    }########
+    <# [Gateway - Prepping Section II]
+    If ($Main.Gateway)
+    {
+        $Gateway = $Main.Gateway
+        $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
+        $Date    = Get-Date -UFormat %Y%m%d
+        $Path    = "$Scratch\Lab($Date)"
+        If (!(Test-Path $Scratch))
+        {
+            New-Item -Path $Scratch -ItemType Directory -Verbose
+        }
+        If (!(Test-Path $Path))
+        {
+            New-Item -Path $Path -ItemType Directory -Verbose 
+        }
 
-    #    Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
+        Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
 
-    #    ForEach ( $X in 0..($Gateway.Count - 1 ))
-    #    {
-    #        $Item = $Gateway[$X]
-    #        $Item.Hash.Network.HostObject = $Null 
-    #        $Item.Hash.Network.Network_   = $Null 
-    #        $Item.Hash.Network.Netmask_   = $Null
-    #        $Item.Hash.Domain.Ping        = $Null
+        ForEach ( $X in 0..($Gateway.Count - 1 ))
+        {
+            $Item = $Gateway[$X]
+            $Item.Hash.Network.HostObject = $Null 
+            $Item.Hash.Network.Network_   = $Null 
+            $Item.Hash.Network.Netmask_   = $Null
+            $Item.Hash.Domain.Ping        = $Null
 
-    #        Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
-    #    }
-    #}
+            Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
+        }
+    }
 
-    # [Server]
+    # [Server]#>
 }
+
+#$Files = [GwFiles]::New($Path)
+
+# Add-Type -AssemblyName PresentationFramework
+# ( GC $Home\Desktop\New-FEDeploymentShare.ps1 -Encoding UTF8 ) -join "`n" | IEX

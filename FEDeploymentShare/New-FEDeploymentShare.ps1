@@ -1,4 +1,4 @@
-Function New-FEDeploymentShare
+Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
 {
     # Load Assemblies
     Add-Type -AssemblyName PresentationFramework
@@ -377,7 +377,7 @@ public struct WindowPosition
         }
     }
 
-    Class DcTopography
+    Class DcTopology
     {
         Hidden [String[]]     $Enum = "True","False"
         [String]              $Name
@@ -385,7 +385,7 @@ public struct WindowPosition
         [String]          $SiteName
         [UInt32]            $Exists
         [Object] $DistinguishedName
-        DcTopography([Object]$SiteList,[Object]$SM)
+        DcTopology([Object]$SiteList,[Object]$SM)
         {
             $This.Name     = $SM.Sitename
             $This.Sitelink = $SM.Sitelink
@@ -404,14 +404,14 @@ public struct WindowPosition
         }
     }
 
-    Class NwTopography
+    Class NwTopology
     {
         Hidden [String[]]     $Enum = "True","False"
         [String]              $Name
         [String]           $Network
         [UInt32]            $Exists
         [Object] $DistinguishedName
-        NwTopography([Object]$SubnetList,[Object]$NW)
+        NwTopology([Object]$SubnetList,[Object]$NW)
         {
             $This.Name     = $Nw.Name
             $This.Network  = $Nw.Network
@@ -429,65 +429,140 @@ public struct WindowPosition
         }
     }
 
-    Class GwTopography
+    Class Site
     {
-        Hidden [String[]] $Enum = "True","False"
-        [String]              $Name
-        [String]           $Network
-        [String]          $SiteName
-        [UInt32]            $Exists
-        [Object] $DistinguishedName
-        GwTopography([Object]$OuList,[Object]$Gw)
-        {
-            $This.Name     = $Gw.Name
-            $This.Network  = $Gw.Network
-            $This.Sitename = $Gw.Sitename
-            $Tmp           = $OuList | ? Name -match $Gw.Name
-            If ($Tmp)
-            {
-                $This.Exists = 1
-                $This.DistinguishedName = $Tmp.DistinguishedName
-            }
-            Else
-            {
-                $This.Exists = 0
-                $This.DistinguishedName = $Null
-            }
-        }
-    }
-
-    Class GwFile
-    {
-        [String]$Path
+        Hidden [Object] $Hash
         [String]$Name
-        [UInt32]$Index
-        [String]$Slot
-        [Object]$Content
-        GwFile([Object]$File)
+        [String]$Location
+        [String]$Region
+        [String]$Country
+        [String]$Postal
+        [String]$TimeZone
+        [String]$SiteLink
+        [String]$SiteName
+        [String]$Network
+        [String]$Prefix
+        [String]$Netmask
+        [String]$Start
+        [String]$End
+        [String]$Range
+        [String]$Broadcast
+        Site([Object]$Domain,[Object]$Network)
         {
-            $This.Path    = $File.FullName
-            $This.Slot    = [Regex]::Matches($File.Name,"^\(\d+\)").Value
-            $This.Name    = $File.Name.Replace($This.Slot,"").Replace(".txt","")
-            $This.Index   = $This.Slot.Replace("(","").Replace(")","")
-            $This.Content = Get-Content $File.FullName | ConvertFrom-Json
+            $This.Hash      = @{ Domain = $Domain; Network = $Network }
+            $This.Name      = $Domain.SiteLink
+            $This.Location  = $Domain.Location
+            $This.Region    = $Domain.Region
+            $This.Country   = $Domain.Country
+            $This.Postal    = $Domain.Postal
+            $This.TimeZone  = $Domain.TimeZone
+            $This.SiteLink  = $Domain.SiteLink
+            $This.Sitename  = $Domain.Sitename
+            $This.Network   = $Network.Network
+            $This.Prefix    = $Network.Prefix
+            $This.Netmask   = $Network.Netmask
+            $This.Start     = $Network.Start
+            $This.End       = $Network.End
+            $This.Range     = $Network.Range
+            $This.Broadcast = $Network.Broadcast
         }
     }
 
-    Class GwFiles
+    Class SwTopologyBranch
     {
-        [Object] $Path
-        [Object] $Items
-        [Object] $Files
-        GwFiles([String]$Path)
+        [String]              $Type
+        [String]              $Name
+        [String] $DistinguishedName
+        [Bool]              $Exists
+        SwTopologyBranch([String]$Type,[String]$Name,[String]$Base)
         {
-            If (!(Test-Path $Path))
+            $This.Type              = $Type
+            Switch($Type) 
             {
-                Throw "Invalid path"
+                Main 
+                {
+                    $This.Name              = $Name
+                    $This.DistinguishedName = "OU=$Name,$Base"
+                } 
+                
+                Leaf 
+                { 
+                    $This.Name              = $Name.Split("/")[1]
+                    $This.DistinguishedName = "OU={1},OU={0},$Base" -f $Name.Split("/") 
+                }
             }
+            $Return                 = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -Properties * | ? DistinguishedName -eq $This.DistinguishedName
+            $This.Exists            = @(0,1)[$Return -ne $Null] 
+        }
+    }
 
-            $This.Path  = $Path
-            $This.Items = Get-ChildItem $Path *.txt 
-            $This.Files = @( $This.Items | % { [GwFile]::New($_) } )
+    Class SmTemplateItem
+    {
+        [String] $ObjectClass
+        [Bool] $Create
+        SmTemplateItem([String]$ObjectClass,[Bool]$Create)
+        {
+            $This.ObjectClass = $ObjectClass
+            $This.Create      = $Create
+        }
+    }
+
+    Class SmTemplate
+    {
+        Hidden [String[]] $Names = ("Gateway Server Computers Users Service" -Split " ")
+        [Object] $Stack
+        SmTemplate()
+        {
+            $This.Stack = @( )
+
+            ForEach ( $Name in $This.Names )
+            {
+                $This.Stack += [SmTemplateItem]::New($Name,1)
+            }
+        }
+    }
+
+    Class Topology
+    {
+        [String] $Type
+        [String] $DistinguishedName
+        [Bool]   $Exists
+        [String] $Name
+        [String] $Location
+        [String] $Region
+        [String] $Country
+        [String] $Postal
+        [String] $TimeZone
+        [String] $SiteLink
+        [String] $SiteName
+        [String] $Network
+        [String] $Prefix
+        [String] $Netmask
+        [String] $Start
+        [String] $End
+        [String] $Range
+        [String] $Broadcast
+        Topology([String]$Type,[String]$DN,[Object]$Site)
+        {
+            $This.Type              = $Type
+            $This.DistinguishedName = @{Gateway="CN=$($Site.Name),$DN";Server="CN=dc1-$($Site.Postal),$DN"}[$Type]
+            $Return                 = Get-ADObject -Filter * | ? DistinguishedName -match $This.DistinguishedName
+            $This.Exists            = $Return -ne $Null
+            $This.Name              = $Site.Name
+            $This.Location          = $Site.Location
+            $This.Region            = $Site.Region
+            $this.Country           = $Site.Country
+            $This.Postal            = $Site.Postal
+            $This.TimeZone          = $Site.TimeZone
+            $This.SiteLink          = $Site.SiteLink
+            $This.SiteName          = $Site.SiteName
+            $This.Network           = $Site.Network
+            $This.Prefix            = $Site.Prefix
+            $This.Netmask           = $Site.Netmask
+            $This.Start             = $Site.Start
+            $This.End               = $Site.End
+            $This.Range             = $Site.Range
+            $This.Broadcast         = $Site.Broadcast
         }
     }
 
@@ -506,7 +581,7 @@ public struct WindowPosition
         }
         DsShare([String]$Name,[String]$Root,[String]$Share,[String]$Description)
         {
-            If (Get-SMBShare -Name $Share)
+            If (Get-SMBShare -Name $Share -EA 0)
             {
                 Throw "Share name is already assigned"
             }
@@ -517,7 +592,7 @@ public struct WindowPosition
             $This.Description = $Description
         }
     }
-    
+
     Class Certificate
     {
         Hidden[String] $ExternalIP
@@ -531,9 +606,7 @@ public struct WindowPosition
         [String]         $TimeZone
         [String]         $SiteName
         [String]         $SiteLink
-        Certificate(
-        [String]     $Organization ,
-        [String]       $CommonName )
+        Certificate([String]$Organization,[String]$CommonName)
         {
             $This.Organization     = $Organization
             $This.CommonName       = $CommonName  
@@ -859,45 +932,6 @@ public struct WindowPosition
                 Stop-VM -Name $ID -Confirm:$False -Force
                 $This.VMC += $Mac
             }
-        }
-    }
-
-    Class Site
-    {
-        Hidden [Object] $Hash
-        [String]$Name
-        [String]$Location
-        [String]$Region
-        [String]$Country
-        [String]$Postal
-        [String]$TimeZone
-        [String]$SiteLink
-        [String]$SiteName
-        [String]$Network
-        [String]$Prefix
-        [String]$Netmask
-        [String]$Start
-        [String]$End
-        [String]$Range
-        [String]$Broadcast
-        Site([Object]$Domain,[Object]$Network)
-        {
-            $This.Hash      = @{ Domain = $Domain; Network = $Network }
-            $This.Name      = $Domain.SiteLink
-            $This.Location  = $Domain.Location
-            $This.Region    = $Domain.Region
-            $This.Country   = $Domain.Country
-            $This.Postal    = $Domain.Postal
-            $This.TimeZone  = $Domain.TimeZone
-            $This.SiteLink  = $Domain.SiteLink
-            $This.Sitename  = $Domain.Sitename
-            $This.Network   = $Network.Network
-            $This.Prefix    = $Network.Prefix
-            $This.Netmask   = $Network.Netmask
-            $This.Start     = $Network.Start
-            $This.End       = $Network.End
-            $This.Range     = $Network.Range
-            $This.Broadcast = $Network.Broadcast
         }
     }
     
@@ -1364,6 +1398,13 @@ public struct WindowPosition
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style TargetType="Label">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
             <Style TargetType="TabControl">
                 <Setter Property="Background" Value="Azure"/>
             </Style>
@@ -1645,13 +1686,13 @@ public struct WindowPosition
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[DcTopography]">
+                            <GroupBox Grid.Row="3" Header="[DcTopology]">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
-                                    <DataGrid Grid.Row="0" Name="DcTopography"
+                                    <DataGrid Grid.Row="0" Name="DcTopology"
                                                       ScrollViewer.CanContentScroll="True"
                                                       ScrollViewer.IsDeferredScrollingEnabled="True"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Visible">
@@ -1676,12 +1717,11 @@ public struct WindowPosition
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Name="DcGetTopography" Content="Get"/>
-                                        <Button Grid.Column="1" Name="DcNewTopography" Content="New"/>
+                                        <Button Grid.Column="0" Name="DcGetTopology" Content="Get"/>
+                                        <Button Grid.Column="1" Name="DcNewTopology" Content="New"/>
                                     </Grid>
                                 </Grid>
                             </GroupBox>
-    
                         </Grid>
                     </TabItem>
                     <TabItem Header="Network" BorderBrush="{x:Null}">
@@ -1743,13 +1783,13 @@ public struct WindowPosition
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[NwTopography]">
+                            <GroupBox Grid.Row="3" Header="[NwTopology]">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
-                                    <DataGrid Grid.Row="0" Name="NwTopography"
+                                    <DataGrid Grid.Row="0" Name="NwTopology"
                                                           ScrollViewer.CanContentScroll="True"
                                                           ScrollViewer.IsDeferredScrollingEnabled="True"
                                                           ScrollViewer.HorizontalScrollBarVisibility="Visible">
@@ -1781,13 +1821,14 @@ public struct WindowPosition
                             </GroupBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Gateway" BorderBrush="{x:Null}">
+                    <TabItem Header="Sitemap" BorderBrush="{x:Null}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="80"/>
-                                <RowDefinition Height="225"/>
-                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="180"/>
+                                <RowDefinition Height="180"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
@@ -1795,15 +1836,85 @@ public struct WindowPosition
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="120"/>
                                 </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column="0" Header="[GwSiteCount]">
-                                    <TextBox Name="GwSiteCount"/>
+                                <GroupBox Grid.Column="0" Header="[SmSiteCount]">
+                                    <TextBox Name="SmSiteCount"/>
                                 </GroupBox>
-                                <GroupBox Grid.Column="1" Header="[GwNetworkCount]">
-                                    <TextBox Name="GwNetworkCount"/>
+                                <GroupBox Grid.Column="1" Header="[SmNetworkCount]">
+                                    <TextBox Name="SmNetworkCount"/>
                                 </GroupBox>
-                                <Button Grid.Column="2" Name="GwLoadGateway" Content="Load"/>
+                                <Button Grid.Column="2" Name="SmLoadSitemap" Content="Load"/>
                             </Grid>
-                            <GroupBox Grid.Row="1" Header="[GwAggregate]">
+                            <GroupBox Grid.Row="1" Header="[SmAggregate]">
+                                <DataGrid Name="SmAggregate">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name"      Binding="{Binding Name}"     Width="*"/>
+                                        <DataGridTextColumn Header="Location"  Binding="{Binding Location}" Width="*"/>
+                                        <DataGridTextColumn Header="Sitename"  Binding="{Binding SiteName}" Width="*"/>
+                                        <DataGridTextColumn Header="Network"   Binding="{Binding Network}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[SmTemplate]">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Select the following items to create objects for each site listed above"/>
+                                    <DataGrid Grid.Row="1" Name="SmTemplate">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ObjectClass" Binding="{Binding ObjectClass}" Width="150"/>
+                                            <DataGridTemplateColumn Header="Create" Width="*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                            <ComboBoxItem Content="No"/>
+                                                            <ComboBoxItem Content="Yes"/>
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Header="[SmTopology]">
+                                <DataGrid Name="SmTopology">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"/>
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                                        <DataGridTemplateColumn Header="Exists" Width="60">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                        <ComboBoxItem Content="No"/>
+                                                        <ComboBoxItem Content="Yes"/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="DistinguishedName" Binding="{Binding DistinguishedName}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Name="SmGetSitemap" Content="Get"/>
+                                <Button Grid.Column="1" Name="SmNewSitemap" Content="New"/>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Gateway" BorderBrush="{x:Null}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="225"/>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="[GwAggregate]">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -1814,10 +1925,8 @@ public struct WindowPosition
                                                       ScrollViewer.IsDeferredScrollingEnabled="True"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name"      Binding="{Binding Name}"     Width="*"/>
-                                            <DataGridTextColumn Header="Location"  Binding="{Binding Location}" Width="*"/>
-                                            <DataGridTextColumn Header="Sitename"  Binding="{Binding SiteName}" Width="*"/>
-                                            <DataGridTextColumn Header="Network"   Binding="{Binding Network}"  Width="*"/>
+                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="*"/>
+                                            <DataGridTextColumn Header="DistinguishedName" Binding="{Binding DistinguishedName}" Width="*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <Grid Grid.Row="1" Margin="5">
@@ -1834,7 +1943,7 @@ public struct WindowPosition
                                     </Grid>
                                 </Grid>
                             </GroupBox>
-                            <GroupBox Grid.Row="2" Header="[GwViewer]">
+                            <GroupBox Grid.Row="1" Header="[GwViewer]">
                                 <DataGrid Name="GwViewer">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"  Binding="{Binding Name}"   Width="150"/>
@@ -1842,13 +1951,13 @@ public struct WindowPosition
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
-                            <GroupBox Grid.Row="3" Header="[GwTopography]">
+                            <GroupBox Grid.Row="2" Header="[GwTopology]">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="60"/>
                                     </Grid.RowDefinitions>
-                                    <DataGrid Grid.Row="0" Name="GwTopography">
+                                    <DataGrid Grid.Row="0" Name="GwTopology">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="SiteName"  Binding="{Binding SiteName}" Width="200"/>
                                             <DataGridTextColumn Header="Network"    Binding="{Binding Network}" Width="150"/>
@@ -1877,22 +1986,83 @@ public struct WindowPosition
                             </GroupBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Sites">
+                    <TabItem Header="Server" BorderBrush="{x:Null}">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="80"/>
-                                <RowDefinition Height="200"/>
+                                <RowDefinition Height="225"/>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="120"/>
-                                </Grid.ColumnDefinitions>
-                                <GroupBox Grid.Column="0" Header="[SLSiteList]">
-                                    <TextBox Name="SLSiteList"/>
-                                </GroupBox>
-                                <Button Grid.Column="1" Name="SLLoadSiteList" Content="Load"/>
-                            </Grid>
+                            <GroupBox Grid.Row="0" Header="[SrAggregate]">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="80"/>
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Name="SrAggregate"
+                                                      ScrollViewer.CanContentScroll="True" 
+                                                      ScrollViewer.IsDeferredScrollingEnabled="True"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="*"/>
+                                            <DataGridTextColumn Header="DistinguishedName" Binding="{Binding DistinguishedName}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1" Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="1" Name="SrAddServer" Content="+"/>
+                                        <GroupBox Grid.Column="0" Header="[SrServerName]">
+                                            <TextBox Name="SrServer"/>
+                                        </GroupBox>
+                                        <Button Grid.Column="2" Name="SrRemoveServer" Content="-"/>
+                                    </Grid>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="[SrViewer]">
+                                <DataGrid Name="SrViewer">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name"  Binding="{Binding Name}"   Width="150"/>
+                                        <DataGridTextColumn Header="Value" Binding="{Binding Value}"   Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="[SrTopology]">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="60"/>
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Grid.Row="0" Name="SrTopology">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="SiteName"  Binding="{Binding SiteName}" Width="200"/>
+                                            <DataGridTextColumn Header="Network"    Binding="{Binding Network}" Width="150"/>
+                                            <DataGridTemplateColumn Header="Exists" Width="50">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                            <ComboBoxItem Content="No"/>
+                                                            <ComboBoxItem Content="Yes"/>
+                                                        </ComboBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Header="Distinguished Name" Binding="{Binding DistinguishedName}" Width="400"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Name="SrGetServer" Content="Get"/>
+                                        <Button Grid.Column="1" Name="SrNewServer" Content="New"/>
+                                    </Grid>
+                                </Grid>
+                            </GroupBox>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Imaging" BorderBrush="{x:Null}">
@@ -2125,7 +2295,7 @@ public struct WindowPosition
                                                 </Grid>
                                             </GroupBox>
                                             <Button Grid.Column="2" Name="DsAddShare" Content="+"/>
-                                            <Button Grid.Column="3" Name="DcRemoveShare" Content="-"/>
+                                            <Button Grid.Column="3" Name="DsRemoveShare" Content="-"/>
                                         </Grid>
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
@@ -2351,11 +2521,14 @@ public struct WindowPosition
         [Object]            $Config
         [Object]          $SiteList
         [Object]        $SubnetList
-        [Object]            $OuList
+        [Object]        $SmTemplate
         [Object]            $Domain
         [Object]           $Network
+        [Object]           $Sitemap
         [Object]           $Gateway
         [Object]            $Server
+        [Object]           $Service
+        [Object]           $Virtual
         [Object]             $Image
         [Object]            $Update
         [Object]             $Share
@@ -2384,13 +2557,20 @@ public struct WindowPosition
                 }
             )
 
-            $This.Domain  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Network = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Gateway = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Server  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Image   = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Update  = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
-            $This.Share   = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.SmTemplate = [SmTemplate]::New().Stack
+            $This.Domain     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Network    = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Sitemap    = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Gateway    = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Server     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Image      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Update     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Share      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.Virtual    = @{ 
+
+                Gateway      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+                Server       = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            }
         }
         [Void] GetSiteList()
         {
@@ -2400,29 +2580,20 @@ public struct WindowPosition
         {
             $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase "CN=Configuration,$($This.SearchBase)"
         }
-        [Void] GetOuList()
-        {
-            $This.OuList        = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -SearchBase $This.SearchBase
-        }
-        [Void] GetLists()
-        {
-            $This.GetSiteList()
-            $This.GetSubnetList()
-            $This.GetOuList()
-        }
         [Object] NewCertificate()
         {
             Return @( [Certificate]::New($This.Org,$This.CN) )
         }
-        [Void] LoadSitemap([String]$Organization,[String]$CommonName)
-        {   # $Organization = "Secure Digits Plus LLC"; $CommonName = "securedigitsplus.com"
+        [Void] LoadSite([String]$Organization,[String]$CommonName)
+        {
             $This.Org           = $Organization
             $This.CN            = $CommonName
             $This.Template      = $This.NewCertificate()
             $This.SearchBase    = "DC=$( $CommonName.Split(".") -join ",DC=" )"
 
             $This.AddSiteName($This.Template.Postal)
-            $This.GetLists()
+            $This.GetSiteList()
+            $This.GetSubnetList()
         }
         [Void] AddSitename([String]$Zip)
         {
@@ -2455,7 +2626,7 @@ public struct WindowPosition
         [Object[]] GetDomain([Object]$List)
         {
             $This.GetSiteList()
-            Return @( $List | % { [DcTopography]::New($This.SiteList,$_) } )
+            Return @( $List | % { [DcTopology]::New($This.SiteList,$_) } )
         }
         [Void] NewDomain([Object]$List)
         {
@@ -2514,7 +2685,7 @@ public struct WindowPosition
         [Object[]] GetNetwork([Object]$List)
         {
             $This.GetSubnetList()
-            Return @( $List | % { [NwTopography]::New($This.SubnetList,$_) } )
+            Return @( $List | % { [NwTopology]::New($This.SubnetList,$_) } )
         }
         [Void] NewNetwork([Object]$List)
         {
@@ -2529,27 +2700,27 @@ public struct WindowPosition
                 }
             }
         }
-        [Void] LoadGateway()
+        [Void] LoadSitemap()
         {
             If ($This.Network.Count -lt $This.Domain.Count)
             {
                 Throw "Insufficient networks"
             }
 
-            $This.Gateway = @( )
+            $This.Sitemap = @( )
 
             ForEach ($X in 0..($This.Domain.Count - 1))
             {
-                $This.Gateway += [Site]::New($This.Domain[$X],$This.Network[$X])
+                $This.Sitemap += [Site]::New($This.Domain[$X],$This.Network[$X])
             }
         }
-        [Void] RemoveGateway([String]$Name)
+        [Void] RemoveGateway([String]$DistinguishedName)
         {
             If ( $This.Gateway.Count -gt 1 )
             {
-                If ($Name -in $This.Gateway.Name)
+                If ($DistinguishedName -in $This.Gateway.DistinguishedName)
                 {
-                    $This.Gateway = @( $This.Gateway | ? Name -ne $Name )
+                    $This.Gateway = @( $This.Gateway | ? DistinguishedName -ne $DistinguishedName )
                 }
             }
 
@@ -2558,10 +2729,20 @@ public struct WindowPosition
                 [System.Windows.MessageBox]::Show("Invalid operation, only one gateway remaining","Error")
             }
         }
-        [Object[]] GetGateway([Object]$List)
+        [Void] RemoveServer([String]$DistinguishedName)
         {
-            $This.GetOuList()
-            Return @( $List | % { [GwTopography]::New($This.OuList,$_) } )
+            If ( $This.Server.Count -gt 1 )
+            {
+                If ($DistinguishedName -in $This.Server.DistinguishedName)
+                {
+                    $This.Server = @( $This.Server | ? DistinguishedName -ne $DistinguishedName )
+                }
+            }
+
+            Else
+            {
+                [System.Windows.MessageBox]::Show("Invalid operation, only one gateway remaining","Error")
+            }
         }
         [Object[]] LoadUpdate([String]$Path)
         {
@@ -2614,7 +2795,7 @@ public struct WindowPosition
     $Xaml.IO.CfgServices.ItemsSource    = @( $Main.Config )
 
     # [CfgMdt]://Installed ? -> Load persistent drives
-    If ( $Main.Config | ? Name -eq MDT | ? Value -eq $True )
+    If ($Main.Config | ? Name -eq MDT | ? Value -eq $True)
     {   
         $MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
         Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
@@ -2628,7 +2809,7 @@ public struct WindowPosition
             }
         }
 
-        $Xaml.IO.DsAggregate.ItemsSource += [DsShare]@{ Name = "<New>"; Root = "-"; Share = "-"; Description = "-" }
+        $Xaml.IO.DsAggregate.ItemsSource += [DsShare]::New("<New>","-",$Null,"-")
     }
 
 #    ____                                                                                                    ________    
@@ -2647,31 +2828,31 @@ public struct WindowPosition
     # $Xaml.IO.DcAddSitenameTown        # Text
     # $Xaml.IO.DcRemoveSitename         # Button
     # $Xaml.IO.DcViewer                 # DataGrid
-    # $Xaml.IO.DcTopography             # DataGrid
-    # $Xaml.IO.DcGetTopography          # Button
-    # $Xaml.IO.DcNewTopography          # Button
+    # $Xaml.IO.DcTopology               # DataGrid
+    # $Xaml.IO.DcGetTopology            # Button
+    # $Xaml.IO.DcNewTopology            # Button
 
     # [DataGrid(s)]://Initialize
     $Xaml.IO.DcAggregate.ItemsSource    = @( )
     $Xaml.IO.DcViewer.ItemsSource       = @( )
-    $Xaml.IO.DcTopography.ItemsSource   = @( )
+    $Xaml.IO.DcTopology.ItemsSource     = @( )
 
     # [Domain]://Events
     $Xaml.IO.DcGetSitename.Add_Click(
     {
         If (!$Xaml.IO.DcOrganization.Text)
         {
-            [System.Windows.MessageBox]::Show("Invalid/null organization entry","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid/null organization entry","Error")
         }
 
         ElseIf (!$Xaml.IO.DcCommonName.Text)
         {
-            [System.Windows.MessageBox]::Show("Invalid/null common name entry","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid/null common name entry","Error")
         }
 
         Else
         {   # $Main.LoadSitemap("Secure Digits Plus LLC","securedigitsplus.com")
-            $Main.LoadSitemap($Xaml.IO.DcOrganization.Text,$Xaml.IO.DcCommonName.Text)
+            $Main.LoadSite($Xaml.IO.DcOrganization.Text,$Xaml.IO.DcCommonName.Text)
             $Xaml.IO.DcAggregate.ItemsSource   = @( )
             $Xaml.IO.DcAggregate.ItemsSource   = @( $Main.Domain )
             $Xaml.IO.DcGetSitename.IsEnabled   = 0
@@ -2746,18 +2927,18 @@ public struct WindowPosition
         }
     })
 
-    $Xaml.IO.DcGetTopography.Add_Click(
+    $Xaml.IO.DcGetTopology.Add_Click(
     {
-        $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopography]::New($Main.SiteList,$_) } )
-        $Xaml.IO.DcTopography.ItemsSource = @( )
-        $Xaml.IO.DcTopography.ItemsSource = @( $Tmp )
+        $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopology]::New($Main.SiteList,$_) } )
+        $Xaml.IO.DcTopology.ItemsSource = @( )
+        $Xaml.IO.DcTopology.ItemsSource = @( $Tmp )
 
-        $Xaml.IO.GwSiteCount.Text         = $Main.Domain.Count
+        $Xaml.IO.SmSiteCount.Text         = $Main.Domain.Count
     })
     
-    $Xaml.IO.DcNewTopography.Add_Click(
+    $Xaml.IO.DcNewTopology.Add_Click(
     {
-        ForEach ( $Item in $Xaml.IO.DcTopography.ItemsSource )
+        ForEach ( $Item in $Xaml.IO.DcTopology.ItemsSource )
         {
             If ( $Item.Exists -eq 0 )
             {
@@ -2765,11 +2946,11 @@ public struct WindowPosition
             }
         }
 
-        $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopography]::New($Main.SiteList,$_) } )
-        $Xaml.IO.DcTopography.ItemsSource = @( )
-        $Xaml.IO.DcTopography.ItemsSource = @( $Tmp )
+        $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopology]::New($Main.SiteList,$_) } )
+        $Xaml.IO.DcTopology.ItemsSource = @( )
+        $Xaml.IO.DcTopology.ItemsSource = @( $Tmp )
 
-        $Xaml.IO.GwSiteCount.Text         = $Main.Domain.Count
+        $Xaml.IO.SmSiteCount.Text         = $Main.Domain.Count
     })
 
 #    ____                                                                                                    ________    
@@ -2785,21 +2966,21 @@ public struct WindowPosition
     # $Xaml.IO.NwViewer                 # DataGrid
     # $Xaml.IO.NwAddNetwork             # Button
     # $Xaml.IO.NwRemoveNetwork          # Button
-    # $Xaml.IO.NwTopography             # DataGrid
+    # $Xaml.IO.NwTopology               # DataGrid
     # $Xaml.IO.NwGetNetwork             # Button
     # $Xaml.IO.NwNewNetwork             # Button
 
     # [DataGrid(s)]://Initialize
     $Xaml.IO.NwAggregate.ItemsSource    = @( )
     $Xaml.IO.NwViewer.ItemsSource       = @( )
-    $Xaml.IO.NwTopography.ItemsSource   = @( )
+    $Xaml.IO.NwTopology.ItemsSource     = @( )
 
     # [Network]://Events
     $Xaml.IO.NwScopeLoad.Add_Click(
     {
         If ($Xaml.IO.NwScope.Text -notmatch "((\d+\.+){3}\d+\/\d+)")
         {
-            [System.Windows.MessageBox]::Show("Invalid/null network string (Use 'IP/Prefix' notation)","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid/null network string (Use 'IP/Prefix' notation)","Error")
         }
 
         Else
@@ -2834,11 +3015,11 @@ public struct WindowPosition
         $Prefix = $Xaml.IO.NwSubnetName.Text
         If ( $Prefix -notmatch "((\d+\.+){3}\d+\/\d+)")
         {
-            [System.Windows.MessageBox]::Show("Invalid subnet provided","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid subnet provided","Error")
         }
         ElseIf( $Prefix -in $Main.Network.Name )
         {
-            [System.Windows.MessageBox]::Show("Prefix already exists","Error")
+            Return [System.Windows.MessageBox]::Show("Prefix already exists","Error")
         }
         Else
         {
@@ -2860,7 +3041,7 @@ public struct WindowPosition
 
         Else
         {
-            [System.Windows.MessageBox]::Show("Select a subnet within the dialog box","Error")
+            Return [System.Windows.MessageBox]::Show("Select a subnet within the dialog box","Error")
         }
     })
 
@@ -2872,20 +3053,20 @@ public struct WindowPosition
             Throw "No valid networks detected"
         }
         
-        $Xaml.IO.NwTopography.ItemsSource = @( )
+        $Xaml.IO.NwTopology.ItemsSource = @( )
 
-        ForEach ( $Item in $Xaml.IO.NwAggregate.ItemsSource | % { [NwTopography]::New($Main.SubnetList,$_) } )
+        ForEach ( $Item in $Xaml.IO.NwAggregate.ItemsSource | % { [NwTopology]::New($Main.SubnetList,$_) } )
         {
-            $Xaml.IO.NwTopography.ItemsSource += $Item 
+            $Xaml.IO.NwTopology.ItemsSource += $Item 
             #[DGList]::New($Item.Name,$Item.DistinguishedName)
         }
 
-        $Xaml.IO.GwNetworkCount.Text      = $Main.Network.Count 
+        $Xaml.IO.SmNetworkCount.Text      = $Main.Network.Count 
     })
 
     $Xaml.IO.NwNewSubnetName.Add_Click(
     {
-        ForEach ( $Item in $Xaml.IO.NwTopography.ItemsSource )
+        ForEach ($Item in $Xaml.IO.NwTopology.ItemsSource)
         {
             If (!$Item.Exists)
             {
@@ -2893,11 +3074,101 @@ public struct WindowPosition
             }
         }
 
-        $Tmp                              = @( $Main.GetNetwork($Main.Network) | % { [NwTopography]::New($Main.SubnetList,$_) } )
-        $Xaml.IO.NwTopography.ItemsSource = @( )
-        $Xaml.IO.NwTopography.ItemsSource = @( $Tmp )
+        $Tmp                              = @( $Main.GetNetwork($Main.Network) | % { [NwTopology]::New($Main.SubnetList,$_) } )
+        $Xaml.IO.NwTopology.ItemsSource   = @( )
+        $Xaml.IO.NwTopology.ItemsSource   = @( $Tmp )
 
-        $Xaml.IO.GwNetworkCount.Text      = $Main.Network.Count 
+        $Xaml.IO.SmNetworkCount.Text      = $Main.Network.Count
+    })
+
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Sitemap Tab    ]______________________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+    # $Xaml.IO.SmSiteCount               # TextBox
+    # $Xaml.IO.SmNetworkCount            # TextBox
+    # $Xaml.IO.SmLoadSitemap             # Button
+    # $Xaml.IO.SmAggregate               # DataGrid
+    # $Xaml.IO.SmTemplate                # DataGrid
+    # $Xaml.IO.SmGetSitemap              # Button
+    # $Xaml.IO.SmNewSitemap              # Button
+
+    $Xaml.IO.SmTemplate.ItemsSource  = @( )
+    $Xaml.IO.SmAggregate.ItemsSource = @( )
+    $Xaml.IO.SmTopology.ItemsSource  = @( )
+
+    $Xaml.IO.SmLoadSitemap.Add_Click(
+    {
+        If ($Main.Network.Count -lt $Main.Domain.Count)
+        {
+            Return [System.Windows.MessageBox]::Show("Insufficient networks","Error: Network count")
+        }
+    
+        Else
+        {
+            $Main.LoadSitemap()
+            $Xaml.IO.SmAggregate.ItemsSource = @( )
+            $Xaml.IO.SmAggregate.ItemsSource = @( $Main.Sitemap )
+            If ( $Xaml.IO.SmAggregate.Items.Count -gt 0 )
+            {
+                $Xaml.IO.SmTemplate.ItemsSource  = @( $Main.SmTemplate )
+            }
+        }
+    })
+
+    $Xaml.IO.SmGetSitemap.Add_Click(
+    {
+        $Xaml.IO.SmTopology.ItemsSource = @( )
+
+        ForEach ($Item in $Xaml.IO.SmAggregate.ItemsSource)
+        {
+            $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Main",$Item.Name,$Main.SearchBase)
+
+            ForEach ($Name in $Xaml.IO.SmTemplate.Items | ? Create -eq 1)
+            {
+                $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Leaf","$($Item.Name)/$($Name.ObjectClass)",$Main.SearchBase)
+            }
+        }
+    })
+
+    $Xaml.IO.SmNewSitemap.Add_Click(
+    {
+        ForEach ($X in 0..($Xaml.IO.SmTopology.ItemsSource.Count-1))
+        {
+            $Item               = $Xaml.IO.SmTopology.Items[$X]
+            $Site               = $Main.Sitemap | ? Name -match ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value)
+            If ($Item.Exists -eq $False)
+            {
+                $OU             = @{
+
+                    City        = $Site.Location
+                    Country     = $Site.Country
+                    Description = $Site.Hash.Network.Name
+                    DisplayName = $Site.SiteName
+                    PostalCode  = $Site.Postal
+                    State       = $Site.Region
+                    Name        = $Item.Name
+                    Path        = $Item.DistinguishedName -Replace "OU=$($Item.Name),",""
+                }        
+                New-ADOrganizationalUnit @OU -Verbose
+
+                $Item.Exists    = $True
+            }
+
+            Else
+            {
+                Write-Host ("Item [+] Exists [{0}]" -f $Item.DistinguishedName)
+            }
+        }
+        
+        $Main.Sitelist                    = $Xaml.IO.SmTopology.ItemsSource
+        $Main.Gateway                     = $Main.Sitelist | ? Name -eq Gateway
+        $Main.Server                      = $Main.Sitelist | ? Name -eq Server
+
+        $Xaml.IO.GwAggregate.ItemsSource  = $Main.Gateway
+        $Xaml.IO.SrAggregate.ItemsSource  = $Main.Server
     })
 
 #    ____                                                                                                    ________    
@@ -2909,36 +3180,21 @@ public struct WindowPosition
     # [Gateway]://Variables
     # $Xaml.IO.GwSiteCount               # TextBox
     # $Xaml.IO.GwNetworkCount            # TextBox
-    # $Xaml.IO.GwLoadGateway             # Button
     # $Xaml.IO.GwAggregate               # DataGrid
     # $Xaml.IO.GwAddGateway              # Button
     # $Xaml.IO.GwGateway                 # TextBox
     # $Xaml.IO.GwRemoveGateway           # Button
     # $Xaml.IO.GwViewer                  # DataGrid
-    # $Xaml.IO.GwTopography              # DataGrid
+    # $Xaml.IO.GwTopology                # DataGrid
     # $Xaml.IO.GwGetGateway              # Button
     # $Xaml.IO.GwNewGateway              # Button
 
     # [DataGrid(s)]://Initialize
     $Xaml.IO.GwAggregate.ItemsSource    = @()
     $Xaml.IO.GwViewer.ItemsSource       = @()
-    $Xaml.IO.GwTopography.ItemsSource   = @()
+    $Xaml.IO.GwTopology.ItemsSource     = @()
 
     # [Gateway]://Events
-    $Xaml.IO.GwLoadGateway.Add_Click(
-    {
-        If ( $Main.Network.Count -lt $Main.Domain.Count )
-        {
-            [System.Windows.MessageBox]::Show("Insufficient networks","Error: Network count")
-        }
-
-        Else
-        {
-            $Main.LoadGateway()
-            $Xaml.IO.GwAggregate.ItemsSource = @( )
-            $Xaml.IO.GwAggregate.ItemsSource = @( $Main.Gateway )
-        }
-    })
 
     $Xaml.IO.GwAggregate.Add_SelectionChanged(
     {
@@ -2946,7 +3202,7 @@ public struct WindowPosition
 
         If ( $Xaml.IO.GwAggregate.SelectedIndex -gt -1 )
         {
-            $Gateway                           = @( $Main.Gateway | ? Network -match $Xaml.IO.GwAggregate.SelectedItem.Network )
+            $Gateway                           = $Main.Sitemap | ? Name -eq ([Regex]::Matches($Xaml.IO.GwAggregate.SelectedItem.DistinguishedName,"(\w{2}\-){3}\d+").Value)
             
             $List = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName Name Network Prefix Netmask Start End Range Broadcast".Split(" ") )
             {     
@@ -2961,8 +3217,8 @@ public struct WindowPosition
     {
         If ( $Xaml.IO.GwAggregate.SelectedIndex -gt -1)
         {
-            $Tmp = $Xaml.IO.GwAggregate.SelectedItem
-            If ( $Tmp.Name -in $Main.Gateway.Name)
+            $Tmp = $Main.Sitemap | ? Name -eq ([Regex]::Matches($Xaml.IO.GwAggregate.SelectedItem.DistinguishedName,"(\w{2}\-){3}\d+").Value)
+            If ( $Tmp.Name -in $Main.Sitemap.Name)
             {
                 $Main.RemoveGateway($Tmp.Name)
                 $Xaml.IO.GwAggregate.ItemsSource = @( )
@@ -2973,68 +3229,127 @@ public struct WindowPosition
 
     $Xaml.IO.GwGetGateway.Add_Click(
     {
-        $Main.GetOuList()
-        $Xaml.IO.GwTopography.ItemsSource = @( )
+        $Xaml.IO.GwTopology.ItemsSource = @( )
+        $Main.Virtual.Gateway           = @( )
 
-        ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource | % { [GwTopography]::New($Main.OuList,$_) } )
+        ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource )
         {
-            $Xaml.IO.GwTopography.ItemsSource += $Item
+            $Main.Virtual.Gateway += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Gateway",$Item.DistinguishedName,$_)}
         }
+
+        $Xaml.IO.GwTopology.ItemsSource = @($Main.Virtual.Gateway)
     })
 
     $Xaml.IO.GwNewGateway.Add_Click(
     {
-        $Main.GetOuList()
-
-        ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource | % { [GwTopography]::New($Main.OuList,$_) } )
+        ForEach ( $X in 0..($Xaml.IO.GwTopology.ItemsSource.Count - 1))
         {
-            If (!$Item.Exists)
+            $Item = $Xaml.IO.GwTopology.Items[$X]
+            If ($Item.Exists -eq $False)
             {
-                $Gateway = $Main.Gateway | ? Name -eq $Item.Name
-                $OU             = @{ 
+                $Split = $Item.DistinguishedName -Split ","
+                $Path  = $Split[1..($Split.Count-1)] -join ","
+                New-ADComputer -Name $Item.Name -DNSHostName $Item.Sitename -Path $Path -TrustedForDelegation:$True -Verbose
+                $Item.Exists = $True
+            }
 
-                    City        = $Gateway.Location
-                    Country     = $Gateway.Country
-                    Description = $Gateway.Hash.Network.Name
-                    DisplayName = $Gateway.SiteName
-                    PostalCode  = $Gateway.Postal
-                    State       = $Gateway.Region
-                    Name        = $Gateway.Name
-                    Path        = $Main.SearchBase
-                }
-                New-ADOrganizationalUnit @OU -Verbose
-
-                $OU.Path        = "OU={0},{1}" -f $OU.Name, $OU.Path
-
-                0..4 | % { 
-                    
-                    $OU.Name        = ("Gateway","Server","Computers","Users","Service")[$_]
-                    $OU.Description = ("(Routing/Remote Access)","(Domain Servers)","(Workstations)","(Domain Users)","(Service Accounts)")[$_]
-                    New-ADOrganizationalUnit @OU -Verbose
-                }
-
-                New-ADComputer -Name $Gateway.Name -DNSHostName $Gateway.Sitename -Path "OU=Gateway,$($OU.Path)" -TrustedForDelegation:$True -Verbose
-                New-ADComputer -Name "dc1-$($Gateway.Postal)"                     -Path "OU=Server,$($OU.Path)"  -TrustedForDelegation:$True -Verbose
-                New-ADUser     -Name "svc1-$($Gateway.Postal)" -Path "OU=Service,$($OU.Path)"
+            Else
+            {
+                Write-Host ("Item Exists [+] [{0}]" -f $Item.DistinguishedName) -F 10
             }
         }
-
-        $Main.GetOuList()
-        $Tmp                              = @( $Main.Gateway | % { [GwTopography]::New($Main.OuList,$_) } )
-        $Xaml.IO.GwTopography.ItemsSource = @( )
-        $Xaml.IO.GwTopography.ItemsSource = @( $Tmp )
     })
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
 #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
-#    ¯¯¯\\__[ Sites Tab  ]__________________________________________________________________________________//¯¯¯        
+#    ¯¯¯\\__[ Server Tab    ]______________________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-    #$Xaml.IO.SLLoadSiteList.Add_Click(
-    #{
+    # [Server]://Variables
+    # $Xaml.IO.SrSiteCount               # TextBox
+    # $Xaml.IO.SrNetworkCount            # TextBox
+    # $Xaml.IO.SrAggregate               # DataGrid
+    # $Xaml.IO.SrAddGateway              # Button
+    # $Xaml.IO.SrGateway                 # TextBox
+    # $Xaml.IO.SrRemoveGateway           # Button
+    # $Xaml.IO.SrViewer                  # DataGrid
+    # $Xaml.IO.SrTopology                # DataGrid
+    # $Xaml.IO.SrGetGateway              # Button
+    # $Xaml.IO.SrNewGateway              # Button
 
-    #})
+    # [DataGrid(s)]://Initialize
+    $Xaml.IO.SrAggregate.ItemsSource    = @()
+    $Xaml.IO.SrViewer.ItemsSource       = @()
+    $Xaml.IO.SrTopology.ItemsSource     = @()
+
+    # [Server]://Events
+    $Xaml.IO.SrAggregate.Add_SelectionChanged(
+    {
+        $Xaml.IO.SrViewer.ItemsSource     = @( )
+
+        If ( $Xaml.IO.SrAggregate.SelectedIndex -gt -1 )
+        {
+            $Server                           = $Main.Sitemap | ? Name -eq ([Regex]::Matches($Xaml.IO.SrAggregate.SelectedItem.DistinguishedName,"(\w{2}\-){3}\d+").Value)
+            
+            $List = ForEach ( $Item in "Location Region Country Postal TimeZone SiteLink SiteName Name Network Prefix Netmask Start End Range Broadcast".Split(" ") )
+            {     
+                [DGList]::New($Item,$Server.$Item) 
+            }
+
+            $Xaml.IO.SrViewer.ItemsSource     = @( $List )
+        }
+    })
+
+    $Xaml.IO.SrRemoveServer.Add_Click(
+    {
+        If ( $Xaml.IO.SrAggregate.SelectedIndex -gt -1)
+        {
+            $Tmp = $Main.Sitemap | ? Name -eq ([Regex]::Matches($Xaml.IO.SrAggregate.SelectedItem.DistinguishedName,"(\w{2}\-){3}\d+").Value)
+            If ( $Tmp.Name -in $Main.Sitemap.Name)
+            {
+                $Main.RemoveServer($Tmp.Name)
+                $Xaml.IO.SrAggregate.ItemsSource = @( )
+                $Xaml.IO.SrAggregate.ItemsSource = @( $Main.Server )
+            }
+        }
+    })
+
+    $Xaml.IO.SrGetServer.Add_Click(
+    {
+        $Xaml.IO.SrTopology.ItemsSource = @( )
+        $Main.Virtual.Server           = @( )
+
+        ForEach ( $Item in $Xaml.IO.SrAggregate.ItemsSource )
+        {
+            $Main.Virtual.Server += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Server",$Item.DistinguishedName,$_)}
+        }
+
+        $Xaml.IO.SrTopology.ItemsSource = @($Main.Virtual.Server)
+    })
+
+    $Xaml.IO.SrNewServer.Add_Click(
+    {
+        ForEach ( $X in 0..($Xaml.IO.SrTopology.ItemsSource.Count - 1))
+        {
+            $Item      = $Xaml.IO.SrTopology.Items[$X]
+            $Split     = $Item.DistinguishedName -Split ","
+            $Path      = $Split[1..($Split.Count-1)] -join ","
+            $Item.Name = $Split[0].Replace("CN=","")
+            $Split     = $Item.SiteName -Split "."
+            $DNSName   = $Item.Name,$Split[1..($Split.Count-1)] -join "."
+            If ($Item.Exists -eq $False)
+            {
+                New-ADComputer -Name $Item.Name -DNSHostName $DNSName -Path $Path -TrustedForDelegation:$True -Verbose
+                $Item.Exists = $True
+            }
+
+            Else
+            {
+                Write-Host ("Item Exists [+] [{0}]" -f $Item.DistinguishedName) -F 10
+            }
+        }
+    })
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
@@ -3095,14 +3410,14 @@ public struct WindowPosition
     {
         If (!(Test-Path $Xaml.IO.IsoPath.Text))
         {
-            [System.Windows.MessageBox]::Show("Invalid image root path","Error")
+            Return [System.Windows.MessageBox]::Show("Invalid image root path","Error")
         }
     
         $Tmp = Get-ChildItem $Xaml.IO.IsoPath.Text *.iso | Select-Object Name, FullName
     
         If (!$Tmp)
         {
-            [System.Windows.MessageBox]::Show("No images detected","Error")
+            Return [System.Windows.MessageBox]::Show("No images detected","Error")
         }
 
         $Xaml.IO.IsoList.ItemsSource = @( $Tmp )
@@ -3125,7 +3440,7 @@ public struct WindowPosition
     {
         If ( $Xaml.IO.IsoList.SelectedIndex -eq -1)
         {
-            [System.Windows.MessageBox]::Show("No image selected","Error")
+            Return [System.Windows.MessageBox]::Show("No image selected","Error")
         }
     
         $ImagePath  = $Xaml.IO.IsoList.SelectedItem.FullName
@@ -3137,12 +3452,12 @@ public struct WindowPosition
         
         If (!$Letter)
         {
-            [System.Windows.MessageBox]::Show("Image failed mounting to drive letter","Error")
+            Return [System.Windows.MessageBox]::Show("Image failed mounting to drive letter","Error")
         }
     
         ElseIf (!(Test-Path "${Letter}:\sources\install.wim"))
         {
-            [System.Windows.MessageBox]::Show("Not a valid Windows disc/image","Error")
+            Return [System.Windows.MessageBox]::Show("Not a valid Windows disc/image","Error")
             Dismount-Diskimage -ImagePath $ImagePath
         }
     
@@ -3202,7 +3517,7 @@ public struct WindowPosition
     {
         If ($Xaml.IO.IsoList.SelectedItem.Fullname -in $Xaml.IO.WimIso.Items.Name)
         {
-            [System.Windows.MessageBox]::Show("Image already selected","Error")
+            Return [System.Windows.MessageBox]::Show("Image already selected","Error")
         }
     
         Else
@@ -3481,7 +3796,7 @@ public struct WindowPosition
             $Xaml.IO.DsDriveName.Text     = ("FE{0:d3}" -f $Xaml.IO.DsAggregate.Items.Count)
             $Xaml.IO.DsRootPath.Text      = ""
             $Xaml.IO.DsShareName.Text     = ""
-            $Xaml.IO.DsDescription.Text   = ("[FightingEntropy({0})][(2021.7.0)]" -f [char]960)
+            $Xaml.IO.DsDescription.Text   = ("[FightingEntropy({0})][(2021.8.0)]" -f [char]960)
             $Xaml.IO.DsType.SelectedIndex = 0
         }
 
@@ -3527,9 +3842,14 @@ public struct WindowPosition
     {
         If ( $Xaml.IO.DsAggregate.SelectedIndex -eq -1 )
         {
-            Return [System.Windows.MessageBox]::Show("No share to remove is even selected","Error")
+            Return [System.Windows.MessageBox]::Show("No share to remove...","Error")
         }
 
+        ElseIf ($Xaml.IO.DsAggregate.SelectedItem.Name -eq "<New>")
+        {
+            Return [System.Windows.MessageBox]::Show("No deployment share selected","Error")
+        }
+        
         Else
         {
             $Items = @( $Xaml.IO.DsAggregate.ItemsSource | ? Name -ne $Xaml.IO.DsAggregate.SelectedItem.Name )
@@ -3657,7 +3977,7 @@ public struct WindowPosition
             Return [System.Windows.MessageBox]::Show("Invalid domain account password/confirm","Error")
         }
 
-        ElseIf (!(Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" | ? DistinguishedName -eq $Xaml.IO.DsNwMachineOuName.Text))
+        ElseIf (!(Get-ADObject -Filter * | ? DistinguishedName -eq $Xaml.IO.DsNwMachineOuName.Text))
         {
             Return [System.Windows.MessageBox]::Show("Invalid OU specified","Error")
         }
@@ -3666,56 +3986,29 @@ public struct WindowPosition
         {
             Write-Theme "Creating [~] Deployment Share"
 
-            #$MDT     = Get-ItemProperty HKLM:\Software\Microsoft\Deployment* | % Install_Dir | % TrimEnd \
-            #Import-Module "$MDT\Bin\MicrosoftDeploymentToolkit.psd1"
-        }
+            $Item = $Xaml.IO.DsAggregate.SelectedItem | ? Name -notin (Get-MDTPersistentDrive).Name
 
-        If (Get-MDTPersistentDrive)
-        {
-            $Persist = Restore-MDTPersistentDrive
-        }
-
-        $SMB     = Get-SMBShare
-        $PSD     = Get-PSDrive
-
-        If ($Xaml.IO.DsRootPath.Text -in $Persist.Root)
-        {
-            Return [System.Windows.MessageBox]::Show("That path belongs to an existing deployment share","Error")
-        }
-
-        ElseIf($Xaml.IO.DsShareName.Text -in $SMB.Name)
-        {
-            Return [System.Windows.MessageBox]::Show("That share name belongs to an existing SMB share","Error")
-        }
-
-        ElseIf ($Xaml.IO.DsDriveName.Text -in $PSD.Name)
-        {
-            Return [System.Windows.MessageBox]::Show("That (DSDrive|PSDrive) label is already being used","Error")
-        }
-
-        Else
-        {
-            If (!(Test-Path $Xaml.IO.DsRootPath.Text))
+            If (!(Test-Path $Item.Root))
             {
-                New-Item $Xaml.IO.DsRootPath.Text -ItemType Directory -Verbose
+                New-Item $Item.Root -ItemType Directory -Verbose
             }
 
             $Hostname       = @($Env:ComputerName,"$Env:ComputerName.$Env:UserDNSDomain")[[Int32](Get-CimInstance Win32_ComputerSystem | % PartOfDomain)].ToLower()
 
             $SMB            = @{
 
-                Name        = $Xaml.IO.DsShareName.Text
-                Path        = $Xaml.IO.DsRootPath.Text
-                Description = $Xaml.IO.DsDescription.Text
+                Name        = $Item.Share
+                Path        = $Item.Root
+                Description = $Item.Description
                 FullAccess  = "Administrators"
             }
 
             $PSD            = @{ 
 
-                Name        = $Xaml.IO.DsDriveName.Text
+                Name        = $Item.Name
                 PSProvider  = "MDTProvider"
-                Root        = $Xaml.IO.DsRootPath.Text
-                Description = $Xaml.IO.DsDescription.Text
+                Root        = $Item.Root
+                Description = $Item.Description
                 NetworkPath = ("\\{0}\{1}" -f $Hostname, $Xaml.IO.DsShareName.Text)
             }
 
@@ -3825,7 +4118,7 @@ public struct WindowPosition
                 $TaskSequence           = @{ 
                     
                     Path                = "$TS\$Type\$($Image.Version)"
-                    Name                = $Image.ImageName
+                    Name                = ( "{0} (x{1})" -f $Image.ImageName, $Image.Architecture)
                     Template            = "FE{0}Mod.xml" -f $Type
                     Comments            = $Comment
                     ID                  = $Image.Label
@@ -3972,43 +4265,34 @@ public struct WindowPosition
     $Xaml.Invoke()
 
     # [Gateway - Prepping Section II]
-    If ($Main.Gateway)
-    {
-        $Gateway = $Main.Gateway
-        $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
-        $Date    = Get-Date -UFormat %Y%m%d
-        $Path    = "$Scratch\Lab($Date)"
-        If (!(Test-Path $Scratch))
-        {
-            New-Item -Path $Scratch -ItemType Directory -Verbose
-        }
-        If (!(Test-Path $Path))
-        {
-            New-Item -Path $Path -ItemType Directory -Verbose 
-        }
+    #If ($Main.Gateway)
+    #{
+    #    $Gateway = $Main.Gateway
+    #    $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
+    #    $Date    = Get-Date -UFormat %Y%m%d
+    #    $Path    = "$Scratch\Lab($Date)"
+    #    If (!(Test-Path $Scratch))
+    #    {
+    #        New-Item -Path $Scratch -ItemType Directory -Verbose
+    #    }
+    #    If (!(Test-Path $Path))
+    #    {
+    #        New-Item -Path $Path -ItemType Directory -Verbose 
+    #    }########
 
-        Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
+    #    Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
 
-        ForEach ( $X in 0..($Gateway.Count - 1 ))
-        {
-            $Item = $Gateway[$X]
-            $Item.Hash.Network.HostObject = $Null 
-            $Item.Hash.Network.Network_   = $Null 
-            $Item.Hash.Network.Netmask_   = $Null
-            $Item.Hash.Domain.Ping        = $Null
+    #    ForEach ( $X in 0..($Gateway.Count - 1 ))
+    #    {
+    #        $Item = $Gateway[$X]
+    #        $Item.Hash.Network.HostObject = $Null 
+    #        $Item.Hash.Network.Network_   = $Null 
+    #        $Item.Hash.Network.Netmask_   = $Null
+    #        $Item.Hash.Domain.Ping        = $Null
 
-            Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
-        }
-    }
+    #        Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
+    #    }
+    #}
 
     # [Server]
-    If ($Main.Server)
-    {
-        
-    }
 }
-
-#$Files = [GwFiles]::New($Path)
-
-# Add-Type -AssemblyName PresentationFramework
-# ( GC $Home\Desktop\New-FEDeploymentShare.ps1 -Encoding UTF8 ) -join "`n" | IEX

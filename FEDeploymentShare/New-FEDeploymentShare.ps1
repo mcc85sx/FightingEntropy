@@ -474,7 +474,7 @@ public struct WindowPosition
         [String]              $Name
         [String] $DistinguishedName
         [Bool]              $Exists
-        SwTopologyBranch([String]$Type,[String]$Name,[String]$Base)
+        SwTopologyBranch([String]$Type,[String]$Name,[String]$Base,[Object]$OUList)
         {
             $This.Type              = $Type
             Switch($Type) 
@@ -491,8 +491,7 @@ public struct WindowPosition
                     $This.DistinguishedName = "OU={1},OU={0},$Base" -f $Name.Split("/") 
                 }
             }
-            $Return                 = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -Properties * | ? DistinguishedName -eq $This.DistinguishedName
-            $This.Exists            = @(0,1)[$Return -ne $Null] 
+            $This.Exists            = @(0,1)[$This.DistinguishedName -in $OUList.DistinguishedName] 
         }
     }
 
@@ -846,6 +845,7 @@ public struct WindowPosition
         [Object] $Internal
         [Object] $External
         [Object] $Gateway
+        [Object] $Server
         [Object] $VMC
         VMSilo([String]$Name,[Object[]]$Gateway)
         {
@@ -931,6 +931,124 @@ public struct WindowPosition
                 Until($Mac -ne 000000000000)
                 Stop-VM -Name $ID -Confirm:$False -Force
                 $This.VMC += $Mac
+            }
+        }
+    }
+
+    Class VmSelect
+    {
+        [String] $Type
+        [String] $Name
+        [Bool]   $Create
+        VmSelect([Object]$Item)
+        {
+            $This.Type   = $Item.Type
+            $This.Name   = $Item.Name
+            $This.Create = 1
+        }
+    }
+
+    Class VmTest
+    {
+        [Object] $Name
+        [Bool] $Exists
+        VmTest([String]$Name)
+        {
+            $This.Name   = $Name
+            $Return      = Get-VM -Name $Name -EA 0
+            $This.Exists = $Return -ne $Null
+        }
+    }
+
+    Class VMObject
+    {
+        [Object]$Item
+        [Object]$Name
+        [Double]$MemoryStartupBytes
+        [Object]$Path
+        [Object]$NewVHDPath
+        [Double]$NewVHDSizeBytes
+        [Object]$Generation
+        [Object]$SwitchName
+        VMObject([Object]$Item,[UInt32]$Mem,[UInt32]$HD,[UInt32]$Gen,[String]$Switch)
+        {
+            $This.Item               = $Item
+            $This.Name               = $Item.Name
+            $This.MemoryStartupBytes = ([UInt32]$Mem)*1048576
+            $This.Path               = "{0}\$($Item.Name).vmx"
+            $This.NewVhdPath         = "{0}\$($Item.Name).vhdx"
+            $This.NewVhdSizeBytes    = ([UInt32]$HD)*1073741824
+            $This.Generation         = $Gen
+            $This.SwitchName         = $Switch
+        }
+        New([Object]$Path)
+        {
+            If (!(Test-Path $Path))
+            {
+                Throw "Invalid path"
+            }
+
+            ElseIf (Get-VM -Name $This.Name -EA 0)
+            {
+                Write-Host "VM exists..."
+                If (Get-VM -Name $This.Name | ? Status -ne Off)
+                {
+                    $This.Stop()
+                }
+
+                $This.Remove()
+            }
+
+            $This.Path             = $This.Path -f $Path
+            $This.NewVhdPath       = $This.NewVhdPath -f $Path
+
+            If (Test-Path $This.Path)
+            {
+                Remove-Item $This.Path -Recurse -Confirm:$False -Verbose
+            }
+
+            If (Test-Path $This.NewVhdPath)
+            {
+                Remove-Item $This.NewVhdPath -Recurse -Confirm:$False -Verbose
+            }
+
+            $Object                = @{
+
+                Name               = $This.Name
+                MemoryStartupBytes = $This.MemoryStartupBytes
+                Path               = $This.Path
+                NewVhdPath         = $This.NewVhdPath
+                NewVhdSizeBytes    = $This.NewVhdSizebytes
+                Generation         = $This.Generation
+                SwitchName         = $This.SwitchName
+            }
+
+            New-VM @Object -Verbose | Add-VMDVDDrive -Verbose
+            $Ct = @{Gateway=1;Server=2}[$This.Item.Type]
+            Set-VMProcessor -VMName $This.Name -Count $Ct -Verbose
+        }
+        Start()
+        {
+            Get-VM -Name $This.Name | ? State -eq Off | Start-VM -Verbose
+        }
+        Remove()
+        {
+            Get-VM -Name $This.Name | Remove-VM -Force -Confirm:$False -Verbose
+        }
+        Stop()
+        {
+            Get-VM -Name $This.Name | ? State -ne Off | Stop-VM -Verbose -Force
+        }
+        LoadISO([String]$Path)
+        {
+            If (!(Test-Path $Path))
+            {
+                Throw "Invalid ISO path"
+            }
+
+            Else
+            {
+                Get-VM -Name $This.Name | % { Set-VMDVDDrive -VMName $_.Name -Path $Path -Verbose }
             }
         }
     }
@@ -1358,7 +1476,7 @@ public struct WindowPosition
     Class FEDeploymentShareGUI
     {
         Static [String] $Tab = @"
-        <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://New Deployment Share" Width="640" Height="780" Icon=" C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" ResizeMode="NoResize" FontWeight="SemiBold" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen">
         <Window.Resources>
             <Style TargetType="GroupBox" x:Key="xGroupBox">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -1713,8 +1831,8 @@ public struct WindowPosition
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                            <ComboBoxItem Content="No"/>
-                                                            <ComboBoxItem Content="Yes"/>
+                                                            <ComboBoxItem Content="False"/>
+                                                            <ComboBoxItem Content="True"/>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1810,8 +1928,8 @@ public struct WindowPosition
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                            <ComboBoxItem Content="No"/>
-                                                            <ComboBoxItem Content="Yes"/>
+                                                            <ComboBoxItem Content="False"/>
+                                                            <ComboBoxItem Content="True"/>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1878,8 +1996,8 @@ public struct WindowPosition
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                            <ComboBoxItem Content="No"/>
-                                                            <ComboBoxItem Content="Yes"/>
+                                                            <ComboBoxItem Content="False"/>
+                                                            <ComboBoxItem Content="True"/>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1897,8 +2015,8 @@ public struct WindowPosition
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                        <ComboBoxItem Content="No"/>
-                                                        <ComboBoxItem Content="Yes"/>
+                                                        <ComboBoxItem Content="False"/>
+                                                        <ComboBoxItem Content="True"/>
                                                     </ComboBox>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1935,7 +2053,7 @@ public struct WindowPosition
                                                       ScrollViewer.IsDeferredScrollingEnabled="True"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="*"/>
+                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="100"/>
                                             <DataGridTextColumn Header="DistinguishedName" Binding="{Binding DistinguishedName}" Width="*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
@@ -1975,8 +2093,8 @@ public struct WindowPosition
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                            <ComboBoxItem Content="No"/>
-                                                            <ComboBoxItem Content="Yes"/>
+                                                            <ComboBoxItem Content="False"/>
+                                                            <ComboBoxItem Content="True"/>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -2014,7 +2132,7 @@ public struct WindowPosition
                                                       ScrollViewer.IsDeferredScrollingEnabled="True"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Visible">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="*"/>
+                                            <DataGridTextColumn Header="Name"              Binding="{Binding Name}"              Width="100"/>
                                             <DataGridTextColumn Header="DistinguishedName" Binding="{Binding DistinguishedName}" Width="*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
@@ -2054,8 +2172,8 @@ public struct WindowPosition
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                            <ComboBoxItem Content="No"/>
-                                                            <ComboBoxItem Content="Yes"/>
+                                                            <ComboBoxItem Content="False"/>
+                                                            <ComboBoxItem Content="True"/>
                                                         </ComboBox>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -2078,38 +2196,47 @@ public struct WindowPosition
                     <TabItem Header="Virtual" BorderBrush="{x:Null}">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="150"/>
                                 <RowDefinition Height="80"/>
+                                <RowDefinition Height="150"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" Header="[VmSelect]">
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="150"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="[VmHost]">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Name="VmHostSelect" Content="Select"/>
+                                        <TextBox Grid.Column="1" Name="VmHost"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="[VmPopulate]">
+                                    <Button Grid.Column="0" Name="VmPopulate" Content="Pull"/>
+                                </GroupBox>
+                            </Grid>
+                            <GroupBox Grid.Row="1" Header="[VmSelect]">
                                 <DataGrid Name="VmSelect">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"/>
                                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                                        <DataGridTemplateColumn Header="Create" Width="100">
+                                        <DataGridTemplateColumn Header="Create VM?" Width="100">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                        <ComboBoxItem Content="No"/>
-                                                        <ComboBoxItem Content="Yes"/>
+                                                        <ComboBoxItem Content="False"/>
+                                                        <ComboBoxItem Content="True"/>
                                                     </ComboBox>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                            </GroupBox>
-                            <GroupBox Grid.Row="1" Header="[VmHost]">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Name="VmHostSelect" Content="Select"/>
-                                    <TextBox Grid.Column="1" Name="VmHost"/>
-                                </Grid>
                             </GroupBox>
                             <TabControl Grid.Row="2">
                                 <TabItem Header="Gateway">
@@ -2126,8 +2253,8 @@ public struct WindowPosition
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                                    <ComboBoxItem Content="No"/>
-                                                                    <ComboBoxItem Content="Yes"/>
+                                                                    <ComboBoxItem Content="False"/>
+                                                                    <ComboBoxItem Content="True"/>
                                                                 </ComboBox>
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
@@ -2170,10 +2297,10 @@ public struct WindowPosition
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
                                                     </Grid.RowDefinitions>
-                                                    <GroupBox Grid.Row="0" Header="[RAM]">
+                                                    <GroupBox Grid.Row="0" Header="[(RAM/MB)]">
                                                         <TextBox Name="VmGatewayMemory"/>
                                                     </GroupBox>
-                                                    <GroupBox Grid.Row="1" Header="[HDD]">
+                                                    <GroupBox Grid.Row="1" Header="[(HDD/GB)]">
                                                         <TextBox Name="VmGatewayDrive"/>
                                                     </GroupBox>
                                                 </Grid>
@@ -2195,8 +2322,8 @@ public struct WindowPosition
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <ComboBox SelectedIndex="{Binding Exists}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                                    <ComboBoxItem Content="No"/>
-                                                                    <ComboBoxItem Content="Yes"/>
+                                                                    <ComboBoxItem Content="False"/>
+                                                                    <ComboBoxItem Content="True"/>
                                                                 </ComboBox>
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
@@ -2239,10 +2366,10 @@ public struct WindowPosition
                                                         <RowDefinition Height="*"/>
                                                         <RowDefinition Height="*"/>
                                                     </Grid.RowDefinitions>
-                                                    <GroupBox Grid.Row="0" Header="[RAM]">
+                                                    <GroupBox Grid.Row="0" Header="[(RAM/MB)]">
                                                         <TextBox Name="VmServerMemory"/>
                                                     </GroupBox>
-                                                    <GroupBox Grid.Row="1" Header="[HDD]">
+                                                    <GroupBox Grid.Row="1" Header="[(HDD/GB)]">
                                                         <TextBox Name="VmServerDrive"/>
                                                     </GroupBox>
                                                 </Grid>
@@ -2699,6 +2826,21 @@ public struct WindowPosition
 "@
     }
 
+    Class VmStack
+    {
+        [Object] $Host
+        [Object] $Switch
+        [Object] $External
+        [Object] $Internal
+        VmStack([Object]$VmHost,[Object]$VmSwitch)
+        {
+            $This.Host   = $VmHost
+            $This.Switch = $VmSwitch
+            $This.External = $Vmswitch | ? SwitchType -eq External
+            $This.Internal = $Vmswitch | ? SwitchType -eq Internal
+        }
+    }
+
     # Controller class
     Class Main
     {
@@ -2712,11 +2854,13 @@ public struct WindowPosition
         [String]                $CN
         [Object]          $Template
         [String]        $SearchBase
-        [Object]               $Win 
+        [Object]               $Win
         [Object]               $Reg
         [Object]            $Config
+        [Object]                $IP
         [Object]          $SiteList
         [Object]        $SubnetList
+        [Object]            $OUList
         [Object]        $SmTemplate
         [Object]            $Domain
         [Object]           $Network
@@ -2724,7 +2868,12 @@ public struct WindowPosition
         [Object]           $Gateway
         [Object]            $Server
         [Object]           $Service
+        [Object]              $ADDS
         [Object]           $Virtual
+        [Object]                $Vm
+        [Object]                $Sw
+        [Object]                $Gw
+        [Object]                $Sr
         [Object]             $Image
         [Object]            $Update
         [Object]             $Share
@@ -2753,6 +2902,8 @@ public struct WindowPosition
                 }
             )
 
+            $This.IP         = Get-NetIPAddress | % IPAddress 
+
             $This.SmTemplate = [SmTemplate]::New().Stack
             $This.Domain     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Network    = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
@@ -2762,11 +2913,18 @@ public struct WindowPosition
             $This.Image      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Update     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             $This.Share      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            $This.ADDS       = @{ 
+
+                Gateway      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+                Server       = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
+            }
             $This.Virtual    = @{ 
 
                 Gateway      = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
                 Server       = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
             }
+
+            $This.OUList     = Get-ADObject -Filter * | ? ObjectClass -eq OrganizationalUnit
         }
         [Void] GetSiteList()
         {
@@ -2775,6 +2933,10 @@ public struct WindowPosition
         [Void] GetSubnetList()
         {
             $This.SubnetList    = Get-ADObject -LDAPFilter "(objectClass=subnet)" -SearchBase "CN=Configuration,$($This.SearchBase)"
+        }
+        [Void] GetOUList()
+        {
+            $This.OUList        = Get-ADObject -LDAPFilter "(objectClass=OrganizationalUnit)" -SearchBase $This.SearchBase 
         }
         [Object] NewCertificate()
         {
@@ -2954,7 +3116,7 @@ public struct WindowPosition
         $X = "    # `$Xaml.IO.$_"
         $Y = $Xaml.IO.$_.GetType().Name 
         "{0}{1} # $Y" -f $X,(" "*(40-$X.Length) -join '')
-    }#>
+    } | Set-Clipboard #>
 
 #    ____                                                                                                    ________    
 #   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
@@ -2967,6 +3129,7 @@ public struct WindowPosition
     # $Xaml.IO.CfgDhcp                  # DataGrid
     # $Xaml.IO.CfgDns                   # DataGrid
     # $Xaml.IO.CfgAdds                  # DataGrid
+    # $Xaml.IO.CfgHyperV                # DataGrid
     # $Xaml.IO.CfgWds                   # DataGrid
     # $Xaml.IO.CfgMdt                   # DataGrid
     # $Xaml.IO.CfgWinAdk                # DataGrid
@@ -2978,6 +3141,7 @@ public struct WindowPosition
     $Xaml.IO.CfgDhcp.ItemsSource        = @( )
     $Xaml.IO.CfgDns.ItemsSource         = @( )
     $Xaml.IO.CfgAdds.ItemsSource        = @( )
+    $Xaml.IO.CfgHyperV.ItemsSource      = @( )
     $Xaml.IO.CfgWds.ItemsSource         = @( )
     $Xaml.IO.CfgMdt.ItemsSource         = @( )
     $Xaml.IO.CfgWinAdk.ItemsSource      = @( )
@@ -3320,13 +3484,22 @@ public struct WindowPosition
 
         ForEach ($Item in $Xaml.IO.SmAggregate.ItemsSource)
         {
-            $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Main",$Item.Name,$Main.SearchBase)
+            $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Main",$Item.Name,$Main.SearchBase,$Main.OUList)
 
             ForEach ($Name in $Xaml.IO.SmTemplate.Items | ? Create -eq 1)
             {
-                $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Leaf","$($Item.Name)/$($Name.ObjectClass)",$Main.SearchBase)
+                $Xaml.IO.SmTopology.ItemsSource += [SwTopologyBranch]::New("Leaf","$($Item.Name)/$($Name.ObjectClass)",$Main.SearchBase,$Main.OUList)
             }
         }
+
+        $Main.GetOUList()
+
+        $Main.Sitelist                    = $Xaml.IO.SmTopology.ItemsSource
+        $Main.Gateway                     = $Main.Sitelist | ? Name -eq Gateway
+        $Main.Server                      = $Main.Sitelist | ? Name -eq Server
+
+        $Xaml.IO.GwAggregate.ItemsSource  = $Main.Gateway
+        $Xaml.IO.SrAggregate.ItemsSource  = $Main.Server
     })
 
     $Xaml.IO.SmNewSitemap.Add_Click(
@@ -3426,14 +3599,14 @@ public struct WindowPosition
     $Xaml.IO.GwGetGateway.Add_Click(
     {
         $Xaml.IO.GwTopology.ItemsSource = @( )
-        $Main.Virtual.Gateway           = @( )
+        $Main.ADDS.Gateway              = @( )
 
         ForEach ( $Item in $Xaml.IO.GwAggregate.ItemsSource )
         {
-            $Main.Virtual.Gateway += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Gateway",$Item.DistinguishedName,$_)}
+            $Main.ADDS.Gateway += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Gateway",$Item.DistinguishedName,$_)}
         }
 
-        $Xaml.IO.GwTopology.ItemsSource = @($Main.Virtual.Gateway)
+        $Xaml.IO.GwTopology.ItemsSource = @($Main.ADDS.Gateway)
     })
 
     $Xaml.IO.GwNewGateway.Add_Click(
@@ -3514,14 +3687,16 @@ public struct WindowPosition
     $Xaml.IO.SrGetServer.Add_Click(
     {
         $Xaml.IO.SrTopology.ItemsSource = @( )
-        $Main.Virtual.Server           = @( )
+        $Main.ADDS.Server               = @( )
 
         ForEach ( $Item in $Xaml.IO.SrAggregate.ItemsSource )
         {
-            $Main.Virtual.Server += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Server",$Item.DistinguishedName,$_)}
+            $Main.ADDS.Server += $Main.Sitemap | ? Name -eq ([Regex]::Matches($Item.DistinguishedName,"(\w{2}\-){3}\d+").Value) | % { [Topology]::New("Server",$Item.DistinguishedName,$_)}
         }
 
-        $Xaml.IO.SrTopology.ItemsSource = @($Main.Virtual.Server)
+        $Main.Adds.Server | % { $_.Name = $_.DistinguishedName.Split(",")[0].Replace("CN=","") }
+
+        $Xaml.IO.SrTopology.ItemsSource = @($Main.ADDS.Server)
     })
 
     $Xaml.IO.SrNewServer.Add_Click(
@@ -3543,6 +3718,331 @@ public struct WindowPosition
             Else
             {
                 Write-Host ("Item Exists [+] [{0}]" -f $Item.DistinguishedName) -F 10
+            }
+        }
+    })
+
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Virtual Tab    ]______________________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+    # $Xaml.IO.VmSelect                  # DataGrid
+    # $Xaml.IO.VmHostSelect              # Button
+    # $Xaml.IO.VmHost                    # TextBox
+    # $Xaml.IO.VmPopulate                # Button
+    # $Xaml.IO.VmGateway                 # DataGrid
+    # $Xaml.IO.VmGatewayScriptSelect     # Button
+    # $Xaml.IO.VmGatewayScript           # TextBox
+    # $Xaml.IO.VmGatewayImageSelect      # Button
+    # $Xaml.IO.VmGatewayImage            # TextBox
+    # $Xaml.IO.VmGatewayMemory           # TextBox
+    # $Xaml.IO.VmGatewayDrive            # TextBox
+    # $Xaml.IO.VmServer                  # DataGrid
+    # $Xaml.IO.VmServerScriptSelect      # Button
+    # $Xaml.IO.VmServerScript            # TextBox
+    # $Xaml.IO.VmServerImageSelect       # Button
+    # $Xaml.IO.VmServerImage             # TextBox
+    # $Xaml.IO.VmServerMemory            # TextBox
+    # $Xaml.IO.VmServerDrive             # TextBox
+    # $Xaml.IO.VmGetArchitecture         # Button
+    # $Xaml.IO.VmNewArchitecture         # Button
+
+    $Xaml.IO.VmSelect.ItemsSource        = @( )
+    $Xaml.IO.VmHostSelect.Add_Click(
+    {
+        If ($Xaml.IO.VmHost.Text -eq "")
+        {
+            Return [System.Windows.Messagebox]::Show("Must enter a server hostname or IP address","Error")
+        }
+
+        ElseIf ((Test-Connection -ComputerName $Xaml.IO.VmHost.Text -Count 1 -EA 0) -eq $Null)
+        {
+            Return [System.Windows.Messagebox]::Show("Not a valid server hostname or IP Address","Error")
+        }
+
+        Else
+        {
+            Write-Host "Retrieving [~] VMHost, and VMSwitch"
+
+            If ( $Xaml.IO.VmHost.Text -in @("localhost";$Main.IP))
+            {
+                $Main.Vm    = [VmStack]::New((Get-VMHost),(Get-VMSwitch))
+            }
+            Else
+            {
+                $Credential = Get-Credential
+                $Main.Vm    = [VmStack]((Get-VMHost -ComputerName $Xaml.IO.VmHost.Text -Credential $Credential),
+                                        (Get-VmSwitch -ComputerName $Xaml.IO.VmHost.Text -Credenttial $Credential))
+            }
+
+            Write-Host "Retrieved [+] VMHost, and VMSwitch"
+        }
+    })
+
+    $Xaml.IO.VmPopulate.Add_Click(
+    {
+        If ( $Xaml.IO.VmHost.Text -eq $Null )
+        {
+            Return [System.Windows.Messagebox]::Show("Must select the VM Host first","Error")
+        }
+
+        $Xaml.IO.VmSelect.ItemsSource    = @( )
+        $Collect                         = @( )
+
+        If ( $Main.ADDS.Gateway.Count -gt 0 )
+        {
+            $Main.ADDS.Gateway           | % { $Collect += $_ }
+        }
+
+        If ( $Main.ADDS.Server.Count -gt 0 )
+        {
+            $Main.ADDS.Server            | % { $Collect += $_ }
+        }
+
+        $Xaml.IO.VmSelect.ItemsSource    = @([VmSelect[]]$Collect)
+    })
+
+    $Xaml.IO.VmGatewayScriptSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $Env:SystemDrive
+        $Item.Filter           = "(*.ps1)|*.ps1"
+        $Item.ShowDialog()
+        
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = ""
+        }
+
+        $Xaml.IO.VmGatewayScript.Text = $Item.FileName
+    })
+
+    $Xaml.IO.VmGatewayImageSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $Env:SystemDrive
+        $Item.Filter           = "(*.iso)|*.iso"
+        $Item.ShowDialog()
+            
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = ""
+        }
+    
+        $Xaml.IO.VmGatewayImage.Text = $Item.FileName
+    })
+
+    $Xaml.IO.VmServerScriptSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $Env:SystemDrive
+        $Item.Filter           = "(*.ps1)|*.ps1"
+        $Item.ShowDialog()
+        
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = ""
+        }
+
+        $Xaml.IO.VmServerScript.Text = $Item.FileName
+    })
+
+    $Xaml.IO.VmServerImageSelect.Add_Click(
+    {
+        $Item                  = New-Object System.Windows.Forms.OpenFileDialog
+        $Item.InitialDirectory = $Env:SystemDrive
+        $Item.Filter           = "(*.iso)|*.iso"
+        $Item.ShowDialog()
+            
+        If (!$Item.Filename)
+        {
+            $Item.Filename     = ""
+        }
+    
+        $Xaml.IO.VmServerImage.Text = $Item.FileName
+    })
+
+    $Xaml.IO.VmGatewayMemory.Text        = "2048"
+    $Xaml.IO.VmGatewayDrive.Text         = "20"
+    $Xaml.IO.VmServerMemory.Text         = "4096"
+    $Xaml.IO.VmServerDrive.Text          = "50"
+
+    $Xaml.IO.VMGetArchitecture.Add_Click(
+    {
+        $Main.Virtual.Gateway            = @( )
+        $Main.Virtual.Server             = @( )
+
+        ForEach ( $Item in $Xaml.IO.VmSelect.Items )
+        {
+            Switch($Item.Type)
+            {
+                Gateway 
+                { 
+                    If ($Item.Create -eq 1 )
+                    {
+                        $Main.Virtual.Gateway += $Main.Adds.Gateway | ? Name -eq $Item.Name
+                    } 
+                }
+                Server  
+                { 
+                    If ($Item.Create -eq 1 )
+                    {     
+                        $Main.Virtual.Server  += $Main.Adds.Server | ? Name -eq $Item.Name
+                    } 
+                }
+            }
+        }
+
+        $Xaml.IO.VmGateway.ItemsSource   = @($Main.Virtual.Gateway | % { [VmTest]$_.Name } )
+        $Xaml.IO.VmServer.ItemsSource    = @($Main.Virtual.Server  | % { [VmTest]$_.Name } )
+    })
+
+    $Xaml.IO.VMNewArchitecture.Add_Click(
+    {
+        If (Get-Service -Name vmms -EA 0 | ? Status -ne Running)
+        {
+            Return [System.Windows.MessageBox]::Show("The Hyper-V Virtual Machine Management service is not (installed/running)","Error")
+        }
+
+        # Create the virtual switches
+        Write-Host "Creating [~] [VMSwitch[]]"
+        $Main.Sw = @( )
+        ForEach ( $X in 0..($Main.Virtual.Gateway.Count-1))
+        {
+            $Switch = $Main.Virtual.Gateway[$X]
+            If (Get-VMSwitch -Name $Switch.Name -EA 0)
+            {
+                Write-Host "Flushing [~] Switch:[$($Switch.Name)]"
+                Remove-VMSwitch -Name $Switch.Name -Verbose -Confirm:$False -Force
+            }
+
+            Write-Host "Processing [~] $($Switch.Name)"
+            $Main.Sw += New-VMSwitch -Name $Switch.Name -SwitchType Internal -Verbose
+        }
+        Write-Host "Created [+] [VMSwitch[]]"
+        Start-Sleep 2
+
+        # Create the virtual gateways
+        Write-Host "Creating [~] [VMGateway[]]"
+        $Main.Gw = @( )
+        ForEach ( $X in 0..($Main.Virtual.Gateway.Count-1))
+        {
+            $Gateway = $Main.Virtual.Gateway[$X]
+            If (Get-VM -Name $Gateway.Name -EA 0)
+            {
+                Write-Host "Flushing [~] Gateway:[$($Gateway.Name)]"
+                Remove-VM -Name $Gateway.Name -Verbose -Confirm:$False -Force
+            }
+
+            Write-Host "Processing [~] Gateway:[$($Gateway.Name)]"
+            $Item     = [VMObject]::New($Gateway,$Xaml.IO.VmGatewayMemory.Text,$Xaml.IO.VmGatewayDrive.Text,1,$Main.Sw[$X].Name)
+            $Item.New($Main.VM.Host.VirtualMachinePath)
+            $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
+            Get-VM -Name $Item.Name | Add-VMNetworkAdapter -SwitchName $Main.Vm.External.Name -Verbose
+            $Item.Start()
+            $Item.Stop()
+            $Main.Gw += $Item
+        }
+
+        Write-Host "Created [+] [VMGateway[]]"
+        Start-Sleep 2
+        
+        # Create the virtual gateways
+        Write-Host "Creating [~] [VMServer[]]"
+        $Main.Sr = @( )
+        ForEach ( $X in 0..($Main.Virtual.Server.Count-1))
+        {
+            $Server = $Main.Virtual.Server[$X]
+            If (Get-VM -Name $Server.Name -EA 0)
+            {
+                Write-Host "Flushing [~] Server:[$($Server.Name)]"
+                Remove-VM -Name $Server.Name -Verbose -Confirm:$False -Force
+            }
+    
+            Write-Host "Processing [~] Gateway:[$($Server.Name)]"
+            $Item     = [VMObject]::New($Server,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,1,$Main.Sw[$X].Name)
+            $Item.New($Main.VM.Host.VirtualMachinePath)
+            $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
+            $Item.Start()
+            $Item.Stop()
+            $Main.Sr += $Item
+        }
+        
+        Write-Host "Created [+] [VMGateway[]]"
+        Start-Sleep 2
+
+        # Preparing [DHCP/MacAddress Stuff]
+        $ScopeID  = Get-DhcpServerv4Scope | % ScopeID
+        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense)"
+
+        If ($DHCP.Count -gt 0)
+        {
+            $DHCP | Remove-DHCPServerV4Reservation -Verbose -EA 0
+        }
+
+        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID
+        $Slot     = $DHCP[-1].IPAddress.ToString().Split(".")
+
+        If ( $Main.Gw.Count -gt 1 )
+        {
+            $Spot    = [UInt32]$Slot[3]
+
+            ForEach ( $X in 0..($Main.Gw.Count - 1))
+            {
+                $Reserve = Get-DhcpServerv4Reservation -ScopeID $Scope.ScopeID
+                $Gw      = $Main.Gw[$X]
+                $Item    = $Gw.Item
+                $Mac     = Get-VMNetworkAdapter -VMName $Gw.Name | ? SwitchName -eq $Gw.Name | % MacAddress
+
+                If ($Item.Name -in $Reserve.Name)
+                {     
+                    Write-Host "Modifying [+] DHCP Reservation [$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
+
+                    Get-DHCPServerV4Reservation -ScopeID $Scope.ScopeID | ? Description -match $Item.Network | Set-DHCPServerV4Reservation -ClientID $Mac -Hostname $Item.Sitelink -Verbose
+                }
+
+                Else
+                {
+                    Write-Host "Adding [+] DHCP Reservation [$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
+                    $Spot ++
+                    $Obj             = @{
+            
+                        ScopeID      = $Scope.ScopeID
+                        IPAddress    = @($Slot[0,1,2];$Spot) -join '.'
+                        ClientID     = $Mac
+                        Name         = $Item.SiteLink
+                        Description  = "[$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
+                    }
+                    Add-DhcpServerV4Reservation @Obj -Verbose
+                }
+            }
+        }
+        
+        Switch([System.Windows.MessageBox]::Show("This process will now spawn the [GATEWAY] items in Hyper-V, and then install them","Press [Yes] to proceed","YesNo"))
+        {
+            Yes 
+            { 
+                Write-Host ( "Running {0}" -f $Xaml.IO.VmGatewayScript.Text )
+            }
+
+            No  
+            {  
+                Write-Host "BREAK Cancelled dialog"
+            }
+        }
+
+        Switch([System.Windows.MessageBox]::Show("This process will now create the [SERVER] items in Hyper-V, and then install them","Proceed","YesNo"))
+        {
+            Yes 
+            { 
+                Write-Host ( "Running {0}" -f $Xaml.IO.VmServerScript.Text )
+            }
+
+            No  
+            {  
+                Write-Host "Cancelled dialog"
             }
         }
     })
@@ -4459,41 +4959,4 @@ public struct WindowPosition
     $Xaml.IO.DsLmUsername.Text    = "Administrator"
     
     $Xaml.Invoke()
-
-    <# [Gateway - Prepping Section II]
-    If ($Main.Gateway)
-    {
-        $Gateway = $Main.Gateway
-        $Scratch = "$Env:ProgramData\Secure Digits Plus LLC"
-        $Date    = Get-Date -UFormat %Y%m%d
-        $Path    = "$Scratch\Lab($Date)"
-        If (!(Test-Path $Scratch))
-        {
-            New-Item -Path $Scratch -ItemType Directory -Verbose
-        }
-        If (!(Test-Path $Path))
-        {
-            New-Item -Path $Path -ItemType Directory -Verbose 
-        }
-
-        Get-ChildItem $Path | ? Extension -eq .txt | Remove-Item -Verbose
-
-        ForEach ( $X in 0..($Gateway.Count - 1 ))
-        {
-            $Item = $Gateway[$X]
-            $Item.Hash.Network.HostObject = $Null 
-            $Item.Hash.Network.Network_   = $Null 
-            $Item.Hash.Network.Netmask_   = $Null
-            $Item.Hash.Domain.Ping        = $Null
-
-            Set-Content -Path "$Path\($X)$($Item.Name).txt" -Value ($Item | ConvertTo-Json) -Verbose
-        }
-    }
-
-    # [Server]#>
 }
-
-#$Files = [GwFiles]::New($Path)
-
-# Add-Type -AssemblyName PresentationFramework
-# ( GC $Home\Desktop\New-FEDeploymentShare.ps1 -Encoding UTF8 ) -join "`n" | IEX

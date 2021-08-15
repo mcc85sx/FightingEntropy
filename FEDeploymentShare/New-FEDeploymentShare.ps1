@@ -1,6 +1,7 @@
 Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
-{
+{    
     # Load Assemblies
+    # $TX = [System.Diagnostics.Stopwatch]::StartNew()
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type @"
@@ -23,6 +24,16 @@ public struct WindowPosition
     public int Top;
     public int Right;
     public int Bottom;
+}
+"@
+
+$WindowObject = @"
+using System;
+using System.Runtime.InteropServices;
+public class WindowObject 
+{ 
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
 }
 "@
 
@@ -722,219 +733,6 @@ public struct WindowPosition
         }
     }
 
-    Class VMGateway
-    {
-        Hidden [Object]$Item
-        [Object]$Name
-        [Object]$MemoryStartupBytes
-        [Object]$Path
-        [Object]$NewVHDPath
-        [Object]$NewVHDSizeBytes
-        [Object]$Generation
-        [Object]$SwitchName
-        VMGateway([Object]$Item,[Object]$Mem,[Object]$HD,[UInt32]$Gen,[String]$Switch)
-        {
-            $This.Item               = $Item
-            $This.Name               = $Item.Name
-            $This.MemoryStartupBytes = $Mem
-            $This.Path               = "{0}\$($Item.Name).vmx"
-            $This.NewVhdPath         = "{0}\$($Item.Name).vhdx"
-            $This.NewVhdSizeBytes    = $HD
-            $This.Generation         = $Gen
-            $This.SwitchName         = $Switch
-        }
-    }
-
-    Class VMServer
-    {
-        Hidden [Object]$Item
-        [Object]$Name
-        [Object]$MemoryStartupBytes
-        [Object]$Path
-        [Object]$NewVHDPath
-        [Object]$NewVHDSizeBytes
-        [Object]$Generation
-        [Object]$SwitchName
-        VMServer([Object]$Item,[Object]$Mem,[Object]$HD,[UInt32]$Gen,[String]$Switch)
-        {
-            $This.Item               = $Item
-            $This.Name               = $Item.Name
-            $This.MemoryStartupBytes = $Mem
-            $This.Path               = "{0}\$($Item.Name).vmx"
-            $This.NewVhdPath         = "{0}\$($Item.Name).vhdx"
-            $This.NewVhdSizeBytes    = $HD
-            $This.Generation         = $Gen
-            $This.SwitchName         = $Switch
-        }
-        New([Object]$Path)
-        {
-            If (!(Test-Path $Path))
-            {
-                Throw "Invalid path"
-            }
-
-            ElseIf (Get-VM -Name $This.Name -EA 0)
-            {
-                Write-Host "VM exists..."
-                If (Get-VM -Name $This.Name | ? Status -ne Off)
-                {
-                    $This.Stop()
-                }
-
-                $This.Remove()
-            }
-
-            $This.Path             = $This.Path -f $Path
-            $This.NewVhdPath       = $This.NewVhdPath -f $Path
-
-            If (Test-Path $This.Path)
-            {
-                Remove-Item $This.Path -Recurse -Confirm:$False -Verbose
-            }
-
-            If (Test-Path $This.NewVhdPath)
-            {
-                Remove-Item $This.NewVhdPath -Recurse -Confirm:$False -Verbose
-            }
-
-            $Object                = @{
-
-                Name               = $This.Name
-                MemoryStartupBytes = $This.MemoryStartupBytes
-                Path               = $This.Path
-                NewVhdPath         = $This.NewVhdPath
-                NewVhdSizeBytes    = $This.NewVhdSizebytes
-                Generation         = $This.Generation
-                SwitchName         = $This.SwitchName
-            }
-
-            New-VM @Object -Verbose | Add-VMDVDDrive -Verbose
-            Set-VMProcessor -VMName $This.Name -Count 2 -Verbose
-        }
-        Start()
-        {
-            Get-VM -Name $This.Name | ? State -eq Off | Start-VM -Verbose
-        }
-        Remove()
-        {
-            Get-VM -Name $This.Name | Remove-VM -Force -Confirm:$False -Verbose
-        }
-        Stop()
-        {
-            Get-VM -Name $This.Name | ? State -ne Off | Stop-VM -Verbose -Force
-        }
-        LoadISO([String]$Path)
-        {
-            If (!(Test-Path $Path))
-            {
-                Throw "Invalid ISO path"
-            }
-
-            Else
-            {
-                Get-VM -Name $This.Name | % { Set-VMDVDDrive -VMName $_.Name -Path $Path -Verbose }
-            }
-        }
-    }
-
-    Class VMSilo
-    {
-        [Object] $Name
-        [Object] $VMHost
-        [Object] $Switch
-        [Object] $Internal
-        [Object] $External
-        [Object] $Gateway
-        [Object] $Server
-        [Object] $VMC
-        VMSilo([String]$Name,[Object[]]$Gateway)
-        {
-            $This.Name     = $Name
-            $This.VMHost   = Get-VMHost
-            $This.Switch   = Get-VMSwitch
-            $This.Internal = $This.Switch | ? SwitchType -eq Private
-            $This.External = $This.Switch | ? SwitchType -eq External
-            $This.Gateway  = ForEach ( $X in 0..($Gateway.Count - 1))
-            {        
-                $Item            = [VMGateway]::New($Gateway[$X],1024MB,20GB,1,$This.External.Name)
-                $Item.Path       = $Item.Path       -f $This.VMHost.VirtualMachinePath
-                $Item.NewVhdPath = $Item.NewVhdPath -f $This.VMHost.VirtualHardDiskPath
-                $Item
-            }
-            $This.VMC = @( )
-        }
-        Clear()
-        {
-            $VMList        = Get-VM | % Name
-
-            ForEach ( $Item in $This.Gateway)
-            {
-                If ($Item.Name -in $VMList)
-                {
-                    Stop-VM -Name $Item.Name -Force -Verbose
-                    Remove-VM -Name $Item.Name -Force -Verbose
-                }
-            }
-
-            ForEach ( $Item in $This.Gateway)
-            {
-                If (Test-Path $Item.Path)
-                {
-                    Remove-Item $Item.Path -Recurse -Force -Verbose
-                }
-
-                If (Test-Path $Item.NewVhdPath)
-                {
-                    Remove-Item $Item.NewVhdPath -Recurse -Force -Verbose
-                }
-            }
-        }
-        Create([Object]$ISOPath)
-        {
-            ForEach ($X in 0..($This.Gateway.Count - 1))
-            {
-                $Item                      = $This.Gateway[$X] | % { 
-                    
-                    @{
-                        Name               = $_.Name
-                        MemoryStartupBytes = $_.MemoryStartupBytes
-                        Path               = $_.Path
-                        NewVhdPath         = $_.NewVhdPath
-                        NewVhdSizeBytes    = $_.NewVhdSizeBytes
-                        Generation         = $_.Generation
-                        SwitchName         = $_.SwitchName
-                    }
-                }
-                
-                New-VM @Item -Verbose
-                Add-VMNetworkAdapter -VMName $Item.Name -SwitchName $This.Internal.Name -Verbose
-                Switch -Regex ($IsoPath.GetType().Name)
-                {
-                    "\[\]"
-                    {
-                        Set-VMDVDDrive -VMName $Item.Name -Path $IsoPath[($X % $IsoPath.Count)] -Verbose
-                    }
-                    Default
-                    {
-                        Set-VMDVDDrive -VMName $Item.Name -Path $ISOPath -Verbose
-                    }
-                }
-                $Mac = $Null
-                $ID  = $Item.Name 
-                Start-VM -Name $ID
-                Do
-                {
-                    Start-Sleep 1
-                    $Item = Get-VM -Name $ID
-                    $Mac  = $Item.NetworkAdapters | ? Switchname -eq $This.External.Name | % MacAddress
-                }
-                Until($Mac -ne 000000000000)
-                Stop-VM -Name $ID -Confirm:$False -Force
-                $This.VMC += $Mac
-            }
-        }
-    }
-
     Class VmSelect
     {
         [String] $Type
@@ -957,6 +755,38 @@ public struct WindowPosition
             $This.Name   = $Name
             $Return      = Get-VM -Name $Name -EA 0
             $This.Exists = $Return -ne $Null
+        }
+    }
+
+    Class VmController
+    {
+        [String]$Name
+        [String]$Status
+        [String]$Username
+        [String]$Credential
+        VmController([String]$ID)
+        {
+            If ($ID -eq "localhost")
+            {
+                $ID = $Env:ComputerName
+            }
+
+            $This.Name       = Resolve-DNSName $ID | Select-Object -First 1 | % Name
+            $This.Status     = Get-Service -Name vmms | % Status
+            $This.Username   = $Env:Username
+            $This.Credential = Get-Credential $Env:Username
+        }
+        VmController([String]$ID,[Object]$Credential)
+        {
+            If ($ID -eq "localhost")
+            {
+                $ID = $Env:ComputerName
+            }
+
+            $This.Name       = Resolve-DNSName $ID | Select-Object -First 1 | % Name
+            $This.Status     = Get-Service -Name vmms -ComputerName $ID | % Status
+            $This.Username   = $Credential.Username
+            $This.Credential = $Credential
         }
     }
 
@@ -1023,7 +853,7 @@ public struct WindowPosition
                 SwitchName         = $This.SwitchName
             }
 
-            New-VM @Object -Verbose | Add-VMDVDDrive -Verbose
+            New-VM @Object -Verbose
             $Ct = @{Gateway=1;Server=2}[$This.Item.Type]
             Set-VMProcessor -VMName $This.Name -Count $Ct -Verbose
         }
@@ -2197,7 +2027,6 @@ public struct WindowPosition
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="80"/>
-                                <RowDefinition Height="150"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
@@ -2220,25 +2049,68 @@ public struct WindowPosition
                                     <Button Grid.Column="0" Name="VmPopulate" Content="Pull"/>
                                 </GroupBox>
                             </Grid>
-                            <GroupBox Grid.Row="1" Header="[VmSelect]">
-                                <DataGrid Name="VmSelect">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"/>
-                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                                        <DataGridTemplateColumn Header="Create VM?" Width="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
-                                                        <ComboBoxItem Content="False"/>
-                                                        <ComboBoxItem Content="True"/>
-                                                    </ComboBox>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GroupBox>
-                            <TabControl Grid.Row="2">
+                            <TabControl Grid.Row="1">
+                                <TabItem Header="Control">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="120"/>
+                                            <RowDefinition Height="80"/>
+                                            <RowDefinition Height="80"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <GroupBox Header="[VmController]">
+                                            <DataGrid Name="VmController">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150"/>
+                                                    <DataGridTextColumn Header="Status (Hyper-V Service)" Binding="{Binding Status}" Width="150"/>
+                                                    <DataGridTextColumn Header="Credential" Binding="{Binding Username}" Width="*"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </GroupBox>
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <GroupBox Grid.Column="0" Header="[VmControllerSwitch]">
+                                                <ComboBox Name="VmControllerSwitch"/>
+                                            </GroupBox>
+                                            <GroupBox Grid.Column="1" Header="[VmControllerNetwork]">
+                                                <TextBox Name="VmControllerNetwork"/>
+                                            </GroupBox>
+                                        </Grid>
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <GroupBox Grid.Column="0" Header="[VmControllerConfigVM]">
+                                                <ComboBox Name="VmControllerConfigVM"/>
+                                            </GroupBox>
+                                            <GroupBox Grid.Column="1" Header="[VmControllerGateway]">
+                                                <TextBox Name="VmControllerGateway"/>
+                                            </GroupBox>
+                                        </Grid>
+                                        <GroupBox Grid.Row="3" Header="[VmSelect]">
+                                            <DataGrid Name="VmSelect">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"/>
+                                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                                    <DataGridTemplateColumn Header="Create VM?" Width="100">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <ComboBox SelectedIndex="{Binding Create}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                                    <ComboBoxItem Content="False"/>
+                                                                    <ComboBoxItem Content="True"/>
+                                                                </ComboBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </GroupBox>
+                                    </Grid>
+                                </TabItem>
                                 <TabItem Header="Gateway">
                                     <GroupBox Header="[VmGateway]">
                                         <Grid>
@@ -2834,8 +2706,8 @@ public struct WindowPosition
         [Object] $Internal
         VmStack([Object]$VmHost,[Object]$VmSwitch)
         {
-            $This.Host   = $VmHost
-            $This.Switch = $VmSwitch
+            $This.Host     = $VmHost
+            $This.Switch   = $VmSwitch
             $This.External = $Vmswitch | ? SwitchType -eq External
             $This.Internal = $Vmswitch | ? SwitchType -eq Internal
         }
@@ -2852,6 +2724,7 @@ public struct WindowPosition
         Hidden [Object]   $ZipStack
         [String]               $Org
         [String]                $CN
+        [Object]        $Credential
         [Object]          $Template
         [String]        $SearchBase
         [Object]               $Win
@@ -3290,8 +3163,8 @@ public struct WindowPosition
     $Xaml.IO.DcGetTopology.Add_Click(
     {
         $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopology]::New($Main.SiteList,$_) } )
-        $Xaml.IO.DcTopology.ItemsSource = @( )
-        $Xaml.IO.DcTopology.ItemsSource = @( $Tmp )
+        $Xaml.IO.DcTopology.ItemsSource   = @( )
+        $Xaml.IO.DcTopology.ItemsSource   = @( $Tmp )
 
         $Xaml.IO.SmSiteCount.Text         = $Main.Domain.Count
     })
@@ -3307,8 +3180,8 @@ public struct WindowPosition
         }
 
         $Tmp                              = @( $Main.GetDomain($Main.Domain) | % { [DcTopology]::New($Main.SiteList,$_) } )
-        $Xaml.IO.DcTopology.ItemsSource = @( )
-        $Xaml.IO.DcTopology.ItemsSource = @( $Tmp )
+        $Xaml.IO.DcTopology.ItemsSource   = @( )
+        $Xaml.IO.DcTopology.ItemsSource   = @( $Tmp )
 
         $Xaml.IO.SmSiteCount.Text         = $Main.Domain.Count
     })
@@ -3762,23 +3635,43 @@ public struct WindowPosition
             Return [System.Windows.Messagebox]::Show("Not a valid server hostname or IP Address","Error")
         }
 
+        Write-Host "Retrieving [~] VMHost, and VMSwitch"
+
+        If ( $Xaml.IO.VmHost.Text -in @("localhost";$Main.IP))
+        {
+            $Main.Vm    = [VmStack]::New((Get-VMHost),(Get-VMSwitch))
+            If (Get-Service -Name vmms -EA 0 | ? Status -ne Running)
+            {
+                Return [System.Windows.MessageBox]::Show("The Hyper-V Virtual Machine Management service is not (installed/running)","Error")
+            }
+
+            $Xaml.IO.VmController.ItemsSource         = @([VmController]::New($Xaml.IO.VmHost.Text))
+            $Xaml.IO.VmControllerConfigVM.ItemsSource = @( Get-VM | % Name )
+        }
         Else
         {
-            Write-Host "Retrieving [~] VMHost, and VMSwitch"
-
-            If ( $Xaml.IO.VmHost.Text -in @("localhost";$Main.IP))
+            $Credential = Get-Credential
+            $Main.Vm    = [VmStack]::New((Get-VMHost -ComputerName $Xaml.IO.VmHost.Text -Credential $Credential),
+                                    (Get-VmSwitch -ComputerName $Xaml.IO.VmHost.Text -Credenttial $Credential))
+            If (Get-Service -ComputerName $Xaml.IO.VmHost.Text -Credential $Credential -Name vmms -EA 0 | ? Status -ne Running)
             {
-                $Main.Vm    = [VmStack]::New((Get-VMHost),(Get-VMSwitch))
-            }
-            Else
-            {
-                $Credential = Get-Credential
-                $Main.Vm    = [VmStack]((Get-VMHost -ComputerName $Xaml.IO.VmHost.Text -Credential $Credential),
-                                        (Get-VmSwitch -ComputerName $Xaml.IO.VmHost.Text -Credenttial $Credential))
+                Return [System.Windows.MessageBox]::Show("The Hyper-V Virtual Machine Management service is not (installed/running)","Error")
             }
 
-            Write-Host "Retrieved [+] VMHost, and VMSwitch"
+            $Xaml.IO.VmController.ItemsSource         = [VmController]::New($Xaml.IO.VmHost.Text,$Credential)
+            $Xaml.IO.VmControllerConfigVM.ItemsSource = @( Get-VM -ComputerName $$Xaml.IO.VmHost.Text -Credential $Credential )
         }
+        
+        $Xaml.IO.VmControllerSwitch.ItemsSource   = @( $Main.Vm.External | % Name )
+        
+        Write-Host "Retrieved [+] VMHost, and VMSwitch"
+    })
+
+    $Xaml.IO.VmControllerSwitch.Add_SelectionChanged(
+    {
+        $NetRoute = Get-NetAdapter | ? Name -match $Xaml.IO.VmControllerSwitch.SelectedItem | Get-NetRoute -AddressFamily IPV4
+        $Xaml.IO.VmControllerNetwork.Text = $NetRoute | ? NextHop -eq 0.0.0.0 | Select-Object -Last 1 | % DestinationPrefix
+        $Xaml.IO.VmControllerGateway.Text = $NetRoute | ? NextHop -ne 0.0.0.0 | % NextHop
     })
 
     $Xaml.IO.VmPopulate.Add_Click(
@@ -3898,49 +3791,76 @@ public struct WindowPosition
         $Xaml.IO.VmGateway.ItemsSource   = @($Main.Virtual.Gateway | % { [VmTest]$_.Name } )
         $Xaml.IO.VmServer.ItemsSource    = @($Main.Virtual.Server  | % { [VmTest]$_.Name } )
     })
-
+    
+    # $Xaml.IO.DcOrganization.Text = "Secure Digits Plus LLC"; $Xaml.IO.DcCommonName.Text = "securedigitsplus.com"; $Xaml.IO.NwScope.Text = "172.16.0.0/19"
+    
     $Xaml.IO.VMNewArchitecture.Add_Click(
     {
-        If (Get-Service -Name vmms -EA 0 | ? Status -ne Running)
+        If (!$Xaml.IO.VmGatewayImage.Text)
         {
-            Return [System.Windows.MessageBox]::Show("The Hyper-V Virtual Machine Management service is not (installed/running)","Error")
+            Return [System.Windows.MessageBox]::Show("Must input an image to install virtual gateway(s)","Error")
         }
+
+        If (!(Test-Path $Xaml.IO.VmGatewayImage.Text) -or $Xaml.IO.VmGatewayImage.Text.Split(".")[-1] -ne "iso" )
+        {
+            Return [System.Windows.MessageBox]::Show("Not a valid image (path/file)","Error")
+        }
+
+        If (!$Xaml.IO.VmServerImage.Text)
+        {
+            Return [System.Windows.MessageBox]::Show("Must input an image to install virtual server(s)","Error")
+        }
+
+        If (!(Test-Path $Xaml.IO.VmServerImage.Text) -or $Xaml.IO.VmServerImage.Text.Split(".")[-1] -ne "iso" )
+        {
+            Return [System.Windows.MessageBox]::Show("Not a valid image (path/file)","Error")
+        }
+
+        If(!($Main.Vm))
+        {
+            Return [System.Windows.MessageBox]::Show("Must have Hyper-V running","Error")
+        }
+
+        $Main.Credential = Get-Credential root
 
         # Create the virtual switches
         Write-Host "Creating [~] [VMSwitch[]]"
         $Main.Sw = @( )
         ForEach ( $X in 0..($Main.Virtual.Gateway.Count-1))
         {
-            $Switch = $Main.Virtual.Gateway[$X]
-            If (Get-VMSwitch -Name $Switch.Name -EA 0)
+            $Sw = $Main.Virtual.Gateway[$X]
+            If (Get-VMSwitch -Name $Sw.Name -EA 0)
             {
-                Write-Host "Flushing [~] Switch:[$($Switch.Name)]"
-                Remove-VMSwitch -Name $Switch.Name -Verbose -Confirm:$False -Force
+                Write-Host "Flushing [~] Switch:[$($Sw.Name)]"
+                Remove-VMSwitch -Name $Sw.Name -Verbose -Confirm:$False -Force
             }
 
-            Write-Host "Processing [~] $($Switch.Name)"
-            $Main.Sw += New-VMSwitch -Name $Switch.Name -SwitchType Internal -Verbose
+            Write-Host "Processing [~] Switch:[$($Sw.Name)]"
+            $Main.Sw += New-VMSwitch -Name $Sw.Name -SwitchType Internal -Verbose
         }
         Write-Host "Created [+] [VMSwitch[]]"
         Start-Sleep 2
+
+        Write-Host "Updating [~] `$Main.Vm.Switch"
+        $Main.Vm.Switch = Get-VMSwitch
 
         # Create the virtual gateways
         Write-Host "Creating [~] [VMGateway[]]"
         $Main.Gw = @( )
         ForEach ( $X in 0..($Main.Virtual.Gateway.Count-1))
         {
-            $Gateway = $Main.Virtual.Gateway[$X]
-            If (Get-VM -Name $Gateway.Name -EA 0)
+            $Gw = $Main.Virtual.Gateway[$X]
+            If (Get-VM -Name $Gw.Name -EA 0)
             {
-                Write-Host "Flushing [~] Gateway:[$($Gateway.Name)]"
-                Remove-VM -Name $Gateway.Name -Verbose -Confirm:$False -Force
+                Write-Host "Flushing [~] Gateway:[$($Gw.Name)]"
+                Remove-VM -Name $Gw.Name -Verbose -Confirm:$False -Force
             }
 
-            Write-Host "Processing [~] Gateway:[$($Gateway.Name)]"
-            $Item     = [VMObject]::New($Gateway,$Xaml.IO.VmGatewayMemory.Text,$Xaml.IO.VmGatewayDrive.Text,1,$Main.Sw[$X].Name)
+            Write-Host "Processing [~] Gateway:[$($Gw.Name)]"
+            $Item     = [VMObject]::New($Gw,$Xaml.IO.VmGatewayMemory.Text,$Xaml.IO.VmGatewayDrive.Text,1,$Main.Vm.External.Name)
             $Item.New($Main.VM.Host.VirtualMachinePath)
+            Add-VMNetworkAdapter -VMName $Item.Name -SwitchName $Item.Name -Verbose
             $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
-            Get-VM -Name $Item.Name | Add-VMNetworkAdapter -SwitchName $Main.Vm.External.Name -Verbose
             $Item.Start()
             $Item.Stop()
             $Main.Gw += $Item
@@ -3949,20 +3869,20 @@ public struct WindowPosition
         Write-Host "Created [+] [VMGateway[]]"
         Start-Sleep 2
         
-        # Create the virtual gateways
+        # Create the virtual servers
         Write-Host "Creating [~] [VMServer[]]"
         $Main.Sr = @( )
         ForEach ( $X in 0..($Main.Virtual.Server.Count-1))
         {
-            $Server = $Main.Virtual.Server[$X]
-            If (Get-VM -Name $Server.Name -EA 0)
+            $Sr = $Main.Virtual.Server[$X]
+            If (Get-VM -Name $Sr.Name -EA 0)
             {
-                Write-Host "Flushing [~] Server:[$($Server.Name)]"
-                Remove-VM -Name $Server.Name -Verbose -Confirm:$False -Force
+                Write-Host "Flushing [~] Server:[$($Sr.Name)]"
+                Remove-VM -Name $Sr.Name -Verbose -Confirm:$False -Force
             }
     
-            Write-Host "Processing [~] Gateway:[$($Server.Name)]"
-            $Item     = [VMObject]::New($Server,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,1,$Main.Sw[$X].Name)
+            Write-Host "Processing [~] Server:[$($Sr.Name)]"
+            $Item     = [VMObject]::New($Sr,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,1,$Main.Sw[$X].Name)
             $Item.New($Main.VM.Host.VirtualMachinePath)
             $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
             $Item.Start()
@@ -3970,19 +3890,23 @@ public struct WindowPosition
             $Main.Sr += $Item
         }
         
-        Write-Host "Created [+] [VMGateway[]]"
+        Write-Host "Created [+] [VMServer[]]"
         Start-Sleep 2
 
-        # Preparing [DHCP/MacAddress Stuff]
-        $ScopeID  = Get-DhcpServerv4Scope | % ScopeID
-        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense)"
+        # Preparing [DNS/DHCP/MacAddress Stuff]
+        $DNS      = Get-DNSServerResourceRecord -Zonename $Main.CN
 
-        If ($DHCP.Count -gt 0)
+        ForEach ( $Name in $Main.Gw.Name )
         {
-            $DHCP | Remove-DHCPServerV4Reservation -Verbose -EA 0
+            $DNS  | ? HostName -match $Item | Remove-DNSServerResourceRecord -ZoneName $Main.CN -Verbose -Confirm:$False -Force
         }
 
-        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID
+        $ScopeID  = Get-DhcpServerv4Scope
+        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID.ScopeID
+
+        $DHCP | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense)" | Remove-DHCPServerV4Reservation -Verbose -EA 0
+
+        $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID.ScopeID
         $Slot     = $DHCP[-1].IPAddress.ToString().Split(".")
 
         If ( $Main.Gw.Count -gt 1 )
@@ -3991,47 +3915,706 @@ public struct WindowPosition
 
             ForEach ( $X in 0..($Main.Gw.Count - 1))
             {
-                $Reserve = Get-DhcpServerv4Reservation -ScopeID $Scope.ScopeID
+                $Reserve = Get-DhcpServerv4Reservation -ScopeID $ScopeID.ScopeID
                 $Gw      = $Main.Gw[$X]
                 $Item    = $Gw.Item
-                $Mac     = Get-VMNetworkAdapter -VMName $Gw.Name | ? SwitchName -eq $Gw.Name | % MacAddress
+                $Mac     = Get-VMNetworkAdapter -VMName $Gw.Name | ? SwitchName -ne $Gw.Name | % MacAddress
 
-                If ($Item.Name -in $Reserve.Name)
-                {     
-                    Write-Host "Modifying [+] DHCP Reservation [$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
-
-                    Get-DHCPServerV4Reservation -ScopeID $Scope.ScopeID | ? Description -match $Item.Network | Set-DHCPServerV4Reservation -ClientID $Mac -Hostname $Item.Sitelink -Verbose
-                }
-
-                Else
-                {
-                    Write-Host "Adding [+] DHCP Reservation [$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
-                    $Spot ++
-                    $Obj             = @{
-            
-                        ScopeID      = $Scope.ScopeID
-                        IPAddress    = @($Slot[0,1,2];$Spot) -join '.'
-                        ClientID     = $Mac
-                        Name         = $Item.SiteLink
-                        Description  = "[$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
-                    }
-                    Add-DhcpServerV4Reservation @Obj -Verbose
-                }
-            }
-        }
+                Write-Host "Adding [+] DHCP Reservation [$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
+                $Spot ++
+                $Obj             = @{
         
-        Switch([System.Windows.MessageBox]::Show("This process will now spawn the [GATEWAY] items in Hyper-V, and then install them","Press [Yes] to proceed","YesNo"))
-        {
-            Yes 
-            { 
-                Write-Host ( "Running {0}" -f $Xaml.IO.VmGatewayScript.Text )
-            }
-
-            No  
-            {  
-                Write-Host "BREAK Cancelled dialog"
+                    ScopeID      = $ScopeID.ScopeID
+                    IPAddress    = @($Slot[0,1,2];$Spot) -join '.'
+                    ClientID     = $Mac
+                    Name         = $Item.SiteLink
+                    Description  = "[$($Item.Network)/$($Item.Prefix)]@[$($Item.Sitename)]"
+                }
+                Add-DhcpServerV4Reservation @Obj -Verbose
             }
         }
+
+        #    ____                                                                                            ________    
+        #   //¯¯\\__________________________________________________________________________________________//¯¯\\__//   
+        #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+        #    ¯¯¯\\__[ Gateway Installation   ]______________________________________________________________//¯¯¯        
+        #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+        #Switch([System.Windows.MessageBox]::Show("This process will now spawn the [GATEWAY] items in Hyper-V, and then install them","Press [Yes] to proceed","YesNo"))
+        #{
+            #Yes 
+            #{
+                0..($Main.Gw.Count-1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
+
+                    $Main       = $Using:Main
+                    $Pass       = $Main.Credential.GetNetworkCredential().Password
+                    $X          = $_
+                    $VM         = $Main.Gw[$X]
+                    $VMDisk     = $VM.NewVHDPath
+                    $ID         = $VM.Name
+                
+                    $Time       = [System.Diagnostics.Stopwatch]::StartNew()
+                    $Log        = @{ }
+                
+                    Start-VM $ID -Verbose
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] Starting [~] [$ID]")
+                
+                    $Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+                    $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+                
+                    Start-Sleep 75
+                    $C         = @( )
+                    Do
+                    {
+                        Start-Sleep -Seconds 1
+                
+                        $Item     = Get-VM -Name $ID
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C  = @( ) } 0 { $C += 1 } 1 { $C += 1 }
+                        }
+                
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+                
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Initializing [Inactivity:($($Sum))]")
+                        Write-Host $Log[$Log.Count-1]
+                    }
+                    Until($Sum -ge 35) # Manual assignment capture (35)
+                
+                    # Manual Interface
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Configure VLans Now?
+                    KeyEntry $KB "n"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Enter WAN interface name
+                    KeyEntry $KB "hn0"
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Enter LAN Interface name
+                    KeyEntry $KB "hn1"
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Enter Optional interface name
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+                
+                    # Proceed...?
+                    KeyEntry $KB "y"
+                    $KB.TypeKey(13)
+                
+                    $C         = @( )
+                    Do
+                    {
+                        $Item     = Get-VM -Name $ID
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C  = @( ) } 0 { $C += 1 } 1 { $C += 1 }
+                        }
+                
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+                
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Initializing [Inactivity:($($Sum))]")
+                        Write-Host $Log[$Log.Count-1]
+                
+                        Start-Sleep -Seconds 1
+                    }
+                    Until($Sum -ge 200) # Initial login, must account for machine delay
+                
+                    # Login
+                    KeyEntry $KB "installer"
+                    $KB.PressKey(13)
+                    Start-Sleep 1
+                
+                    # Password
+                    KeyEntry $KB "opnsense"
+                    $KB.PressKey(13)
+                    Start-Sleep 3
+                
+                    # [21.1] Welcome
+                    # $KB.TypeKey(13)
+                    # $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Installer")
+                    # Write-Host $Log[$Log.Count-1]
+                    # Start-Sleep 2
+                
+                    # Continue with default keymap
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Accept defaults")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 2
+                
+                    # [21.1] Guided installation
+                    # $KB.TypeKey(13)
+                    # $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Guided installation")
+                    # Write-Host $Log[$Log.Count-1]
+                    # Start-Sleep 2
+                
+                    # Install (ZFS)
+                    $KB.TypeKey(40)
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Install (ZFS)")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 8
+                
+                    # ZFS Configuration (stripe)
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] ZFS Configuration (stripe)")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 2
+                
+                    # Select a disk
+                    $KB.TypeKey(32)
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Disk select")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 2
+                
+                    # Install mode
+                    $KB.TypeKey(9)
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Install mode")
+                    Write-Host $Log[$Log.Count-1]
+                
+                    While((Get-Item $VMDisk).Length -lt 1.5GB)
+                    {
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] Installing")
+                        Write-Host $Log[$Log.Count-1]
+                
+                        $Item     = Get-VM -Name $ID
+                        Start-Sleep -Seconds 10
+                    }
+                
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense validating")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 300
+                
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C  = @( ) } 0 { $C += 1 } 1 { $C += 1 }
+                        }
+                
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+                
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNSense [~] finalizing [Inactivity:($($Sum))]")
+                        Write-Host $Log[$Log.Count-1]
+                        
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -ge 100)
+                
+                    # Change root password
+                    $KB.TypeKey(40)
+                    Start-Sleep -M 100
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+                
+                    # Enter root password
+                    KeyEntry $KB "$Pass"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Confirm root password
+                    KeyEntry $KB "$Pass"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Complete
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] Installed")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 5
+                
+                    # [21.1] Reboot
+                    # $KB.TypeKey(13)
+                    # Start-Sleep 5
+                
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] [$ID] [~] Rebooting...")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Item.Uptime.TotalSeconds -le 2)
+                
+                    Stop-VM -Name $ID -Verbose -Force
+                
+                    # Disconnect DVD/ISO
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] [~] Releasing DVD-ISO")
+                    Set-VMDvdDrive -VMName $ID -Path $Null -Verbose
+                
+                    Start-VM -Name $ID 
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] First boot...")
+                    Write-Host $Log[$Log.Count-1]
+                
+                    Start-Sleep 30
+                
+                    $C         = @( )
+                    Do
+                    {
+                        Start-Sleep 1
+                
+                        $Item     = Get-VM -Name $ID
+                
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C  = @( ) } 0 { $C += 1 } 1 { $C += 1 }
+                        }
+                
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+                
+                        $Log.Add($Log.Count,"[$($Time.Elapsed)] OPNsense [~] First boot... [Inactivity:($($Sum))]")
+                        Write-Host $Log[$Log.Count-1]
+                    }
+                    Until($Sum -ge 250)
+                
+                    KeyEntry $KB "root"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    KeyEntry $KB "$Pass"
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+                
+                    KeyEntry $KB "2"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    KeyEntry $KB "1"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Configure LAN via DHCP? (No)
+                    KeyEntry $KB "n"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # IPV4 Gateway (Subnet start address)
+                    KeyEntry $KB "$($VM.Item.Start)"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Subnet bit count/prefix (Subnet prefix)
+                    KeyEntry $KB "$($VM.Item.Prefix)"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Upstream gateway? (for WAN)
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # IPV6 WAN Tracking? (Can't hurt)
+                    KeyEntry $KB "y"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Enable DHCP? (No, save DHCP for Windows Server)
+                    KeyEntry $KB "n"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Revert to HTTP as the web GUI protocol? (No)
+                    KeyEntry $KB "n"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Generate a new self-signed web GUI certificate? (Yes)
+                    KeyEntry $KB "y"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    # Restore web GUI defaults? (Yes)
+                    KeyEntry $KB "y"
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                
+                    Set-Content -Path "$Home\Desktop\$(Get-Date -UFormat %Y%m%d)($($ID)).log" -Value $Log[0..($Log.Count-1)]
+                }
+            
+                # Open VMC Windows
+                0..($Main.Gw.Count-1) | % { 
+                    
+                    Start-Process -FilePath C:\Windows\System32\vmconnect.exe -ArgumentList @($Main.Vm.Host.Computername,$Main.Gw.Name[$_]) -Passthru
+                    Start-Sleep -Milliseconds 100
+                }
+                
+                $Time = [System.Diagnostics.Stopwatch]::StartNew()
+                Do
+                {
+                    "[$($Time.Elapsed)]"
+                    $RS = Get-RSJob
+                    $RS
+                    $Complete = $RS | ? State -eq Completed
+                    Start-Sleep -Seconds 10
+                    Clear-Host
+                }
+                Until ($Complete.Count -ge $Main.Gw.Count)
+                
+                Get-RSJob | Remove-RSJob -Verbose
+                Write-Theme "Complete [+] Gateway Installation"
+
+        #    ____                                                                                            ________    
+        #   //¯¯\\__________________________________________________________________________________________//¯¯\\__//   
+        #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+        #    ¯¯¯\\__[ Gateway Configuration  ]______________________________________________________________//¯¯¯        
+        #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+                $ID        = $Xaml.IO.VmControllerConfigVM.SelectedItem
+                $VM        = Get-VM -Name $ID
+                $Internal  = $Main.VM.Switch | ? SwitchType -eq Internal | ? Name -notin $Main.Gw.Name | % Name
+                $External  = $Xaml.IO.VmControllerSwitch.SelectedItem
+                $DHCP      = Get-DHCPServerV4OptionValue 
+                $DNS       = $DHCP | ? OptionID -eq 6 | % Value
+                [String]$Network, [UInt32]$Prefix = $Xaml.IO.VmControllerNetwork.Text.Split("/")
+
+                Get-VM -Name $ID | ? State -ne Off | Stop-VM -Confirm:$False -Verbose
+                Start-VM -Name $ID -Verbose
+                $Ctrl      = Get-WmiObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+                $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+
+                Start-Process vmconnect -ArgumentList @($Main.VM.Host.ComputerName,$ID) -PassThru
+
+                $C         = @()
+                Do
+                {
+                    Start-Sleep 1
+                    $Item = Get-VM -Name $ID
+
+                    Switch($Item.CPUUsage)
+                    {
+                        0 { $C += 1 } 1 { $C += 1 } Default { $C = @( ) }
+                    }
+
+                    $Sum = @( Switch($C.Count)
+                    {
+                        0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                    } ) | Invoke-Expression
+
+                    Write-Host ("Booting [~] CFGSRV [{0}]" -f $Sum )
+                }
+                Until ($Sum -gt 35)
+                $KB.TypeCtrlAltDel()
+                Start-Sleep 3
+                KeyEntry $KB "$($Main.Credential.GetNetworkCredential().Password)"
+                $KB.TypeKey(13)
+                Start-Sleep 15
+
+                $KB.PressKey(18)
+                $KB.TypeKey(114)
+                $KB.ReleaseKey(18)
+                Start-Sleep 1
+
+                $KB.PressKey(91)
+                $KB.TypeKey(82)
+                $KB.ReleaseKey(91)
+                $KB.TypeText("msedge")
+                $KB.TypeKey(13)
+                Start-Sleep 1
+
+                $KB.PressKey(91)
+                $KB.TypeKey(82)
+                $KB.ReleaseKey(91)
+                $KB.TypeText("taskmgr")
+                $KB.TypeKey(13)
+                Start-Sleep 2
+
+                $KB.PressKey(18)
+                $KB.TypeKey(70)
+                $KB.TypeKey(78)
+                $KB.ReleaseKey(18)
+                Start-Sleep 1
+                $KB.TypeText("powershell")
+                $KB.TypeKey(9)
+                $KB.TypeKey(32)
+                $KB.TypeKey(9)
+                $KB.TypeKey(13)
+                Start-Sleep 12
+
+                $KB.TypeText('"ServerManager","TaskMgr","wuauserv","WinDefend" | % { Stop-Process -Name $_ -EA 0 }')
+                $KB.TypeKey(13)
+                Start-Sleep 1
+
+                $KB.TypeText("Add-Type @'")
+                $KB.TypeKey(13)
+
+                $KB.TypeText($WindowObject)
+                $KB.TypeKey(13)
+
+                $KB.TypeText("'@")
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$Date = Get-Date -UFormat %Y%m%d;$Path = "$Home\Desktop\IP-($Date).ps1";$Start = Get-NetIPAddress -AddressFamily IPV4 | ? PrefixOrigin -eq Manual')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$ifIndex = $Start.InterfaceIndex;$Ip = $Start.IPAddress;$pfLength = $Start.PrefixLength')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$Gw = Get-NetRoute -InterfaceIndex $ifIndex | ? DestinationPrefix -eq 0.0.0.0/0 | % NextHop')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$Dns = Get-DNSClientServerAddress -AddressFamily IPV4 -interfaceIndex $ifIndex | % ServerAddresses')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('If ($Dns.Count -gt 1) { $Dns = "`"$($Dns -join "``",``"")`"" } Else { $Dns = "`"$Dns`"" }')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$Content = "`$ifIndex=`"$ifIndex`";`$IP=`"$IP`";`$pfLength=`"$pfLength`";`$Dns=$Dns;`$Gw=`"$Gw`"";Set-Content -Path $Path -Value $Content -Verbose')
+                $KB.TypeKey(13)
+                Start-Sleep 30
+
+                $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Internal #$Xaml.IO.VmControllerSwitch.SelectedItem
+
+                $X = 0
+                Do
+                {
+                    $Item  = $Main.Gw[$X].Item
+                    $Names = "Hash Name Location Region Country Postal Timezone SiteLink SiteName Network Prefix Netmask Start End Range Broadcast".Split(" ")
+
+                    $KB.TypeText('$Item = @{}')
+                    $KB.TypeKey(13)
+
+                    $List  = @( $Names | % { "('$_','$($Item.$_)')" } ) -join "," 
+
+                    $KB.TypeText("$List | % { `$Item.Add(`$_[0],`$_[1]) }")
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('$Temp = $Item.Start -Split "\.";$Temp[-1] = [UInt32]($Temp[-1]) + 1')
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('$Hash = @{ InterfaceIndex = $ifIndex; AddressFamily="IPV4"; IPAddress=$Temp -join "."; PrefixLength=$pfLength; DefaultGateway=$Item.Start}')
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('Get-NetRoute -DestinationPrefix 0.0.0.0/0 -InterfaceIndex $ifIndex | ? NextHop -notmatch $Item.Start | Remove-NetRoute -Confirm:$False -Verbose')
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('Get-NetIPAddress -AddressFamily IPV4 -InterfaceIndex $ifIndex | ? PrefixOrigin -eq Manual | ? IPAddress -ne $Hash.IPAddress | Remove-NetIPAddress -Confirm:$False -Verbose')
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('New-NetIPAddress @Hash -Verbose -EA 0')
+                    $KB.TypeKey(13)
+
+                    $KB.TypeText('Set-DNSclientServerAddress -InterfaceIndex $ifIndex -ServerAddresses $Item.Start -Verbose;Start-Sleep 1')
+                    $KB.TypeKey(13)
+
+                    # Alt-Tab
+                    Start-Sleep 30
+                    $KB.PressKey(18)
+                    $KB.TypeKey(9)
+                    $KB.ReleaseKey(18)
+                    Start-Sleep 1
+
+                    $KB.PressKey(17)
+                    $KB.TypeKey(76)
+                    $KB.ReleaseKey(17)
+                    Start-Sleep 1
+                    $KB.TypeText("https://$($Item.Start)")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    # [Edge]-Browser Accept
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(32)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+
+                    # [Edge]-Login
+                    $KB.TypeText('root')
+                    $KB.TypeKey(9)
+                    $KB.TypeText($Main.Credential.GetNetworkCredential().Password)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+
+                    # [Edge]-General Setup
+                    $KB.PressKey(16)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # [Edge]-General Information
+                    $KB.PressKey(16)
+                    0..11 | % { $KB.TypeKey(9) }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeText($Item.SiteLink)
+                    $KB.TypeKey(9)
+                    $KB.TypeText($Item.Sitename.Replace($Item.Sitelink.ToLower()+'.',""))
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeText($DNS[0])
+                    $KB.TypeKey(9)
+                    If ($DNS[1])
+                    {
+                        $KB.TypeText($DNS[1])
+                        $KB.TypeKey(9)
+                    }
+                    $KB.TypeKey(32)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # [Edge]-Time server information
+                    $KB.PressKey(16)
+                    0..2 | % { $KB.TypeKey(9)}
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # [Edge]-WAN Interface (Keep set to DHCP, has a reservation tied to MAC address)
+                    $KB.PressKey(16)
+                    0..4 | % { $KB.TypeKey(9) }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    0..1 | % { $KB.TypeKey(9) }
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # LAN Interface (Should be fine as is)
+                    $KB.PressKey(16)
+                    0..2 | % { $KB.TypeKey(9) }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # Set root password
+                    $KB.PressKey(16)
+                    0..2 | % { $KB.TypeKey(9) }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # Reload Configuration
+                    $KB.PressKey(16)
+                    0..2 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(32)
+                    Start-Sleep 10
+
+                    # Get to firewall rules
+                    $KB.PressKey(17)
+                    $KB.TypeKey(76)
+                    $KB.ReleaseKey(17)
+                    Start-Sleep 1
+                    0..6 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.TypeText("rules")
+                    Start-Sleep 1
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+
+                    # Firewall Rules
+                    $KB.PressKey(16)
+                    0..7 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.PressKey(16)
+                    0..24 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(38)
+                    $KB.TypeText("Network")
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                    $KB.TypeKey(9)
+                    $KB.TypeText($Network)
+                    Start-Sleep 1
+                    $KB.TypeKey(9)
+                    0..(32-($Prefix+1)) | % { $KB.TypeKey(40); Start-Sleep -M 100 }
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                    0..20 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.TypeKey(32)
+                    Start-Sleep 2
+
+                    # Apply Firewall Rules
+                    $KB.PressKey(16)
+                    0..13 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.ReleaseKey(16)
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+
+                    # Alt-Tab
+                    $KB.PressKey(18)
+                    $KB.TypeKey(9)
+                    $KB.ReleaseKey(18)
+                    Start-Sleep 1
+                    $X ++
+                }
+                Until ($X -eq $Main.Gw.Count)
+
+                $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Xaml.IO.VmControllerSwitch.SelectedItem
+
+                $KB.TypeText('$Content = Get-Content "$Home\Desktop\IP*";Invoke-Expression ($Content -join "`n")')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$Hash = @{ InterfaceIndex = $ifIndex; AddressFamily="IPV4"; IPAddress=$IP; PrefixLength=$pfLength; DefaultGateway=$Gw}')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$EndGw = Get-Netroute | ? DestinationPrefix -eq 0.0.0.0/0 | % NextHop')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$EndIp = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('$EndDns = Get-DNSClientServerAddress -AddressFamily IPV4 -InterfaceIndex $ifIndex')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('If ($EndGw -ne $Gw) { Get-NetRoute | ? NextHop -eq $EndGw | Remove-NetRoute -Confirm:$False -Verbose; $Hash.DefaultGateway = $Gw }')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('If ($EndIp.IPAddress -ne $Ip) { Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $ifIndex | ? PrefixOrigin -eq Manual | ? IPAddress -ne $IP | Remove-NetIPAddress -Confirm:$False -Verbose; $Hash.IPAddress = $IP }')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('New-NetIPAddress @Hash -Verbose')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('Set-DNSClientServerAddress -InterfaceIndex $ifIndex -ServerAddresses @($Dns) -Verbose')
+                $KB.TypeKey(13)
+
+                $KB.TypeText('Get-Process -Name msedge | Stop-Process; Stop-Computer')
+                $KB.TypeKey(13)
+
+                Write-Theme "Complete [+] Gateway Configuration"
+            #}
+
+            #No  
+            #{  
+                #Write-Host "BREAK Cancelled dialog"
+            #}
+        #}
 
         Switch([System.Windows.MessageBox]::Show("This process will now create the [SERVER] items in Hyper-V, and then install them","Proceed","YesNo"))
         {

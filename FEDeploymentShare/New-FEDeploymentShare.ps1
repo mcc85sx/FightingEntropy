@@ -2731,6 +2731,7 @@ public class WindowObject
         [Object]               $Reg
         [Object]            $Config
         [Object]                $IP
+        [Object]              $Dhcp
         [Object]          $SiteList
         [Object]        $SubnetList
         [Object]            $OUList
@@ -2775,7 +2776,12 @@ public class WindowObject
                 }
             )
 
-            $This.IP         = Get-NetIPAddress | % IPAddress 
+            $This.IP         = Get-NetIPAddress | % IPAddress
+            $This.DHCP       = @{ 
+
+                ScopeID      = Get-DHCPServerV4Scope | % ScopeID
+                Options      = Get-DHCPServerV4OptionValue | Sort-Object OptionID
+            }
 
             $This.SmTemplate = [SmTemplate]::New().Stack
             $This.Domain     = [System.Collections.ObjectModel.ObservableCollection[Object]]::New()
@@ -3868,7 +3874,7 @@ public class WindowObject
 
         Write-Host "Created [+] [VMGateway[]]"
         Start-Sleep 2
-        
+
         # Create the virtual servers
         Write-Host "Creating [~] [VMServer[]]"
         $Main.Sr = @( )
@@ -3880,16 +3886,19 @@ public class WindowObject
                 Write-Host "Flushing [~] Server:[$($Sr.Name)]"
                 Remove-VM -Name $Sr.Name -Verbose -Confirm:$False -Force
             }
-    
+                    
             Write-Host "Processing [~] Server:[$($Sr.Name)]"
-            $Item     = [VMObject]::New($Sr,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,1,$Main.Sw[$X].Name)
+            $Item     = [VMObject]::New($Sr,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,2,$Main.Sw[$X].Name)
             $Item.New($Main.VM.Host.VirtualMachinePath)
             $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
             $Item.Start()
             $Item.Stop()
-            $Main.Sr += $Item
+            $VM        = Get-VM -Name $Item.Name
+            $BootOrder = $VM | Get-VMFirmware | % { $_.BootOrder[2,0,1] }
+            $VM        | Set-VMFirmware -BootOrder $BootOrder -Verbose
+            $Main.Sr  += $Item
         }
-        
+
         Write-Host "Created [+] [VMServer[]]"
         Start-Sleep 2
 
@@ -3904,7 +3913,7 @@ public class WindowObject
         $ScopeID  = Get-DhcpServerv4Scope
         $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID.ScopeID
 
-        $DHCP | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense)" | Remove-DHCPServerV4Reservation -Verbose -EA 0
+        $DHCP     | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense)" | Remove-DHCPServerV4Reservation -Verbose -EA 0
 
         $DHCP     = Get-DhcpServerv4Reservation -ScopeID $ScopeID.ScopeID
         $Slot     = $DHCP[-1].IPAddress.ToString().Split(".")
@@ -3940,10 +3949,10 @@ public class WindowObject
         #    ¯¯¯\\__[ Gateway Installation   ]______________________________________________________________//¯¯¯        
         #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-        #Switch([System.Windows.MessageBox]::Show("This process will now spawn the [GATEWAY] items in Hyper-V, and then install them","Press [Yes] to proceed","YesNo"))
-        #{
-            #Yes 
-            #{
+        Switch([System.Windows.MessageBox]::Show("This process will now spawn the [GATEWAY] items in Hyper-V, and then install them","Press [Yes] to proceed","YesNo"))
+        {
+            Yes 
+            {
                 0..($Main.Gw.Count-1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
 
                     $Main       = $Using:Main
@@ -4323,40 +4332,59 @@ public class WindowObject
                 Start-Sleep 3
                 KeyEntry $KB "$($Main.Credential.GetNetworkCredential().Password)"
                 $KB.TypeKey(13)
-                Start-Sleep 15
+                $C         = @()
+                Do
+                {
+                    Start-Sleep 1
+                    $Item = Get-VM -Name $ID
+
+                    Switch($Item.CPUUsage)
+                    {
+                        0 { $C += 1 } 1 { $C += 1 } Default { $C = @( ) }
+                    }
+
+                    $Sum = @( Switch($C.Count)
+                    {
+                        0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                    } ) | Invoke-Expression
+
+                    Write-Host ("Booting [~] CFGSRV [{0}]" -f $Sum )
+                }
+                Until ($Sum -gt 50)
 
                 $KB.PressKey(18)
                 $KB.TypeKey(114)
                 $KB.ReleaseKey(18)
-                Start-Sleep 1
+                Start-Sleep 2
 
                 $KB.PressKey(91)
                 $KB.TypeKey(82)
                 $KB.ReleaseKey(91)
+                Start-Sleep 1
                 $KB.TypeText("msedge")
-                $KB.TypeKey(13)
                 Start-Sleep 1
+                $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.PressKey(91)
                 $KB.TypeKey(82)
                 $KB.ReleaseKey(91)
+                Start-Sleep 1
                 $KB.TypeText("taskmgr")
+                Start-Sleep 1
                 $KB.TypeKey(13)
                 Start-Sleep 2
 
                 $KB.PressKey(18)
-                $KB.TypeKey(70)
-                $KB.TypeKey(78)
+                70,78 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
                 $KB.ReleaseKey(18)
                 Start-Sleep 1
                 $KB.TypeText("powershell")
-                $KB.TypeKey(9)
-                $KB.TypeKey(32)
-                $KB.TypeKey(9)
-                $KB.TypeKey(13)
+                Start-Sleep 1
+                9,32,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
                 Start-Sleep 12
 
-                $KB.TypeText('"ServerManager","TaskMgr","wuauserv","WinDefend" | % { Stop-Process -Name $_ -EA 0 }')
+                $KB.TypeText('"ServerManager","TaskMgr" | % { Stop-Process -Name $_ -EA 0 }')
                 $KB.TypeKey(13)
                 Start-Sleep 1
 
@@ -4369,7 +4397,7 @@ public class WindowObject
                 $KB.TypeText("'@")
                 $KB.TypeKey(13)
 
-                $KB.TypeText('$Date = Get-Date -UFormat %Y%m%d;$Path = "$Home\Desktop\IP-($Date).ps1";$Start = Get-NetIPAddress -AddressFamily IPV4 | ? PrefixOrigin -eq Manual')
+                $KB.TypeText('$Date = Get-Date -UFormat %Y%m%d;$Path = "$Home\Desktop\IP-($Date).ps1";$Start = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1')
                 $KB.TypeKey(13)
 
                 $KB.TypeText('$ifIndex = $Start.InterfaceIndex;$Ip = $Start.IPAddress;$pfLength = $Start.PrefixLength')
@@ -4388,12 +4416,10 @@ public class WindowObject
                 $KB.TypeKey(13)
                 Start-Sleep 30
 
-                $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Internal #$Xaml.IO.VmControllerSwitch.SelectedItem
-
                 $X = 0
                 Do
                 {
-                    $Item  = $Main.Gw[$X].Item
+                    $Item  = $Main.Sr[$X].Item
                     $Names = "Hash Name Location Region Country Postal Timezone SiteLink SiteName Network Prefix Netmask Start End Range Broadcast".Split(" ")
 
                     $KB.TypeText('$Item = @{}')
@@ -4403,27 +4429,39 @@ public class WindowObject
 
                     $KB.TypeText("$List | % { `$Item.Add(`$_[0],`$_[1]) }")
                     $KB.TypeKey(13)
+                    Start-Sleep 12
 
                     $KB.TypeText('$Temp = $Item.Start -Split "\.";$Temp[-1] = [UInt32]($Temp[-1]) + 1')
                     $KB.TypeKey(13)
+                    Start-Sleep 2
 
                     $KB.TypeText('$Hash = @{ InterfaceIndex = $ifIndex; AddressFamily="IPV4"; IPAddress=$Temp -join "."; PrefixLength=$pfLength; DefaultGateway=$Item.Start}')
                     $KB.TypeKey(13)
+                    Start-Sleep 3
 
                     $KB.TypeText('Get-NetRoute -DestinationPrefix 0.0.0.0/0 -InterfaceIndex $ifIndex | ? NextHop -notmatch $Item.Start | Remove-NetRoute -Confirm:$False -Verbose')
                     $KB.TypeKey(13)
+                    Start-Sleep 3
 
                     $KB.TypeText('Get-NetIPAddress -AddressFamily IPV4 -InterfaceIndex $ifIndex | ? PrefixOrigin -eq Manual | ? IPAddress -ne $Hash.IPAddress | Remove-NetIPAddress -Confirm:$False -Verbose')
                     $KB.TypeKey(13)
+                    Start-Sleep 3
 
                     $KB.TypeText('New-NetIPAddress @Hash -Verbose -EA 0')
                     $KB.TypeKey(13)
+                    Start-Sleep 3
 
                     $KB.TypeText('Set-DNSclientServerAddress -InterfaceIndex $ifIndex -ServerAddresses $Item.Start -Verbose;Start-Sleep 1')
                     $KB.TypeKey(13)
+                    Start-Sleep 3
+
+                    $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Item.Sitelink
+                    Start-Sleep 1
+                    $KB.PressKey(27)
+
+                    Start-Sleep 4
 
                     # Alt-Tab
-                    Start-Sleep 30
                     $KB.PressKey(18)
                     $KB.TypeKey(9)
                     $KB.ReleaseKey(18)
@@ -4579,48 +4617,689 @@ public class WindowObject
 
                 $KB.TypeText('$Content = Get-Content "$Home\Desktop\IP*";Invoke-Expression ($Content -join "`n")')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('$Hash = @{ InterfaceIndex = $ifIndex; AddressFamily="IPV4"; IPAddress=$IP; PrefixLength=$pfLength; DefaultGateway=$Gw}')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('$EndGw = Get-Netroute | ? DestinationPrefix -eq 0.0.0.0/0 | % NextHop')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('$EndIp = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('$EndDns = Get-DNSClientServerAddress -AddressFamily IPV4 -InterfaceIndex $ifIndex')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('If ($EndGw -ne $Gw) { Get-NetRoute | ? NextHop -eq $EndGw | Remove-NetRoute -Confirm:$False -Verbose; $Hash.DefaultGateway = $Gw }')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('If ($EndIp.IPAddress -ne $Ip) { Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $ifIndex | ? PrefixOrigin -eq Manual | ? IPAddress -ne $IP | Remove-NetIPAddress -Confirm:$False -Verbose; $Hash.IPAddress = $IP }')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('New-NetIPAddress @Hash -Verbose')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('Set-DNSClientServerAddress -InterfaceIndex $ifIndex -ServerAddresses @($Dns) -Verbose')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
                 $KB.TypeText('Get-Process -Name msedge | Stop-Process; Stop-Computer')
                 $KB.TypeKey(13)
 
                 Write-Theme "Complete [+] Gateway Configuration"
-            #}
+            }
 
-            #No  
-            #{  
-                #Write-Host "BREAK Cancelled dialog"
-            #}
-        #}
+            No  
+            {  
+                Write-Host "Cancelled dialog"
+                Break
+            }
+        }
+
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Server Configuration   ]______________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
         Switch([System.Windows.MessageBox]::Show("This process will now create the [SERVER] items in Hyper-V, and then install them","Proceed","YesNo"))
         {
             Yes 
-            { 
-                Write-Host ( "Running {0}" -f $Xaml.IO.VmServerScript.Text )
+            {
+
+                # 0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
+                # $Main     = $Using:Main
+                $Pass       = $Main.Credential.GetNetworkCredential().Password
+                $Domain     = $Main.CN
+                $Base       = $Main.SearchBase
+                $Cfg        = "CN=Configuration,$Base"
+                $DhcpOpt    = $Main.DHCP.OptionID
+                $DNS        = Get-NetAdapter | ? Name -match $Main.Vm.External.Name | Get-NetIPAddress | % IPAddress
+
+                $X = 0
+                Do
+                {
+                    # Time and logging
+                    $T1        = [System.Diagnostics.Stopwatch]::StartNew()
+                    $T2        = [System.Diagnostics.Stopwatch]::New()
+                    $Log       = @{ }
+
+                    # Grab server manifest
+                    $Sr        = $Main.Sr[$X]
+                    $ID        = $Sr.Name
+                    $VMDisk    = $Sr.NewVHDPath
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Beginning [~] Installation]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    # Start
+                    $Sr.Start()
+
+                    # Set Msvm keyboard controls
+                    $Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+                    $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
+
+                    # Connect to the VM
+                    Start-Process -FilePath vmconnect -ArgumentList @($Main.Vm.Host.ComputerName,$ID) -Verbose -Passthru
+                    $KB.TypeKey(13)
+
+                    # Timer to initialize setup
+                    $T2.Start()
+                    $C         = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Initializing [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/35)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 35)
+                    $T2.Reset()
+                    
+                    0..2 | % { $KB.TypeKey(9); Start-Sleep -M 100 }
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+
+                    $KB.TypeKey(13)
+
+                    $T2.Start()
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Starting [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/35)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 35)
+                    $T2.Reset()
+
+                    40,40,40,40,9,13 | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 5
+                    32,9,13,9,13     | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 3
+                    9,9,9,9,13       | % { $KB.TypeKey($_); Start-Sleep -M 100 }; Start-Sleep 1
+
+                    # Commence main installation
+                    $T2.Start()
+                    $C = @( )
+                    Do
+                    {
+                        $Disk = Get-Item $VMDisk | % { $_.Length }
+
+                        $Log.Add($Log.Count,("[$($T1.Elapsed)][Installing [~] Windows Server 2019 ($($T2.Elapsed))][({0:n3}/8.500 GB)]" -f [Float]($Disk/1GB)))
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Disk -ge 8.5GB)
+                    $T2.Reset()
+
+                    # Set idle timer for first login
+                    $T2.Start()
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Finalizing [~] Setup ($($T2.Elapsed))][(Inactivity:$Sum/250)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Item.Uptime.TotalSeconds -le 2)
+                    $T2.Reset()
+
+                    $T2.Start()
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Preparing [~] System ($($T2.Elapsed))][(Inactivity:$Sum/250)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -ge 250)
+                    $T2.Reset()
+
+                    # Log and begin interacting with VM
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Ready [+] System (First login)]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    # First PW Screen
+                    $KB.TypeText($Pass)
+                    Start-Sleep 1
+                    $KB.TypeKey(9)
+                    $KB.TypeText($Pass)
+                    Start-Sleep 1
+                    $KB.TypeKey(13)
+                    Start-Sleep 15
+
+                    # First Login screen
+                    $KB.TypeCtrlAltDel()
+                    Start-Sleep 5
+                    $KB.TypeText($Pass)
+                    $KB.TypeKey(13)
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][First Login [@] ($(Get-Date))]")
+                    Write-Host $Log[$Log.Count-1]
+                    Start-Sleep 60
+
+                    # For the 'join network' 
+                    $KB.TypeKey(27)
+                    Start-Sleep 1
+
+                    # Run PowerShell
+                    $T2.Start()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.PressKey(91)
+                    $KB.TypeKey(82)
+                    $KB.ReleaseKey(91)
+                    Start-Sleep 1
+                    $KB.TypeText("powershell")
+                    $KB.TypeKey(13)
+                    Start-Sleep 30
+
+                    # Stop ServerManager, get manifest, set static IP
+                    $KB.TypeText("Stop-Process -Name ServerManager")
+                    $KB.TypeKey(13)
+                    Start-Sleep 15
+
+                    $KB.TypeText("Set-DisplayResolution -Width 1280 -Height 720")
+                    $KB.TypeKey(13)
+                    Start-Sleep 12
+
+                    $KB.TypeText("y")
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+
+                    $Log.Add($Log.count,"[$($T1.Elapsed)][PowerShell [~] Setup (IP/Gateway/DNS) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.TypeText("`$ifIndex = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1 | % InterfaceIndex;`$pfLength='$($Sr.Item.Prefix)'")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText("`$Start = `"$($Sr.Item.Start)`";`$Temp = `$Start.Split('.'); `$Temp[-1] = [UInt32]`$Temp[-1] + 1;")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText("`$Hash = @{ InterfaceIndex = `$ifIndex; AddressFamily='IPV4'; IPAddress=`$Temp -join '.'; PrefixLength=`$pfLength; DefaultGateway='$($Sr.Item.Start)'}")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText("New-NetIPAddress @Hash -Verbose -EA 0")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText("Set-DNSclientServerAddress -InterfaceIndex `$ifIndex -ServerAddresses $DNS -Verbose;Start-Sleep 1")
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    # Deposit the manifest to a text file
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup (Transfer Server Manifest) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $Names     = ($Item.Item | ConvertTo-CSV)[1].Split(",")
+                    $Values    = $Names | % { $Item.Item.$($_.Replace('"',"")) } | % { "`"$_`"" }
+                    $Content = @("@(`"```$Hash = @{`""; 0..($Names.Count-1) | % { "'{0} = {1}'" -f $Names[$_], $Values[$_] }; "`"};`")") -join "`n"
+                    $KB.TypeText("`$Content = $Content")
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+
+                    $KB.TypeText("Set-Content -Path `$Home\Desktop\server.txt -Value `$Content -Verbose")
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+                    $T2.Reset()
+
+                    $KB.TypeText("Invoke-Expression (`$Content -join `"``n`")")
+                    $KB.TypeKey(13)
+
+                    $T2.Start()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup (FightingEntropy) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.TypeText("IRM github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | IEX")
+                    $KB.TypeKey(13)
+
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup (FightingEntropy) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 100)
+                    $T2.Reset()
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][System [~] (Hostname/Network/Domain) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $KB.PressKey(91)
+                    $KB.TypeKey(82)
+                    $KB.ReleaseKey(91)
+                    Start-Sleep 1
+                    $KB.TypeText("control panel")
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+                    $KB.PressKey(17)
+                    $KB.TypeKey(76)
+                    $KB.ReleaseKey(17)
+                    Start-Sleep 1
+                    $KB.TypeText("Control Panel\System and Security\System")
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+                    $KB.TypeKey(32)
+                    Start-Sleep 1
+                    $KB.TypeText("[$ID]://($($Sr.Item.SiteLink))")
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(32)
+                    Start-Sleep 1
+                    $KB.TypeText($ID)
+                    Start-Sleep 1
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(32)
+                    Start-Sleep 1
+                    $KB.TypeText($Main.CN)
+                    13,13,27,9,38,9 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
+                    $KB.TypeText($Main.CN)
+                    $KB.TypeKey(9)
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+                    $KB.TypeText("$($Main.Credential.Username)@$Domain")
+                    $KB.TypeKey(9)
+                    Start-Sleep 1
+                    $KB.TypeText("$($Main.Credential.GetNetworkCredential().Password)")
+                    $KB.TypeKey(9)
+                    Start-Sleep 1
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][System [~] (Joining domain...) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $KB.TypeKey(13)
+                    Start-Sleep 25
+
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+
+                    $KB.TypeKey(13)
+                    Start-Sleep 1
+
+                    $KB.PressKey(18)
+                    $KB.TypeKey(65)
+                    $KB.ReleaseKey(18)
+                    Start-Sleep 1
+
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][System [+] (Hostname/Network/Domain) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $T2.Reset()
+
+                    # Wait for login
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+                        Start-Sleep 1
+                    }
+                    Until ($Item.Uptime.TotalSeconds -lt 2)
+
+                    $T2.Start()
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Domain [~] Restarting ($($T2.Elapsed))]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 100)
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Domain [+] (Joined to domain) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $T2.Reset()
+
+                    $KB.TypeCtrlAltDel()
+                    Start-Sleep 5
+                    $KB.TypeText($Main.Credential.GetNetworkCredential().Password)
+                    $KB.TypeKey(13)
+                    Start-Sleep 15
+
+                    $T2.Start()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.PressKey(91)
+                    $KB.TypeKey(82)
+                    $KB.ReleaseKey(91)
+                    Start-Sleep 1
+                    $KB.TypeText("powershell")
+                    $KB.TypeKey(13)
+                    Start-Sleep 15
+
+                    $KB.TypeText("Stop-Process -Name ServerManager")
+                    $KB.TypeKey(13)
+                    Start-Sleep 15
+
+                    # Install Dhcp
+                    $KB.TypeText("Get-WindowsFeature | ? Name -match DHCP | Install-WindowsFeature")
+                    $KB.TypeKey(13)
+
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 100)
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Services [+] (Deploy Dhcp) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $T2.Reset()
+
+                    # Reload the gateway/server variables
+                    $KB.TypeText("(Get-Content `$Home\Desktop\server.txt) -join `"``n`" | Invoke-Expression")
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    # Get Dhcp splat 
+                    $KB.TypeText('$Content="`$Dhcp=@{StartRange=`"$($Hash.Start)`";EndRange=`"$($Hash.End)`";Name=`"$($Hash.Network)/$($Hash.Prefix)`";Description=`"$($Hash.Sitelink)`";SubnetMask=`"$($Hash.Netmask)`"}"')
+                    $KB.TypeKey(13)
+                    Start-Sleep 3
+
+                    # Set content
+                    $KB.TypeText("Set-Content `$Home\Desktop\dhcp.txt -Value `$Content -Verbose")
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    # Add the Dhcp scope
+                    $KB.TypeText('$Content | Invoke-Expression; Add-DhcpServerV4Scope @Dhcp -Verbose')
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    # Get NetIPConfig
+                    $KB.TypeText('$Config = Get-NetIPConfiguration -Detailed')
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+
+                    $KB.TypeText('$Arp = arp -a | ? { $_ -match "dynamic" -and $_ -match "$($Hash.Start) "};$ClientID=[Regex]::Matches($Arp,"([a-f0-9]{2}\-){5}([a-f0-9]){2}").Value -Replace "-|:",""')
+                    $KB.TypeKey(13)
+                    Start-Sleep 6
+
+                    # Set Initial DHCP Reservations
+                    $KB.TypeText('Add-DhcpServerv4Reservation -ScopeID $Hash.Network -IPAddress $Hash.Start -ClientID $ClientID -Name Router -Verbose')
+                    $KB.TypeKey(13)
+                    Start-Sleep 4
+
+                    $KB.TypeText('Add-DhcpServerv4Reservation -ScopeID $Hash.Network -IPAddress $Config.IPv4Address.IPAddress -ClientID $Config.NetAdapter.LinkLayerAddress.Replace("-","").ToLower() -Name Server -Verbose')
+                    $KB.TypeKey(13)
+                    Start-Sleep 6
+
+                    # Set Dhcp Scope Options
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 3 -Value `$Config.IPV4DefaultGateway.NextHop -Verbose") # (Router)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $Value = ( $Main.Dhcp.OptionID | ? OptionID -eq 4 | % Value ) -join ','
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 4 -Value $Value -Verbose") # (Time Servers)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $Value = ( $Main.Dhcp.OptionID | ? OptionID -eq 5 | % Value ) -join ','
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 5 -Value $Value -Verbose") # (Name Servers)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("`$Value = ( `$Config.DNSServer | ? AddressFamily -eq 2 | % ServerAddresses )")
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 6 -Value `$Value -Verbose") # (Dns Servers)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 15 -Value $($Main.CN) -Verbose") # (Dns Domain Name)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 28 -Value `$Hash.Broadcast -Verbose") # (Broadcast Address)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Services [+] (Dhcp Configured) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $T2.Reset()
+
+                    $T2.Start()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Services [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.TypeText('$Module = Get-FEModule')
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText('($Module.Classes | ? Name -match ServerFeature | Get-Content ) -join "`n" | Invoke-Expression')
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText('$Features = [_ServerFeatures]::New().Output')
+                    $KB.TypeKey(13)
+                    Start-Sleep 5
+
+                    $KB.TypeText('$Features | ? { !($_.Installed) } | % { $_.Name.Replace("_","-") } | Install-WindowsFeature -Verbose')
+                    $KB.TypeKey(13)
+
+                    $C = 0
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+                        Start-Sleep 1
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Timer:$C/120)]")
+                        Write-Host $Log[$Log.Count-1]
+
+                        $C ++
+                    }
+                    Until ($C -gt 120)
+
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)]Installing [~] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 100)
+
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Installed [+] (Adds/Rsat/Dhcp/Dns) Suite ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    $T2.Reset()
+
+                    $T2.Start()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $KB.TypeText('Import-Module ADDSDeployment')
+                    $KB.TypeKey(13)
+                    Start-Sleep 10
+
+                    $KB.TypeText("`$Pw = Read-Host 'Enter password' -AsSecureString")
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText($Main.Credential.GetNetworkCredential().Password)
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$($Main.Credential.Username)@$Domain`",`$Pw)")
+                    $KB.TypeKey(13)
+                    Start-Sleep 2
+
+                    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Main.CN)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Server.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
+                    $KB.TypeKey(13)
+                    Start-Sleep 8
+
+                    $KB.TypeText("Install-ADDSDomainController @ADDS -Verbose")
+                    $KB.TypeKey(13)
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+
+                    $T2.Start()
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Deploying [~] (Domain Controller) ($($T2.Elapsed))]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until($Item.Uptime.TotalSeconds -le 2)
+
+                    $C = @( )
+                    Do
+                    {
+                        $Item = Get-VM -Name $ID
+
+                        Switch($Item.CPUUsage)
+                        {
+                            Default { $C = @( ) } 0 { $C += 1 } 1 { $C += 1 } 
+                        }
+
+                        $Sum = @( Switch($C.Count)
+                        {
+                            0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
+                        } ) | Invoke-Expression
+
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Booting [~] Domain Controller ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+                        Write-Host $Log[$Log.Count-1]
+                        Start-Sleep 1
+                    }
+                    Until ($Sum -gt 100)
+
+                    $T2.Stop()
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][Deployed [+] (Domain Controller) ($($T2.Elapsed))]")
+                    Write-Host $Log[$Log.Count-1]
+                    
+                    Set-Content -Path "$Home\Desktop\$(Get-Date -UFormat %Y%m%d)($ID).txt" -Value $Log[0..($Log.Count-1)] -Verbose
+
+                    Stop-VM -Name $ID -Verbose
+
+                    $X ++
+                    Read-Host "Press Enter to continue"
+                }
+                Until ($X -eq ($Main.Sr.Count-1))
             }
 
             No  

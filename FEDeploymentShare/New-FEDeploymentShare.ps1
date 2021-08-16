@@ -3890,10 +3890,11 @@ public class WindowObject
             Write-Host "Processing [~] Server:[$($Sr.Name)]"
             $Item     = [VMObject]::New($Sr,$Xaml.IO.VmServerMemory.Text,$Xaml.IO.VmServerDrive.Text,2,$Main.Sw[$X].Name)
             $Item.New($Main.VM.Host.VirtualMachinePath)
-            $Item.LoadISO($Xaml.IO.VmGatewayImage.Text)
+            $VM       = Get-VM -Name $Item.Name
+            $VM       | Add-VMDVDDrive -Verbose
+            $Item.LoadISO($Xaml.IO.VmServerImage.Text)
             $Item.Start()
             $Item.Stop()
-            $VM        = Get-VM -Name $Item.Name
             $BootOrder = $VM | Get-VMFirmware | % { $_.BootOrder[2,0,1] }
             $VM        | Set-VMFirmware -BootOrder $BootOrder -Verbose
             $Main.Sr  += $Item
@@ -4674,19 +4675,17 @@ public class WindowObject
         {
             Yes 
             {
+                0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Sr[$_].Name} -Throttle 2 -FunctionsToLoad KeyEntry -ScriptBlock {
+                    
+                    $Main       = $Using:Main
+                    $Pass       = $Main.Credential.GetNetworkCredential().Password
+                    $Domain     = $Main.CN
+                    $Base       = $Main.SearchBase
+                    $Cfg        = "CN=Configuration,$Base"
+                    $DhcpOpt    = $Main.DHCP.OptionID
+                    $DNS        = Get-NetAdapter | ? Name -match $Main.Vm.External.Name | Get-NetIPAddress | % IPAddress
+                    $X          = $_
 
-                # 0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
-                # $Main     = $Using:Main
-                $Pass       = $Main.Credential.GetNetworkCredential().Password
-                $Domain     = $Main.CN
-                $Base       = $Main.SearchBase
-                $Cfg        = "CN=Configuration,$Base"
-                $DhcpOpt    = $Main.DHCP.OptionID
-                $DNS        = Get-NetAdapter | ? Name -match $Main.Vm.External.Name | Get-NetIPAddress | % IPAddress
-
-                $X = 0
-                Do
-                {
                     # Time and logging
                     $T1        = [System.Diagnostics.Stopwatch]::StartNew()
                     $T2        = [System.Diagnostics.Stopwatch]::New()
@@ -4806,6 +4805,10 @@ public class WindowObject
                     Until ($Item.Uptime.TotalSeconds -le 2)
                     $T2.Reset()
 
+                    # Disconnect DVD/ISO
+                    $Log.Add($Log.Count,"[$($Time.Elapsed)] [~] Releasing DVD-ISO")
+                    Set-VMDvdDrive -VMName $ID -Path $Null -Verbose
+
                     $T2.Start()
                     $C = @( )
                     Do
@@ -4909,8 +4912,8 @@ public class WindowObject
                     $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup (Transfer Server Manifest) ($($T2.Elapsed))]")
                     Write-Host $Log[$Log.Count-1]
 
-                    $Names     = ($Item.Item | ConvertTo-CSV)[1].Split(",")
-                    $Values    = $Names | % { $Item.Item.$($_.Replace('"',"")) } | % { "`"$_`"" }
+                    $Names     = ($Sr.Item | ConvertTo-CSV)[1].Split(",")
+                    $Values    = $Names | % { $Sr.Item.$($_.Replace('"',"")) } | % { "`"$_`"" }
                     $Content = @("@(`"```$Hash = @{`""; 0..($Names.Count-1) | % { "'{0} = {1}'" -f $Names[$_], $Values[$_] }; "`"};`")") -join "`n"
                     $KB.TypeText("`$Content = $Content")
                     $KB.TypeKey(13)
@@ -5240,7 +5243,7 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $KB.TypeText($Main.Credential.GetNetworkCredential().Password)
+                    KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
@@ -5248,7 +5251,7 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Main.CN)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Server.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
+                    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Main.CN)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Sr.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
                     $KB.TypeKey(13)
                     Start-Sleep 8
 
@@ -5295,11 +5298,29 @@ public class WindowObject
                     Set-Content -Path "$Home\Desktop\$(Get-Date -UFormat %Y%m%d)($ID).txt" -Value $Log[0..($Log.Count-1)] -Verbose
 
                     Stop-VM -Name $ID -Verbose
-
-                    $X ++
-                    Read-Host "Press Enter to continue"
                 }
-                Until ($X -eq ($Main.Sr.Count-1))
+
+                # Open VMC Windows
+                0..($Main.Sr.Count-1) | % { 
+                    
+                    Start-Process -FilePath C:\Windows\System32\vmconnect.exe -ArgumentList @($Main.Vm.Host.Computername,$Main.Sr.Name[$_]) -Passthru
+                    Start-Sleep -Milliseconds 100
+                }
+                
+                $Time = [System.Diagnostics.Stopwatch]::StartNew()
+                Do
+                {
+                    "[$($Time.Elapsed)]"
+                    $RS = Get-RSJob
+                    $RS
+                    $Complete = $RS | ? State -eq Completed
+                    Start-Sleep -Seconds 10
+                    Clear-Host
+                }
+                Until ($Complete.Count -ge $Main.Sr.Count)
+                
+                Get-RSJob | Remove-RSJob -Verbose
+                Write-Theme "Complete [+] Server Installation"
             }
 
             No  

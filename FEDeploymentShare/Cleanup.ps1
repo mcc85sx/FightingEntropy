@@ -1,16 +1,17 @@
-# ADDS Cleanup Script
-# -------------------
+
 $Base       = "DC=securedigitsplus,DC=com"
 $Code       = "(\w{2}\-){3}\d{5}"
-$Gateway    = Get-ADComputer -Filter * | ? Name -match $Code
-$Gateway    | Remove-ADComputer -Confirm:$False -Verbose
-$OUList     = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -SearchBase $Base | ? Name -match "Gateway|((\w{2}\-){3}\d{5})" 
-$OUList     | ? Name -ne CP-NY-US-12065 | % { Set-ADObject -Identity $_.DistinguishedName -ProtectedFromAccidentalDeletion 0 -Verbose }
+$SafeOU     = "CP-NY-US-12065"
+$SafeSubnet = "172.16.0.0/19"
+$Gateway    = Get-ADObject -Filter * | ? ObjectClass -eq Computer | ? Name -match "(dc\d\-\d{5}|(\w{2}\-){3}\d{5})"
+$Gateway    | Remove-ADObject -Confirm:$False -Recursive -Verbose -EA 0
+$OUList     = Get-ADObject -LDAPFilter "(objectClass=organizationalUnit)" -SearchBase $Base | ? Name -match "(\w{2}\-){3}\d{5}"
+$OUList     | ? Name -ne $SafeOU | % { Set-ADObject -Identity $_.DistinguishedName -ProtectedFromAccidentalDeletion 0 -Verbose }
 $OUList     | Remove-ADObject -Confirm:$False -Recursive -Verbose -EA 0
 $Subnet     = Get-ADObject -LDAPfilter "(objectClass=subnet)" -SearchBase "CN=Configuration,$Base"
-$Subnet     | ? Name -ne 172.16.0.0/19  | Remove-ADObject -Confirm:$False -Verbose
+$Subnet     | ? Name -ne $SafeSubnet  | Remove-ADObject -Confirm:$False -Verbose
 $SiteList   = Get-ADObject -LDAPFilter "(objectClass=site)" -SearchBase "CN=Configuration,$Base"
-$SiteList   | ? Name -ne CP-NY-US-12065 | Remove-ADObject -Confirm:$False -Recursive -Verbose
+$SiteList   | ? Name -ne $SafeOU | Remove-ADObject -Confirm:$False -Recursive -Verbose
 
 # DHCP Cleanup Script
 # -------------------
@@ -23,13 +24,25 @@ If ($DHCP.Count -gt 0)
     $DHCP | Remove-DHCPServerV4Reservation -Verbose -EA 0
 }
 
-# VM Guide Cleanup Script
-# -----------------------
-$Path     = GCI "$Env:ProgramData\Secure Digits Plus LLC" | ? Name -match "(Lab\(\d{8}\))" | % FullName
-If (Test-Path $Path)
+$DNS      = Get-DNSServerResourceRecord -ZoneName $Zone | ? HostName -match "((\w{2}-){3}(\d{5})|OPNsense)" | ? Hostname -notmatch $SafeOU
+If ($DNS.Count -gt 0)
 {
-    Get-ChildItem $Path | ? Extension -match "log|txt" | Remove-Item -Verbose
+    $DNS | Remove-DNSServerResourceRecord -ZoneName $Zone -Verbose -EA 0 -Confirm:$False -Force
 }
 
-# VM Network Switch Cleanup
-# -------------------------
+# VM Cleanup Script
+# -----------------
+$VM = Get-VM | ? Name -match "((\w{2}-){3}(\d{5})|OPNsense|dc\d\-\d{5})"
+If ( $VM.Count -gt 0 )
+{
+    $VM | Stop-VM -Confirm:$False -Verbose -Force
+    $VM | Remove-VM -Confirm:$false -Verbose -Force
+}
+
+# VM Switch Cleanup
+# -----------------
+$VMS = Get-VMSwitch | ? Name -match "(\w{2}-){3}(\d{5})"
+If ( $VMS.Count -gt 0 )
+{
+    $VMS | Remove-VMSwitch -Confirm:$False -Verbose -Force
+}

@@ -4291,11 +4291,7 @@ public class WindowObject
                 Get-RSJob | Remove-RSJob -Verbose
                 Write-Theme "Complete [+] Gateway Installation"
 
-        #    ____                                                                                            ________    
-        #   //¯¯\\__________________________________________________________________________________________//¯¯\\__//   
-        #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
-        #    ¯¯¯\\__[ Gateway Configuration  ]______________________________________________________________//¯¯¯        
-        #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
 
                 $ID        = $Xaml.IO.VmControllerConfigVM.SelectedItem
                 $VM        = Get-VM -Name $ID
@@ -4667,11 +4663,11 @@ public class WindowObject
             }
         }
 
-#    ____                                                                                                    ________    
-#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
-#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
-#    ¯¯¯\\__[ Server Configuration   ]______________________________________________________________________//¯¯¯        
-#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+        #    ____                                                                                            ________    
+        #   //¯¯\\__________________________________________________________________________________________//¯¯\\__//   
+        #   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+        #    ¯¯¯\\__[ Server Installation    ]______________________________________________________________//¯¯¯        
+        #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
         Switch([System.Windows.MessageBox]::Show("This process will now create the [SERVER] items in Hyper-V, and then install them","Proceed","YesNo"))
         {
@@ -4679,9 +4675,6 @@ public class WindowObject
             {
                 Set-Content -Path $Home\Desktop\main.txt -Value ( $Main | Select-Object CN, SearchBase, VM, Sr | ConvertTo-Json ) -Verbose
                 Export-CliXml -Path $Home\Desktop\cred.txt -InputObject $Main.Credential -Verbose
-
-                $Main = Get-Content $Home\Desktop\main.txt | ConvertFrom-Json
-                $Time = [System.Diagnostics.Stopwatch]::StartNew()
 
                 0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Sr[$_].Name} -Throttle 2 -FunctionsToLoad Invoke-KeyEntry -ScriptBlock {
                     

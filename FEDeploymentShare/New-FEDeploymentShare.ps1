@@ -3829,7 +3829,7 @@ public class WindowObject
             Return [System.Windows.MessageBox]::Show("Must have Hyper-V running","Error")
         }
 
-        $Main.Credential = Get-Credential root
+        $Main.Credential    = Get-Credential root
 
         # Create the virtual switches
         Write-Host "Creating [~] [VMSwitch[]]"
@@ -4677,19 +4677,27 @@ public class WindowObject
         {
             Yes 
             {
+                Set-Content -Path $Home\Desktop\main.txt -Value ( $Main | Select-Object CN, SearchBase, VM, Sr | ConvertTo-Json ) -Verbose
+                Export-CliXml -Path $Home\Desktop\cred.txt -InputObject $Main.Credential -Verbose
+
+                $Main = Get-Content $Home\Desktop\main.txt | ConvertFrom-Json
+                $Time = [System.Diagnostics.Stopwatch]::StartNew()
+
                 0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Sr[$_].Name} -Throttle 2 -FunctionsToLoad Invoke-KeyEntry -ScriptBlock {
                     
-                    $Main       = $Using:Main
+                    $MX       = Get-Content $Home\Desktop\main.txt | ConvertFrom-Json #$Using:Main
+                    $Cred       = Import-CliXml $Home\Desktop\cred.txt
+                    $User       = $Cred.Username
+                    $Pass       = $Cred.GetNetworkCredential().Password
                     $X          = $_
-                    $Sr         = $Main.Sr[$X]
+                    $Sr         = $MX.Sr[$X]
                     $ID         = $Sr.Name
                     $VMDisk     = $Sr.NewVHDPath
-                    $Pass       = $Main.Credential.GetNetworkCredential().Password
-                    $Domain     = $Main.CN
-                    $Base       = $Main.SearchBase
+                    $Domain     = $MX.CN
+                    $Base       = $MX.SearchBase
                     $Cfg        = "CN=Configuration,$Base"
-                    $DhcpOpt    = $Main.DHCP.OptionID
-                    $DNS        = Get-NetAdapter | ? Name -match $Main.Vm.External.Name | Get-NetIPAddress | % IPAddress
+                    $DhcpOpt    = Get-DhcpServerV4OptionValue
+                    $DNS        = Get-NetAdapter | ? Name -match $MX.Vm.External.Name | Get-NetIPAddress | % IPAddress
 
                     # Time and logging
                     $T1        = [System.Diagnostics.Stopwatch]::StartNew()
@@ -4708,7 +4716,7 @@ public class WindowObject
                     $Ctrl      = Get-WmiObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
                     $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
 
-                    Start-Sleep 1
+                    Start-Sleep 3
                     $KB.TypeKey(13)
 
                     # Timer to initialize setup
@@ -4838,10 +4846,10 @@ public class WindowObject
                     Write-Host $Log[$Log.Count-1]
 
                     # First PW Screen
-                    $KB.TypeText($Pass)
+                    Invoke-KeyEntry $KB "$Pass"
                     Start-Sleep 1
                     $KB.TypeKey(9)
-                    $KB.TypeText($Pass)
+                    Invoke-KeyEntry $KB "$Pass"
                     Start-Sleep 1
                     $KB.TypeKey(13)
                     Start-Sleep 15
@@ -4849,7 +4857,7 @@ public class WindowObject
                     # First Login screen
                     $KB.TypeCtrlAltDel()
                     Start-Sleep 5
-                    $KB.TypeText($Pass)
+                    Invoke-KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
 
                     $Log.Add($Log.Count,"[$($T1.Elapsed)][First Login [@] ($(Get-Date))]")
@@ -4886,7 +4894,7 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 1
 
-                    $Log.Add($Log.count,"[$($T1.Elapsed)][PowerShell [~] Setup (IP/Gateway/DNS) ($($T2.Elapsed))]")
+                    $Log.Add($Log.Count,"[$($T1.Elapsed)][PowerShell [~] Setup (IP/Gateway/DNS) ($($T2.Elapsed))]")
                     Write-Host $Log[$Log.Count-1]
 
                     $KB.TypeText("`$ifIndex = Get-NetIPAddress -AddressFamily IPV4 | ? IPAddress -ne 127.0.0.1 | % InterfaceIndex;`$pfLength='$($Sr.Item.Prefix)'")
@@ -4984,16 +4992,16 @@ public class WindowObject
                     $KB.TypeKey(9)
                     $KB.TypeKey(32)
                     Start-Sleep 1
-                    $KB.TypeText($Main.CN)
+                    $KB.TypeText($MX.CN)
                     13,13,27,9,38,9 | % { $KB.TypeKey($_); Start-Sleep -M 100 }
-                    $KB.TypeText($Main.CN)
+                    $KB.TypeText($MX.CN)
                     $KB.TypeKey(9)
                     $KB.TypeKey(13)
                     Start-Sleep 10
-                    $KB.TypeText("$($Main.Credential.Username)@$Domain")
+                    $KB.TypeText("$User@$Domain")
                     $KB.TypeKey(9)
                     Start-Sleep 1
-                    $KB.TypeText("$($Main.Credential.GetNetworkCredential().Password)")
+                    $KB.TypeText("$Pass")
                     $KB.TypeKey(9)
                     Start-Sleep 1
 
@@ -5054,7 +5062,7 @@ public class WindowObject
 
                     $KB.TypeCtrlAltDel()
                     Start-Sleep 5
-                    $KB.TypeText($Main.Credential.GetNetworkCredential().Password)
+                    $KB.TypeText($Pass)
                     $KB.TypeKey(13)
                     Start-Sleep 15
 
@@ -5093,7 +5101,7 @@ public class WindowObject
                             0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
                         } ) | Invoke-Expression
 
-                        $Log.Add($Log.count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
+                        $Log.Add($Log.Count,"[$($T1.Elapsed)][Services [~] (Deploy Dhcp) ($($T2.Elapsed))][(Inactivity:$Sum/100)]")
                         Write-Host $Log[$Log.Count-1]
                         Start-Sleep 1
                     }
@@ -5146,12 +5154,12 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $Value = ( $Main.Dhcp.OptionID | ? OptionID -eq 4 | % Value ) -join ','
+                    $Value = ( $MX.Dhcp.Options | ? OptionID -eq 4 | % Value ) -join ','
                     $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 4 -Value $Value -Verbose") # (Time Servers)
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $Value = ( $Main.Dhcp.OptionID | ? OptionID -eq 5 | % Value ) -join ','
+                    $Value = ( $MX.Dhcp.Options | ? OptionID -eq 5 | % Value ) -join ','
                     $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 5 -Value $Value -Verbose") # (Name Servers)
                     $KB.TypeKey(13)
                     Start-Sleep 2
@@ -5164,7 +5172,7 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 15 -Value $($Main.CN) -Verbose") # (Dns Domain Name)
+                    $KB.TypeText("Set-DhcpServerv4OptionValue -OptionID 15 -Value $($MX.CN) -Verbose") # (Dns Domain Name)
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
@@ -5248,11 +5256,11 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$($Main.Credential.Username)@$Domain`",`$Pw)")
+                    $KB.TypeText("`$Credential=[System.Management.Automation.PSCredential]::New(`"$User@$Domain`",`$Pw)")
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($Main.CN)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Sr.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
+                    $KB.TypeText("`$ADDS=@{NoGlobalCatalog=0;CreateDnsDelegation=0;Credential=`$Credential;CriticalReplicationOnly=0;DatabasePath='C:\Windows\NTDS';DomainName='$($MX.CN)';InstallDns=1;LogPath='C:\Windows\NTDS';NoRebootOnCompletion=0;SiteName='$($Sr.Item.SiteLink)';SysVolPath='C:\Windows\SYSVOL';Force=1;SafeModeAdministratorPassword=`$Pw}")
                     $KB.TypeKey(13)
                     Start-Sleep 8
 
@@ -5302,7 +5310,7 @@ public class WindowObject
                 }
 
                 # Open VMC Windows
-                0..($Main.Sr.Count-1) | % { 
+                5..($Main.Sr.Count-1) | % { 
                     
                     Start-Process -FilePath C:\Windows\System32\vmconnect.exe -ArgumentList @($Main.Vm.Host.Computername,$Main.Sr.Name[$_]) -Passthru
                     Start-Sleep -Milliseconds 100
@@ -5317,16 +5325,17 @@ public class WindowObject
                     Start-Sleep -Seconds 10
                     Clear-Host
                 }
-                Until ($Complete.Count -ge $Main.Sr.Count)
+                Until ($Complete.Count -ge (4-$Main.Sr.Count))
                 
                 Get-RSJob | Remove-RSJob -Verbose
+                $Time.Stop()
                 Write-Theme "Complete ($($Time.Elapsed)) [+] Server Installation"
             }
 
             No  
             {  
                 $Time.Stop()
-                Write-Host "Cancelled dialog [$($Time.Elapsed)]"
+                Write-Theme "Cancelled dialog [$($Time.Elapsed)]"
                 Break
             }
         }

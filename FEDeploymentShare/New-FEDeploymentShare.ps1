@@ -1,3 +1,59 @@
+Function Invoke-KeyEntry
+{
+    [CmdLetBinding()]
+    Param(
+    [Parameter(Mandatory)][Object]$KB,
+    [Parameter(Mandatory)][Object]$Object)
+    Class KeyEntry
+    {
+        Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
+        Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
+        Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
+        Static [Object]    $Keys  = @{
+
+            " " =  32; [Char]706 =  37; [Char]708 =  38; [char]707 =  39; [Char]709 =  40; 
+            "0" =  48; "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
+            "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
+            "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
+            "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
+            "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
+            "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
+            "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
+            "[" = 219; "\" = 220; "]" = 221; "'" = 222;
+        }
+        Static [Object]     $SKey = @{ 
+
+            "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
+            "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
+            "M" =  77; "N" =  78; "O" =  79; "P" =  80; "Q" =  81; "R" =  82; 
+            "S" =  83; "T" =  84; "U" =  85; "V" =  86; "W" =  87; "X" =  88;
+            "Y" =  89; "Z" =  90; ")" =  48; "!" =  49; "@" =  50; "#" =  51; 
+            "$" =  52; "%" =  53; "^" =  54; "&" =  55; "*" =  56; "(" =  57; 
+            ":" = 186; "+" = 187; "<" = 188; "_" = 189; ">" = 190; "?" = 191; 
+            "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
+        }
+    }
+    If ( $Object.Length -gt 1 )
+    {
+        $Object = $Object.ToCharArray()
+    }
+    ForEach ( $Key in $Object )
+    {
+        If ($Key -cin @([KeyEntry]::Special + [KeyEntry]::Capital))
+        {
+            $KB.PressKey(16) | Out-Null
+            $KB.TypeKey([KeyEntry]::SKey["$Key"]) | Out-Null
+            $KB.ReleaseKey(16) | Out-Null
+        }
+        Else
+        {
+            $KB.TypeKey([KeyEntry]::Keys["$Key"]) | Out-Null
+        }
+
+        Start-Sleep -Milliseconds 50
+    }
+}
+
 Function New-FEDeploymentShare # based off of https://github.com/mcc85sx/FightingEntropy/blob/master/FEDeploymentShare/FEDeploymentShare.ps1
 {    
     # Load Assemblies
@@ -26,6 +82,8 @@ public struct WindowPosition
     public int Bottom;
 }
 "@
+
+Import-Module PoshRSJob
 
 $WindowObject = @"
 using System;
@@ -674,62 +732,6 @@ public class WindowObject
 
             $This.SiteLink = ($Return[0..3] -join "-").ToUpper()
             $This.SiteName = ("{0}.{1}" -f ($Return[0..3] -join "-"),$This.CommonName).ToLower()
-        }
-    }
-
-    Function KeyEntry
-    {
-        [CmdLetBinding()]
-        Param(
-        [Parameter(Mandatory)][Object]$KB,
-        [Parameter(Mandatory)][Object]$Object)
-        Class KeyEntry
-        {
-            Static [Char[]] $Capital  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray()
-            Static [Char[]]   $Lower  = "abcdefghijklmnopqrstuvwxyz".ToCharArray()
-            Static [Char[]] $Special  = ")!@#$%^&*(:+<_>?~{|}`"".ToCharArray()
-            Static [Object]    $Keys  = @{
-    
-                " " =  32; [Char]706 =  37; [Char]708 =  38; [char]707 =  39; [Char]709 =  40; 
-                "0" =  48; "1" =  49; "2" =  50; "3" =  51; "4" =  52; "5" =  53; "6" =  54; 
-                "7" =  55; "8" =  56; "9" =  57; "a" =  65; "b" =  66; "c" =  67; 
-                "d" =  68; "e" =  69; "f" =  70; "g" =  71; "h" =  72; "i" =  73; 
-                "j" =  74; "k" =  75; "l" =  76; "m" =  77; "n" =  78; "o" =  79; 
-                "p" =  80; "q" =  81; "r" =  82; "s" =  83; "t" =  84; "u" =  85; 
-                "v" =  86; "w" =  87; "x" =  88; "y" =  89; "z" =  90; ";" = 186; 
-                "=" = 187; "," = 188; "-" = 189; "." = 190; "/" = 191; '`' = 192; 
-                "[" = 219; "\" = 220; "]" = 221; "'" = 222;
-            }
-            Static [Object]     $SKey = @{ 
-    
-                "A" =  65; "B" =  66; "C" =  67; "D" =  68; "E" =  69; "F" =  70; 
-                "G" =  71; "H" =  72; "I" =  73; "J" =  74; "K" =  75; "L" =  76; 
-                "M" =  77; "N" =  78; "O" =  79; "P" =  80; "Q" =  81; "R" =  82; 
-                "S" =  83; "T" =  84; "U" =  85; "V" =  86; "W" =  87; "X" =  88;
-                "Y" =  89; "Z" =  90; ")" =  48; "!" =  49; "@" =  50; "#" =  51; 
-                "$" =  52; "%" =  53; "^" =  54; "&" =  55; "*" =  56; "(" =  57; 
-                ":" = 186; "+" = 187; "<" = 188; "_" = 189; ">" = 190; "?" = 191; 
-                "~" = 192; "{" = 219; "|" = 220; "}" = 221; '"' = 222;
-            }
-        }
-        If ( $Object.Length -gt 1 )
-        {
-            $Object = $Object.ToCharArray()
-        }
-        ForEach ( $Key in $Object )
-        {
-            If ($Key -cin @([KeyEntry]::Special + [KeyEntry]::Capital))
-            {
-                $KB.PressKey(16) | Out-Null
-                $KB.TypeKey([KeyEntry]::SKey["$Key"]) | Out-Null
-                $KB.ReleaseKey(16) | Out-Null
-            }
-            Else
-            {
-                $KB.TypeKey([KeyEntry]::Keys["$Key"]) | Out-Null
-            }
-
-            Start-Sleep -Milliseconds 50
         }
     }
 
@@ -3954,7 +3956,7 @@ public class WindowObject
         {
             Yes 
             {
-                0..($Main.Gw.Count-1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad KeyEntry -ScriptBlock {
+                0..($Main.Gw.Count-1) | Start-RSJob -Name {$Main.Gw[$_].Name} -Throttle 4 -FunctionsToLoad Invoke-KeyEntry -ScriptBlock {
 
                     $Main       = $Using:Main
                     $Pass       = $Main.Credential.GetNetworkCredential().Password
@@ -3999,18 +4001,18 @@ public class WindowObject
                     Start-Sleep 1
                 
                     # Configure VLans Now?
-                    KeyEntry $KB "n"
+                    Invoke-KeyEntry $KB "n"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Enter WAN interface name
-                    KeyEntry $KB "hn0"
+                    Invoke-KeyEntry $KB "hn0"
                     Start-Sleep -M 100
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Enter LAN Interface name
-                    KeyEntry $KB "hn1"
+                    Invoke-KeyEntry $KB "hn1"
                     Start-Sleep -M 100
                     $KB.TypeKey(13)
                     Start-Sleep 1
@@ -4020,7 +4022,7 @@ public class WindowObject
                     Start-Sleep 2
                 
                     # Proceed...?
-                    KeyEntry $KB "y"
+                    Invoke-KeyEntry $KB "y"
                     $KB.TypeKey(13)
                 
                     $C         = @( )
@@ -4045,12 +4047,12 @@ public class WindowObject
                     Until($Sum -ge 200) # Initial login, must account for machine delay
                 
                     # Login
-                    KeyEntry $KB "installer"
+                    Invoke-KeyEntry $KB "installer"
                     $KB.PressKey(13)
                     Start-Sleep 1
                 
                     # Password
-                    KeyEntry $KB "opnsense"
+                    Invoke-KeyEntry $KB "opnsense"
                     $KB.PressKey(13)
                     Start-Sleep 3
                 
@@ -4142,12 +4144,12 @@ public class WindowObject
                     Start-Sleep 2
                 
                     # Enter root password
-                    KeyEntry $KB "$Pass"
+                    Invoke-KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Confirm root password
-                    KeyEntry $KB "$Pass"
+                    Invoke-KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
@@ -4204,34 +4206,34 @@ public class WindowObject
                     }
                     Until($Sum -ge 250)
                 
-                    KeyEntry $KB "root"
+                    Invoke-KeyEntry $KB "root"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
-                    KeyEntry $KB "$Pass"
+                    Invoke-KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
                     Start-Sleep 3
                 
-                    KeyEntry $KB "2"
+                    Invoke-KeyEntry $KB "2"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
-                    KeyEntry $KB "1"
+                    Invoke-KeyEntry $KB "1"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Configure LAN via DHCP? (No)
-                    KeyEntry $KB "n"
+                    Invoke-KeyEntry $KB "n"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # IPV4 Gateway (Subnet start address)
-                    KeyEntry $KB "$($VM.Item.Start)"
+                    Invoke-KeyEntry $KB "$($VM.Item.Start)"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Subnet bit count/prefix (Subnet prefix)
-                    KeyEntry $KB "$($VM.Item.Prefix)"
+                    Invoke-KeyEntry $KB "$($VM.Item.Prefix)"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
@@ -4240,27 +4242,27 @@ public class WindowObject
                     Start-Sleep 1
                 
                     # IPV6 WAN Tracking? (Can't hurt)
-                    KeyEntry $KB "y"
+                    Invoke-KeyEntry $KB "y"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Enable DHCP? (No, save DHCP for Windows Server)
-                    KeyEntry $KB "n"
+                    Invoke-KeyEntry $KB "n"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Revert to HTTP as the web GUI protocol? (No)
-                    KeyEntry $KB "n"
+                    Invoke-KeyEntry $KB "n"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Generate a new self-signed web GUI certificate? (Yes)
-                    KeyEntry $KB "y"
+                    Invoke-KeyEntry $KB "y"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
                     # Restore web GUI defaults? (Yes)
-                    KeyEntry $KB "y"
+                    Invoke-KeyEntry $KB "y"
                     $KB.TypeKey(13)
                     Start-Sleep 1
                 
@@ -4331,7 +4333,7 @@ public class WindowObject
                 Until ($Sum -gt 35)
                 $KB.TypeCtrlAltDel()
                 Start-Sleep 3
-                KeyEntry $KB "$($Main.Credential.GetNetworkCredential().Password)"
+                Invoke-KeyEntry $KB "$($Main.Credential.GetNetworkCredential().Password)"
                 $KB.TypeKey(13)
                 $C         = @()
                 Do
@@ -4349,7 +4351,7 @@ public class WindowObject
                         0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
                     } ) | Invoke-Expression
 
-                    Write-Host ("Booting [~] CFGSRV [{0}]" -f $Sum )
+                    Write-Host ("Await Idle [~] CFGSRV [{0}]" -f $Sum )
                 }
                 Until ($Sum -gt 50)
 
@@ -4420,7 +4422,7 @@ public class WindowObject
                 $X = 0
                 Do
                 {
-                    $Item  = $Main.Sr[$X].Item
+                    $Item  = $Main.Gw[$X].Item
                     $Names = "Hash Name Location Region Country Postal Timezone SiteLink SiteName Network Prefix Netmask Start End Range Broadcast".Split(" ")
 
                     $KB.TypeText('$Item = @{}')
@@ -4457,7 +4459,7 @@ public class WindowObject
                     Start-Sleep 3
 
                     $VM | Get-VMNetworkAdapter | Connect-VMNetworkAdapter -SwitchName $Item.Sitelink
-                    Start-Sleep 1
+                    Start-Sleep 3
                     $KB.PressKey(27)
 
                     Start-Sleep 4
@@ -4466,22 +4468,18 @@ public class WindowObject
                     $KB.PressKey(18)
                     $KB.TypeKey(9)
                     $KB.ReleaseKey(18)
-                    Start-Sleep 1
+                    Start-Sleep 2
 
                     $KB.PressKey(17)
                     $KB.TypeKey(76)
                     $KB.ReleaseKey(17)
-                    Start-Sleep 1
+                    Start-Sleep 2
                     $KB.TypeText("https://$($Item.Start)")
                     $KB.TypeKey(13)
-                    Start-Sleep 5
+                    Start-Sleep 8
 
                     # [Edge]-Browser Accept
-                    $KB.TypeKey(9)
-                    $KB.TypeKey(9)
-                    $KB.TypeKey(32)
-                    $KB.TypeKey(9)
-                    $KB.TypeKey(13)
+                    9,9,32,9,13 | % { $KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
                     Start-Sleep 3
 
                     # [Edge]-Login
@@ -4494,9 +4492,7 @@ public class WindowObject
 
                     # [Edge]-General Setup
                     $KB.PressKey(16)
-                    $KB.TypeKey(9)
-                    $KB.TypeKey(9)
-                    $KB.TypeKey(9)
+                    9,9,9|%{$KB.TypeKey($_); Start-Sleep -Milliseconds 100 }
                     $KB.ReleaseKey(16)
                     $KB.TypeKey(32)
                     Start-Sleep 2
@@ -4609,7 +4605,7 @@ public class WindowObject
                     $KB.PressKey(18)
                     $KB.TypeKey(9)
                     $KB.ReleaseKey(18)
-                    Start-Sleep 1
+                    Start-Sleep 2
                     $X ++
                 }
                 Until ($X -eq $Main.Gw.Count)
@@ -4652,15 +4648,21 @@ public class WindowObject
                 $KB.TypeKey(13)
                 Start-Sleep 2
 
+                $KB.TypeText('$Connection = Test-Connection 1.1.1.1 -Count 1 -EA 0; If ($Connection) { Remove-Item $Home\Desktop\IP* -Force -Verbose }')
+                $KB.TypeKey(13)
+                Start-Sleep 2
+
                 $KB.TypeText('Get-Process -Name msedge | Stop-Process; Stop-Computer')
                 $KB.TypeKey(13)
+                Start-Sleep 2
 
-                Write-Theme "Complete [+] Gateway Configuration"
+                Write-Theme "Complete $($Time.Elapsed) [+] Gateway Configuration"
             }
 
             No  
             {  
-                Write-Host "Cancelled dialog"
+                $Time.Stop()
+                Write-Host "Cancelled dialog [$($Time.Elapsed)]"
                 Break
             }
         }
@@ -4675,16 +4677,19 @@ public class WindowObject
         {
             Yes 
             {
-                0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Sr[$_].Name} -Throttle 2 -FunctionsToLoad KeyEntry -ScriptBlock {
+                0..($Main.Sr.Count - 1) | Start-RSJob -Name {$Main.Sr[$_].Name} -Throttle 2 -FunctionsToLoad Invoke-KeyEntry -ScriptBlock {
                     
                     $Main       = $Using:Main
+                    $X          = $_
+                    $Sr         = $Main.Sr[$X]
+                    $ID         = $Sr.Name
+                    $VMDisk     = $Sr.NewVHDPath
                     $Pass       = $Main.Credential.GetNetworkCredential().Password
                     $Domain     = $Main.CN
                     $Base       = $Main.SearchBase
                     $Cfg        = "CN=Configuration,$Base"
                     $DhcpOpt    = $Main.DHCP.OptionID
                     $DNS        = Get-NetAdapter | ? Name -match $Main.Vm.External.Name | Get-NetIPAddress | % IPAddress
-                    $X          = $_
 
                     # Time and logging
                     $T1        = [System.Diagnostics.Stopwatch]::StartNew()
@@ -4692,22 +4697,18 @@ public class WindowObject
                     $Log       = @{ }
 
                     # Grab server manifest
-                    $Sr        = $Main.Sr[$X]
-                    $ID        = $Sr.Name
-                    $VMDisk    = $Sr.NewVHDPath
 
                     $Log.Add($Log.Count,"[$($T1.Elapsed)][Beginning [~] Installation]")
                     Write-Host $Log[$Log.Count-1]
 
                     # Start
-                    $Sr.Start()
+                    Start-VM $ID -Verbose
 
                     # Set Msvm keyboard controls
-                    $Ctrl      = Get-WMIObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
+                    $Ctrl      = Get-WmiObject MSVM_ComputerSystem -NS Root\Virtualization\V2 | ? ElementName -eq $ID
                     $KB        = Get-WmiObject -Query "ASSOCIATORS OF {$($Ctrl.path.path)} WHERE resultClass = Msvm_Keyboard" -Namespace "root\virtualization\v2"
 
-                    # Connect to the VM
-                    Start-Process -FilePath vmconnect -ArgumentList @($Main.Vm.Host.ComputerName,$ID) -Verbose -Passthru
+                    Start-Sleep 1
                     $KB.TypeKey(13)
 
                     # Timer to initialize setup
@@ -5243,7 +5244,7 @@ public class WindowObject
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
-                    KeyEntry $KB "$Pass"
+                    Invoke-KeyEntry $KB "$Pass"
                     $KB.TypeKey(13)
                     Start-Sleep 2
 
@@ -5307,7 +5308,6 @@ public class WindowObject
                     Start-Sleep -Milliseconds 100
                 }
                 
-                $Time = [System.Diagnostics.Stopwatch]::StartNew()
                 Do
                 {
                     "[$($Time.Elapsed)]"
@@ -5320,12 +5320,14 @@ public class WindowObject
                 Until ($Complete.Count -ge $Main.Sr.Count)
                 
                 Get-RSJob | Remove-RSJob -Verbose
-                Write-Theme "Complete [+] Server Installation"
+                Write-Theme "Complete ($($Time.Elapsed)) [+] Server Installation"
             }
 
             No  
             {  
-                Write-Host "Cancelled dialog"
+                $Time.Stop()
+                Write-Host "Cancelled dialog [$($Time.Elapsed)]"
+                Break
             }
         }
     })
@@ -6243,3 +6245,5 @@ public class WindowObject
     
     $Xaml.Invoke()
 }
+
+# Add-Type -AssemblyName PresentationFramework; ( Get-Content $Home\Desktop\New-FEDeploymentShare.ps1 ) -join "`n" | Invoke-Expression; New-FEDeploymentShare

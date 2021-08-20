@@ -267,7 +267,8 @@ Function _MariaDB
 Function _PostFix
 {
     [CmdLetBinding()]Param(
-        [Parameter(Position=0)][String]$CertPath="/etc/ssl/certs"
+        [Parameter(Mandatory,Position=0)][String]$Name
+        [Parameter(Mandatory,Position=1)][String]$CertPath
     )
 
     # main.cf
@@ -329,7 +330,7 @@ Function _PostFix
     # [183] #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
     # [184] #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,
     # [185] #       mail.$mydomain, www.$mydomain, ftp.$mydomain
-    mydestination = $Network.Host.Hostname
+    mydestination = "$($Network.Host.Hostname), `$myhostname, localhost.`$mydomain, localhost"
 
     # [197] # local_recipient_maps = (i.e. empty).
     # [226] #local_recipient_maps = unix:passwd.byname $alias_maps
@@ -435,10 +436,10 @@ Function _PostFix
     # [693] sample_directory = /usr/share/doc/postfix/samples
     # [697] readme_directory = /usr/share/doc/postfix/README_FILES
     # [708] smtpd_tls_cert_file = /etc/pki/tls/certs/postfix.pem
-    smtpd_tls_cert_file = "$CertPath/$($Network.Host.DomainName).cer.pem"
+    smtpd_tls_cert_file = "$CertPath/$Name.cer.pem"
 
     # [714] smtpd_tls_key_file = /etc/pki/tls/private/postfix.key
-    smtpd_tls_key_file = "$CertPath/$($Network.Host.DomainName).key.pem"
+    smtpd_tls_key_file = "$CertPath/$Name.key.pem"
 
     # [719] smtpd_tls_security_level = may
     smtpd_tls_security_level = "may"
@@ -461,6 +462,11 @@ Function _PostFix
     smtp_tls_mandatory_protocols = "!SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
     smtp_tls_protocols = "!SSLv2, !SSLv3, !TLSv1, !TLSv1.1"
     smtputf8_enable = "no"
+    message_size_limit="52428800"
+    mailbox_size_limit="0"
+    smtp_address_preference = "ipv4"
+    smtpd_tls_loglevel = "1"
+    smtp_tls_loglevel = "1"
 
     }
 
@@ -513,6 +519,10 @@ Function _PostFix
 
 Function _Dovecot
 {
+    [CmdLetBinding()]Param(
+        [Parameter(Mandatory,Position=0)][String]$Name
+        [Parameter(Mandatory,Position=1)][String]$CertPath
+    )
     [String] $Name     = "securedigitsplus.com"
     [String] $CertPath = "/etc/ssl/certs"
 
@@ -536,7 +546,7 @@ Function _Dovecot
     $X = 0..($Content.Count-1) | ? { $Content[$_] -match "#mail_location"}
     $Content[$X] = "mail_location = maildir:~/Maildir"
 
-    $X = 0..($Content.Count-1) | ? { $Content[$_] -match "mail_privileged_group"}
+    $X ++
     $Content[$X] = "mail_privileged_group = mail"
 
     Set-Content -Path $Path -Value $Content -Verbose
@@ -552,13 +562,18 @@ Function _Dovecot
     [Object] $Content = Get-Content $Path
     [Object] $Value   = @( )
 
-    $X = 0..($Content.count-1) | ? { $Content[$_] -match "service lmtp"}
+    $X = 0..($Content.count-1) | ? { $Content[$_] -match "^service lmtp" }
     $Y = $X + 12
     0..($X-1) | % { $Value += $Content[$_] }
-    $LMTP = @("service lmtp {"," unix_listener /var/spool/postfix/private/dovecot-lmtp {",
-    "  mode = 0600","  user = postfix","  group = postfix"," }","}")
-    $Value += $LMTP
-    
+    $LMTP = @(
+        "service lmtp {",
+        " unix_listener /var/spool/postfix/private/dovecot-lmtp {",
+        "  mode = 0600",
+        "  user = postfix",
+        "  group = postfix",
+        " }",
+        "}")
+    $LMTP | % { $Value += $_ }
     $Y..($Content.Count-1) | % { $Value += $Content[$_] }
 
     Set-Content -Path $Path -Value $Value -Verbose
@@ -569,8 +584,15 @@ Function _Dovecot
     [Object] $Value   = @( )
 
     $X = 0..($Content.count-1) | ? { $Content[$_] -match "^service auth {"}
-    0..($X) | % { $Value += $Content[$_] }
-    $Value += @("  unix_listener /var/spool/postfix/private/auth {","    mode = 0600","    user = postfix","    group = postfix","    }")
+    0..($X-1) | % { $Value += $Content[$_] }
+    $Auth = @(
+        "service auth {",
+        "  unix_listener /var/spool/postfix/private/auth {",
+        "    mode = 0600",
+        "    user = postfix",
+        "    group = postfix",
+        "    }")
+    $Auth | % { $Value += $_ }
     ($X+18)..($Content.Count-1) | % { $Value += $Content[$_] }
 
     Set-Content -Path $Path -Value $Value -Verbose
@@ -589,7 +611,7 @@ Function _Dovecot
     $Content[$X] = $Content[$X].Replace("#","").Replace("%Lu","%n")
 
     $X = 0..($Content.count-1) | ? { $Content[$_] -match "auth_mechanisms" }
-    $Content[$X] = $Content[$X] += " login"
+    $Content[$X] = "$($Content[$X] + " login")"
 
     Set-Content -Path $Path -Value $Content -Verbose
 
@@ -601,8 +623,8 @@ Function _Dovecot
     [Object] $Content = Get-Content $Path
 
     $X = 0..($Content.Count-1) | ? { $Content[$_] -match "^ssl_cert" }
-    $Content[$X+0] = "ssl_cert = <$CertPath/$Name.cer"
-    $Content[$X+1] = "ssl_key = <$CertPath/$Name.key"
+    $Content[$X+0] = "ssl_cert = <$CertPath/$Name.cer.pem"
+    $Content[$X+1] = "ssl_key = <$CertPath/$Name.key.pem"
 
     $X = 0..($Content.Count-1) | ? { $Content[$_] -match "^#ssl_dh"}
     $Content[$X] = "ssl_dh = <$CertPath/dh.pem"
@@ -639,12 +661,14 @@ Function _Dovecot
     # Generate dh.pem #
     # --------------- #
 
-    sudo openssl dhparam -out $CertPath/dh.pem 4096
+    sudo openssl dhparam -out "$CertPath/dh.pem" 4096
 
     # ------- #
     # Restart #
     # ------- #
 
+    systemctl start dovecot
+    systemctl enable dovecot
     systemctl restart postfix dovecot
 }
 

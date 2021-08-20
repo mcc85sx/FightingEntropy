@@ -473,7 +473,7 @@ Function _PostFix
 
         mkdir -p $_
         $Value = "[Service];Restart=on-failure;RestartSec=5s".Split(";")
-        Set-Content -Path $_ -Value $Value -Verbose
+        Set-Content -Path "$_\restart.conf" -Value $Value -Verbose
     }
 
     # master.cf

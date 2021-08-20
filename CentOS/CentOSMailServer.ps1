@@ -269,6 +269,8 @@ Function _PostFix
     [CmdLetBinding()]Param(
         [Parameter(Position=0)][String]$CertPath="/etc/ssl/certs"
     )
+
+    # main.cf
     $Path     = "/etc/postfix/main.cf"
     $Content  = Get-Content $Path
     $Network  = _NetworkObject
@@ -433,10 +435,10 @@ Function _PostFix
     # [693] sample_directory = /usr/share/doc/postfix/samples
     # [697] readme_directory = /usr/share/doc/postfix/README_FILES
     # [708] smtpd_tls_cert_file = /etc/pki/tls/certs/postfix.pem
-    smtpd_tls_cert_file = "$CertPath/securedigitsplus.com.cer"
+    smtpd_tls_cert_file = "$CertPath/$($Network.Host.DomainName).cer.pem"
 
     # [714] smtpd_tls_key_file = /etc/pki/tls/private/postfix.key
-    smtpd_tls_key_file = "$CertPath/securedigitsplus.com.key"
+    smtpd_tls_key_file = "$CertPath/$($Network.Host.DomainName).key.pem"
 
     # [719] smtpd_tls_security_level = may
     smtpd_tls_security_level = "may"
@@ -445,7 +447,7 @@ Function _PostFix
     smtp_tls_CApath = $CertPath
 
     # [730] smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
-    smtp_tls_CAfile = "$CertPath/ca.cer"
+    smtp_tls_CAfile = "$CertPath/ca.crt"
 
     # [735] smtp_tls_security_level = may
     smtp_tls_security_level = "may"
@@ -464,48 +466,49 @@ Function _PostFix
 
     $Main.GetEnumerator() | % { postconf -e "$($_.Name)=$($_.Value)" }
 
-    $MasterPath = "/etc/postfix/master.cf"
-    $Master     = Get-Content $MasterPath
-    $Content    = @( )
+    $Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
+    Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
 
-    $Start      = 0..($Master.Count-1) | ? { $Master[$_] -match "#submission" }
-    $End        = 0..($Master.Count-1) | ? { $Master[$_] -match "#628"}
+    "/etc/systemd/system/postfix.service" | % { 
 
-    0..($Start-1) | % { $Content += $Master[$_] }
+        mkdir -p $_
+        $Value = "[Service];Restart=on-failure;RestartSec=5s".Split(";")
+        Set-Content -Path $_ -Value $Value -Verbose
+    }
+
+    # master.cf
+    $Content = ( Get-Content "/etc/postfix/master.cf" )
+
+    $Value   = @("submission     inet     n    -    y    -    -    smtpd",
+    "  -o syslog_name=postfix/submission",
+    "  -o smtpd_tls_security_level=encrypt",
+    "  -o smtpd_tls_wrappermode=no",
+    "  -o smtpd_sasl_auth_enable=yes",
+    "  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject",
+    "  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject",
+    "  -o smtpd_sasl_type=dovecot",
+    "  -o smtpd_sasl_path=private/auth",
+    "smtps     inet  n       -       y       -       -       smtpd",
+    "  -o syslog_name=postfix/smtps",
+    "  -o smtpd_tls_wrappermode=yes",
+    "  -o smtpd_sasl_auth_enable=yes",
+    "  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject",
+    "  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject",
+    "  -o smtpd_sasl_type=dovecot",
+    "  -o smtpd_sasl_path=private/auth")
+
+    Set-Content -Path $Path -Value @($Content[0..15];$Value;$Content[39..($Content.Count-1)])
+
+    firewall-cmd --permanent --add-port=25/tcp
     
-    # Submission...
-    $Submission  = @(
-    "#submission inet n       -       y       -       -       smtpd",
-    $master[$Start+1],
-    $master[$Start+2],
-    "#  -o smtpd_tls_wrappermode=no",
-    $master[$Start+3],
-    "#  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject",
-    "#  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject",
-    "#  -o smtpd_sasl_type=dovecot",
-    "#  -o smtpd_sasl_path=private/auth")
-    
-    # Smtps
-    $Smtps = @(
-    "#smtps     inet  n       -       y       -       -       smtpd",
-    $Master[$Start+13],
-    $Master[$Start+14],
-    $Master[$Start+15],
-    "#  -o syslog_name=postfix/smtps",
-    "#  -o smtpd_tls_wrappermode=yes",
-    "#  -o smtpd_sasl_auth_enable=yes",
-    "#  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject",
-    "#  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject",
-    "#  -o smtpd_sasl_type=dovecot",
-    "#  -o smtpd_sasl_path=private/auth")
-    ($Submission,$Smtps).Replace("#","") | % { $Content += $_ }
-    $End..($Master.Count-1) | % { $Content += $master[$_] }
-
-    Set-Content -Path $MasterPath -Value $Content -Verbose
-
     systemctl start postfix
     systemctl enable postfix
     systemctl restart postfix
+
+    "http","https","smtp-submission","smtps","imap","imaps" | % { 
+
+        firewall-cmd --permanent --add-service=$_
+    }
 }
 
 Function _Dovecot

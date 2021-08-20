@@ -472,15 +472,14 @@ Function _PostFix
 
     $Main.GetEnumerator() | % { postconf -e "$($_.Name)=$($_.Value)" }
 
-    #$Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
-    #Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
+    $Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
+    Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
 
-    "/etc/systemd/system/postfix.service" | % { 
-
-        mkdir -p $_
-        $Value = "[Service];Restart=on-failure;RestartSec=5s".Split(";")
-        Set-Content -Path "$_\restart.conf" -Value $Value -Verbose
-    }
+    $Path = "/etc/systemd/system/postfix.service"
+    $Value = "[Service];Restart=on-failure;RestartSec=5s" -Split ";"
+    
+    mkdir -p $Path
+    Set-Content -Path "$Path/restart.conf" -Value $Value -Verbose
 
     # master.cf
     $Content = ( Get-Content "/etc/postfix/master.cf" )

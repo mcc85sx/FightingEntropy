@@ -472,8 +472,8 @@ Function _PostFix
 
     $Main.GetEnumerator() | % { postconf -e "$($_.Name)=$($_.Value)" }
 
-    $Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
-    Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
+    #$Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
+    #Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
 
     "/etc/systemd/system/postfix.service" | % { 
 

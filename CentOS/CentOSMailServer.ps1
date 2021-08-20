@@ -271,6 +271,9 @@ Function _PostFix
         [Parameter(Mandatory,Position=1)][String]$CertPath
     )
 
+    systemctl start postfix
+    systemctl enable postfix
+    
     # main.cf
     $Path     = "/etc/postfix/main.cf"
     $Content  = Get-Content $Path
@@ -510,9 +513,7 @@ Function _PostFix
     Set-Content -Path $Path -Value @($Content[0..15];$Value;$Content[39..($Content.Count-1)])
 
     firewall-cmd --permanent --add-port=25/tcp
-    
-    systemctl start postfix
-    systemctl enable postfix
+   
     systemctl restart postfix
 
     "http","https","smtp-submission","smtps","imap","imaps" | % { 

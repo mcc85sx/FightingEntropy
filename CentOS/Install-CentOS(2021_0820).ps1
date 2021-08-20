@@ -541,7 +541,7 @@ $KB.TypeKey(13)
 Start-Sleep 2
 
 # Enter password
-Invoke-KeyEntry $KB $Kerb.GetNetworkCredential().Password
+Invoke-KeyEntry $KB "$($Kerb.GetNetworkCredential().Password)"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 Start-Sleep 2
@@ -562,7 +562,7 @@ Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$zone.p12 -out /etc/ssl/c
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 
-Invoke-KeyEntry $KB $P12.GetNetworkCredential().Password
+Invoke-KeyEntry $KB "$($P12.GetNetworkCredential().Password)"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 Start-Sleep 2
@@ -572,7 +572,7 @@ Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$zone.p12 -out /etc/ssl/c
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 
-Invoke-KeyEntry $KB $P12.GetNetworkCredential().Password
+Invoke-KeyEntry $KB "$($P12.GetNetworkCredential().Password)"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 Start-Sleep 2
@@ -599,7 +599,7 @@ Write-Host $Log[$Log.Count-1]
 Start-Sleep 10
 
 # Configure & Start Postfix
-Invoke-KeyEntry $KB "_PostFix"
+Invoke-KeyEntry $KB "_PostFix securedigitsplus.com /etc/ssl/certs"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting PostFix")
@@ -607,7 +607,7 @@ Write-Host $Log[$Log.Count-1]
 Start-Sleep 10
 
 # Configure & Start Dovecot
-Invoke-KeyEntry $KB "_Dovecot"
+Invoke-KeyEntry $KB "_Dovecot securedigitsplus.com /etc/ssl/certs"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting Dovecot")

@@ -482,7 +482,8 @@ Function _PostFix
     Set-Content -Path "$Path/restart.conf" -Value $Value -Verbose
 
     # master.cf
-    $Content = ( Get-Content "/etc/postfix/master.cf" )
+    $Path = "/etc/postfix/master.cf"
+    $Content = ( Get-Content $Path )
 
     $Value   = @("submission     inet     n    -    y    -    -    smtpd",
     "  -o syslog_name=postfix/submission",

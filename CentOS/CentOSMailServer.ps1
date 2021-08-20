@@ -267,7 +267,7 @@ Function _MariaDB
 Function _PostFix
 {
     [CmdLetBinding()]Param(
-        [Parameter(Mandatory,Position=0)][String]$Name
+        [Parameter(Mandatory,Position=0)][String]$Name,
         [Parameter(Mandatory,Position=1)][String]$CertPath
     )
 
@@ -520,11 +520,9 @@ Function _PostFix
 Function _Dovecot
 {
     [CmdLetBinding()]Param(
-        [Parameter(Mandatory,Position=0)][String]$Name
+        [Parameter(Mandatory,Position=0)][String]$Name,
         [Parameter(Mandatory,Position=1)][String]$CertPath
     )
-    [String] $Name     = "securedigitsplus.com"
-    [String] $CertPath = "/etc/ssl/certs"
 
     # ------------ #
     # Dovecot.conf #
@@ -583,7 +581,7 @@ Function _Dovecot
     [Object] $Content = Get-Content $Path
     [Object] $Value   = @( )
 
-    $X = 0..($Content.count-1) | ? { $Content[$_] -match "^service auth {"}
+    $X = 0..($Content.count-1) | ? { $Content[$_] -match "^service auth {" }
     0..($X-1) | % { $Value += $Content[$_] }
     $Auth = @(
         "service auth {",

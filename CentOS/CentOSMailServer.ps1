@@ -478,7 +478,11 @@ Function _PostFix
     $Path = "/etc/systemd/system/postfix.service"
     $Value = "[Service];Restart=on-failure;RestartSec=5s" -Split ";"
     
-    mkdir -p $Path
+    If (!(Test-Path $Path))
+    {
+        mkdir -p $Path
+    }
+    
     Set-Content -Path "$Path/restart.conf" -Value $Value -Verbose
 
     # master.cf

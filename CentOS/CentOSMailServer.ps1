@@ -626,7 +626,7 @@ Function _Dovecot
     [Object] $Content = Get-Content $Path
 
     $X = 0..($Content.Count-1) | ? { $Content[$_] -match "^ssl_cert" }
-    $Content[$X+0] = "ssl_cert = <$CertPath/$Name.cer.pem"
+    $Content[$X+0] = "ssl_cert = <$CertPath/$Name.crt.pem"
     $Content[$X+1] = "ssl_key = <$CertPath/$Name.key.pem"
 
     $X = 0..($Content.Count-1) | ? { $Content[$_] -match "^#ssl_dh"}

@@ -564,7 +564,6 @@ Function _Dovecot
         "  mode = 0600",
         "  user = postfix",
         "  group = postfix",
-        " }",
         "}")
     $LMTP | % { $Value += $_ }
     $Y..($Content.Count-1) | % { $Value += $Content[$_] }

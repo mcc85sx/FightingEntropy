@@ -1,8 +1,26 @@
-$Kerb   = Get-Credential # Kerberos Administrator
-$Unix   = Get-Credential root # Unix Administrator
-$P12    = Get-Credential p12
-$Server = "dsc0.securedigitsplus.com"
-$Share  = "cert"
+#    ____                                                                                                    ________    
+#   //¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯\\   
+#   //¯¯\\__[ Section    ]__________________________________________________________________________________//¯¯\\__//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯\\   
+#   //¯¯¯                                                                                                           //   
+#   \\       Install CentOS Server [2021-08-20]                                                                     \\   
+#   //                                                                                                              //   
+#   \\       Module: [FightingEntropy(π)][(2021.8.0)]                                                               \\   
+#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0820).ps1    //    
+#   \\         Name: mail.securedigitsplus.com                                                                      \\   
+#   //                                                                                                           ___//   
+#   \\___                                                                                                    ___//¯¯\\   
+#   //¯¯\\__________________________________________________________________________________________________//¯¯¯___//   
+#   \\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\__//¯¯¯    
+#    ¯¯¯\\__[ Press enter to continue    ]__________________________________________________________________//¯¯¯        
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
+
+$Kerb                  = Get-Credential      #    Kerberos Administrator
+$Unix                  = Get-Credential root #        Unix Administrator
+$P12                   = Get-Credential p12  # Certificate Administrator
+$Server                = "dsc0.securedigitsplus.com"
+$Share                 = "cert"
 
 Import-Module FightingEntropy
 
@@ -12,6 +30,7 @@ Start-Sleep 1
 $Zone                  = "securedigitsplus.com"
 $Scope                 = Get-DhcpServerv4Scope
 $ID                    = "mail"
+$IP                    = "172.16.0.21"
 
 $VMSwitch              = Get-VMSwitch | ? SwitchType -eq External | % Name
 $ISOPath               = "C:\Images\CentOS-8.4.2105-x86_64-boot.iso"
@@ -64,7 +83,7 @@ Stop-VM -Name $Name -Confirm:$False -Force -Verbose
 $VMNet = Get-VMNetworkAdapter -VMName $Name
 $DHCP  = Get-DhcpServerv4Reservation $Scope.ScopeID
 
-If ( "172.16.0.21" -notin $DHCP.IPAddress.IPAddressToString )
+If ( $IP -notin $DHCP.IPAddress.IPAddressToString )
 {
     $Obj             = @{
     
@@ -76,9 +95,9 @@ If ( "172.16.0.21" -notin $DHCP.IPAddress.IPAddressToString )
     }
     Add-DhcpServerV4Reservation @Obj -Verbose
 }
-If ("172.16.0.21" -in $DHCP.IPAddress.IPAddressToString )
+If ( $IP -in $DHCP.IPAddress.IPAddressToString )
 {
-    Set-DhcpServerv4Reservation -IPAddress "172.16.0.21" -ClientID $VMNet.MacAddress -Verbose
+    Set-DhcpServerv4Reservation -IPAddress $IP -ClientID $VMNet.MacAddress -Verbose
 }
 
 #  ____                                                                                                    ________    
@@ -335,9 +354,6 @@ Write-Host $Log[$Log.Count-1]
 
 Do
 {
-    Start-Sleep -Seconds 1
-    $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Finalizing...")
-    Write-Host $Log[$Log.count-1]
     $Item     = Get-VM -Name $Name
     
     Switch($Item.CPUUsage)
@@ -345,6 +361,11 @@ Do
         0       { $C +=   1  }
         Default { $C  = @( ) }
     }
+
+    $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Finalizing...")
+    Write-Host $Log[$Log.Count-1]
+
+    Start-Sleep -Seconds 1
 }
 Until($C.Count -gt 30)
 
@@ -364,10 +385,10 @@ $KB.TypeKey(13)
 
 Do
 {
-    Start-Sleep -Seconds 1
     $Item = Get-VM -Name $Name
     $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Rebooting...")
     Write-Host $Log[$Log.Count-1]
+    Start-Sleep -Seconds 1
 }
 Until ($Item.Uptime.TotalSeconds -le 5)
 
@@ -462,27 +483,28 @@ Do
         0 { 0 } 1 { $C } Default { (0..($C.Count-1) | % {$C[$_]*$_}) -join "+" }
     } ) | Invoke-Expression
 
-    Start-Sleep -Seconds 1
     $Log.Add($Log.Count,"[$($Time.Elapsed)][CentOS [~] Installing Packages][Inactivity:$Sum/100]")
     Write-Host $Log[$Log.Count-1]
+
+    Start-Sleep -Seconds 1
 }
 Until($Sum -ge 100)
 
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [+] Packages installed")
 Write-Host $Log[$Log.Count-1]
 
-# Join Kerberos realm
-Invoke-KeyEntry $KB "realm join -v -U $($Kerb.Username)"
-Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
-Start-Sleep 2
-$Pass = $Kerb.GetNetworkCredential().Password
-Invoke-KeyEntry $KB "$Pass"
-Start-Sleep -Milliseconds 100
-$KB.TypeKey(13)
-$Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Joining Kerberos")
-Write-Host $Log[$Log.Count-1]
-Start-Sleep 10
+# Join Kerberos realm (Not sure why this fails a lot/Commented out)
+# Invoke-KeyEntry $KB "realm join -v -U $($Kerb.Username)"
+# Start-Sleep -Milliseconds 100
+# $KB.TypeKey(13)
+# Start-Sleep 2
+# $Pass = $Kerb.GetNetworkCredential().Password
+# Invoke-KeyEntry $KB "$Pass"
+# Start-Sleep -Milliseconds 100
+# $KB.TypeKey(13)
+# $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Joining Kerberos")
+# Write-Host $Log[$Log.Count-1]
+# Start-Sleep 10
 
 #    ____    ____________________________________________________________________________________________________        
 #   //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
@@ -574,7 +596,7 @@ ForEach ( $Cert in "ca.crt","securedigitsplus.com.p12" )
 }
 
 # Extract Certificate from p12
-Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$zone.p12 -out /etc/ssl/certs/$zone.crt.pem -clcerts -nokeys"
+Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$Zone.p12 -out /etc/ssl/certs/$Zone.crt.pem -clcerts -nokeys"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 
@@ -584,7 +606,7 @@ $KB.TypeKey(13)
 Start-Sleep 2
 
 # Extract Key from p12
-Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$zone.p12 -out /etc/ssl/certs/$zone.key.pem -nocerts -nodes"
+Invoke-KeyEntry $KB "openssl pkcs12 -in /etc/ssl/certs/$Zone.p12 -out /etc/ssl/certs/$Zone.key.pem -nocerts -nodes"
 Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 
@@ -620,7 +642,7 @@ Start-Sleep -Milliseconds 100
 $KB.TypeKey(13)
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting PostFix")
 Write-Host $Log[$Log.Count-1]
-Start-Sleep 10
+Start-Sleep 15
 
 # Configure & Start Dovecot
 Invoke-KeyEntry $KB "_Dovecot securedigitsplus.com /etc/ssl/certs"
@@ -630,7 +652,12 @@ $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Configuring & Starting Doveco
 Write-Host $Log[$Log.Count-1]
 Start-Sleep 1 
 
-# Creating Diffie-Hellman dh.pem
+#    ____    ____________________________________________________________________________________________________        
+#   //¯¯\\__//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\\___    
+#   \\__//¯¯¯ Create [~] Diffie-Hellman [dh.pem] (Like compiling a Q3 map. Approx 43m on 2x core)            ___//¯¯\\   
+#    ¯¯¯\\__________________________________________________________________________________________________//¯¯\\__//   
+#        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯    ¯¯¯¯    
+
 $T2 = [System.Diagnostics.Stopwatch]::StartNew()
 $C = @( )
 Do
@@ -841,7 +868,7 @@ Start-Sleep 1
 #    ¯¯¯\\__[ Straggler configuration    ]__________________________________________________________________//¯¯¯        
 #        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯            
 
-Write-Theme "Straggler configuration"
+Write-Theme "Straggler configuration" 14,6,15
 
 # Apache/Roundcube files/folders path
 Invoke-KeyEntry $KB "chown apache:apache /var/www/roundcube -R"
@@ -895,7 +922,7 @@ ForEach ( $Item in "php-fpm","httpd" )
     }
 }
 
-# Start Apache for real
+# Start Apache for *real*...
 Invoke-KeyEntry $KB "setsebool -P httpd_execmem 1"
 Start-Sleep -Milliseconds 100
 $Log.Add($Log.Count,"[$($Time.Elapsed)] CentOS [~] Fully start Apache")
@@ -933,3 +960,6 @@ Write-Host $Log[$Log.Count-1]
 
 $Name = Get-Date -UFormat %Y_%d%m_%H%M%S
 Set-Content -Path "$home\Desktop\$Name.log" -Value ( 0..($Log.Count-1) | % { $Log[$_] } ) -Verbose
+
+# Add user account
+# Postconfigure http://(fqdn)/installer

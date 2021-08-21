@@ -7,7 +7,7 @@
 #   \\       Install CentOS Server [2021-08-20]                                                                     \\   
 #   //                                                                                                              //   
 #   \\       Module: [FightingEntropy(π)][(2021.8.0)]                                                               \\   
-#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0820).ps1    //    
+#   //          URL: https://github.com/mcc85sx/FightingEntropy/blob/master/CentOS/Install-CentOS(2021_0820)(1).ps1 //    
 #   \\         Name: mail.securedigitsplus.com                                                                      \\   
 #   //                                                                                                           ___//   
 #   \\___                                                                                                    ___//¯¯\\   

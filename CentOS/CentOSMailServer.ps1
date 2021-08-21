@@ -439,7 +439,7 @@ Function _PostFix
     # [693] sample_directory = /usr/share/doc/postfix/samples
     # [697] readme_directory = /usr/share/doc/postfix/README_FILES
     # [708] smtpd_tls_cert_file = /etc/pki/tls/certs/postfix.pem
-    smtpd_tls_cert_file = "$CertPath/$Name.cer.pem"
+    smtpd_tls_cert_file = "$CertPath/$Name.crt.pem"
 
     # [714] smtpd_tls_key_file = /etc/pki/tls/private/postfix.key
     smtpd_tls_key_file = "$CertPath/$Name.key.pem"
@@ -477,16 +477,6 @@ Function _PostFix
 
     $Content = ( Get-Content "/etc/aliases" ) -Replace "postmaster:\s+root","postmaster: username"
     Set-Content -Path "/etc/aliases" -Value $Content -Verbose 
-
-    $Path = "/etc/systemd/system/postfix.service"
-    $Value = "[Service];Restart=on-failure;RestartSec=5s" -Split ";"
-    
-    If (!(Test-Path $Path))
-    {
-        mkdir -p $Path
-    }
-    
-    Set-Content -Path "$Path/restart.conf" -Value $Value -Verbose
 
     # master.cf
     $Path = "/etc/postfix/master.cf"

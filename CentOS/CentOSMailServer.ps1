@@ -333,7 +333,7 @@ Function _PostFix
     # [183] #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
     # [184] #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,
     # [185] #       mail.$mydomain, www.$mydomain, ftp.$mydomain
-    mydestination = "$($Network.Host.Hostname), `$myhostname, localhost.`$mydomain, localhost"
+    mydestination = "$($Network.Host.Domain), $($Network.Host.Hostname), `$myhostname, localhost.`$mydomain, localhost"
 
     # [197] # local_recipient_maps = (i.e. empty).
     # [226] #local_recipient_maps = unix:passwd.byname $alias_maps

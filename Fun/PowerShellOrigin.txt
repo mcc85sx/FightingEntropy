@@ -1,0 +1,37 @@
+Once upon a time, there were a bunch of experts at sitting around.
+Pounding away at their keyboards… 
+...at the location where the world’s best software engineering takes place.
+1 Microsoft Way, Redmond WA 98052
+
+It was just another day at the office, when suddenly... 
+...one of those experts said to another…
+
+Expert #1: Hey, you know what? 
+Expert #2: ...what?
+Expert #1: We need an extremely versatile AND powerful tool, to get stuff done.
+Expert #2: But we have a lot of those already.
+Expert #1: Yeah, but… we have a lot of those already.
+Expert #2: I just said that...
+Expert #1: I meant that we have way too many. 
+Expert #2: *sigh* Man… you’re right.
+Expert #1: We need to find a way to join them together into one powerful tool.
+Expert #2: That’s… nonsense man. How could we do that…?
+Expert #1: Suppose we had something that could run them all?
+Expert #2: Isn’t that what cmd.exe is for?
+Expert #1: Yeah… but- we could make a way better cmd.exe
+Expert #2: ...could we?
+Expert #1: I don’t know man. We have to think of a way.
+Expert #2: I am inclined to agree.
+Expert #1: It’s gotta be something that doesn’t need to be compiled, to run.
+Expert #2: You’re blowing my mind right now. I’ve been thinking the same thing.
+
+And so, the race was on in order to build this extremely versatile AND powerful tool.
+
+At which point, days later... an expert came bursting into the room with an idea.
+An idea that sounded cool, but also worked incredibly well, too.
+That idea eventually became…
+“PowerShell”.
+
+For years, people used BASIC to develop applications.
+Then, a guy by the name of Jeffrey Snover told red rover to move over…
+...and now we have PowerShell 7.

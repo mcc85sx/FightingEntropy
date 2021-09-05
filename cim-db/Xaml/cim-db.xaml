@@ -128,18 +128,18 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Name="UID_Tab">
+            <Button Grid.Row="0" Name="Tab_UID">
                 <Image Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\sdplogo.png"/>
             </Button>
-            <Button Grid.Row="1" Name="Client_Tab"    HorizontalContentAlignment="Right" Content="Client"/>
-            <Button Grid.Row="2" Name="Service_Tab"   HorizontalContentAlignment="Right" Content="Service"/>
-            <Button Grid.Row="3" Name="Device_Tab"    HorizontalContentAlignment="Right" Content="Device"/>
-            <Button Grid.Row="4" Name="Issue_Tab"     HorizontalContentAlignment="Right" Content="Issue"/>
-            <Button Grid.Row="5" Name="Purchase_Tab"  HorizontalContentAlignment="Right" Content="Purchase"/>
-            <Button Grid.Row="6" Name="Inventory_Tab" HorizontalContentAlignment="Right" Content="Inventory"/>
-            <Button Grid.Row="7" Name="Expense_Tab"   HorizontalContentAlignment="Right" Content="Expense"/>
-            <Button Grid.Row="8" Name="Account_Tab"   HorizontalContentAlignment="Right" Content="Account"/>
-            <Button Grid.Row="9" Name="Invoice_Tab"   HorizontalContentAlignment="Right" Content="Invoice"/>
+            <Button Grid.Row="1" Name="Tab_Client"    HorizontalContentAlignment="Right" Content="Client"/>
+            <Button Grid.Row="2" Name="Tab_Service"   HorizontalContentAlignment="Right" Content="Service"/>
+            <Button Grid.Row="3" Name="Tab_Device"    HorizontalContentAlignment="Right" Content="Device"/>
+            <Button Grid.Row="4" Name="Tab_Issue"     HorizontalContentAlignment="Right" Content="Issue"/>
+            <Button Grid.Row="5" Name="Tab_Purchase"  HorizontalContentAlignment="Right" Content="Purchase"/>
+            <Button Grid.Row="6" Name="Tab_Inventory" HorizontalContentAlignment="Right" Content="Inventory"/>
+            <Button Grid.Row="7" Name="Tab_Expense"   HorizontalContentAlignment="Right" Content="Expense"/>
+            <Button Grid.Row="8" Name="Tab_Account"   HorizontalContentAlignment="Right" Content="Account"/>
+            <Button Grid.Row="9" Name="Tab_Invoice"   HorizontalContentAlignment="Right" Content="Invoice"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -232,7 +232,7 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Name="Get_Client_Result" ItemsSource="{Binding Client}" Margin="5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DisplayNameName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
+                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
                             <DataGridTemplateColumn Header="Email" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -412,11 +412,11 @@
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Client_Issue_Result" ItemsSource="{Binding Issue}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="*"/>
-                                        <DataGridTextColumn Header="Status"      Binding="{Binding Record.Status}"      Width="*"/>
-                                        <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="*"/>
-                                        <DataGridTextColumn Header="Client"      Binding="{Binding Record.Client}"      Width="*"/>
-                                        <DataGridTextColumn Header="Device"      Binding="{Binding Record.Device}"      Width="*"/>
+                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="200"/>
+                                        <DataGridTextColumn Header="Status"      Binding="{Binding Record.Status}"      Width="100"/>
+                                        <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="150"/>
+                                        <DataGridTextColumn Header="Client"      Binding="{Binding Record.Client}"      Width="150"/>
+                                        <DataGridTextColumn Header="Device"      Binding="{Binding Record.Device}"      Width="150"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -437,7 +437,7 @@
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="40"/>
-                               </Grid.RowDefinitions>
+                                </Grid.RowDefinitions>
                                 <Grid Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
@@ -448,12 +448,12 @@
                                 </Grid>
                                 <DataGrid     Grid.Row="1"    Name="Mod_Client_Invoice_Result" ItemsSource="{Binding Invoice}" Margin="5">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}"   Width="*"/>
-                                        <DataGridTextColumn Header="Mode"        Binding="{Binding Record.Mode}"   Width="*"/>
-                                        <DataGridTextColumn Header="Date"        Binding="{Binding Record.Date}"   Width="*"/>
-                                        <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"   Width="*"/>
-                                        <DataGridTextColumn Header="Phone"       Binding="{Binding Record.Phone}"  Width="*"/>
-                                        <DataGridTextColumn Header="Email"       Binding="{Binding Record.Email}"  Width="*"/>
+                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}"   Width="200"/>
+                                        <DataGridTextColumn Header="Mode"        Binding="{Binding Record.Mode}"   Width="150"/>
+                                        <DataGridTextColumn Header="Date"        Binding="{Binding Record.Date}"   Width="150"/>
+                                        <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"   Width="150"/>
+                                        <DataGridTextColumn Header="Phone"       Binding="{Binding Record.Phone}"  Width="100"/>
+                                        <DataGridTextColumn Header="Email"       Binding="{Binding Record.Email}"  Width="150"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -468,7 +468,7 @@
                                 </Grid>
                             </Grid>
                         </TabItem>
-                    </TabControl> 
+                    </TabControl>
                 </Grid>
             </Grid>
             <Grid Grid.Row="0">
@@ -731,25 +731,25 @@
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Issue_Client_Result" ItemsSource="{Binding Client}">
                                     <DataGrid.Columns>
-                                <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
-                                <DataGridTemplateColumn Header="Email" Width="150">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Phone" Width="100">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>
-                                <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
-                                <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
-                                <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
+                                        <DataGridTemplateColumn Header="Email" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Phone" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>
+                                        <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
+                                        <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
+                                        <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -884,7 +884,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>                            
+                            <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>
                             <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -1092,8 +1092,8 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="Get_Expense_Result" ItemsSource="{Binding Expense}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Recipient"    Binding="{Binding Record.Recipient}"   Width="*"/>
-                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="1.5*"/>
+                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="200"/>
+                            <DataGridTextColumn Header="Recipient"    Binding="{Binding Record.Recipient}"   Width="200"/>
                             <DataGridTemplateColumn Header="IsAccount" Width="60">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -1103,9 +1103,9 @@
                                         </ComboBox>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>   
-                            <DataGridTextColumn Header="Account"      Binding="{Binding Record.Account}"     Width="*"/>
-                            <DataGridTextColumn Header="Cost"         Binding="{Binding Record.Cost}"        Width="0.5*"/>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Account"      Binding="{Binding Record.Account}"     Width="100"/>
+                            <DataGridTextColumn Header="Cost"         Binding="{Binding Record.Cost}"        Width="80"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1244,7 +1244,16 @@
                         <RowDefinition Height="180"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="[Mode]">
-                        <ComboBox Name="Mod_Invoice_Mode_List"/>
+                        <ComboBox Name="Mod_Invoice_Mode_List">
+                            <ComboBoxItem Content="Issue"/>
+                            <ComboBoxItem Content="Purchase"/>
+                            <ComboBoxItem Content="Inventory"/>
+                            <ComboBoxItem Content="Issue/Purchase"/>
+                            <ComboBoxItem Content="Issue/Inventory"/>
+                            <ComboBoxItem Content="Purchase/Inventory"/>
+                            <ComboBoxItem Content="Issue/Purchase/Inventory"/>
+                            <ComboBoxItem Content="-"/>
+                        </ComboBox>
                     </GroupBox>
                     <TabControl Grid.Row="1">
                         <TabItem Header="Client">
@@ -1263,28 +1272,28 @@
                                     <TextBox  Grid.Column="1" Name="Mod_Invoice_Client_Filter"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Invoice_Client_Result" ItemsSource="{Binding Client}">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="DisplayNameName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
-                                            <DataGridTemplateColumn Header="Email" Width="150">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Header="Phone" Width="100">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>
-                                            <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
-                                            <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
-                                            <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="DisplayNameName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
+                                        <DataGridTemplateColumn Header="Email" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Phone" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>
+                                        <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
+                                        <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
+                                        <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                                 <Grid Grid.Row="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="40"/>
@@ -1385,7 +1394,7 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>                            
+                                        <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>
                                         <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>
                                     </DataGrid.Columns>
                                 </DataGrid>

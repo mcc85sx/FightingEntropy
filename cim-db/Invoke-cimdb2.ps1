@@ -44,1565 +44,1499 @@ Function Invoke-cimdb2
         }
     }
 
-    # (Get-Content $home\desktop\cim-db.xaml).Replace("'",'"') | % { "        '$_'," } | Set-Clipboard
+    # (Get-Content $home\desktop\cim-db(1).xaml).Replace("'",'"') | % { "        '$_'," } | Set-Clipboard
     Class cimdbGUI
     {
-        Static [String] $Tab = @(        '<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     Title="[FightingEntropy]://(Company Information Management Database)"      Height="680"      Width="800"     Topmost="True"      ResizeMode="NoResize"      Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico"      HorizontalAlignment="Center"      WindowStartupLocation="CenterScreen"     FontFamily="Consolas"     Background="LightYellow">',
-        '    <Window.Resources>',
-        '        <Style TargetType="ToolTip">',
-        '            <Setter Property="Background" Value="#000000"/>',
-        '            <Setter Property="Foreground" Value="#66D066"/>',
-        '        </Style>',
-        '        <Style TargetType="TabItem">',
-        '            <Setter Property="FontSize" Value="15"/>',
-        '            <Setter Property="FontWeight" Value="Heavy"/>',
-        '            <Setter Property="Template">',
-        '                <Setter.Value>',
-        '                    <ControlTemplate TargetType="TabItem">',
-        '                        <Border Name="Border" BorderThickness="2" BorderBrush="Black" CornerRadius="2" Margin="2">',
-        '                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>',
-        '                        </Border>',
-        '                        <ControlTemplate.Triggers>',
-        '                            <Trigger Property="IsSelected" Value="True">',
-        '                                <Setter TargetName="Border" Property="Background" Value="#4444FF"/>',
-        '                                <Setter Property="Foreground" Value="#FFFFFF"/>',
-        '                            </Trigger>',
-        '                            <Trigger Property="IsSelected" Value="False">',
-        '                                <Setter TargetName="Border" Property="Background" Value="#DFFFBA"/>',
-        '                                <Setter Property="Foreground" Value="#000000"/>',
-        '                            </Trigger>',
-        '                        </ControlTemplate.Triggers>',
-        '                    </ControlTemplate>',
-        '                </Setter.Value>',
-        '            </Setter>',
-        '        </Style>',
-        '        <Style TargetType="Button">',
-        '            <Setter Property="Margin" Value="5"/>',
-        '            <Setter Property="Padding" Value="5"/>',
-        '            <Setter Property="FontSize" Value="15"/>',
-        '            <Setter Property="FontWeight" Value="Heavy"/>',
-        '            <Setter Property="Foreground" Value="Black"/>',
-        '            <Setter Property="Background" Value="#DFFFBA"/>',
-        '            <Setter Property="BorderThickness" Value="2"/>',
-        '            <Setter Property="VerticalContentAlignment" Value="Center"/>',
-        '            <Style.Resources>',
-        '                <Style TargetType="Border">',
-        '                    <Setter Property="CornerRadius" Value="2"/>',
-        '                </Style>',
-        '            </Style.Resources>',
-        '        </Style>',
-        '        <Style TargetType="TextBox">',
-        '            <Setter Property="Height" Value="24"/>',
-        '            <Setter Property="Margin" Value="4"/>',
-        '            <Setter Property="FontSize" Value="12"/>',
-        '            <Setter Property="VerticalContentAlignment" Value="Center"/>',
-        '            <Setter Property="BorderThickness" Value="2"/>',
-        '            <Setter Property="Foreground" Value="#000000"/>',
-        '            <Style.Resources>',
-        '                <Style TargetType="Border">',
-        '                    <Setter Property="CornerRadius" Value="2"/>',
-        '                </Style>',
-        '            </Style.Resources>',
-        '        </Style>',
-        '        <Style TargetType="ComboBox">',
-        '            <Setter Property="Height" Value="24"/>',
-        '            <Setter Property="Margin" Value="5"/>',
-        '            <Setter Property="FontSize" Value="12"/>',
-        '            <Setter Property="FontWeight" Value="Normal"/>',
-        '        </Style>',
-        '        <Style TargetType="DataGrid">',
-        '            <Setter Property="Margin" Value="5"/>',
-        '            <Setter Property="AutoGenerateColumns" Value="False"/>',
-        '            <Setter Property="AlternationCount" Value="2"/>',
-        '            <Setter Property="HeadersVisibility" Value="Column"/>',
-        '            <Setter Property="CanUserResizeRows" Value="False"/>',
-        '            <Setter Property="CanUserAddRows" Value="False"/>',
-        '            <Setter Property="IsReadOnly" Value="True"/>',
-        '            <Setter Property="IsTabStop" Value="True"/>',
-        '            <Setter Property="IsTextSearchEnabled" Value="True"/>',
-        '            <Setter Property="SelectionMode" Value="Extended"/>',
-        '            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>',
-        '            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>',
-        '            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>',
-        '        </Style>',
-        '        <Style TargetType="DataGridRow">',
-        '            <Style.Triggers>',
-        '                <Trigger Property="AlternationIndex" Value="0">',
-        '                    <Setter Property="Background" Value="White"/>',
-        '                </Trigger>',
-        '                <Trigger Property="AlternationIndex" Value="1">',
-        '                    <Setter Property="Background" Value="#FFD6FFFB"/>',
-        '                </Trigger>',
-        '                <Trigger Property="IsMouseOver" Value="True">',
-        '                    <Setter Property="ToolTip">',
-        '                        <Setter.Value>',
-        '                            <TextBlock TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>',
-        '                        </Setter.Value>',
-        '                    </Setter>',
-        '                    <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>',
-        '                </Trigger>',
-        '            </Style.Triggers>',
-        '        </Style>',
-        '        <Style TargetType="DataGridColumnHeader">',
-        '            <Setter Property="FontSize"   Value="12"/>',
-        '            <Setter Property="FontWeight" Value="Normal"/>',
-        '        </Style>',
-        '        <Style TargetType="TabControl">',
-        '            <Setter Property="TabStripPlacement" Value="Top"/>',
-        '            <Setter Property="HorizontalContentAlignment" Value="Center"/>',
-        '            <Setter Property="Background" Value="LightYellow"/>',
-        '        </Style>',
-        '        <Style TargetType="GroupBox">',
-        '            <Setter Property="Foreground" Value="Black"/>',
-        '            <Setter Property="Margin" Value="5"/>',
-        '            <Setter Property="FontSize" Value="12"/>',
-        '            <Setter Property="FontWeight" Value="Normal"/>',
-        '        </Style>',
-        '    </Window.Resources>',
-        '    <Grid>',
-        '        <Grid.ColumnDefinitions>',
-        '            <ColumnDefinition Width="120"/>',
-        '            <ColumnDefinition Width="*"/>',
-        '        </Grid.ColumnDefinitions>',
-        '        <Grid Grid.Column="0">',
-        '            <Grid.RowDefinitions>',
-        '                <RowDefinition Height="120"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '                <RowDefinition Height="40"/>',
-        '            </Grid.RowDefinitions>',
-        '            <Button Grid.Row="0" Name="UID_Tab">',
-        '                <Image Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\sdplogo.png"/>',
-        '            </Button>',
-        '            <Button Grid.Row="1" Name="Client_Tab" HorizontalContentAlignment="Right" Content="Client"/>',
-        '            <Button Grid.Row="2" Name="Service_Tab" HorizontalContentAlignment="Right" Content="Service"/>',
-        '            <Button Grid.Row="3" Name="Device_Tab" HorizontalContentAlignment="Right" Content="Device"/>',
-        '            <Button Grid.Row="4" Name="Issue_Tab" HorizontalContentAlignment="Right" Content="Issue"/>',
-        '            <Button Grid.Row="5" Name="Inventory_Tab" HorizontalContentAlignment="Right" Content="Inventory"/>',
-        '            <Button Grid.Row="6" Name="Purchase_Tab" HorizontalContentAlignment="Right" Content="Purchase"/>',
-        '            <Button Grid.Row="7" Name="Expense_Tab" HorizontalContentAlignment="Right" Content="Expense"/>',
-        '            <Button Grid.Row="8" Name="Account_Tab" HorizontalContentAlignment="Right" Content="Account"/>',
-        '            <Button Grid.Row="9" Name="Invoice_Tab" HorizontalContentAlignment="Right" Content="Invoice"/>',
-        '        </Grid>',
-        '        <Grid Grid.Column="1">',
-        '            <Grid.RowDefinitions>',
-        '                <RowDefinition Height="*"/>',
-        '                <RowDefinition Height="40"/>',
-        '            </Grid.RowDefinitions>',
-        '            <Grid Grid.Row="0" Name="UID_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_UID" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_UID_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_UID_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_UID_Result" ItemsSource="{Binding UID}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="UID"    Binding="{Binding UID}"    Width="200"/>',
-        '                            <DataGridTextColumn Header="Index"  Binding="{Binding Index}"  Width="50"/>',
-        '                            <DataGridTextColumn Header="Slot"   Binding="{Binding Slot}"   Width="50"/>',
-        '                            <DataGridTextColumn Header="Date"   Binding="{Binding Date}"   Width="100"/>',
-        '                            <DataGridTextColumn Header="Time"   Binding="{Binding Time}"   Width="100"/>',
-        '                            <DataGridTextColumn Header="Record" Binding="{Binding Record}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_UID" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="200"/>',
-        '                            <ColumnDefinition Width="120"/>',
-        '                            <ColumnDefinition Width="60"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[UID]">',
-        '                            <TextBox Name="Mod_UID_UID_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Index]">',
-        '                            <TextBox Name="Mod_UID_Index_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[Slot]">',
-        '                            <TextBox Name="Mod_UID_Slot_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="3" Header="[Type]">',
-        '                            <TextBox Name="Mod_UID_Type_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Date]">',
-        '                            <TextBox Name="Mod_UID_Date_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Time]">',
-        '                            <TextBox Name="Mod_UID_Time_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="2" Margin="5" Name="Mod_UID_Record_List">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="2*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Client_Grid" Visibility="Visible">',
-        '                <Grid Name="Get_Client" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Client_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Client_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Client_Result" ItemsSource="{Binding Client}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                            <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"  Width="*"/>',
-        '                            <DataGridTextColumn Header="First" Binding="{Binding Record.First}" Width="*"/>',
-        '                            <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"    Width="0.25*"/>',
-        '                            <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"   Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Client" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                            <ColumnDefinition Width="0.5*"/>',
-        '                            <ColumnDefinition Width="120"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Last]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_Last"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[First]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_First"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[MI]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_MI"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="3" Header="[Gender]" IsEnabled="False">',
-        '                            <ComboBox Name="Mod_Client_Gender" SelectedIndex="2">',
-        '                                <ComboBoxItem Content="Male"/>',
-        '                                <ComboBoxItem Content="Female"/>',
-        '                                <ComboBoxItem Content="-"/>',
-        '                            </ComboBox>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="3*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Address]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_Address"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[DOB(MM/DD/YYYY)]" IsEnabled="False">',
-        '                            <Grid>',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="0.6*"/>',
-        '                                    <ColumnDefinition Width="0.6*"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <TextBox Grid.Column="0" Name="Mod_Client_Month"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Client_Day"/>',
-        '                                <TextBox Grid.Column="2" Name="Mod_Client_Year"/>',
-        '                            </Grid>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="2">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="3*"/>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="1.5*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[City]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_City"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Region]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_Region"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[Country]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_Country"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="3" Header="[Postal]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Client_Postal"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <GroupBox Header="[Phone Number(s)]" Grid.Row="3">',
-        '                        <Grid>',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="40"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="40"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <TextBox Grid.Column="0" Name="Mod_Client_Phone_Text" IsEnabled="False"/>',
-        '                            <Button Grid.Column="1" Margin="5" Content="+" Name="Mod_Client_Phone_Add" IsEnabled="False"/>',
-        '                            <ComboBox Grid.Column="2" Name="Mod_Client_Phone_List"/>',
-        '                            <Button Grid.Column="3" Margin="5" Content="-" Name="Mod_Client_Phone_Remove" IsEnabled="False"/>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                    <GroupBox Header="[Email Address(es)]" Grid.Row="4">',
-        '                        <Grid>',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="40"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="40"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <TextBox Grid.Column="0" Name="Mod_Client_Email_Text" IsEnabled="False"/>',
-        '                            <Button Grid.Column="1" Margin="5" Content="+" Name="Mod_Client_Email_Add" IsEnabled="False"/>',
-        '                            <ComboBox Grid.Column="2" Name="Mod_Client_Email_List"/>',
-        '                            <Button Grid.Column="3" Margin="5" Content="-" Name="Mod_Client_Email_Remove" IsEnabled="False"/>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                    <Grid Grid.Row="5">',
-        '                        <Grid.RowDefinitions>',
-        '                            <RowDefinition Height="40"/>',
-        '                            <RowDefinition Height="*"/>',
-        '                        </Grid.RowDefinitions>',
-        '                        <Grid Grid.Row="0">',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="160"/>',
-        '                                <ColumnDefinition Width="160"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <Button Grid.Column="0" Content="Device(s)" Name="Mod_Client_Device_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="1" Content="Invoice(es)" Name="Mod_Client_Invoice_Tab" IsEnabled="False"/>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Client_Device_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Client_Device_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Client_Device_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Client_Device_Result" ItemsSource="{Binding Device}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="*"/>',
-        '                                    <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="*"/>',
-        '                                    <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Client_Device_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Client_Device_List" IsEnabled="False"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Client_Device_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Client_Invoice_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Client_Invoice_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Client_Invoice_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Margin="5" Name="Mod_Client_Invoice_Result" ItemsSource="{Binding Invoice}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Date" Binding="{Binding Record.Date}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Phone"  Binding="{Binding Record.Phone}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Email" Binding="{Binding Record.Email}" Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Client_Invoice_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Client_Invoice_List" IsEnabled="False"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Client_Invoice_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </Grid>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Service_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Service" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Service_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Service_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Service_Result" ItemsSource="{Binding Service}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Cost}" Width="0.5*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Service" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <GroupBox Grid.Row="0" Header="[Name]">',
-        '                        <TextBox Name="Mod_Service_Name_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="1" Header="[Description]">',
-        '                        <TextBox Name="Mod_Service_Description_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="2" Header="[Cost]">',
-        '                        <TextBox Name="Mod_Service_Cost_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Device_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Device" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Device_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Device_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Device_Result" ItemsSource="{Binding Device}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="*"/>',
-        '                            <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="*"/>',
-        '                            <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="*"/>',
-        '                            <DataGridTextColumn Header="Title"         Binding="{Binding Record.Title}"         Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Device" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="300"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="1.5*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Chassis]">',
-        '                            <ComboBox Name="Mod_Device_Chassis_List" SelectedIndex="8" IsEnabled="False">',
-        '                                <ComboBoxItem Content="Desktop"/>',
-        '                                <ComboBoxItem Content="Laptop"/>',
-        '                                <ComboBoxItem Content="Smartphone"/>',
-        '                                <ComboBoxItem Content="Tablet"/>',
-        '                                <ComboBoxItem Content="Console"/>',
-        '                                <ComboBoxItem Content="Server"/>',
-        '                                <ComboBoxItem Content="Network"/>',
-        '                                <ComboBoxItem Content="Other"/>',
-        '                                <ComboBoxItem Content="-"/>',
-        '                            </ComboBox>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Vendor]">',
-        '                            <TextBox Name="Mod_Device_Vendor_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[Model]">',
-        '                            <TextBox Name="Mod_Device_Model_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="3" Header="[Specification]">',
-        '                            <TextBox Name="Mod_Device_Specification_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Serial]">',
-        '                            <TextBox Name="Mod_Device_Serial_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Display Name]">',
-        '                            <TextBox Name="Mod_Device_DisplayName_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="2">',
-        '                        <Grid.RowDefinitions>',
-        '                            <RowDefinition Height="40"/>',
-        '                            <RowDefinition Height="*"/>',
-        '                        </Grid.RowDefinitions>',
-        '                        <Grid Grid.Row="0">',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <Button Grid.Column="0" Content="Client"   Name="Mod_Device_Client_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="1" Content="Issue"    Name="Mod_Device_Issue_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="2" Content="Purchase" Name="Mod_Device_Purchase_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="3" Content="Invoice"  Name="Mod_Device_Invoice_Tab" IsEnabled="False"/>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Device_Client_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Client_Property"/>',
-        '                                <TextBox Grid.Row="0" Grid.Column="1" Name="Mod_Device_Client_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Grid.Column="0" Name="Mod_Device_Client_Result" ItemsSource="{Binding Client}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.DisplayName}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="*"/>',
-        '                                    <DataGridTextColumn Header="First" Binding="{Binding Record.First}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}" Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Device_Client_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Device_Client_List">',
-        '                                    <ComboBox.ItemTemplate>',
-        '                                        <DataTemplate>',
-        '                                            <TextBlock Text="{Binding Record.DisplayName}"/>',
-        '                                        </DataTemplate>',
-        '                                    </ComboBox.ItemTemplate>',
-        '                                </ComboBox>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Device_Client_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Device_Issue_Grid" Visibility="Visible">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Issue_Property"/>',
-        '                                <TextBox Grid.Row="0" Grid.Column="1" Name="Mod_Device_Issue_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Device_Issue_Result" ItemsSource="{Binding Issue}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Vendor" Binding="{Binding Record.Vendor}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"  Binding="{Binding Record.Model}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Spec."  Binding="{Binding Record.Specification}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Serial" Binding="{Binding Record.Serial}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="Title"  Binding="{Binding Record.Title}"   Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Device_Issue_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Device_Issue_List">',
-        '                                    <ComboBox.ItemTemplate>',
-        '                                        <DataTemplate>',
-        '                                            <TextBlock Text="{Binding Record.DisplayName}"/>',
-        '                                        </DataTemplate>',
-        '                                    </ComboBox.ItemTemplate>',
-        '                                </ComboBox>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Device_Issue_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Device_Purchase_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Purchase_Property"/>',
-        '                                <TextBox Grid.Row="0" Grid.Column="1" Name="Mod_Device_Purchase_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Device_Purchase_Result" ItemsSource="{Binding Purchase}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Name"   Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Vendor" Binding="{Binding Record.Vendor}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Serial" Binding="{Binding Record.Serial}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"  Binding="{Binding Record.Model}"   Width="*"/>',
-        '                                    <DataGridTextColumn Header="Device" Binding="{Binding Record.Device}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"  Binding="{Binding Record.DOB}"   Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Device_Purchase_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Device_Purchase_List">',
-        '                                    <ComboBox.ItemTemplate>',
-        '                                        <DataTemplate>',
-        '                                            <TextBlock Text="{Binding Record.DisplayName}"/>',
-        '                                        </DataTemplate>',
-        '                                    </ComboBox.ItemTemplate>',
-        '                                </ComboBox>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Device_Purchase_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Device_Invoice_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="40"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Invoice_Property"/>',
-        '                                <TextBox Grid.Row="0" Grid.Column="1" Name="Mod_Device_Invoice_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Device_Invoice_Result" ItemsSource="{Binding Invoice}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Date"  Binding="{Binding Record.Date}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Phone" Binding="{Binding Record.Phone}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Email"  Binding="{Binding Record.Email}"  Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Device_Invoice_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Device_Invoice_List">',
-        '                                    <ComboBox.ItemTemplate>',
-        '                                        <DataTemplate>',
-        '                                            <TextBlock Text="{Binding Record.DisplayName}"/>',
-        '                                        </DataTemplate>',
-        '                                    </ComboBox.ItemTemplate>',
-        '                                </ComboBox>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Device_Invoice_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="3" Name="Mod_Device_Record_List">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100"/>',
-        '                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Issue_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Issue" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Issue_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Issue_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Issue_Result" ItemsSource="{Binding Issue}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Client"   Binding="{Binding Record.Client}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Device"   Binding="{Binding Record.Device}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Status"   Binding="{Binding Record.Status}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Purchase" Binding="{Binding Record.Purchase}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Service"  Binding="{Binding Record.Service}"  Width="*"/>',
-        '                            <DataGridTextColumn Header="Invoice"  Binding="{Binding Record.Invoice}"  Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Issue" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                        <RowDefinition Height="180"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Status]" IsEnabled="False">',
-        '                            <ComboBox Name="Mod_Issue_Status_List">',
-        '                                <ComboBoxItem Content="New"/>',
-        '                                <ComboBoxItem Content="Diagnosed"/>',
-        '                                <ComboBoxItem Content="Commit"/>',
-        '                                <ComboBoxItem Content="Complete"/>',
-        '                            </ComboBox>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Description]" IsEnabled="False">',
-        '                            <TextBox Name="Mod_Issue_Description_Text"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.RowDefinitions>',
-        '                            <RowDefinition Height="40"/>',
-        '                            <RowDefinition Height="*"/>',
-        '                        </Grid.RowDefinitions>',
-        '                        <Grid Grid.Row="0">',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <Button Grid.Column="0" Content="Client" Name="Mod_Issue_Client_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="1" Content="Device" Name="Mod_Issue_Device_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="2" Content="Purchase" Name="Mod_Issue_Purchase_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="3" Content="Service" Name="Mod_Issue_Service_Tab" IsEnabled="False"/>',
-        '                            <Button Grid.Column="4" Content="Invoice" Name="Mod_Issue_Invoice_Tab" IsEnabled="False"/>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Issue_Client_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="50"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0" Margin="5">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Issue_Client_Property"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Issue_Client_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Issue_Client_Result" ItemsSource="{Binding Client}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="First" Binding="{Binding Record.First}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"   Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Issue_Client_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Issue_Client_List"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Issue_Client_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Issue_Device_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="50"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="50"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0" Margin="5">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Issue_Device_Property"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Issue_Device_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Issue_Device_Result" ItemsSource="{Binding Device}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Vendor" Binding="{Binding Record.Vendor}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"  Binding="{Binding Record.Model}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Spec."  Binding="{Binding Record.Specification}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Serial" Binding="{Binding Record.Serial}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="Title"  Binding="{Binding Record.Title}"   Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Issue_Device_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Issue_Device_List"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Issue_Device_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Issue_Purchase_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="50"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="50"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0" Margin="5">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Issue_Purchase_Property"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Issue_Purchase_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Issue_Purchase_Result" ItemsSource="{Binding Purchase}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Distributor"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Vendor" Binding="{Binding Record.First}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Serial"    Binding="{Binding Record.MI}"    Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"   Binding="{Binding Record.DOB}"   Width="*"/>',
-        '                                    <DataGridTextColumn Header="Device" Binding="{Binding Record.IsDevice}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Model"   Binding="{Binding Record.DOB}"   Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Issue_Purchase_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Issue_Purchase_List"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Issue_Purchase_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Issue_Service_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="50"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0" Margin="5">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Issue_Service_Property"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Issue_Service_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Issue_Service_Result" ItemsSource="{Binding Service}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Cost" Binding="{Binding Record.Cost}" Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Issue_Service_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Issue_Service_List"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Issue_Service_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Issue_Invoice_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="50"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="40"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0" Margin="5">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="150"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Issue_Invoice_Property"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Issue_Invoice_Filter"/>',
-        '                            </Grid>',
-        '                            <DataGrid Grid.Row="1" Name="Mod_Issue_Invoice_Result" ItemsSource="{Binding Invoice}">',
-        '                                <DataGrid.Columns>',
-        '                                    <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Date"  Binding="{Binding Record.Date}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                                    <DataGridTextColumn Header="Phone" Binding="{Binding Record.Phone}" Width="*"/>',
-        '                                    <DataGridTextColumn Header="Email"  Binding="{Binding Record.Email}"  Width="*"/>',
-        '                                </DataGrid.Columns>',
-        '                            </DataGrid>',
-        '                            <Grid Grid.Row="2">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <Button Grid.Column="0" Content="+" Name="Mod_Issue_Invoice_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Issue_Invoice_List"/>',
-        '                                <Button Grid.Column="2" Content="-" Name="Mod_Issue_Invoice_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </Grid>',
-        '                    <DataGrid Name="Mod_Issue_Record_List" Grid.Row="2">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100"/>',
-        '                            <DataGridTemplateColumn Header="Value" Width="*">',
-        '                                <DataGridTemplateColumn.CellTemplate>',
-        '                                    <DataTemplate>',
-        '                                        <ComboBox ItemsSource="{Binding Value}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
-        '                                    </DataTemplate>',
-        '                                </DataGridTemplateColumn.CellTemplate>',
-        '                            </DataGridTemplateColumn>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Inventory_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Inventory" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Inventory_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Inventory_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Inventory_Result" ItemsSource="{Binding Inventory}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name"       Binding="{Binding Record.DisplayName}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Vendor"     Binding="{Binding Record.Vendor}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Serial"     Binding="{Binding Record.Serial}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="Model"      Binding="{Binding Record.Model}"    Width="*"/>',
-        '                            <DataGridTextColumn Header="Title"      Binding="{Binding Record.Title}"    Width="2*"/>',
-        '                            <DataGridTemplateColumn Header="Device" Width="60">',
-        '                                <DataGridTemplateColumn.CellTemplate>',
-        '                                    <DataTemplate>',
-        '                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}">',
-        '                                            <ComboBoxItem Content="N"/>',
-        '                                            <ComboBoxItem Content="Y"/>',
-        '                                            <ComboBoxItem Content="-"/>',
-        '                                        </ComboBox>',
-        '                                    </DataTemplate>',
-        '                                </DataGridTemplateColumn.CellTemplate>',
-        '                            </DataGridTemplateColumn>',
-        '                            <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Inventory" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="105"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Vendor]">',
-        '                            <TextBox Name="Mod_Inventory_Vendor_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Model]">',
-        '                            <TextBox Name="Mod_Inventory_Model_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[Serial]">',
-        '                            <TextBox Name="Mod_Inventory_Serial_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Title]">',
-        '                            <TextBox Name="Mod_Inventory_Title_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Cost]">',
-        '                            <TextBox Name="Mod_Inventory_Cost_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <GroupBox Grid.Row="2" Header="[Device]">',
-        '                        <Grid>',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="60"/>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Inventory_IsDevice_List" IsEnabled="False">',
-        '                                    <ComboBoxItem Content="No"/>',
-        '                                    <ComboBoxItem Content="Yes"/>',
-        '                                </ComboBox>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Inventory_Device_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="2" Name="Mod_Inventory_Device_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Inventory_Device_Result" IsEnabled="False"/>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Inventory_Device_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Inventory_Device_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Inventory_Device_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Purchase_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Purchase" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Purchase_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Purchase_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Purchase_Result" ItemsSource="{Binding Purchase}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Distributor"  Binding="{Binding Record.Distributor}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Vendor"       Binding="{Binding Record.Vendor}"      Width="*"/>',
-        '                            <DataGridTextColumn Header="Serial"       Binding="{Binding Record.Serial}"      Width="2*"/>',
-        '                            <DataGridTextColumn Header="Model"        Binding="{Binding Record.Model}"       Width="*"/>',
-        '                            <DataGridTemplateColumn Header="Device"   Width="60">',
-        '                                <DataGridTemplateColumn.CellTemplate>',
-        '                                    <DataTemplate>',
-        '                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}">',
-        '                                            <ComboBoxItem Content="N"/>',
-        '                                            <ComboBoxItem Content="Y"/>',
-        '                                            <ComboBoxItem Content="-"/>',
-        '                                        </ComboBox>',
-        '                                    </DataTemplate>',
-        '                                </DataGridTemplateColumn.CellTemplate>',
-        '                            </DataGridTemplateColumn>',
-        '                            <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Purchase" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="105"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <GroupBox Grid.Row="0" Header="[Display Name]">',
-        '                        <TextBox Name="Mod_Purchase_DisplayName_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="1" Header="[Distributor]">',
-        '                        <TextBox Name="Mod_Purchase_Distributor_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="2" Header="[URL]">',
-        '                        <TextBox Name="Mod_Purchase_URL_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <Grid Grid.Row="3">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="2*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <GroupBox Grid.Column="0" Header="[Vendor]">',
-        '                            <TextBox Name="Mod_Purchase_Vendor_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="1" Header="[Model]">',
-        '                            <TextBox Name="Mod_Purchase_Model_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                        <GroupBox Grid.Column="2" Header="[Specification]">',
-        '                            <TextBox Name="Mod_Purchase_Specification_Text" IsEnabled="False"/>',
-        '                        </GroupBox>',
-        '                    </Grid>',
-        '                    <GroupBox Grid.Row="4" Header="[Serial]">',
-        '                        <TextBox Name="Mod_Purchase_Serial_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="5" Header="[Device]">',
-        '                        <Grid>',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="60"/>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Purchase_IsDevice_List" IsEnabled="False">',
-        '                                    <ComboBoxItem Content="No"/>',
-        '                                    <ComboBoxItem Content="Yes"/>',
-        '                                </ComboBox>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Purchase_Device_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="2" Name="Mod_Purchase_Device_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Purchase_Device_Result" IsEnabled="False"/>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Purchase_Device_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Purchase_Device_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Purchase_Device_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="6" Header="[Cost]">',
-        '                        <TextBox Name="Mod_Purchase_Cost_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Expense_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Expense" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Expense_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Expense_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Expense_Result" ItemsSource="{Binding Expense}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Recipient"    Binding="{Binding Record.Recipient}"   Width="*"/>',
-        '                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="1.5*"/>',
-        '                            <DataGridTemplateColumn Header="IsAccount" Width="60">',
-        '                                <DataGridTemplateColumn.CellTemplate>',
-        '                                    <DataTemplate>',
-        '                                        <ComboBox SelectedIndex="{Binding IsAccount}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">',
-        '                                            <ComboBoxItem Content="False"/>',
-        '                                            <ComboBoxItem Content="True"/>',
-        '                                        </ComboBox>',
-        '                                    </DataTemplate>',
-        '                                </DataGridTemplateColumn.CellTemplate>',
-        '                            </DataGridTemplateColumn>   ',
-        '                            <DataGridTextColumn Header="Account"      Binding="{Binding Record.Account}"     Width="*"/>',
-        '                            <DataGridTextColumn Header="Cost"         Binding="{Binding Record.Cost}"        Width="0.5*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Expense" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="105"/>',
-        '                        <RowDefinition Height="70"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <GroupBox Grid.Row="0" Header="[Display Name]">',
-        '                        <TextBox Name="Mod_Expense_DisplayName_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="1" Header="[Recipient]">',
-        '                        <TextBox Name="Mod_Expense_Recipient_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="2" Header="[Account]">',
-        '                        <Grid>',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Expense_IsAccount_List" IsEnabled="False">',
-        '                                    <ComboBoxItem Content="No"/>',
-        '                                    <ComboBoxItem Content="Yes"/>',
-        '                                </ComboBox>',
-        '                                <ComboBox Grid.Column="1" Name="Mod_Expense_Account_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="2" Name="Mod_Expense_Account_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Expense_Account_Result" IsEnabled="False"/>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Expense_Account_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Expense_Account_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Expense_Account_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                    <GroupBox Grid.Row="3" Header="[Cost]">',
-        '                        <TextBox Name="Mod_Expense_Cost_Text" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Account_Grid" Visibility="Collapsed">',
-        '                <Grid Name="Get_Account" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Account_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Account_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Account_Result" ItemsSource="{Binding Account}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Object"  Binding="{Binding Record.Object}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Account" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="105"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <GroupBox Grid.Column="0" Header="[Object]">',
-        '                        <Grid>',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Account_Object_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Account_Object_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Account_Object_Result" IsEnabled="False"/>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Account_Object_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Account_Object_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Account_Object_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </GroupBox>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="0" Name="Invoice_Grid" Visibility="Visible">',
-        '                <Grid Name="Get_Invoice" Visibility="Collapsed">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="40"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <Grid Grid.Row="0">',
-        '                        <Grid.ColumnDefinitions>',
-        '                            <ColumnDefinition Width="*"/>',
-        '                            <ColumnDefinition Width="4*"/>',
-        '                        </Grid.ColumnDefinitions>',
-        '                        <ComboBox Grid.Column="0" Name="Get_Invoice_Property"/>',
-        '                        <TextBox Grid.Column="1" Name="Get_Invoice_Filter"/>',
-        '                    </Grid>',
-        '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Invoice_Result" ItemsSource="{Binding Invoice}">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Date" Binding="{Binding Record.Date}" Width="*"/>',
-        '                            <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
-        '                            <DataGridTextColumn Header="Phone"  Binding="{Binding Record.Last}"  Width="*"/>',
-        '                            <DataGridTextColumn Header="Email" Binding="{Binding Record.First}" Width="*"/>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '                <Grid Name="Mod_Invoice" Visibility="Visible">',
-        '                    <Grid.RowDefinitions>',
-        '                        <RowDefinition Height="70"/>',
-        '                        <RowDefinition Height="*"/>',
-        '                        <RowDefinition Height="180"/>',
-        '                    </Grid.RowDefinitions>',
-        '                    <GroupBox Grid.Row="0" Header="[Mode]">',
-        '                        <ComboBox Name="Mod_Invoice_Mode_List" IsEnabled="False"/>',
-        '                    </GroupBox>',
-        '                    <Grid Grid.Row="1">',
-        '                        <Grid.RowDefinitions>',
-        '                            <RowDefinition Height="40"/>',
-        '                            <RowDefinition Height="*"/>',
-        '                        </Grid.RowDefinitions>',
-        '                        <Grid Grid.Row="0">',
-        '                            <Grid.ColumnDefinitions>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                                <ColumnDefinition Width="*"/>',
-        '                            </Grid.ColumnDefinitions>',
-        '                            <Button Grid.Column="0" Name="Mod_Invoice_Client_Tab" Content="Client"/>',
-        '                            <Button Grid.Column="1" Name="Mod_Invoice_Inventory_Tab" Content="Inventory"/>',
-        '                            <Button Grid.Column="2" Name="Mod_Invoice_Service_Tab" Content="Service"/>',
-        '                            <Button Grid.Column="3" Name="Mod_Invoice_Purchase_Tab" Content="Purchase"/>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Invoice_Client_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Invoice_Client_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Invoice_Client_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <DataGrid Grid.Column="0" Name="Mod_Invoice_Client_Result" ItemsSource="{Binding Client}">',
-        '                                    <DataGrid.Columns>',
-        '                                        <DataGridTextColumn Header="Name"  Binding="{Binding Record.DisplayName}" Width="*"/>',
-        '                                        <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"        Width="*"/>',
-        '                                        <DataGridTextColumn Header="First" Binding="{Binding Record.First}"       Width="*"/>',
-        '                                        <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"          Width="*"/>',
-        '                                        <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"         Width="*"/>',
-        '                                    </DataGrid.Columns>',
-        '                                </DataGrid>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Invoice_Client_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Invoice_Client_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Invoice_Client_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Invoice_Inventory_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Invoice_Inventory_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Invoice_Inventory_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <DataGrid Grid.Column="0" Name="Mod_Invoice_Inventory_Result" ItemsSource="{Binding Inventory}">',
-        '                                    <DataGrid.Columns>',
-        '                                        <DataGridTextColumn Header="Name"     Binding="{Binding Record.DisplayName}" Width="*"/>',
-        '                                        <DataGridTextColumn Header="Vendor"   Binding="{Binding Record.Vendor}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Serial"   Binding="{Binding Record.Serial}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Model"    Binding="{Binding Record.Model}"       Width="*"/>',
-        '                                        <DataGridTextColumn Header="Title"    Binding="{Binding Record.Title}"       Width="*"/>',
-        '                                        <DataGridTextColumn Header="IsDevice" Binding="{Binding Record.IsDevice}"    Width="*"/>',
-        '                                        <DataGridTextColumn Header="Device"   Binding="{Binding Record.Device}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Cost"     Binding="{Binding Record.Cost}"        Width="*"/>',
-        '                                    </DataGrid.Columns>',
-        '                                </DataGrid>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Invoice_Inventory_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Invoice_Inventory_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Invoice_Inventory_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Invoice_Service_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Invoice_Service_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Invoice_Service_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <DataGrid Grid.Column="0" Name="Mod_Invoice_Service_Result" ItemsSource="{Binding Service}">',
-        '                                    <DataGrid.Columns>',
-        '                                        <DataGridTextColumn Header="Name"        Binding="{Binding Record.DisplayName}" Width="*"/>',
-        '                                        <DataGridTextColumn Header="Description" Binding="{Binding Record.Vendor}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Serial}"      Width="*"/>',
-        '                                    </DataGrid.Columns>',
-        '                                </DataGrid>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Invoice_Service_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Invoice_Service_List"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Invoice_Service_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                        <Grid Grid.Row="1" Name="Mod_Invoice_Purchase_Grid" Visibility="Collapsed">',
-        '                            <Grid.RowDefinitions>',
-        '                                <RowDefinition Height="*"/>',
-        '                                <RowDefinition Height="*"/>',
-        '                            </Grid.RowDefinitions>',
-        '                            <Grid Grid.Row="0">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="120"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <ComboBox Grid.Column="0" Name="Mod_Invoice_Purchase_Property" IsEnabled="False"/>',
-        '                                <TextBox Grid.Column="1" Name="Mod_Invoice_Purchase_Filter" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                            <Grid Grid.Row="1">',
-        '                                <Grid.ColumnDefinitions>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                    <ColumnDefinition Width="*"/>',
-        '                                    <ColumnDefinition Width="40"/>',
-        '                                </Grid.ColumnDefinitions>',
-        '                                <DataGrid Grid.Column="0" Name="Mod_Invoice_Purchase_Result" ItemsSource="{Binding Purchase}">',
-        '                                    <DataGrid.Columns>',
-        '                                        <DataGridTextColumn Header="Name"          Binding="{Binding Record.DisplayName}" Width="*"/>',
-        '                                        <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"       Width="*"/>',
-        '                                        <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="*"/>',
-        '                                        <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"       Width="*"/>',
-        '                                        <DataGridTextColumn Header="IsDevice"      Binding="{Binding Record.IsDevice}"    Width="*"/>',
-        '                                        <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="*"/>',
-        '                                        <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="*"/>',
-        '                                    </DataGrid.Columns>',
-        '                                </DataGrid>',
-        '                                <Button Grid.Column="1" Content="+" Name="Mod_Invoice_Purchase_Add" IsEnabled="False"/>',
-        '                                <ComboBox Grid.Column="2" Name="Mod_Invoice_Purchase_List" IsEnabled="False"/>',
-        '                                <Button Grid.Column="3" Content="-" Name="Mod_Invoice_Purchase_Remove" IsEnabled="False"/>',
-        '                            </Grid>',
-        '                        </Grid>',
-        '                    </Grid>',
-        '                    <DataGrid Name="Mod_Invoice_Record_List" Grid.Row="2">',
-        '                        <DataGrid.Columns>',
-        '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100"/>',
-        '                            <DataGridTemplateColumn Header="Value" Width="*">',
-        '                                <DataGridTemplateColumn.CellTemplate>',
-        '                                    <DataTemplate>',
-        '                                        <ComboBox ItemsSource="{Binding Value}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
-        '                                    </DataTemplate>',
-        '                                </DataGridTemplateColumn.CellTemplate>',
-        '                            </DataGridTemplateColumn>',
-        '                        </DataGrid.Columns>',
-        '                    </DataGrid>',
-        '                </Grid>',
-        '            </Grid>',
-        '            <Grid Grid.Row="1">',
-        '                <Grid.ColumnDefinitions>',
-        '                    <ColumnDefinition Width="*"/>',
-        '                    <ColumnDefinition Width="*"/>',
-        '                    <ColumnDefinition Width="*"/>',
-        '                    <ColumnDefinition Width="*"/>',
-        '                    <ColumnDefinition Width="*"/>',
-        '                </Grid.ColumnDefinitions>',
-        '                <Button Grid.Column="0" Name="View" Content="View"/>',
-        '                <Button Grid.Column="1" Name="New" Content="New"/>',
-        '                <Button Grid.Column="2" Name="Edit" Content="Edit"/>',
-        '                <Button Grid.Column="3" Name="Save" Content="Save"/>',
-        '                <Button Grid.Column="4" Name="Delete" Content="Delete"/>',
-        '            </Grid>',
-        '        </Grid>',
-        '    </Grid>',
-        '</Window>')
+        Static [String] $Tab = @(
+            '<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="[FightingEntropy]://(Company Information Management Database)" Height="680" Width="800" Topmost="True" ResizeMode="NoResize" Icon="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\icon.ico" HorizontalAlignment="Center" WindowStartupLocation="CenterScreen" FontFamily="Consolas" Background="LightYellow">',
+            '    <Window.Resources>',
+            '        <Style TargetType="ToolTip">',
+            '            <Setter Property="Background" Value="#000000"/>',
+            '            <Setter Property="Foreground" Value="#66D066"/>',
+            '        </Style>',
+            '        <Style TargetType="TabItem">',
+            '            <Setter Property="FontSize" Value="15"/>',
+            '            <Setter Property="FontWeight" Value="Heavy"/>',
+            '            <Setter Property="Template">',
+            '                <Setter.Value>',
+            '                    <ControlTemplate TargetType="TabItem">',
+            '                        <Border Name="Border" BorderThickness="2" BorderBrush="Black" CornerRadius="2" Margin="2">',
+            '                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Right" ContentSource="Header" Margin="5"/>',
+            '                        </Border>',
+            '                        <ControlTemplate.Triggers>',
+            '                            <Trigger Property="IsSelected" Value="True">',
+            '                                <Setter TargetName="Border" Property="Background" Value="#4444FF"/>',
+            '                                <Setter Property="Foreground" Value="#FFFFFF"/>',
+            '                            </Trigger>',
+            '                            <Trigger Property="IsSelected" Value="False">',
+            '                                <Setter TargetName="Border" Property="Background" Value="#DFFFBA"/>',
+            '                                <Setter Property="Foreground" Value="#000000"/>',
+            '                            </Trigger>',
+            '                        </ControlTemplate.Triggers>',
+            '                    </ControlTemplate>',
+            '                </Setter.Value>',
+            '            </Setter>',
+            '        </Style>',
+            '        <Style TargetType="Button">',
+            '            <Setter Property="Margin" Value="5"/>',
+            '            <Setter Property="Padding" Value="5"/>',
+            '            <Setter Property="FontSize" Value="15"/>',
+            '            <Setter Property="FontWeight" Value="Heavy"/>',
+            '            <Setter Property="Foreground" Value="Black"/>',
+            '            <Setter Property="Background" Value="#DFFFBA"/>',
+            '            <Setter Property="BorderThickness" Value="2"/>',
+            '            <Setter Property="VerticalContentAlignment" Value="Center"/>',
+            '            <Style.Resources>',
+            '                <Style TargetType="Border">',
+            '                    <Setter Property="CornerRadius" Value="2"/>',
+            '                </Style>',
+            '            </Style.Resources>',
+            '        </Style>',
+            '        <Style TargetType="TextBox">',
+            '            <Setter Property="Height" Value="24"/>',
+            '            <Setter Property="Margin" Value="4"/>',
+            '            <Setter Property="FontSize" Value="12"/>',
+            '            <Setter Property="VerticalContentAlignment" Value="Center"/>',
+            '            <Setter Property="BorderThickness" Value="2"/>',
+            '            <Setter Property="Foreground" Value="#000000"/>',
+            '            <Style.Resources>',
+            '                <Style TargetType="Border">',
+            '                    <Setter Property="CornerRadius" Value="2"/>',
+            '                </Style>',
+            '            </Style.Resources>',
+            '        </Style>',
+            '        <Style TargetType="ComboBox">',
+            '            <Setter Property="Height" Value="24"/>',
+            '            <Setter Property="Margin" Value="5"/>',
+            '            <Setter Property="FontSize" Value="12"/>',
+            '            <Setter Property="FontWeight" Value="Normal"/>',
+            '        </Style>',
+            '        <Style TargetType="DataGrid">',
+            '            <Setter Property="Margin" Value="5"/>',
+            '            <Setter Property="AutoGenerateColumns" Value="False"/>',
+            '            <Setter Property="AlternationCount" Value="2"/>',
+            '            <Setter Property="HeadersVisibility" Value="Column"/>',
+            '            <Setter Property="CanUserResizeRows" Value="False"/>',
+            '            <Setter Property="CanUserAddRows" Value="False"/>',
+            '            <Setter Property="IsReadOnly" Value="True"/>',
+            '            <Setter Property="IsTabStop" Value="True"/>',
+            '            <Setter Property="IsTextSearchEnabled" Value="True"/>',
+            '            <Setter Property="SelectionMode" Value="Extended"/>',
+            '            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>',
+            '            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>',
+            '            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>',
+            '        </Style>',
+            '        <Style TargetType="DataGridRow">',
+            '            <Style.Triggers>',
+            '                <Trigger Property="AlternationIndex" Value="0">',
+            '                    <Setter Property="Background" Value="White"/>',
+            '                </Trigger>',
+            '                <Trigger Property="AlternationIndex" Value="1">',
+            '                    <Setter Property="Background" Value="#FFD6FFFB"/>',
+            '                </Trigger>',
+            '                <Trigger Property="IsMouseOver" Value="True">',
+            '                    <Setter Property="ToolTip">',
+            '                        <Setter.Value>',
+            '                            <TextBlock TextWrapping="Wrap" Width="400" Background="#000000" Foreground="#00FF00"/>',
+            '                        </Setter.Value>',
+            '                    </Setter>',
+            '                    <Setter Property="ToolTipService.ShowDuration" Value="360000000"/>',
+            '                </Trigger>',
+            '            </Style.Triggers>',
+            '        </Style>',
+            '        <Style TargetType="DataGridColumnHeader">',
+            '            <Setter Property="FontSize"   Value="12"/>',
+            '            <Setter Property="FontWeight" Value="Normal"/>',
+            '        </Style>',
+            '        <Style TargetType="TabControl">',
+            '            <Setter Property="TabStripPlacement" Value="Top"/>',
+            '            <Setter Property="HorizontalContentAlignment" Value="Center"/>',
+            '            <Setter Property="Background" Value="LightYellow"/>',
+            '        </Style>',
+            '        <Style TargetType="GroupBox">',
+            '            <Setter Property="Foreground" Value="Black"/>',
+            '            <Setter Property="Margin" Value="5"/>',
+            '            <Setter Property="FontSize" Value="12"/>',
+            '            <Setter Property="FontWeight" Value="Normal"/>',
+            '        </Style>',
+            '    </Window.Resources>',
+            '    <Grid>',
+            '        <Grid.ColumnDefinitions>',
+            '            <ColumnDefinition Width="120"/>',
+            '            <ColumnDefinition Width="*"/>',
+            '        </Grid.ColumnDefinitions>',
+            '        <Grid Grid.Column="0">',
+            '            <Grid.RowDefinitions>',
+            '                <RowDefinition Height="120"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '                <RowDefinition Height="40"/>',
+            '            </Grid.RowDefinitions>',
+            '            <Button Grid.Row="0" Name="UID_Tab">',
+            '                <Image Source="C:\ProgramData\Secure Digits Plus LLC\FightingEntropy\Graphics\sdplogo.png"/>',
+            '            </Button>',
+            '            <Button Grid.Row="1" Name="Client_Tab"    HorizontalContentAlignment="Right" Content="Client"/>',
+            '            <Button Grid.Row="2" Name="Service_Tab"   HorizontalContentAlignment="Right" Content="Service"/>',
+            '            <Button Grid.Row="3" Name="Device_Tab"    HorizontalContentAlignment="Right" Content="Device"/>',
+            '            <Button Grid.Row="4" Name="Issue_Tab"     HorizontalContentAlignment="Right" Content="Issue"/>',
+            '            <Button Grid.Row="5" Name="Purchase_Tab"  HorizontalContentAlignment="Right" Content="Purchase"/>',
+            '            <Button Grid.Row="6" Name="Inventory_Tab" HorizontalContentAlignment="Right" Content="Inventory"/>',
+            '            <Button Grid.Row="7" Name="Expense_Tab"   HorizontalContentAlignment="Right" Content="Expense"/>',
+            '            <Button Grid.Row="8" Name="Account_Tab"   HorizontalContentAlignment="Right" Content="Account"/>',
+            '            <Button Grid.Row="9" Name="Invoice_Tab"   HorizontalContentAlignment="Right" Content="Invoice"/>',
+            '        </Grid>',
+            '        <Grid Grid.Column="1">',
+            '            <Grid.RowDefinitions>',
+            '                <RowDefinition Height="*"/>',
+            '                <RowDefinition Height="40"/>',
+            '            </Grid.RowDefinitions>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_UID" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_UID_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_UID_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Name="Get_UID_Result" ItemsSource="{Binding UID}" Margin="5" >',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="UID"    Binding="{Binding UID}"    Width="200"/>',
+            '                            <DataGridTextColumn Header="Index"  Binding="{Binding Index}"  Width="50"/>',
+            '                            <DataGridTextColumn Header="Slot"   Binding="{Binding Slot}"   Width="50"/>',
+            '                            <DataGridTextColumn Header="Date"   Binding="{Binding Date}"   Width="100"/>',
+            '                            <DataGridTextColumn Header="Time"   Binding="{Binding Time}"   Width="100"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_UID" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="200"/>',
+            '                            <ColumnDefinition Width="120"/>',
+            '                            <ColumnDefinition Width="60"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[UID]">',
+            '                            <TextBox Name="Mod_UID_UID"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Index]">',
+            '                            <TextBox Name="Mod_UID_Index"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[Slot]">',
+            '                            <TextBox Name="Mod_UID_Slot"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="3" Header="[Type]">',
+            '                            <TextBox Name="Mod_UID_Type"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <Grid Grid.Row="1">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Date]">',
+            '                            <TextBox Name="Mod_UID_Date"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Time]">',
+            '                            <TextBox Name="Mod_UID_Time"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="2" Name="Mod_UID_Record" Margin="5">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Name"  Binding="{Binding Name}"  Width="*"/>',
+            '                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="2*"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Client" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Client_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Client_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Name="Get_Client_Result" ItemsSource="{Binding Client}" Margin="5">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayNameName"  Binding="{Binding Record.DisplayName}"  Width="150"/>',
+            '                            <DataGridTemplateColumn Header="Email" Width="150">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTemplateColumn Header="Phone" Width="100">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>',
+            '                            <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>',
+            '                            <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>',
+            '                            <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Client" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                            <ColumnDefinition Width="0.5*"/>',
+            '                            <ColumnDefinition Width="120"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Last]">',
+            '                            <TextBox Name="Mod_Client_Last"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[First]">',
+            '                            <TextBox Name="Mod_Client_First"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[MI]">',
+            '                            <TextBox Name="Mod_Client_MI"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="3" Header="[Gender]">',
+            '                            <ComboBox Name="Mod_Client_Gender" SelectedIndex="2">',
+            '                                <ComboBoxItem Content="Male"/>',
+            '                                <ComboBoxItem Content="Female"/>',
+            '                                <ComboBoxItem Content="-"/>',
+            '                            </ComboBox>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <Grid Grid.Row="1">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="3*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Address]">',
+            '                            <TextBox Name="Mod_Client_Address"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[DOB(MM/DD/YYYY)]">',
+            '                            <Grid>',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="0.6*"/>',
+            '                                    <ColumnDefinition Width="0.6*"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <TextBox Grid.Column="0" Name="Mod_Client_Month"/>',
+            '                                <TextBox Grid.Column="1" Name="Mod_Client_Day"/>',
+            '                                <TextBox Grid.Column="2" Name="Mod_Client_Year"/>',
+            '                            </Grid>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <Grid Grid.Row="2">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="3*"/>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="1.5*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[City]">',
+            '                            <TextBox Name="Mod_Client_City"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Region]">',
+            '                            <TextBox Name="Mod_Client_Region"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[Country]">',
+            '                            <TextBox Name="Mod_Client_Country"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="3" Header="[Postal]">',
+            '                            <TextBox Name="Mod_Client_Postal"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <GroupBox Header="[Phone Number(s)]" Grid.Row="3">',
+            '                        <Grid>',
+            '                            <Grid.ColumnDefinitions>',
+            '                                <ColumnDefinition Width="*"/>',
+            '                                <ColumnDefinition Width="40"/>',
+            '                                <ColumnDefinition Width="*"/>',
+            '                                <ColumnDefinition Width="40"/>',
+            '                            </Grid.ColumnDefinitions>',
+            '                            <TextBox  Grid.Column="0" Name="Mod_Client_Phone_Text"/>',
+            '                            <Button   Grid.Column="1" Name="Mod_Client_Phone_Add"    Margin="5" Content="+"/>',
+            '                            <ComboBox Grid.Column="2" Name="Mod_Client_Phone_List"/>',
+            '                            <Button   Grid.Column="3" Name="Mod_Client_Phone_Remove" Margin="5" Content="-"/>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                    <GroupBox Header="[Email Address(es)]" Grid.Row="4">',
+            '                        <Grid>',
+            '                            <Grid.ColumnDefinitions>',
+            '                                <ColumnDefinition Width="*"/>',
+            '                                <ColumnDefinition Width="40"/>',
+            '                                <ColumnDefinition Width="*"/>',
+            '                                <ColumnDefinition Width="40"/>',
+            '                            </Grid.ColumnDefinitions>',
+            '                            <TextBox  Grid.Column="0" Name="Mod_Client_Email_Text"/>',
+            '                            <Button   Grid.Column="1" Name="Mod_Client_Email_Add"    Margin="5" Content="+"/>',
+            '                            <ComboBox Grid.Column="2" Name="Mod_Client_Email_List"/>',
+            '                            <Button   Grid.Column="3" Name="Mod_Client_Email_Remove" Margin="5" Content="-"/>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                    <TabControl Grid.Row="5">',
+            '                        <TabItem Header="Device(s)">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Client_Device_Property" SelectedIndex="0"/>',
+            '                                    <TextBox Grid.Column="1"  Name="Mod_Client_Device_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Client_Device_Result" ItemsSource="{Binding Device}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>',
+            '                                        <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>',
+            '                                        <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>',
+            '                                        <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>',
+            '                                        <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Client_Device_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Client_Device_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Client_Device_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Issue(s)">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Client_Issue_Property" SelectedIndex="0"/>',
+            '                                    <TextBox Grid.Column="1"  Name="Mod_Client_Issue_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Client_Issue_Result" ItemsSource="{Binding Issue}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="*"/>',
+            '                                        <DataGridTextColumn Header="Status"      Binding="{Binding Record.Status}"      Width="*"/>',
+            '                                        <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="*"/>',
+            '                                        <DataGridTextColumn Header="Client"      Binding="{Binding Record.Client}"      Width="*"/>',
+            '                                        <DataGridTextColumn Header="Device"      Binding="{Binding Record.Device}"      Width="*"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Client_Issue_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Client_Issue_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Client_Issue_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Invoice(s)">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                               </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Client_Invoice_Property" SelectedIndex="0"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Client_Invoice_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid     Grid.Row="1"    Name="Mod_Client_Invoice_Result" ItemsSource="{Binding Invoice}" Margin="5">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}"   Width="*"/>',
+            '                                        <DataGridTextColumn Header="Mode"        Binding="{Binding Record.Mode}"   Width="*"/>',
+            '                                        <DataGridTextColumn Header="Date"        Binding="{Binding Record.Date}"   Width="*"/>',
+            '                                        <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"   Width="*"/>',
+            '                                        <DataGridTextColumn Header="Phone"       Binding="{Binding Record.Phone}"  Width="*"/>',
+            '                                        <DataGridTextColumn Header="Email"       Binding="{Binding Record.Email}"  Width="*"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Client_Invoice_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Client_Invoice_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Client_Invoice_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                    </TabControl> ',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Service" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Service_Property"/>',
+            '                        <TextBox Grid.Column="1" Name="Get_Service_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Service_Result" ItemsSource="{Binding Service}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="250"/>',
+            '                            <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"        Width="150"/>',
+            '                            <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Cost}"        Width="80"/>',
+            '                            <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="300"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Service" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <GroupBox Grid.Row="0" Header="[Name]">',
+            '                        <TextBox Name="Mod_Service_Name" IsEnabled="False"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="1" Header="[Description]">',
+            '                        <TextBox Name="Mod_Service_Description" IsEnabled="False"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="2" Header="[Cost]">',
+            '                        <TextBox Name="Mod_Service_Cost" IsEnabled="False"/>',
+            '                    </GroupBox>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Device" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Device_Property"/>',
+            '                        <TextBox Grid.Column="1" Name="Get_Device_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Device_Result" ItemsSource="{Binding Device}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>',
+            '                            <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>',
+            '                            <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>',
+            '                            <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>',
+            '                            <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>',
+            '                            <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>',
+            '                            <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Device" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="300"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="1.5*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Chassis]">',
+            '                            <ComboBox Name="Mod_Device_Chassis_List" SelectedIndex="8">',
+            '                                <ComboBoxItem Content="Desktop"/>',
+            '                                <ComboBoxItem Content="Laptop"/>',
+            '                                <ComboBoxItem Content="Smartphone"/>',
+            '                                <ComboBoxItem Content="Tablet"/>',
+            '                                <ComboBoxItem Content="Console"/>',
+            '                                <ComboBoxItem Content="Server"/>',
+            '                                <ComboBoxItem Content="Network"/>',
+            '                                <ComboBoxItem Content="Other"/>',
+            '                                <ComboBoxItem Content="-"/>',
+            '                            </ComboBox>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Vendor]">',
+            '                            <TextBox Name="Mod_Device_Vendor"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[Model]">',
+            '                            <TextBox Name="Mod_Device_Model"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="3" Header="[Specification]">',
+            '                            <TextBox Name="Mod_Device_Specification"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <Grid Grid.Row="1">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Serial]">',
+            '                            <TextBox Name="Mod_Device_Serial"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Display Name]">',
+            '                            <TextBox Name="Mod_Device_DisplayName"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <TabControl Grid.Row="2">',
+            '                        <TabItem Header="Client">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="150"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Client_Property"/>',
+            '                                    <TextBox  Grid.Row="0" Grid.Column="1" Name="Mod_Device_Client_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid     Grid.Row="1" Grid.Column="0" Name="Mod_Device_Client_Result" ItemsSource="{Binding Client}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>',
+            '                                        <DataGridTemplateColumn Header="Email" Width="150">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTemplateColumn Header="Phone" Width="100">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>',
+            '                                        <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>',
+            '                                        <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Device_Client_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Device_Client_List">',
+            '                                        <ComboBox.ItemTemplate>',
+            '                                            <DataTemplate>',
+            '                                                <TextBlock Text="{Binding Record.DisplayName}"/>',
+            '                                            </DataTemplate>',
+            '                                        </ComboBox.ItemTemplate>',
+            '                                    </ComboBox>',
+            '                                    <Button Grid.Column="2"   Name="Mod_Device_Client_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                    </TabControl>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Issue" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Issue_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Issue_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid     Grid.Row="1"    Name="Get_Issue_Result" ItemsSource="{Binding Issue}" Margin="5">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"   Width="150"/>',
+            '                            <DataGridTextColumn Header="Status"       Binding="{Binding Record.Status}"        Width="100"/>',
+            '                            <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}"   Width="200"/>',
+            '                            <DataGridTemplateColumn Header="Client" Width="150">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Client}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTemplateColumn Header="Device" Width="150">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Device}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTemplateColumn Header="Service" Width="150">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Service}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Issue" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                        <RowDefinition Height="180"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Status]">',
+            '                            <ComboBox SelectedIndex="4" Name="Mod_Issue_Status_List">',
+            '                                <ComboBoxItem Content="New"/>',
+            '                                <ComboBoxItem Content="Diagnosed"/>',
+            '                                <ComboBoxItem Content="Commit"/>',
+            '                                <ComboBoxItem Content="Complete"/>',
+            '                                <ComboBoxItem Content="-"/>',
+            '                            </ComboBox>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Description]">',
+            '                            <TextBox Name="Mod_Issue_Description"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <TabControl Grid.Row="1">',
+            '                        <TabItem Header="Client">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0" Margin="5">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="150"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Issue_Client_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Issue_Client_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Issue_Client_Result" ItemsSource="{Binding Client}">',
+            '                                    <DataGrid.Columns>',
+            '                                <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>',
+            '                                <DataGridTemplateColumn Header="Email" Width="150">',
+            '                                    <DataGridTemplateColumn.CellTemplate>',
+            '                                        <DataTemplate>',
+            '                                            <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                        </DataTemplate>',
+            '                                    </DataGridTemplateColumn.CellTemplate>',
+            '                                </DataGridTemplateColumn>',
+            '                                <DataGridTemplateColumn Header="Phone" Width="100">',
+            '                                    <DataGridTemplateColumn.CellTemplate>',
+            '                                        <DataTemplate>',
+            '                                            <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                        </DataTemplate>',
+            '                                    </DataGridTemplateColumn.CellTemplate>',
+            '                                </DataGridTemplateColumn>',
+            '                                <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>',
+            '                                <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>',
+            '                                <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>',
+            '                                <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Issue_Client_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Client_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Issue_Client_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Device">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0" Margin="5">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="150"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Issue_Device_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Issue_Device_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Issue_Device_Result" ItemsSource="{Binding Device}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>',
+            '                                        <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>',
+            '                                        <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>',
+            '                                        <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>',
+            '                                        <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Issue_Device_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Device_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Issue_Device_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Service">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0" Margin="5">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="150"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Issue_Service_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Issue_Service_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid     Grid.Row="1"    Name="Mod_Issue_Service_Result" ItemsSource="{Binding Service}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="250"/>',
+            '                                        <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Cost}"        Width="80"/>',
+            '                                        <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="300"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Issue_Service_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Service_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Issue_Service_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                    </TabControl>',
+            '                    <DataGrid Grid.Row="2" Name="Mod_Issue_Record_List">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100"/>',
+            '                            <DataGridTemplateColumn Header="Value" Width="*">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Value}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Purchase" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Purchase_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Purchase_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Purchase_Result" ItemsSource="{Binding Purchase}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="200"/>',
+            '                            <DataGridTextColumn Header="Distributor"   Binding="{Binding Record.Distributor}"   Width="150"/>',
+            '                            <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>',
+            '                            <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>',
+            '                            <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>',
+            '                            <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>',
+            '                            <DataGridTemplateColumn Header="IsDevice"   Width="60">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}">',
+            '                                            <ComboBoxItem Content="False"/>',
+            '                                            <ComboBoxItem Content="True"/>',
+            '                                        </ComboBox>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>                            ',
+            '                            <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Purchase" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="110"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <GroupBox Grid.Row="0" Header="[Display Name]">',
+            '                        <TextBox Name="Mod_Purchase_DisplayName"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="1" Header="[Distributor]">',
+            '                        <TextBox Name="Mod_Purchase_Distributor"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="2" Header="[URL]">',
+            '                        <TextBox Name="Mod_Purchase_URL"/>',
+            '                    </GroupBox>',
+            '                    <Grid Grid.Row="3">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="2*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Vendor]">',
+            '                            <TextBox Name="Mod_Purchase_Vendor"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Model]">',
+            '                            <TextBox Name="Mod_Purchase_Model"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[Specification]">',
+            '                            <TextBox Name="Mod_Purchase_Specification"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <GroupBox Grid.Row="4" Header="[Serial]">',
+            '                        <TextBox Name="Mod_Purchase_Serial"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="5" Header="[Device]">',
+            '                        <Grid>',
+            '                            <Grid.RowDefinitions>',
+            '                                <RowDefinition Height="*"/>',
+            '                                <RowDefinition Height="*"/>',
+            '                            </Grid.RowDefinitions>',
+            '                            <Grid Grid.Row="0">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="60"/>',
+            '                                    <ColumnDefinition Width="120"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Purchase_IsDevice">',
+            '                                    <ComboBoxItem Content="No"/>',
+            '                                    <ComboBoxItem Content="Yes"/>',
+            '                                </ComboBox>',
+            '                                <ComboBox Grid.Column="1" Name="Mod_Purchase_Device_Property"/>',
+            '                                <TextBox  Grid.Column="2" Name="Mod_Purchase_Device_Filter"/>',
+            '                            </Grid>',
+            '                            <Grid Grid.Row="1">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" Name="Mod_Purchase_Device_Result"/>',
+            '                                <Button   Grid.Column="1" Name="Mod_Purchase_Device_Add"    Content="+"/>',
+            '                                <ComboBox Grid.Column="2" Name="Mod_Purchase_Device_List"/>',
+            '                                <Button   Grid.Column="3" Name="Mod_Purchase_Device_Remove" Content="-"/>',
+            '                            </Grid>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="6" Header="[Cost]">',
+            '                        <TextBox Name="Mod_Purchase_Cost"/>',
+            '                    </GroupBox>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Inventory" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Inventory_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Inventory_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Inventory_Result" ItemsSource="{Binding Inventory}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="200"/>',
+            '                            <DataGridTextColumn Header="Vendor"      Binding="{Binding Record.Vendor}"      Width="150"/>',
+            '                            <DataGridTextColumn Header="Model"       Binding="{Binding Record.Model}"       Width="150"/>',
+            '                            <DataGridTextColumn Header="Serial"      Binding="{Binding Record.Serial}"      Width="150"/>',
+            '                            <DataGridTextColumn Header="Title"       Binding="{Binding Record.Title}"       Width="200"/>',
+            '                            <DataGridTemplateColumn Header="IsDevice" Width="75">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">',
+            '                                            <ComboBoxItem Content="False"/>',
+            '                                            <ComboBoxItem Content="True"/>',
+            '                                        </ComboBox>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTemplateColumn Header="Device" Width="150">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Record.Device}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                            <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="80"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Inventory" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="105"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Vendor]">',
+            '                            <TextBox Name="Mod_Inventory_Vendor"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Model]">',
+            '                            <TextBox Name="Mod_Inventory_Model"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="2" Header="[Serial]">',
+            '                            <TextBox Name="Mod_Inventory_Serial"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <Grid Grid.Row="1">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <GroupBox Grid.Column="0" Header="[Title]">',
+            '                            <TextBox Name="Mod_Inventory_Title"/>',
+            '                        </GroupBox>',
+            '                        <GroupBox Grid.Column="1" Header="[Cost]">',
+            '                            <TextBox Name="Mod_Inventory_Cost"/>',
+            '                        </GroupBox>',
+            '                    </Grid>',
+            '                    <GroupBox Grid.Row="2" Header="[Device]">',
+            '                        <Grid>',
+            '                            <Grid.RowDefinitions>',
+            '                                <RowDefinition Height="*"/>',
+            '                                <RowDefinition Height="*"/>',
+            '                            </Grid.RowDefinitions>',
+            '                            <Grid Grid.Row="0">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="60"/>',
+            '                                    <ColumnDefinition Width="120"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Inventory_IsDevice">',
+            '                                    <ComboBoxItem Content="No"/>',
+            '                                    <ComboBoxItem Content="Yes"/>',
+            '                                </ComboBox>',
+            '                                <ComboBox Grid.Column="1" Name="Mod_Inventory_Device_Property"/>',
+            '                                <TextBox  Grid.Column="2" Name="Mod_Inventory_Device_Filter"/>',
+            '                            </Grid>',
+            '                            <Grid Grid.Row="1">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" Name="Mod_Inventory_Device_Result"/>',
+            '                                <Button   Grid.Column="1" Name="Mod_Inventory_Device_Add"    Content="+"/>',
+            '                                <ComboBox Grid.Column="2" Name="Mod_Inventory_Device_List"/>',
+            '                                <Button   Grid.Column="3" Name="Mod_Inventory_Device_Remove" Content="-"/>',
+            '                            </Grid>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Expense" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Expense_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Expense_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Expense_Result" ItemsSource="{Binding Expense}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Recipient"    Binding="{Binding Record.Recipient}"   Width="*"/>',
+            '                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="1.5*"/>',
+            '                            <DataGridTemplateColumn Header="IsAccount" Width="60">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox SelectedIndex="{Binding IsAccount}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">',
+            '                                            <ComboBoxItem Content="False"/>',
+            '                                            <ComboBoxItem Content="True"/>',
+            '                                        </ComboBox>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>   ',
+            '                            <DataGridTextColumn Header="Account"      Binding="{Binding Record.Account}"     Width="*"/>',
+            '                            <DataGridTextColumn Header="Cost"         Binding="{Binding Record.Cost}"        Width="0.5*"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Expense" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="105"/>',
+            '                        <RowDefinition Height="70"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <GroupBox Grid.Row="0" Header="[Display Name]">',
+            '                        <TextBox Name="Mod_Expense_DisplayName"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="1" Header="[Recipient]">',
+            '                        <TextBox Name="Mod_Expense_Recipient"/>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="2" Header="[Account]">',
+            '                        <Grid>',
+            '                            <Grid.RowDefinitions>',
+            '                                <RowDefinition Height="*"/>',
+            '                                <RowDefinition Height="*"/>',
+            '                            </Grid.RowDefinitions>',
+            '                            <Grid Grid.Row="0">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="120"/>',
+            '                                    <ColumnDefinition Width="120"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" SelectedIndex="0" Name="Mod_Expense_IsAccount">',
+            '                                    <ComboBoxItem Content="No"/>',
+            '                                    <ComboBoxItem Content="Yes"/>',
+            '                                </ComboBox>',
+            '                                <ComboBox Grid.Column="1" Name="Mod_Expense_Account_Property"/>',
+            '                                <TextBox  Grid.Column="2" Name="Mod_Expense_Account_Filter"/>',
+            '                            </Grid>',
+            '                            <Grid Grid.Row="1">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" Name="Mod_Expense_Account_Result"/>',
+            '                                <Button   Grid.Column="1" Name="Mod_Expense_Account_Add"    Content="+"/>',
+            '                                <ComboBox Grid.Column="2" Name="Mod_Expense_Account_List"/>',
+            '                                <Button   Grid.Column="3" Name="Mod_Expense_Account_Remove" Content="-"/>',
+            '                            </Grid>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                    <GroupBox Grid.Row="3" Header="[Cost]">',
+            '                        <TextBox Name="Mod_Expense_Cost"/>',
+            '                    </GroupBox>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Account" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Account_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Account_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Account_Result" ItemsSource="{Binding Account}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Object"  Binding="{Binding Record.Object}" Width="*"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Account" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="105"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <GroupBox Grid.Column="0" Header="[Object]">',
+            '                        <Grid>',
+            '                            <Grid.RowDefinitions>',
+            '                                <RowDefinition Height="*"/>',
+            '                                <RowDefinition Height="*"/>',
+            '                            </Grid.RowDefinitions>',
+            '                            <Grid Grid.Row="0">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="120"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" Name="Mod_Account_Object_Property"/>',
+            '                                <TextBox  Grid.Column="1" Name="Mod_Account_Object_Filter"/>',
+            '                            </Grid>',
+            '                            <Grid Grid.Row="1">',
+            '                                <Grid.ColumnDefinitions>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                    <ColumnDefinition Width="*"/>',
+            '                                    <ColumnDefinition Width="40"/>',
+            '                                </Grid.ColumnDefinitions>',
+            '                                <ComboBox Grid.Column="0" Name="Mod_Account_Object_Result"/>',
+            '                                <Button   Grid.Column="1" Name="Mod_Account_Object_Add"    Content="+"/>',
+            '                                <ComboBox Grid.Column="2" Name="Mod_Account_Object_List"/>',
+            '                                <Button   Grid.Column="3" Name="Mod_Account_Object_Remove" Content="-"/>',
+            '                            </Grid>',
+            '                        </Grid>',
+            '                    </GroupBox>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="0">',
+            '                <Grid Name="Get_Invoice" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="40"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <Grid Grid.Row="0">',
+            '                        <Grid.ColumnDefinitions>',
+            '                            <ColumnDefinition Width="*"/>',
+            '                            <ColumnDefinition Width="4*"/>',
+            '                        </Grid.ColumnDefinitions>',
+            '                        <ComboBox Grid.Column="0" Name="Get_Invoice_Property"/>',
+            '                        <TextBox  Grid.Column="1" Name="Get_Invoice_Filter"/>',
+            '                    </Grid>',
+            '                    <DataGrid Grid.Row="1" Margin="5" Name="Get_Invoice_Result" ItemsSource="{Binding Invoice}">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Date"  Binding="{Binding Record.Date}"  Width="*"/>',
+            '                            <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>',
+            '                            <DataGridTextColumn Header="Phone" Binding="{Binding Record.Last}"  Width="*"/>',
+            '                            <DataGridTextColumn Header="Email" Binding="{Binding Record.First}" Width="*"/>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '                <Grid Name="Mod_Invoice" Visibility="Collapsed">',
+            '                    <Grid.RowDefinitions>',
+            '                        <RowDefinition Height="70"/>',
+            '                        <RowDefinition Height="*"/>',
+            '                        <RowDefinition Height="180"/>',
+            '                    </Grid.RowDefinitions>',
+            '                    <GroupBox Grid.Row="0" Header="[Mode]">',
+            '                        <ComboBox Name="Mod_Invoice_Mode_List"/>',
+            '                    </GroupBox>',
+            '                    <TabControl Grid.Row="1">',
+            '                        <TabItem Header="Client">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Invoice_Client_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Invoice_Client_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Invoice_Client_Result" ItemsSource="{Binding Client}">',
+            '                                        <DataGrid.Columns>',
+            '                                            <DataGridTextColumn Header="DisplayNameName"  Binding="{Binding Record.DisplayName}"  Width="150"/>',
+            '                                            <DataGridTemplateColumn Header="Email" Width="150">',
+            '                                                <DataGridTemplateColumn.CellTemplate>',
+            '                                                    <DataTemplate>',
+            '                                                        <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                    </DataTemplate>',
+            '                                                </DataGridTemplateColumn.CellTemplate>',
+            '                                            </DataGridTemplateColumn>',
+            '                                            <DataGridTemplateColumn Header="Phone" Width="100">',
+            '                                                <DataGridTemplateColumn.CellTemplate>',
+            '                                                    <DataTemplate>',
+            '                                                        <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                    </DataTemplate>',
+            '                                                </DataGridTemplateColumn.CellTemplate>',
+            '                                            </DataGridTemplateColumn>',
+            '                                            <DataGridTextColumn Header="Last"  Binding="{Binding Record.Last}"         Width="150"/>',
+            '                                            <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>',
+            '                                            <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>',
+            '                                            <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>',
+            '                                        </DataGrid.Columns>',
+            '                                    </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Invoice_Client_Add" Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Client_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Invoice_Client_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Issue">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Invoice_Issue_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Invoice_Issue_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Invoice_Issue_Result" ItemsSource="{Binding Issue}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"   Width="150"/>',
+            '                                        <DataGridTextColumn Header="Status"       Binding="{Binding Record.Status}"        Width="100"/>',
+            '                                        <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}"   Width="200"/>',
+            '                                        <DataGridTemplateColumn Header="Client" Width="150">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox ItemsSource="{Binding Record.Client}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTemplateColumn Header="Device" Width="150">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox ItemsSource="{Binding Record.Device}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTemplateColumn Header="Service" Width="150">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox ItemsSource="{Binding Record.Service}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Invoice_Issue_Add"    Content="+" />',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Issue_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Invoice_Issue_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Purchase">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Invoice_Purchase_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Invoice_Purchase_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Invoice_Purchase_Result" ItemsSource="{Binding Purchase}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="200"/>',
+            '                                        <DataGridTextColumn Header="Distributor"   Binding="{Binding Record.Distributor}"   Width="150"/>',
+            '                                        <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>',
+            '                                        <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>',
+            '                                        <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>',
+            '                                        <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>',
+            '                                        <DataGridTemplateColumn Header="IsDevice"   Width="60">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox SelectedIndex="{Binding Record.IsDevice}">',
+            '                                                        <ComboBoxItem Content="False"/>',
+            '                                                        <ComboBoxItem Content="True"/>',
+            '                                                    </ComboBox>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>                            ',
+            '                                        <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Invoice_Purchase_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Purchase_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Invoice_Purchase_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                        <TabItem Header="Inventory">',
+            '                            <Grid>',
+            '                                <Grid.RowDefinitions>',
+            '                                    <RowDefinition Height="50"/>',
+            '                                    <RowDefinition Height="*"/>',
+            '                                    <RowDefinition Height="40"/>',
+            '                                </Grid.RowDefinitions>',
+            '                                <Grid Grid.Row="0">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="120"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <ComboBox Grid.Column="0" Name="Mod_Invoice_Inventory_Property"/>',
+            '                                    <TextBox  Grid.Column="1" Name="Mod_Invoice_Inventory_Filter"/>',
+            '                                </Grid>',
+            '                                <DataGrid Grid.Row="1" Name="Mod_Invoice_Inventory_Result" ItemsSource="{Binding Inventory}">',
+            '                                    <DataGrid.Columns>',
+            '                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="200"/>',
+            '                                        <DataGridTextColumn Header="Vendor"      Binding="{Binding Record.Vendor}"      Width="150"/>',
+            '                                        <DataGridTextColumn Header="Model"       Binding="{Binding Record.Model}"       Width="150"/>',
+            '                                        <DataGridTextColumn Header="Serial"      Binding="{Binding Record.Serial}"      Width="150"/>',
+            '                                        <DataGridTextColumn Header="Title"       Binding="{Binding Record.Title}"       Width="200"/>',
+            '                                        <DataGridTemplateColumn Header="IsDevice" Width="75">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox SelectedIndex="{Binding Record.IsDevice}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">',
+            '                                                        <ComboBoxItem Content="False"/>',
+            '                                                        <ComboBoxItem Content="True"/>',
+            '                                                    </ComboBox>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTemplateColumn Header="Device" Width="150">',
+            '                                            <DataGridTemplateColumn.CellTemplate>',
+            '                                                <DataTemplate>',
+            '                                                    <ComboBox ItemsSource="{Binding Record.Device}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                                </DataTemplate>',
+            '                                            </DataGridTemplateColumn.CellTemplate>',
+            '                                        </DataGridTemplateColumn>',
+            '                                        <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="80"/>',
+            '                                    </DataGrid.Columns>',
+            '                                </DataGrid>',
+            '                                <Grid Grid.Row="2">',
+            '                                    <Grid.ColumnDefinitions>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                        <ColumnDefinition Width="*"/>',
+            '                                        <ColumnDefinition Width="40"/>',
+            '                                    </Grid.ColumnDefinitions>',
+            '                                    <Button   Grid.Column="0" Name="Mod_Invoice_Inventory_Add"    Content="+"/>',
+            '                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Inventory_List"/>',
+            '                                    <Button   Grid.Column="2" Name="Mod_Invoice_Inventory_Remove" Content="-"/>',
+            '                                </Grid>',
+            '                            </Grid>',
+            '                        </TabItem>',
+            '                    </TabControl>',
+            '                    <DataGrid Name="Mod_Invoice_Record_List" Grid.Row="2">',
+            '                        <DataGrid.Columns>',
+            '                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100"/>',
+            '                            <DataGridTemplateColumn Header="Value" Width="*">',
+            '                                <DataGridTemplateColumn.CellTemplate>',
+            '                                    <DataTemplate>',
+            '                                        <ComboBox ItemsSource="{Binding Value}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+            '                                    </DataTemplate>',
+            '                                </DataGridTemplateColumn.CellTemplate>',
+            '                            </DataGridTemplateColumn>',
+            '                        </DataGrid.Columns>',
+            '                    </DataGrid>',
+            '                </Grid>',
+            '            </Grid>',
+            '            <Grid Grid.Row="1">',
+            '                <Grid.ColumnDefinitions>',
+            '                    <ColumnDefinition Width="*"/>',
+            '                    <ColumnDefinition Width="*"/>',
+            '                    <ColumnDefinition Width="*"/>',
+            '                    <ColumnDefinition Width="*"/>',
+            '                    <ColumnDefinition Width="*"/>',
+            '                </Grid.ColumnDefinitions>',
+            '                <Button Grid.Column="0" Name="View" Content="View"/>',
+            '                <Button Grid.Column="1" Name="New" Content="New"/>',
+            '                <Button Grid.Column="2" Name="Edit" Content="Edit"/>',
+            '                <Button Grid.Column="3" Name="Save" Content="Save"/>',
+            '                <Button Grid.Column="4" Name="Delete" Content="Delete"/>',
+            '            </Grid>',
+            '        </Grid>',
+            '    </Grid>',
+            '</Window>')
     }
 
     Class DGList
@@ -1616,36 +1550,25 @@ Function Invoke-cimdb2
         }
     }
 
-    Class Postal
-    {
-        Hidden [Object] $Line
-        [String] $Postal
-        [String] $City
-        [String] $County
-        Postal([String]$Line)
-        {
-            $This.Line  = $Line -Split "\t"
-            $This.Postal = $This.Line[0]
-            $This.City   = $This.Line[1]
-            $This.County = $This.Line[2]
-        }
-    }
-
     Class UID
     {
         [Object] $UID
         [UInt32] $Index
-        [Object] $Slot
+        [UInt32] $Slot
         [Object] $Type
         [Object] $Date
         [Object] $Time
+        [UInt32] $Sort
         [Object] $Record
-        UID([UInt32]$Slot)
+        UID([UInt32]$Index,[UInt32]$Slot)
         {
             $This.UID    = New-GUID | % GUID
+            $This.Index  = $Index
             $This.Slot   = $Slot
+            $This.Type   = ("Client Service Device Issue Purchase Inventory Expense Account Invoice" -Split " ")[$Slot]
             $This.Date   = Get-Date -UFormat "%m/%d/%Y"
             $This.Time   = Get-Date -UFormat "%H:%M:%S"
+            $This.Sort   = 0
         }
         [String] ToString()
         {
@@ -1656,11 +1579,12 @@ Function Invoke-cimdb2
     Class Client
     {
         [Object]         $UID
-        [Object]       $Index
-        [Object]        $Slot
+        [UInt32]       $Index
+        [UInt32]        $Slot
         [Object]        $Type
         [Object]        $Date
         [Object]        $Time
+        [UInt32]        $Sort
         [UInt32]        $Rank
         [String] $DisplayName
         [String]       $First
@@ -1680,18 +1604,22 @@ Function Invoke-cimdb2
         [Object[]]     $Phone
         [Object[]]     $Email
         [Object[]]    $Device
+        [Object[]]     $Issue
         [Object[]]   $Invoice
-        Client([Object]$UID)
+        Client([Object]$UID,[UInt32]$Rank)
         {
             $This.UID  = $UID.UID
-            $This.Slot = 0
-            $This.Type = "Client"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
 
             $This.Phone   = @( )
             $This.Email   = @( )
             $This.Device  = @( )
+            $This.Issue   = @( )
             $This.Invoice = @( )
         }
         [String] ToString()
@@ -1704,22 +1632,25 @@ Function Invoke-cimdb2
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [UInt32]          $Sort
         [UInt32]          $Rank
         [String]   $DisplayName
         [String]          $Name
         [String]   $Description
         [Float]           $Cost
-        Service([Object]$UID) 
+        Service([Object]$UID,[UInt32]$Rank) 
         { 
             $This.UID  = $UID.UID
-            $This.Slot = 1
-            $This.Type = "Service"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
         }
         [String] ToString()
         {
@@ -1731,11 +1662,12 @@ Function Invoke-cimdb2
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
-        [String]          $Rank
+        [UInt32]          $Sort
+        [UInt32]          $Rank
         [String]   $DisplayName
         [String]       $Chassis
         [String]        $Vendor
@@ -1743,16 +1675,15 @@ Function Invoke-cimdb2
         [String] $Specification
         [String]        $Serial
         [Object]        $Client
-        [Object[]]       $Issue
-        [Object[]]    $Purchase
-        [Object[]]     $Invoice
-        Device([Object]$UID) 
+        Device([Object]$UID,[UInt32]$Rank) 
         { 
             $This.UID  = $UID.UID
-            $This.Slot = 2
-            $This.Type = "Device"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
         }
         [String] ToString()
         {
@@ -1764,61 +1695,33 @@ Function Invoke-cimdb2
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [UInt32]          $Sort
         [UInt32]          $Rank
         [Object]   $DisplayName
         [Object]        $Status
-        [String[]] $Description
+        [String]   $Description
         [Object]        $Client
         [Object]        $Device
-        [Object[]]    $Purchase
         [Object[]]     $Service
-        [Object[]]     $Invoice
-        Issue([Object]$UID) 
+        Issue([Object]$UID,[UInt32]$Rank)
         {
             $This.UID  = $UID.UID
-            $This.Slot = 3
-            $This.Type = "Issue"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
+
+            $This.Service  = @( )
         }
         [String] ToString()
         {
             Return "Issue"
-        }
-    }
-
-    Class Inventory
-    {
-        [Object]           $UID
-        [UInt32]         $Index
-        [Object]          $Slot
-        [Object]          $Type
-        [Object]          $Date
-        [Object]          $Time
-        [UInt32]          $Rank
-        [String]   $DisplayName
-        [String]        $Vendor
-        [String]         $Model
-        [String]        $Serial
-        [Object]         $Title
-        [Object]          $Cost
-        [Bool]        $IsDevice
-        [Object[]]      $Device
-        Inventory([Object]$UID) 
-        {
-            $This.UID  = $UID.UID
-            $This.Slot = 4
-            $This.Type = "Inventory"
-            $This.Date = $UID.Date
-            $This.Time = $UID.Time
-        }
-        [String] ToString()
-        {
-            Return "Inventory"
         }
     }
 
@@ -1830,6 +1733,7 @@ Function Invoke-cimdb2
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [Object]          $Sort
         [UInt32]          $Rank
         [Object]   $DisplayName
         [Object]   $Distributor
@@ -1841,13 +1745,15 @@ Function Invoke-cimdb2
         [Bool]        $IsDevice
         [Object]        $Device
         [Object]          $Cost
-        Purchase([Object]$UID) 
+        Purchase([Object]$UID,[UInt32]$Rank) 
         {
             $This.UID  = $UID.UID
-            $This.Slot = 5
-            $This.Type = "Purchase"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
         }
         [String] ToString()
         {
@@ -1855,27 +1761,66 @@ Function Invoke-cimdb2
         }
     }
 
+    Class Inventory
+    {
+        [Object]           $UID
+        [UInt32]         $Index
+        [UInt32]          $Slot
+        [Object]          $Type
+        [Object]          $Date
+        [Object]          $Time
+        [UInt32]          $Sort
+        [UInt32]          $Rank
+        [String]   $DisplayName
+        [String]        $Vendor
+        [String]         $Model
+        [String]        $Serial
+        [Object]         $Title
+        [Object]          $Cost
+        [Bool]        $IsDevice
+        [Object]        $Device
+        Inventory([Object]$UID,[UInt32]$Rank) 
+        {
+            $This.UID  = $UID.UID
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
+            $This.Date = $UID.Date
+            $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
+
+            $This.Device = @( )
+        }
+        [String] ToString()
+        {
+            Return "Inventory"
+        }
+    }
+
     Class Expense
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [UInt32]          $Sort
         [UInt32]          $Rank
         [Object]   $DisplayName
         [Object]     $Recipient
         [Object]     $IsAccount
         [Object]       $Account
         [Object]          $Cost
-        Expense([Object]$UID) 
+        Expense([Object]$UID,[UInt32]$Rank) 
         {
             $This.UID  = $UID.UID
-            $This.Slot = 6
-            $This.Type = "Expense"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
         }
         [String] ToString()
         {
@@ -1887,20 +1832,23 @@ Function Invoke-cimdb2
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [UInt32]          $Sort
         [UInt32]          $Rank
         [String]   $DisplayName
         [Object]        $Object
-        Account([Object]$UID) 
+        Account([Object]$UID,[UInt32]$Rank) 
         {
             $This.UID  = $UID.UID
-            $This.Slot = 7
-            $This.Type = "Account"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
         }
         [String] ToString()
         {
@@ -1912,24 +1860,31 @@ Function Invoke-cimdb2
     {
         [Object]           $UID
         [UInt32]         $Index
-        [Object]          $Slot
+        [UInt32]          $Slot
         [Object]          $Type
         [Object]          $Date
         [Object]          $Time
+        [UInt32]          $Sort
         [UInt32]          $Rank
         [String]   $DisplayName
         [UInt32]          $Mode
         [Object]        $Client
-        [Object]     $Inventory
-        [Object]       $Service
-        [Object]      $Purchase
-        Invoice([Object]$UID) 
+        [Object[]]       $Issue
+        [Object[]]    $Purchase
+        [Object[]]   $Inventory
+        Invoice([Object]$UID,[UInt32]$Rank) 
         {
             $This.UID  = $UID.UID
-            $This.Slot = 8
-            $This.Type = "Invoice"
+            $This.Slot = $UID.Slot
+            $This.Type = $UID.Type
             $This.Date = $UID.Date
             $This.Time = $UID.Time
+            $This.Sort = $UID.Sort
+            $This.Rank = $Rank
+
+            $This.Issue     = @( )
+            $This.Purchase  = @( )
+            $This.Inventory = @( )
         }
         [String] ToString()
         {
@@ -1944,11 +1899,12 @@ Function Invoke-cimdb2
         [Object[]]     $Service
         [Object[]]      $Device
         [Object[]]       $Issue
-        [Object[]]   $Inventory
         [Object[]]    $Purchase
+        [Object[]]   $Inventory
         [Object[]]     $Expense
         [Object[]]     $Account
         [Object[]]     $Invoice
+        [Object[]]      $Sorted
         DB()
         {
             $This.UID       = @( )
@@ -1956,35 +1912,12 @@ Function Invoke-cimdb2
             $This.Service   = @( )
             $This.Device    = @( )
             $This.Issue     = @( )
-            $This.Inventory = @( )
             $This.Purchase  = @( )
+            $This.Inventory = @( )
             $This.Expense   = @( )
             $This.Account   = @( )
             $This.Invoice   = @( )  
-        }
-        [UInt32] GetCount([UInt32]$X)
-        {
-            Return ( $X + 1 )
-        }
-        [UInt32] GetIndex()
-        {
-            Return ($This.GetCount($This.UID.Count) - 1)
-        }
-        [UInt32] GetRank([UInt32]$Slot)
-        {
-            Return $This.GetCount(
-            @(  
-                $This.Client.Count    ,
-                $This.Service.Count   ,
-                $This.Device.Count    ,
-                $This.Issue.Count     , 
-                $This.Inventory.Count ,
-                $This.Purchase.Count  ,
-                $This.Expense.Count   ,
-                $This.Account.Count   ,
-                $This.Invoice.Count   
-            
-            )[$Slot]) - 1
+            $This.Sorted    = @( )
         }
         [Object] NewUID([Object]$Slot)
         {
@@ -1993,23 +1926,23 @@ Function Invoke-cimdb2
                 Throw "Invalid entry"
             }
 
-            $Item                = [UID]::New($Slot)
-            $Item.Type           = @("Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")[$Slot]
-            $Item.Index          = $This.GetIndex()
+            $Item                = [UID]::New($This.UID.Count,$Slot)
+            $Type                = $Item.Type
+            $X                   = $This.$Type.Count
             $Item.Record         = Switch ($Slot)
             {
-                0 { [Client]::New($Item)    } 1 { [Service]::New($Item)   } 2 { [Device]::New($Item)    }
-                3 { [Issue]::New($Item)     } 4 { [Inventory]::New($Item) } 5 { [Purchase]::New($Item)  }
-                6 { [Expense]::New($Item)   } 7 { [Account]::New($Item)   } 8 { [Invoice]::New($Item)   }
+                0 { [Client]::New($Item,$X)    } 1 { [Service]::New($Item,$X)   } 2 { [Device]::New($Item,$X)    }
+                3 { [Issue]::New($Item,$X)     } 4 { [Purchase]::New($Item,$X)  } 5 { [Inventory]::New($Item,$X) } 
+                6 { [Expense]::New($Item,$X)   } 7 { [Account]::New($Item,$X)   } 8 { [Invoice]::New($Item,$X)   }
             }
 
-            $Item.Record.Index   = $Item.Index
-            $Item.Record.Rank    = $This.GetRank($Slot)
+            $Item.Record.Index   = $This.UID.Count
+            $Item.Record.Rank    = $X
 
             Switch($Slot)
             {
                 0 { $This.Client     += $Item } 1 { $This.Service    += $Item } 2 { $This.Device     += $Item }
-                3 { $This.Issue      += $Item } 4 { $This.Inventory  += $Item } 5 { $This.Purchase   += $Item } 
+                3 { $This.Issue      += $Item } 4 { $This.Purchase   += $Item } 5 { $This.Inventory  += $Item }
                 6 { $This.Expense    += $Item } 7 { $This.Account    += $Item } 8 { $This.Invoice    += $Item }
             }
 
@@ -2021,6 +1954,24 @@ Function Invoke-cimdb2
         {
             Return $This.UID | ? UID -match $UID
         }
+        [Void] SortUID([Object]$UID)
+        {
+            $Item             = $This.GetUID($UID)
+            $Type             = $Item.Type
+            $Item.Slot        = 9
+            $Item.Type        = "Sorted"
+            $Item.Record.Rank = $This.Sorted.Count
+            $Item.Sort        = 1
+            $This.Sorted     += $Item
+
+            $This.$Type       = @( $This.$Type | ? Type -ne "Sorted" )
+            $X                = 0
+            ForEach ( $Object in $This.$Type )
+            {
+                $Object.Record.Rank = $X
+                $X ++
+            }
+        }
     }
 
     Class Template
@@ -2030,43 +1981,36 @@ Function Invoke-cimdb2
         [String[]] $Service
         [String[]] $Device
         [String[]] $Issue
-        [String[]] $Inventory
         [String[]] $Purchase
+        [String[]] $Inventory
         [String[]] $Expense
         [String[]] $Account
         [String[]] $Invoice
         Template()
         {
-            $This.UID          = @("UID","Index","Date","Rank","DisplayName")
-            $This.Client       = @($This.UID; "DOB", "Phone", "Email")
-            $This.Service      = @($This.UID; "Description")
-            $This.Device       = @($This.UID; "Vendor", "Model", "Specification", "Serial", "Title")
-            $This.Issue        = @($This.UID; "Status","Description","Client","Device","Purchase","Service","Invoice")
-            $This.Inventory    = @($This.UID; "Vendor","Model","Serial","Title","Cost","IsDevice","Device")
-            $This.Purchase     = @($This.UID; "Distributor","Vendor","Serial","Model","IsDevice","Device","Cost")
-            $This.Expense      = @($This.UID; "Recipient","Account","Cost")
-            $This.Account      = @($This.UID; "Object")
-            $This.Invoice      = @($This.UID; "Client","Inventory","Service","Purchase")
-            $This.UID          = $This.UID[0..3]
+            $This.UID          = "UID","Index","Slot","Date"
+            $This.Client       = @($This.UID;"Rank","DisplayName","Email","Phone","Last","First","DOB")
+            $This.Service      = @($This.UID;"Rank","DisplayName","Name","Cost","Description")
+            $This.Device       = @($This.UID;"Rank","DisplayName","Chassis","Vendor","Model","Specification","Serial","Client")
+            $This.Issue        = @($This.UID;"Rank","Status","Description","Client","Device")
+            $This.Purchase     = @($This.UID;"Rank","Distributor","Vendor","Serial","Model","IsDevice","Device","Cost")
+            $This.Inventory    = @($This.UID;"Rank","Vendor","Model","Serial","Title","Cost","IsDevice","Device")
+            $This.Expense      = @($This.UID;"Rank","Recipient","Account","Cost")
+            $This.Account      = @($This.UID;"Rank","Object")
+            $This.Invoice      = @($This.UID;"DisplayName","Mode","Phone","Email")
         }
     }
 
     Class Main
     {
-        [String[]]       $Slot = ("UID Client Service Device Issue Inventory Purchase Expense Account Invoice" -Split " ")
+        [String[]]       $Slot = ("UID Client Service Device Issue Purchase Inventory Expense Account Invoice" -Split " ")
         [UInt32]            $X
         [UInt32]            $Y
-        [UInt32]            $Z
         [String]      $Current
         [Object]           $DB
         [Object]         $Xaml
         [Object]         $Temp
         [Object[]]      $Names
-        [Object[]]       $Grid
-        [Object[]]    $TextBox
-        [Object[]]   $ComboBox
-        [Object[]]     $Button
-        [Object[]]   $DataGrid
         [Object]     $Selected
         Main([Object]$Xaml)
         {
@@ -2074,30 +2018,22 @@ Function Invoke-cimdb2
             $This.Xaml     = $Xaml
             $This.Temp     = [Template]::New()
             $This.Names    = $Xaml.Names | ? { $_ -notin "ContentPresenter","Border","ContentSite" } | % { [DGList]::New($_,$This.Xaml.IO.$_.GetType().Name) }
-            $This.Grid     = $This.Names | ? Value -eq Grid
-            $This.TextBox  = $This.Names | ? Value -eq TextBox
-            $This.ComboBox = $This.Names | ? Value -eq ComboBox
-            $This.Button   = $This.Names | ? Value -eq Button
-            $This.DataGrid = $This.Names | ? Value -eq DataGrid
         }
         Collapse()
         {
-            $This.TextBox  | % Name | % { $This.Xaml.IO.$_.Text       = ""          }
-            $This.Grid     | % Name | % { $This.Xaml.IO.$_.Visibility = "Collapsed" }
+            $This.Names    | ? Value -eq TextBox | % { $This.Xaml.IO.$($_.Name).Text       = ""          }
+            $This.Names    | ? Name -match Grid  | % { $This.Xaml.IO.$($_.Name).Visibility = "Collapsed" }
         }
         Menu([UInt32]$X)
         {
             $This.X                       = $X
             $This.Y                       = 0
-            $This.Z                       = 0
             $This.Collapse()
             $This.Current                 = $This.Slot[$X]
             $Sx                           = $This.Current
-            $Gr                           = "{0}_Grid"       -f $Sx
             $Gx                           = "Get_{0}"        -f $Sx
             $Mx                           = "Mod_{0}"        -f $Sx
             $Dg                           = "Get_{0}_Result" -f $Sx
-            $This.Xaml.IO.$Gr.Visibility  = "Visible"
             $This.Xaml.IO.$Gx.Visibility  = "Visible"
             $This.Xaml.IO.$Mx.Visibility  = "Collapsed"
             $This.Xaml.IO.$Dg.ItemsSource = @( )
@@ -2110,7 +2046,6 @@ Function Invoke-cimdb2
                 $This.Xaml.IO.Edit.IsEnabled    = 0
                 $This.Xaml.IO.Save.IsEnabled    = 0
                 $This.Xaml.IO.Delete.IsEnabled  = 0
-                $This.Xaml.IO.Refresh.IsEnabled = 1
             }
 
             Else
@@ -2120,7 +2055,6 @@ Function Invoke-cimdb2
                 $This.Xaml.IO.Edit.IsEnabled    = 0
                 $This.Xaml.IO.Save.IsEnabled    = 0
                 $This.Xaml.IO.Delete.IsEnabled  = 0
-                $This.Xaml.IO.Refresh.IsEnabled = 1
             }
 
             ForEach ( $I in 0..9 )
@@ -2145,23 +2079,139 @@ Function Invoke-cimdb2
         Mode([UInt32]$Y)
         {
             $This.Y                       = $Y
-            $This.Z                       = 0
             $This.Collapse()
             $This.Current                 = $This.Slot[$This.X]
             $Sx                           = $This.Current
-            $Gr                           = "{0}_Grid"       -f $Sx
             $Gx                           = "Get_{0}"        -f $Sx
             $Mx                           = "Mod_{0}"        -f $Sx
             $Dg                           = "Get_{0}_Result" -f $Sx
-            $This.Xaml.IO.$Gr.Visibility  = "Visible"
             $This.Xaml.IO.$Gx.Visibility  = "Collapsed"
             $This.Xaml.IO.$Mx.Visibility  = "Visible"
             $This.Xaml.IO.$Dg.ItemsSource = @( )
             $This.Xaml.IO.$Dg.ItemsSource = @( $This.DB.$Sx )
         }
+        View([String]$UID)
+        {
+            $Item = $This.DB.GetUID($UID)
+
+            Switch($This.Current)
+            {
+                UID
+                {
+                    $This.Xaml.IO.Mod_UID_UID.Text                       = $Item.UID
+                    $This.Xaml.IO.Mod_UID_Index.Text                     = $Item.Index
+                    $This.Xaml.IO.Mod_UID_Slot.Text                      = $Item.Slot
+                    $This.Xaml.IO.Mod_UID_Type.Text                      = $Item.Type
+                    $This.Xaml.IO.Mod_UID_Date.Text                      = $Item.Date
+                    $This.Xaml.IO.Mod_UID_Time.Text                      = $Item.Time
+                    $This.Xaml.IO.Mod_UID_Record.ItemsSource             = ForEach ( $Object in $Item.Record | Get-Member | ? MemberType -eq Property | % Name ) 
+                    {
+                        [DGList]::New($Object,$Item.Record.$Object)
+                    }
+                }
+                Client
+                {
+                    $This.Xaml.IO.Mod_Client_Last.Text                   = $Item.Record.Last
+                    $This.Xaml.IO.Mod_Client_First.Text                  = $Item.Record.First
+                    $This.Xaml.IO.Mod_Client_MI.Text                     = $Item.Record.MI
+                    $This.Xaml.IO.Mod_Client_Gender.SelectedIndex        = @(0,1)[$Item.Record.Gender]
+                    $This.Xaml.IO.Mod_Client_Address.Text                = $Item.Record.Address
+                    $This.Xaml.IO.Mod_Client_Month.Text                  = $Item.Record.Month
+                    $This.Xaml.IO.Mod_Client_Day.Text                    = $Item.Record.Day
+                    $This.Xaml.IO.Mod_Client_Year.Text                   = $Item.Record.Year
+                    $This.Xaml.IO.Mod_Client_City.Text                   = $Item.Record.City
+                    $This.Xaml.IO.Mod_Client_Region.Text                 = $Item.Record.Region
+                    $This.Xaml.IO.Mod_Client_Country.Text                = $Item.Record.Country
+                    $This.Xaml.IO.Mod_Client_Postal.Text                 = $Item.Record.Postal
+                    $This.Xaml.IO.Mod_Client_Phone_List.ItemsSource      = @($Item.Record.Phone)
+                    $This.Xaml.IO.Mod_Client_Email_List.ItemsSource      = @($Item.Record.Email)
+                    $This.Xaml.IO.Mod_Client_Device_List.ItemsSource     = @($Item.Record.Device)
+                    $This.Xaml.IO.Mod_Client_Issue_List.ItemsSource      = @($Item.Record.Issue)
+                    $This.Xaml.IO.Mod_Client_Invoice_List.ItemsSource    = @($Item.Record.Invoice)
+                }
+                Service
+                {
+                    $This.Xaml.IO.Mod_Service_Name.Text                  = $Item.Record.Name
+                    $This.Xaml.IO.Mod_Service_Description.Text           = $Item.Record.Description
+                    $This.Xaml.IO.Mod_Service_Cost.Text                  = $Item.Record.Cost
+                }
+                Device
+                {
+                    $This.Xaml.IO.Mod_Device_DisplayName.Text            = $Item.Record.DisplayName
+                    $This.Xaml.IO.Mod_Device_Chassis_List.SelectedIndex  = @{ Desktop = 0; Laptop = 1; Smartphone = 2; Tablet = 3; Console = 4; Server = 5; Network = 6; Other = 7; "-" = 8 }[$Item.Record.Chassis]
+                    $This.Xaml.IO.Mod_Device_Vendor.Text                 = $Item.Record.Vendor
+                    $This.Xaml.IO.Mod_Device_Model.Text                  = $Item.Record.Model
+                    $This.Xaml.IO.Mod_Device_Specification.Text          = $Item.Record.Specfication
+                    $This.Xaml.IO.Mod_Device_Serial.Text                 = $Item.Record.Serial
+                    $This.Xaml.IO.Mod_Device_Client_Result.ItemsSource   = @($Item.Record.Client)
+                }
+                Issue
+                {
+                    $This.Xaml.IO.Mod_Issue_Status_List.SelectedIndex    = @{ "-" = 0; New = 1; Diagnosed = 2; Commit = 3; Complete = 4}[$Item.Record.Status]
+                    $This.Xaml.IO.Mod_Issue_Description.Text             = $Item.Record.Description
+                    $This.Xaml.IO.Mod_Issue_Client_List.ItemsSource      = $Item.Record.Client
+                    $This.Xaml.IO.Mod_Issue_Device_List.ItemsSource      = $Item.Record.Device
+                    $This.Xaml.IO.Mod_Issue_Service_List.ItemsSource     = @($Item.Record.Service)
+                    $This.Xaml.IO.Mod_Issue_Record_List.ItemsSource      = ForEach ( $Object in $Item.Record | Get-Member | ? MemberType -eq Property | % Name ) 
+                    {
+                        [DGList]::New($Object,$Item.Record.$Object)
+                    }
+                }
+                Purchase
+                {
+                    $This.Xaml.IO.Mod_Purchase_DisplayName.Text          = $Item.Record.DisplayName
+                    $This.Xaml.IO.Mod_Purchase_Distributor.Text          = $Item.Record.Distributor
+                    $This.Xaml.IO.Mod_Purchase_URL.Text                  = $Item.Record.URL
+                    $This.Xaml.IO.Mod_Purchase_Vendor.Text               = $Item.Record.Vendor
+                    $This.Xaml.IO.Mod_Purchase_Model.Text                = $Item.Record.Model
+                    $This.Xaml.IO.Mod_Purchase_Specification.Text        = $Item.Record.Specification
+                    $This.Xaml.IO.Mod_Purchase_Serial.Text               = $Item.Record.Serial
+                    $This.Xaml.IO.Mod_Purchase_IsDevice.SelectedIndex    = @(0,1)[$Item.Record.IsDevice]
+                    $This.Xaml.IO.Mod_Purchase_Device_List.ItemsSource   = $Item.Record.Device
+                    $This.Xaml.IO.Mod_Purchase_Cost.Text                 = $Item.Record.Cost
+                }
+                Inventory
+                {
+                    $This.Xaml.IO.Mod_Inventory_Vendor.Text              = $Item.Record.Vendor
+                    $This.Xaml.IO.Mod_Inventory_Model.Text               = $Item.Record.Model
+                    $This.Xaml.IO.Mod_Inventory_Serial.Text              = $Item.Record.Serial
+                    $This.Xaml.IO.Mod_Inventory_Title.Text               = $Item.Record.Title
+                    $This.Xaml.IO.Mod_Inventory_Cost.Text                = $Item.Record.Cost
+                    $This.Xaml.IO.Mod_Inventory_IsDevice.SelectedIndex   = @(0,1)[$Item.Record.IsDevice]
+                    $This.Xaml.IO.Mod_Inventory_Device_List.ItemsSource  = $Item.Record.Device
+                }
+                Expense
+                {
+                    $This.Xaml.IO.Mod_Expense_DisplayName.Text           = $Item.Record.DisplayName
+                    $This.Xaml.IO.Mod_Expense_Recipient.Text             = $Item.Record.Recipient
+                    $This.Xaml.IO.Mod_Expense_IsAccount.SelectedIndex    = @(0,1)[$Item.Record.IsAccount]
+                    $This.Xaml.IO.Mod_Expense_Account_List.ItemsSource   = $Item.Record.Account
+                    $This.Xaml.IO.Mod_Expense_Cost.Text                  = $Item.Record.Cost
+                }
+                Account
+                {
+                    $This.Xaml.IO.Mod_Account_Object_List.ItemsSource    = @($Item.Record.Object)
+                }
+                Invoice
+                {
+                    $This.Xaml.IO.Mod_Invoice_Mode_List.SelectedIndex    = @{ Quick = 0 ; Default = 1 }[$Item.Record.Mode]
+                    $This.Xaml.IO.Mod_Invoice_Client_List.ItemsSource    = @($Item.Record.Client)
+                    $This.Xaml.IO.Mod_Invoice_Issue_List.ItemsSource     = @($Item.Record.Issue)
+                    $This.Xaml.IO.Mod_Invoice_Purchase_List.ItemsSource  = @($Item.Record.Purchase)
+                    $This.Xaml.IO.Mod_Invoice_Inventory_List.ItemsSource = @($Item.Record.Inventory)
+
+                    $This.Xaml.IO.Mod_Invoice_Record_List.ItemsSource    = ForEach ( $Object in $Item.Record | Get-Member | ? MemberType -eq Property | % Name ) 
+                    {
+                        [DGList]::New($Object,$Item.Record.$Object)
+                    }
+                }
+            }
+        }
     }
 
     $Xaml = [XamlWindow][cimdbGUI]::Tab
+
+    $Temp = $Xaml.Names | ? { $_ -notin "ContentPresenter","Border","ContentSite" } | % { [DGList]::New($_,$Xaml.IO.$_.GetType().Name) }
 
     # Open ComboBox/DataGrid ItemsSource
     $Xaml.Names | ? { $_ -match "(Result|Property)" } | % { $Xaml.IO.$_.ItemsSource = @( ) }
@@ -2174,8 +2224,8 @@ Function Invoke-cimdb2
         {
             UID_Property       { $Temp.UID       } Client_Property    { $Temp.Client    } 
             Service_Property   { $Temp.Service   } Device_Property    { $Temp.Device    } 
-            Issue_Property     { $Temp.Issue     } Inventory_Property { $Temp.Inventory }
-            Purchase_Property  { $Temp.Purchase  } Expense_Property   { $Temp.Expense   } 
+            Issue_Property     { $Temp.Issue     } Purchase_Property  { $Temp.Purchase  }
+            Inventory_Property { $Temp.Inventory } Expense_Property   { $Temp.Expense   } 
             Account_Property   { $Temp.Account   } Invoice_Property   { $Temp.Invoice   }
         }
         $Xaml.IO.$_.SelectedIndex = 0
@@ -2183,16 +2233,15 @@ Function Invoke-cimdb2
 
     $Main = [Main]::New($Xaml)
 
-    # For testing DB
-    # 0..30 | % { $X = Get-Random -Minimum 0 -Maximum 8; $Main.DB.NewUID($X) }
+    0..100 | % { $X = Get-Random -Minimum 0 -Maximum 9; $Main.DB.NewUID($X) }
 
     $Xaml.IO.UID_Tab.Add_Click(        { $Main.Menu(0) } )
     $Xaml.IO.Client_Tab.Add_Click(     { $Main.Menu(1) } )
     $Xaml.IO.Service_Tab.Add_Click(    { $Main.Menu(2) } )
     $Xaml.IO.Device_Tab.Add_Click(     { $Main.Menu(3) } )
     $Xaml.IO.Issue_Tab.Add_Click(      { $Main.Menu(4) } )
-    $Xaml.IO.Inventory_Tab.Add_Click(  { $Main.Menu(5) } )
-    $Xaml.IO.Purchase_Tab.Add_Click(   { $Main.Menu(6) } )
+    $Xaml.IO.Purchase_Tab.Add_Click(   { $Main.Menu(5) } )
+    $Xaml.IO.Inventory_Tab.Add_Click(  { $Main.Menu(6) } )
     $Xaml.IO.Expense_Tab.Add_Click(    { $Main.Menu(7) } )
     $Xaml.IO.Account_Tab.Add_Click(    { $Main.Menu(8) } )
     $Xaml.IO.Invoice_Tab.Add_Click(    { $Main.Menu(9) } )
@@ -2200,165 +2249,607 @@ Function Invoke-cimdb2
     # View
     $Xaml.IO.View.Add_Click(
     {
-        $Main.Selected = $Xaml.IO."Get_$($Main.Current)_Result".SelectedItem
+        $Main.Selected = $Xaml.IO."Get_$($Main.Current)_Result".Items[$Xaml.IO."Get_$($Main.Current)_Result".SelectedIndex]
         $Main.Mode(0)
-        $Main.TextBox  | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$_.IsEnabled = 0 }
-        $Main.Button   | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$_.IsEnabled = 0 }
-        Switch($Main.Current)
-        {
-            UID
-            {
-                $Xaml.IO.Mod_UID_UID_Text.Text   = $Main.Selected.UID
-                $Xaml.IO.Mod_UID_Index_Text.Text = $Main.Selected.Index
-                $Xaml.IO.Mod_UID_Slot_Text.Text  = $Main.Selected.Slot
-                $Xaml.IO.Mod_UID_Type_Text.Text  = $Main.Selected.Type
-                $Xaml.IO.Mod_UID_Date_Text.Text  = $Main.Selected.Date
-                $Xaml.IO.Mod_UID_Time_Text.Text  = $Main.Selected.Time
-                $Xaml.IO.Mod_UID_Record_List.ItemsSource = ForEach ( $Object in $Select.Record | Get-Member | ? MemberType -eq Property | % Name ) 
-                {
-                    [DGList]::New($Object,$Select.Record.$Object)
-                })
-            }
+        $Main.Names    | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 0 }
 
-            Client
-            {
-                $Xaml.IO.Mod_Client_Last.Text            = $Main.Selected.Record.Last
-                $Xaml.IO.Mod_Client_First.Text           = $Main.Selected.Record.First
-                $Xaml.IO.Mod_Client_MI.Text              = $Main.Selected.Record.MI
-                $Xaml.IO.Mod_Client_Address.Text         = $Main.Selected.Record.Address
-                $Xaml.IO.Mod_Client_Month.Text           = $Main.Selected.Record.Month
-                $Xaml.IO.Mod_Client_Day.Text             = $Main.Selected.Record.Day
-                $Xaml.IO.Mod_Client_Year.Text            = $Main.Selected.Record.Year
-                $Xaml.IO.Mod_Client_City.Text            = $Main.Selected.Record.City
-                $Xaml.IO.Mod_Client_Region.Text          = $Main.Selected.Record.Region
-                $Xaml.IO.Mod_Client_Country.Text         = $Main.Selected.Record.Country
-                $Xaml.IO.Mod_Client_Postal.Text          = $Main.Selected.Record.Postal
-                $Xaml.IO.Mod_Client_Phone_List.ItemsSource   = @($Main.Selected.Record.Phone)
-                $Xaml.IO.Mod_Client_Email_List.ItemsSource   = @($Main.Selected.Record.Email)
-                $Xaml.IO.Mod_Client_Device_List.ItemsSource  = @($Main.Selected.Record.Device)
-                $Xaml.IO.Mod_Client_Invoice_List.ItemsSource = @($Main.Selected.Record.Invoice)
-
-            }
-
-            Service
-            {
-                $Xaml.IO.Mod_Service_Name.Text           = $Main.Selected.Record.Name
-                $Xaml.IO.Mod_Service_Description.Text    = $Main.Selected.Record.Description
-                $Xaml.IO.Mod_Service_Cost.Text           = $Main.Selected.Record.Cost
-            }
-
-            Device
-            {
-                $Xaml.IO.Mod_Device_DisplayName.Text           = $Main.Selected.Record.DisplayName
-                $Xaml.IO.Mod_Device_Chassis_List.SelectedIndex = @{ Desktop = 0; Laptop = 1; Smartphone = 2; Tablet = 3; Console = 4; Console = 5; Server = 6; Network = 7; Other = 8; "-" = 9 }[$Main.Selected.Record.Chassis]
-                $Xaml.IO.Mod_Device_Vendor_Text.Text           = $Main.Selected.Record.Vendor
-                $Xaml.IO.Mod_Device_Model_Text.Text            = $Main.Selected.Record.Model
-                $Xaml.IO.Mod_Device_Specification_Text.Text    = $Main.Selected.Record.Specfication
-                $Xaml.IO.Mod_Device_Serial_Text.Text           = $Main.Selected.Record.Serial
-                $Xaml.IO.Mod_Client_Result.ItemsSource         = @($Main.Selected.Record.Client)
-                $Xaml.IO.Mod_Issue_Result.ItemsSource          = @($Main.Selected.Record.Issue)
-                $Xaml.IO.Mod_Purchase_Result.ItemsSource       = @($Main.Selected.Record.Purchase)
-                $Xaml.IO.Mod_Invoice_Result.ItemsSource        = @($Main.Selected.Record.Invoice)
-            }
-
-            Issue
-            {
-                $Xaml.IO.Mod_Issue_DisplayName.Text            = $Main.Selected.Record.DisplayName
-                $Xaml.IO.Mod_Issue_Status_List.SelectedIndex   = @{ New = 0; Diagnosed = 1; Commit = 2; Complete = 3}[$Main.Selected.Record.Status]
-                $Xaml.IO.Mod_Issue_Description_Text.Text       = $Main.Selected.Record.Description
-                $Xaml.IO.Mod_Issue_Client_List.ItemsSource     = $Main.Selected.Record.Client
-                $Xaml.IO.Mod_Issue_Device_List.ItemsSource     = $Main.Selected.Record.Device
-                $Xaml.IO.Mod_Issue_Purchase_List.ItemsSource   = @($Main.Selected.Record.Purchase)
-                $Xaml.IO.Mod_Issue_Service_List.ItemsSource    = @($Main.Selected.Record.Service)
-                $Xaml.IO.Mod_Issue_Invoice_List.ItemsSource    = @($Main.Selected.Record.Invoice)
-                $Xaml.IO.Mod_Issue_Record_List.ItemsSource     = ForEach ( $Object in $Select.Record | Get-Member | ? MemberType -eq Property | % Name ) 
-                {
-                    [DGList]::New($Object,$Select.Record.$Object)
-                })
-            }
-            Inventory
-            {
-                $Xaml.IO.Mod_Inventory_DisplayName.Text        = $Main.Selected.Record.DisplayName
-                $Xaml.IO.Mod_Inventory_Vendor_Text.Text        = $Main.Selected.Record.Vendor
-                $Xaml.IO.Mod_Inventory_Model_Text.Text         = $Main.Selected.Record.Model
-                $Xaml.IO.Mod_Inventory_Serial_Text.Text        = $Main.Selected.Record.Serial
-                $Xaml.IO.Mod_Inventory_Title_Text.Text         = $Main.Selected.Record.Title
-                $Xaml.IO.Mod_Inventory_Cost_Text.Text          = $Main.Selected.Record.Cost
-                $Xaml.IO.Mod_Inventory_IsDevice_List.SelectedIndex = @(0,1)[$Main.Selected.Record.IsDevice]
-                $Xaml.IO.Mod_Inventory_Device_List.ItemsSource = $Main.Selected.Record.Device
-            }
-            Purchase
-            {
-                $Xaml.IO.Mod_Purchase_DisplayName_Text.Text    = $Main.Selected.Record.DisplayName
-                $Xaml.IO.Mod_Purchase_Distributor_Text.Text    = $Main.Selected.Record.Distributor
-                $Xaml.IO.Mod_Purchase_URL_Text.Text            = $Main.Selected.Record.URL
-                $Xaml.IO.Mod_Purchase_Vendor_Text.Text         = $Main.Selected.Record.Vendor
-                $Xaml.IO.Mod_Purchase_Model_Text.Text          = $Main.Selected.Record.Model
-                $Xaml.IO.Mod_Purchase_Specification_Text       = $Main.Selected.Record.Specification
-                $Xaml.IO.Mod_Purchase_Serial_Text              = $Main.Selected.Record.Serial
-                $Xaml.IO.Mod_Purchase_IsDevice_List.SelectedIndex = @(0,1)[$Main.Selected.Record.IsDevice]
-                $Xaml.IO.Mod_Purchase_Device_List.ItemsSource  = $Main.Selected.Record.Device
-                $Xaml.IO.Mod_Purchase_Cost_Text                = $Main.Selected.Record.Cost
-            }
-            Expense
-            {
-                $Xaml.IO.Mod_Expense_DisplayName_Text.Text     = $Main.Selected.Record.DisplayName
-                $Xaml.IO.Mod_Expense_Recipient_Text.Text       = $Main.Selected.Record.Recipient
-                $Xaml.IO.Mod_Expense_IsAccount_List.SelectedIndex = @(0,1)[$Main.Selected.Record.IsAccount]
-                $Xaml.IO.Mod_Expense_Account_List.ItemsSource  = $Main.Selected.Record.Account
-                $Xaml.IO.Mod_Expense_Cost_Text.Text            = $Main.Selected.Record.Cost
-            }
-            Account
-            {
-                $Xaml.IO.Mod_Account_Object_List.ItemsSource   = @($Main.Selected.Record.Object)
-            }
-            Invoice
-            {
-                $Xaml.IO.Mod_Invoice_Mode_List.SelectedIndex    = @{ Quick = 0 ; Default = 1 }[$Main.Selected.Record.Mode]
-                $Xaml.IO.Mod_Invoice_Client_List.ItemsSource    = @($Main.Selected.Record.Client)
-                $Xaml.IO.Mod_Invoice_Inventory_List.ItemsSource = @($Main.Selected.Record.Inventory)
-                $Xaml.IO.Mod_Invoice_Service_List.ItemsSource   = @($Main.Selected.Record.Service)
-                $Xaml.IO.Mod_Invoice_Purchase_List.ItemsSource  = @($Main.Selected.Record.Purchase)
-
-                $Xaml.IO.Mod_Invoice_Record_List.ItemsSource     = ForEach ( $Object in $Select.Record | Get-Member | ? MemberType -eq Property | % Name ) 
-                {
-                    [DGList]::New($Object,$Select.Record.$Object)
-                })
-            }
-        }
+        $Main.View($Main.Selected.UID)
     })
 
     # New
     $Xaml.IO.New.Add_Click(            
     { 
         $Main.Mode(1)
-        $Main.TextBox | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 1  }
-        $Main.TextBox | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).Text      = "" }
+        $Main.Names    | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 1  }
+        $Main.TextBox  | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).Text      = "" }
     })
 
     # Edit
     $Xaml.IO.Edit.Add_Click(           
     {
+        $Main.Selected = $Xaml.IO."Get_$($Main.Current)_Result".SelectedItem
         $Main.Mode(2)
-        $Main.TextBox | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 1 }
+        $Main.TextBox  | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 1 }
+        $Main.Button   | ? Name -match "Mod_$($Main.Current)" | % { $Xaml.IO.$($_.Name).IsEnabled = 1 }
+
+        $Main.View($Main.Selected.UID)
     })
 
     # Save
     $Xaml.IO.Save.Add_Click(           
-    { 
-        $Main.Mode(3)
+    {
+        If ($Mode.Y -eq 2)
+        {
+            $Main.DB.SortUID($Main.Selected.GUID)
+        }
+
+        Switch($Main.Current)
+        {
+            Client
+            {
+                # Email
+                If ($Xaml.IO.Mod_Client_Email_List.Items.Count -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must specify an email address","Error")
+                }
+
+                If ($Xaml.IO.Mod_Client_Email_List.Items.Count -gt 0)
+                {
+                    ForEach ($Email in $Xaml.IO.Mod_Client_Email_List.Items)
+                    {
+                        If ($Email -in $Main.DB.Client.Record.Email)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("That email address is already used in another account","Error")
+                        }
+                    }
+                }
+
+                # Phone
+                If ($Xaml.IO.Mod_Client_Phone_List.Items.Count -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must specify an email address","Error")
+                }
+
+                If ($Xaml.IO.Mod_Client_Email_List.Items.Count -gt 0)
+                {
+                    ForEach ($Phone in $Xaml.IO.Mod_Client_Phone_List.Items)
+                    {
+                        If ($Email -in $Main.DB.Client.Record.Phone)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("That phone number is already used in another account","Error")
+                        }
+                    }
+                }
+
+                # Name
+                If ($Xaml.IO.Mod_Client_Last.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Last name missing","Error")
+                }
+                
+                If ($Xaml.IO.Mod_Client_First.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("First name missing","Error")
+                }
+
+                If ($Xaml.IO.Mod_Client_MI.Text.Length -ne 0)
+                {
+                    $DisplayName = "{0}, {1} {2}." -f $Xaml.IO.Mod_Client_Last.Text,$Xaml.IO.Mod_Client_First.Text,$Xaml.IO.Mod_Client_MI.Text
+                }
+
+                If ($Xaml.IO.Mod_Client_MI.Text.Length -eq 0)
+                {
+                    $DisplayName = "{0}, {1}" -f $Xaml.IO.Mod_Client_Last.Text,$Xaml.IO.Mod_Client_First.Text
+                }
+
+                If ( $Xaml.IO.Mod_Client_Month.Text -notin 1..12 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid DOB/month","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Day.Text -notin 1..31 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid DOB/day","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Year.Text -notin 1900..[UInt32](Get-Date -UFormat %Y))
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid DOB/year","Error")
+                }
+
+                $DOB = "{0}/{1}/{2}" -f $Xaml.IO.Mod_Client_Month.Text,$Xaml.IO.Mod_Client_Day.Text,$Xaml.IO.Mod_Client_Year.Text
+
+                If ($Full -in $Main.DB.Client.Record.DisplayName -and $DOB -in $Main.DB.Client.Record.DOB )
+                {
+                    Throw [System.Windows.MessageBox]::Show("The customer is already in the database","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Gender.SelectedItem.Content -eq "-" )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Gender missing","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Address.Text.Length -eq 0 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Address missing","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_City.Text.Length -eq 0 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid town/city","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Region.Text.Length -eq 0 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid region/state","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Country.Text.Length -eq 0 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid country","Error")
+                }
+
+                If ( $Xaml.IO.Mod_Client_Postal.Text.Length -ne 5 )
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid town/city","Error")
+                }
+
+                $Item                                 = $Main.DB.NewUID(0)
+                $Item.Record.DisplayName              = $DisplayName
+                $Item.Record.Last                     = $Xaml.IO.Mod_Client_Last.Text 
+                $Item.Record.First                    = $Xaml.IO.Mod_Client_First.Text
+                $Item.Record.MI                       = $Xaml.IO.Mod_Client_MI.Text
+                $Item.Record.Gender                   = @(0,1)[$Xaml.IO.Mod_Client_Gender.SelectedIndex]
+                $Item.Record.Address                  = $Xaml.IO.Mod_Client_Address.Text
+                $Item.Record.Month                    = $Xaml.IO.Mod_Client_Month.Text
+                $Item.Record.Day                      = $Xaml.IO.Mod_Client_Day.Text
+                $Item.Record.Year                     = $Xaml.IO.Mod_Client_Year.Text
+                $Item.Record.DOB                      = $DOB
+                $Item.Record.City                     = $Xaml.IO.Mod_Client_City.Text 
+                $Item.Record.Region                   = $Xaml.IO.Mod_Client_Region.Text
+                $Item.Record.Country                  = $Xaml.IO.Mod_Client_Country.Text
+                $Item.Record.Postal                   = $Xaml.IO.Mod_Client_Postal.Text
+                $Item.Record.Phone                    = @($Xaml.IO.Mod_Client_Phone_List.Items)
+                $Item.Record.Email                    = @($Xaml.IO.Mod_Client_Email_List.Items)
+                $Item.Record.Device                   = @($Xaml.IO.Mod_Client_Device_List.Items)
+                $Item.Record.Invoice                  = @($Xaml.IO.Mod_Client_Invoice_List.Items)
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(1)
+            }
+            Service
+            {
+                If ($Xaml.IO.Mod_Service_Name.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No service name listed","Error")
+                }
+
+                If ($Xaml.IO.Mod_Service_Description.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No service description listed","Error")
+                }
+
+                If ($Xaml.IO.Mod_Service_Cost.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No service cost listed","Error")
+                }
+
+                $DisplayName = "{0}/{1}" -f $Xaml.IO.Mod_Service_Name.Text, $Xaml.IO.Mod_Service_Cost.Text
+
+                If ( $DisplayName -in $Main.DB.Service.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That service is already in the database","Error")
+                }
+
+                $Item                    = $Main.DB.NewUID(1)
+                $Item.Record.DisplayName = $DisplayName
+                $Item.Record.Name        = $Xaml.IO.Mod_Service_Name.Text
+                $Item.Record.Description = $Xaml.IO.Mod_Service_Description.Text
+                $Item.Record.Cost        = [Float]($Xaml.IO.Mod_Service_Cost.Text.TrimStart("$"))
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(2)
+            }
+            Device
+            {
+                If ($Xaml.IO.Mod_Device_Chassis_List.SelectedIndex -eq 8)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must select a chassis type","Error")
+                }
+                
+                If ($Xaml.IO.Mod_Device_Vendor.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Missing a vendor name","Error") 
+                }
+
+                If ($Xaml.IO.Mod_Device_Model.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Missing a model name","Error")
+                }
+
+                If ($Xaml.IO.Mod_Device_Specification.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Missing a specification","Error")
+                }
+
+                If ($Xaml.IO.Mod_Device_Serial.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Missing a serial number","Error")
+                }
+
+                $DisplayName = "{0}/{1}/{2}/{3}" -f @($Xaml.IO.Mod_Device_Vendor.Text,
+                                                      $Xaml.IO.Mod_Device_Model.Text,
+                                                      $Xaml.IO.Mod_Device_Specification.Text,
+                                                      $Xaml.IO.Mod_Device_Serial.Text)
+                
+                If ($DisplayName -in $Mod.DB.Device.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That device is already registered","Error")
+                }
+
+                If ($Xaml.IO.Mod_Device_Client_List.Items.Count -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No client was attached to the device","Error" )
+                }
+
+                $Item                      = $Main.DB.NewUID(2)
+                $Item.Record.DisplayName   = $DisplayName
+                $Item.Record.Chassis       = $Xaml.IO.Mod_Device_Chassis_List.SelectedItem.Content
+                $Item.Record.Vendor        = $Xaml.IO.Mod_Device_Vendor.Text
+                $Item.Record.Model         = $Xaml.IO.Mod_Device_Model.Text
+                $Item.Record.Specification = $Xaml.IO.Mod_Device_Specification.Text
+                $Item.Record.Serial        = $Xaml.IO.Mod_Device_Serial.Text
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(3)
+            }
+            Issue
+            {
+                If ($Xaml.IO.Mod_Issue_Status_List.SelectedIndex -eq 4)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must select an issue status","Error")
+                }
+
+                If ($Xaml.IO.Mod_Issue_Description.Text -eq "")
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must enter in a description","Error")
+                }
+
+                If ($Xaml.IO.Mod_Issue_Client_List.Items.Count -ne 1)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must assign (1) client to the issue","Error")
+                }
+
+                If ($Xaml.IO.Mod_Issue_Device_List.Items.Count -ne 1)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must assign (1) device to the issue","Error")
+                }
+
+                If ($Xaml.IO.Mod_Issue_Service_List.Items.Count -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must assign at least (1) service to the issue","Error")
+                }
+
+                $DisplayName = "{0}/{1}/{2}" -f @($Xaml.IO.Mod_Issue_Status_List.SelectedItem.Content,
+                                                  $Xaml.IO.Mod_Issue_Client_List.SelectedItem.Content,
+                                                  $Xaml.IO.Mod_Issue_Device_List.SelectedItem.Content)
+
+                If ($DisplayName -in $Main.DB.Issue.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That status/client/device is already in the system","Error")
+                }
+
+                $Item                    = $Main.DB.NewUID(3)
+                $Item.Record.DisplayName = $DisplayName
+                $Item.Record.Status      = $Xaml.IO.Mod_Issue_Status_List.SelectedItem.Content
+                $Item.Record.Description = $Xaml.IO.Mod_Issue_Description.Text
+                $Item.Record.Client      = $Xaml.IO.Mod_Issue_Client_List.SelectedItem.Content
+                $Item.Record.Device      = $Xaml.IO.Mod_Issue_Device_List.SelectedItem.Content
+                $Item.Record.Service     = @($Xaml.IO.Mod_Issue_Service_List.Items)
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(4)
+            }
+            Purchase
+            {
+                If ($Xaml.IO.Mod_Purchase_Distributor.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Distributor cannot be left blank","Error")
+                }
+
+                If ($Xaml.IO.Mod_Purchase_URL.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Purchase URL cannot be blank","Error")
+                }
+
+                If ($Xaml.IO.Mod_Purchase_Vendor.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Invalid vendor","Error")
+                }
+                
+                If ($Xaml.IO.Mod_Purchase_Model.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Invalid model name","Error")
+                }
+
+                If ($Xaml.IO.Mod_Purchase_Specification.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Invalid specification","Error")
+                }   
+
+                If ($Xaml.IO.Mod_Purchase_Serial.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::New("Serial cannot be blank, use (N/A) if necessary","Error")
+                }
+
+                If ($Xaml.IO.Mod_Purchase_IsDevice.SelectedItem -eq "True")
+                {
+                    If ($Xaml.IO.Mod_Purchase_Device_List.Items.Count -ne 1)
+                    {
+                        Throw [System.Windows.MessageBox]::Show("If this is a device, create the device and select it","Error")
+                    }
+                }
+
+                If ($Xaml.IO.Mod_Purchase_Cost.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Cost cannot be left blank","Error")
+                }
+
+                $DisplayName              = "{0}/{1}/{2}/{3}" -f @($Xaml.IO.Mod_Purchase_Distributor.Text
+                                                                   $Xaml.IO.Mod_Purchase_Vendor.Text,
+                                                                   $Xaml.IO.Mod_Purchase_Model.Text,
+                                                                   $Xaml.IO.Mod_Purchase_Specification.Text)
+                If ($DisplayName -in $Main.DB.Purchase.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That item already exists in the database","Error")
+                }
+
+                $Item                      = $Main.DB.NewUID(4)
+                $Item.Record.DisplayName   = $DisplayName
+                $Item.Record.Distributor   = $Xaml.IO.Mod_Purchase_Distributor.Text
+                $Item.Record.URL           = $Xaml.IO.Mod_Purchase_URL.Text
+                $Item.Record.Vendor        = $Xaml.IO.Mod_Purchase_Vendor.Text
+                $Item.Record.Model         = $Xaml.IO.Mod_Purcahse_Model.Text
+                $Item.Record.Specification = $Xaml.IO.Mod_Purchase_Specification.Text
+                $Item.Record.Serial        = $Xaml.IO.Mod_Purchase_Serial.Text
+                $Item.Record.IsDevice      = @(0,1)[$Xaml.IO.Mod_Purchase_IsDevice]
+                If ($Item.Record.IsDevice -eq $True)
+                {
+                    $Item.Record.Device    = $Xaml.IO.Mod_Purchase_Device.SelectedItem.Content
+                }
+                $Item.Record.Cost          = [Float]($Xaml.IO.Mod_Purchase_Cost.Text.TrimStart("$"))
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(5)
+            }
+            Inventory
+            {
+                If ($Xaml.IO.Mod_Inventory_Vendor.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid vendor specified","Error")
+                }
+
+                If ($Xaml.IO.Mod_Inventory_Model.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid model specified","Error")
+                }
+
+                If ($Xaml.IO.Mod_Inventory_Serial.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Invalid serial specified","Error")
+                }
+
+                If ($Xaml.IO.Mod_Inventory_Title.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Title not listed","Error")
+                }
+
+                If ($Xaml.IO.Mod_Inventory_Cost.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Cost not listed","Error")
+                }
+
+                If ($Xaml.IO.Mod_Inventory_IsDevice.SelectedItem.Content -eq "True" )
+                {
+                    If ($Xaml.IO.Mod_Inventory_Device_List.Items.Count -ne 1)
+                    {
+                        Throw [System.Windows.MessageBox]::Show("If this is a device, must specify (1) device","Error")
+                    }
+                }
+
+                $DisplayName = "{0}/{1}/{2}/{3}" -f @($Xaml.IO.Mod_Inventory_Title.Text,
+                                                      $Xaml.IO.Mod_Inventory_Vendor.Text,
+                                                      $Xaml.IO.Mod_Inventory_Model.Text,
+                                                      $Xaml.IO.Mod_Inventory_Serial.Text)
+                
+                If ($DisplayName -in $Main.DB.Inventory.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("There is an item already in the inventory with these attributes","Error")
+                }
+
+                $Item                     = $Main.DB.NewUID(5)
+                $Item.Record.DisplayName  = $DisplayName
+                $Item.Record.Vendor       = $Xaml.IO.Mod_Inventory_Vendor.Text
+                $Item.Record.Model        = $Xaml.IO.Mod_Inventory_Model.Text
+                $Item.Record.Serial       = $Xaml.IO.Mod_Inventory_Serial.Text
+                $Item.Record.Title        = $Xaml.IO.Mod_Inventory_Title.Text
+                $Item.Record.Cost         = [Float]($Xaml.IO.Mod_Inventory_Cost.Text.TrimStart("$"))
+                $Item.Record.IsDevice     = @(0,1)[$Xaml.IO.Mod_Inventory_IsDevice.SelectedIndex]
+                If ($Item.Record.IsDevice -eq $True)
+                {
+                    $Item.Record.Device   = $Xaml.IO.Mod_Inventory_Device.SelectedItem.Content
+                }
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(6)
+            }
+            Expense
+            {
+                If ($Xaml.IO.Mod_Expense_DisplayName.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Enter a display name for the expense","Error")
+                }
+
+                If ($Xaml.IO.Mod_Expense_Recipient.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No recipient specified","Error")
+                }
+
+                If ($Xaml.IO.Mod_Expense_IsAccount.SelectedItem.Content -eq "True")
+                {
+                    If ($Xaml.IO.Mod_Expense_Account_List.Items.Count -ne 1)
+                    {
+                        Throw [System.Windows.MessageBox]::Show("If this is an account, specify the account","Error")
+                    }
+                }
+
+                If ($Xaml.IO.Mod_Expense_Cost.Text.Length -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("No cost associated with the expense","Error")
+                }
+
+                If ($Xaml.IO.Mod_Expense_DisplayName.Text -in $Main.DB.Expense.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("An expense with that name is already in the database","Error")
+                }
+
+                $Item               = $Main.DB.NewUID(6)
+                $Item.Record.DisplayName = $Xaml.IO.Mod_Expense_DisplayName.Text
+                $Item.Record.Recipient   = $Xaml.IO.Mod_Expense_Recipient.Text
+                $Item.Record.IsAccount   = @(0,1)[$Xaml.IO.Mod_Expense_IsAccount.SelectedIndex]
+                If ($Item.Record.IsAccount -eq $True)
+                {
+                    $Item.Record.Account = $Xaml.IO.Mod_Expense_Account.SelectedItem.Content
+                }
+                $Item.Record.Cost        = [Float]($Xaml.IO.Mod_Expense_Cost.Text.TrimStart("$"))
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(7)
+            }
+            Account
+            {
+                If ($Xaml.IO.Mod_Account_Object_List.Items.Count -eq 0)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must specify an account object","Error")
+                }
+
+                If ($Xaml.IO.Mod_Account_Object_List.SelectedItem.Content -in $Main.DB.Account.Record.Object)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That account is already in the database","Error")
+                }
+
+                $Item                    = $Main.DB.NewUID(7)
+                $Item.Record.Account     = $Xaml.IO.Mod_Account_List.SelectedItem.Content
+
+                [System.Windows.MessageBox]::Show("[$($Item.Record.Account)] added to the database")
+                $Main.Menu(8)
+            }
+            Invoice
+            {
+                If ($Xaml.IO.Mod_Invoice_Client.List.Count -ne 1)
+                {
+                    Throw [System.Windows.MessageBox]::Show("Must specify a client","Error")
+                }
+
+                Switch($Xaml.IO.Mod_Invoice_Mode_List.SelectedIndex)
+                {
+                    0 # Issue
+                    {
+                        If ($Xaml.IO.Mod_Invoice_Issue_List.Items.Count -eq 0)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify an issue","Error")
+                        }
+                    }
+                    1 # Purchase
+                    {
+                        If ($Xaml.IO.Mod_Invoice_Purchase_List.Items.Count -eq 0)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify a purchase","Error")
+                        }
+                    }
+
+                    2 # Inventory
+                    {
+                        If ($Xaml.IO.Mod_Invoice_Inventory_List.Items.Count -eq 0)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify inventory item","Error")
+                        }
+                    }
+
+                    3 # Issue/Purchase
+                    {
+                        If ( 0 -in $Xaml.IO.Mod_Invoice_Issue_List.Items.Count, $Xaml.IO.Mod_Invoice_Purchase_List.Items.Count)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify an issue AND a purchase","Error")
+                        }
+                    }
+
+                    4 # Issue/Inventory
+                    {
+                        If ( 0 -in $Xaml.IO.Mod_Invoice_Issue_List.Items.Count, $Xaml.IO.Mod_Invoice_Inventory_List.Items.Count)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify an issue AND an inventory item","Error")
+                        }
+                    }
+
+                    5 # Purchase/Inventory
+                    {
+                        If ( 0 -in $Xaml.IO.Mod_Invoice_Purchase_List.Items.Count, $Xaml.IO.Mod_Invoice_Inventory_List.Items.Count)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify a purchase AND an inventory item","Error")
+                        }
+                    }
+
+                    6 # Issue/Purchase/Inventory
+                    {
+                        If ( 0 -in $Xaml.IO.Mod_Invoice_Issue.List.Items.Count, $Xaml.IO.Mod_Invoice_Purchase_List.Items.Count, $Xaml.IO.Mod_Invoice_Inventory_List.Items.Count)
+                        {
+                            Throw [System.Windows.MessageBox]::Show("Must specify at least (1) issue, (1) purchase, and (1) inventory item","Error")
+                        }
+                    }
+
+                    7 # Null
+                    {
+                        Throw [System.Windows.MessageBox]::Show("Cannot create a null invoice","Error")
+                    }
+                }
+
+                $DisplayName              = "{0}/{1}/{2}" -f @( Get-Date -UFormat "(%m-%d-%Y)",
+                                                                $Xaml.IO.Mod_Invoice_Client_List.SelectedItem.Content,
+                                                                $Xaml.IO.Mod_Invoice_Mode_List.SelectedIndex)
+                
+                If ($DisplayName -in $Main.DB.Invoice.Record.DisplayName)
+                {
+                    Throw [System.Windows.MessageBox]::Show("That item already exists within the database","Error")
+                }
+                $Item                     = $Main.DB.NewUID(8)
+                $Item.Record.DisplayName  = $DisplayName
+                $Item.Record.Mode         = $Xaml.IO.Mod_Invoice_Mode_List.SelectedItem.Content
+                $Item.Record.Client       = $Xaml.IO.Mod_Invoice_Client_List.SelectedItem.Content
+                $Item.Record.Issue        = @($Xaml.IO.Mod_Invoice_Issue.Items)
+                $Item.Record.Purchase     = @($Xaml.IO.Mod_Invoice_Purchase.Items)
+                $Item.Record.Inventory    = @($Xaml.IO.Mod_Invoice_Inventory.Items)
+
+                [System.Windows.MessageBox]::Show("[$DisplayName] added to the database")
+                $Main.Menu(9)
+            }
+        }
     })
 
     # Delete
-    $Xaml.IO.Save.Add_Click(           
-    { 
+    $Xaml.IO.Delete.Add_Click(           
+    {
+        $Index = $Xaml.IO."Get_$($Main.Current)_Result".SelectedIndex = 15
+        $Main.Selected = $Xaml.IO."Get_$($Main.Current)_Result".Items[$Index]
+        $Main.DB.SortUID($Main.Selected.UID)
         $Main.Mode(4)
     })
 
     # UID
     $Xaml.IO.Get_UID_Result.Add_SelectionChanged(
     {
-        $Xaml.IO.View.IsEnabled = @(0,1)[$Xaml.IO.Get_UID_Result.SelectedIndex -ne -1]
+        $Xaml.IO.View.IsEnabled   = @(0,1)[$Xaml.IO.Get_UID_Result.SelectedIndex -ne -1]
+        $Xaml.IO.Delete.IsEnabled = @(0,1)[$Xaml.IO.Get_UID_Result.SelectedIndex -ne -1]
     })
 
     $Xaml.IO.Get_UID_Filter.Add_TextChanged(
@@ -2368,7 +2859,7 @@ Function Invoke-cimdb2
 
         If ( $Xaml.IO.Get_UID_Filter.Text -ne "" )
         {
-            $List = @( $Xaml.IO.Get_UID_Result | ? $Xaml.IO.Get_UID_Property.SelectedItem -match $Xaml.IO.Get_UID_Filter.Text )
+            $List = @( $Xaml.IO.Get_UID_Result.Items | ? $Xaml.IO.Get_UID_Property.SelectedItem -match $Xaml.IO.Get_UID_Filter.Text )
             If ( $List -ne $Null )
             {
                 $Xaml.IO.Get_UID_Result.ItemsSource = @( $List )
@@ -2377,6 +2868,32 @@ Function Invoke-cimdb2
         If ( $Xaml.IO.Get_UID_Filter.Text -eq "" )
         {
             $Xaml.IO.Get_UID_Result.ItemsSource = @( $Main.DB.UID )
+        }
+    })
+
+    # Client
+    $Xaml.IO.Get_Client_Result.Add_SelectionChanged(
+    {
+        $Xaml.IO.View.IsEnabled   = @(0,1)[$Xaml.IO.Get_Client_Result.SelectedIndex -ne -1]
+        $Xaml.IO.Delete.IsEnabled = @(0,1)[$Xaml.IO.Get_Client_Result.SelectedIndex -ne -1]
+    })
+
+    $Xaml.IO.Get_UID_Filter.Add_TextChanged(
+    {
+        Start-Sleep -Milliseconds 25
+        $Xaml.IO.Get_Client_Result.ItemsSource = @( )
+
+        If ( $Xaml.IO.Get_Client_Filter.Text -ne "" )
+        {
+            $List = @( $Xaml.IO.Get_Client_Result.Items | ? $Xaml.IO.Get_Client_Property.SelectedItem -match $Xaml.IO.Get_Client_Filter.Text )
+            If ( $List -ne $Null )
+            {
+                $Xaml.IO.Get_Client_Result.ItemsSource = @( $List )
+            }
+        }
+        If ( $Xaml.IO.Get_Client_Filter.Text -eq "" )
+        {
+            $Xaml.IO.Get_Client_Result.ItemsSource = @( $Main.DB.UID )
         }
     })
 }

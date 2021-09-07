@@ -31,11 +31,7 @@ and business transactions. It uses a combination of (C#/PowerShell/.Net) class t
 Markup Language/XAML, Windows Presentation (Foundation|Framework)/WPF, with DataBinding/MVVM synchronizing 
 the PowerShell components to the GUI.
 
-In it's current state, the module is broken down into several classes and functions. 
-Running the following installation code in PowerShell will allow a live installation
-of the modification thus far. Intentions to bring this fully cross platform highly 
-depend on WPF and Xamarin still needing implementation on Linux.
-
-In other words, some things in FightingEntropy work in Linux, some things don't.
+In it's current state, the module is broken down into several classes and functions.
+Some things in FightingEntropy work in Linux, some things don't.
 The "Write-Theme" function was written specifically to work on each platform that PowerShell supports.
 Other namespaces don't work fully, and the linux side development has taken a back seat for the time being.

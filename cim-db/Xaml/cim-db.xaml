@@ -77,6 +77,11 @@
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         </Style>
         <Style TargetType="DataGridRow">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
                 <Trigger Property="AlternationIndex" Value="0">
                     <Setter Property="Background" Value="White"/>
@@ -162,11 +167,11 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Name="Get_UID_Result" ItemsSource="{Binding UID}" Margin="5" >
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="UID"    Binding="{Binding UID}"    Width="200"/>
                             <DataGridTextColumn Header="Index"  Binding="{Binding Index}"  Width="50"/>
                             <DataGridTextColumn Header="Slot"   Binding="{Binding Slot}"   Width="50"/>
                             <DataGridTextColumn Header="Date"   Binding="{Binding Date}"   Width="100"/>
                             <DataGridTextColumn Header="Time"   Binding="{Binding Time}"   Width="100"/>
+                            <DataGridTextColumn Header="UID"    Binding="{Binding UID}"    Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -232,18 +237,18 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Name="Get_Client_Result" ItemsSource="{Binding Client}" Margin="5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
-                            <DataGridTemplateColumn Header="Email" Width="150">
+                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="400"/>
+                            <DataGridTemplateColumn Header="Email" Width="250">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                        <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="Phone" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                        <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -251,6 +256,7 @@
                             <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
                             <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
                             <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                            <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"          Width="350"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -280,11 +286,7 @@
                             <TextBox Name="Mod_Client_MI"/>
                         </GroupBox>
                         <GroupBox Grid.Column="3" Header="[Gender]">
-                            <ComboBox Name="Mod_Client_Gender" SelectedIndex="2">
-                                <ComboBoxItem Content="Male"/>
-                                <ComboBoxItem Content="Female"/>
-                                <ComboBoxItem Content="-"/>
-                            </ComboBox>
+                            <ComboBox Name="Mod_Client_Gender"/>
                         </GroupBox>
                     </Grid>
                     <Grid Grid.Row="1">
@@ -356,7 +358,7 @@
                             <Button   Grid.Column="3" Name="Mod_Client_Email_Remove" Margin="5" Content="-"/>
                         </Grid>
                     </GroupBox>
-                    <TabControl Grid.Row="5">
+                    <TabControl Grid.Row="5" Name="Mod_Client_TabControl">
                         <TabItem Header="Device(s)">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -368,19 +370,22 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Client_Device_Property" SelectedIndex="0"/>
                                     <TextBox Grid.Column="1"  Name="Mod_Client_Device_Filter"/>
+                                    <Button Grid.Column="2"   Name="Mod_Client_Device_Search" Content ="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Client_Device_Result" ItemsSource="{Binding Device}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>
+                                        <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="400"/>
                                         <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>
                                         <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>
                                         <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>
                                         <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>
                                         <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>
-                                        <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>
+                                        <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="350"/>
+                                        <DataGridTextColumn Header="UID"           Binding="{Binding Record.UID}"           Width="350"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -406,17 +411,31 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Client_Issue_Property" SelectedIndex="0"/>
                                     <TextBox Grid.Column="1"  Name="Mod_Client_Issue_Filter"/>
+                                    <Button Grid.Column="2"   Name="Mod_Client_Issue_Search" Content ="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Client_Issue_Result" ItemsSource="{Binding Issue}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="200"/>
-                                        <DataGridTextColumn Header="Status"      Binding="{Binding Record.Status}"      Width="100"/>
+                                        <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="400"/>
+                                        <DataGridTemplateColumn Header="Status" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding Record.Status}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                        <ComboBoxItem Content='New'/>
+                                                        <ComboBoxItem Content='Diagnosed'/>
+                                                        <ComboBoxItem Content='Commit'/>
+                                                        <ComboBoxItem Content='Completed'/>
+                                                        <ComboBoxItem Content='-'/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="150"/>
-                                        <DataGridTextColumn Header="Client"      Binding="{Binding Record.Client}"      Width="150"/>
-                                        <DataGridTextColumn Header="Device"      Binding="{Binding Record.Device}"      Width="150"/>
+                                        <DataGridTextColumn Header="Client"      Binding="{Binding Record.Client}"      Width="350"/>
+                                        <DataGridTextColumn Header="Device"      Binding="{Binding Record.Device}"      Width="350"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -442,9 +461,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Client_Invoice_Property" SelectedIndex="0"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Client_Invoice_Filter"/>
+                                    <Button Grid.Column="2"   Name="Mod_Client_Invoice_Search" Content ="Search"/>
                                 </Grid>
                                 <DataGrid     Grid.Row="1"    Name="Mod_Client_Invoice_Result" ItemsSource="{Binding Invoice}" Margin="5">
                                     <DataGrid.Columns>
@@ -487,10 +508,11 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="Get_Service_Result" ItemsSource="{Binding Service}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="250"/>
-                            <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"        Width="150"/>
+                            <DataGridTextColumn Header="DisplayName" Binding="{Binding Record.DisplayName}" Width="400"/>
                             <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Cost}"        Width="80"/>
+                            <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"        Width="150"/>
                             <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="300"/>
+                            <DataGridTextColumn Header="UID"         Binding="{Binding Record.UID}"         Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -501,13 +523,13 @@
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="[Name]">
-                        <TextBox Name="Mod_Service_Name" IsEnabled="False"/>
+                        <TextBox Name="Mod_Service_Name"/>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="[Description]">
-                        <TextBox Name="Mod_Service_Description" IsEnabled="False"/>
+                        <TextBox Name="Mod_Service_Description"/>
                     </GroupBox>
                     <GroupBox Grid.Row="2" Header="[Cost]">
-                        <TextBox Name="Mod_Service_Cost" IsEnabled="False"/>
+                        <TextBox Name="Mod_Service_Cost"/>
                     </GroupBox>
                 </Grid>
             </Grid>
@@ -527,13 +549,30 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="Get_Device_Result" ItemsSource="{Binding Device}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>
-                            <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>
+                            <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="400"/>
+                            <DataGridTemplateColumn Header="Chassis" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedIndex="{Binding Record.Chassis}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                            <ComboBoxItem Content='Desktop'/>
+                                            <ComboBoxItem Content='Laptop'/>
+                                            <ComboBoxItem Content='Smartphone'/>
+                                            <ComboBoxItem Content='Tablet'/>
+                                            <ComboBoxItem Content='Console'/>
+                                            <ComboBoxItem Content='Server'/>
+                                            <ComboBoxItem Content='Network'/>
+                                            <ComboBoxItem Content='Other'/>
+                                            <ComboBoxItem Content='-'/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>
                             <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>
                             <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>
                             <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>
-                            <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>
+                            <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="350"/>
+                            <DataGridTextColumn Header="UID"           Binding="{Binding Record.UID}"           Width="350"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -552,17 +591,7 @@
                             <ColumnDefinition Width="1.5*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Chassis]">
-                            <ComboBox Name="Mod_Device_Chassis_List" SelectedIndex="8">
-                                <ComboBoxItem Content="Desktop"/>
-                                <ComboBoxItem Content="Laptop"/>
-                                <ComboBoxItem Content="Smartphone"/>
-                                <ComboBoxItem Content="Tablet"/>
-                                <ComboBoxItem Content="Console"/>
-                                <ComboBoxItem Content="Server"/>
-                                <ComboBoxItem Content="Network"/>
-                                <ComboBoxItem Content="Other"/>
-                                <ComboBoxItem Content="-"/>
-                            </ComboBox>
+                            <ComboBox Name="Mod_Device_Chassis_List"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Vendor]">
                             <TextBox Name="Mod_Device_Vendor"/>
@@ -586,7 +615,7 @@
                             <TextBox Name="Mod_Device_DisplayName"/>
                         </GroupBox>
                     </Grid>
-                    <TabControl Grid.Row="2">
+                    <TabControl Grid.Row="2" Name="Mod_Device_TabControl">
                         <TabItem Header="Client">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -598,13 +627,15 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox Grid.Row="0" Grid.Column="0" Name="Mod_Device_Client_Property"/>
-                                    <TextBox  Grid.Row="0" Grid.Column="1" Name="Mod_Device_Client_Filter"/>
+                                    <ComboBox Grid.Column="0" Name="Mod_Device_Client_Property"/>
+                                    <TextBox  Grid.Column="1" Name="Mod_Device_Client_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Device_Client_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid     Grid.Row="1" Grid.Column="0" Name="Mod_Device_Client_Result" ItemsSource="{Binding Client}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
+                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="400"/>
                                         <DataGridTemplateColumn Header="Email" Width="150">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -623,6 +654,7 @@
                                         <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
                                         <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
                                         <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"          Width="350"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -662,30 +694,31 @@
                     </Grid>
                     <DataGrid     Grid.Row="1"    Name="Get_Issue_Result" ItemsSource="{Binding Issue}" Margin="5">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"   Width="150"/>
-                            <DataGridTextColumn Header="Status"       Binding="{Binding Record.Status}"        Width="100"/>
-                            <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}"   Width="200"/>
-                            <DataGridTemplateColumn Header="Client" Width="150">
+                            <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"   Width="400"/>
+                            <DataGridTemplateColumn Header="Status" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Record.Client}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                        <ComboBox SelectedIndex="{Binding Record.Status}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                            <ComboBoxItem Content='New'/>
+                                            <ComboBoxItem Content='Diagnosed'/>
+                                            <ComboBoxItem Content='Commit'/>
+                                            <ComboBoxItem Content='Completed'/>
+                                            <ComboBoxItem Content='-'/>
+                                        </ComboBox>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Device" Width="150">
+                            <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}" Width="200"/>
+                            <DataGridTextColumn Header="Client"       Binding="{Binding Record.Client}"      Width="350"/>
+                            <DataGridTextColumn Header="Device"       Binding="{Binding Record.Device}"      Width="350"/>
+                            <DataGridTemplateColumn Header="Service" Width="350">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Record.Device}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                        <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Service}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Service" Width="150">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Record.Service}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="UID"    Binding="{Binding Record.UID}"    Width="350"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -701,19 +734,13 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <GroupBox Grid.Column="0" Header="[Status]">
-                            <ComboBox SelectedIndex="4" Name="Mod_Issue_Status_List">
-                                <ComboBoxItem Content="New"/>
-                                <ComboBoxItem Content="Diagnosed"/>
-                                <ComboBoxItem Content="Commit"/>
-                                <ComboBoxItem Content="Complete"/>
-                                <ComboBoxItem Content="-"/>
-                            </ComboBox>
+                            <ComboBox Name="Mod_Issue_Status_List"/>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="[Description]">
                             <TextBox Name="Mod_Issue_Description"/>
                         </GroupBox>
                     </Grid>
-                    <TabControl Grid.Row="1">
+                    <TabControl Grid.Row="1" Name="Mod_Issue_TabControl">
                         <TabItem Header="Client">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -725,24 +752,26 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Issue_Client_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Issue_Client_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Issue_Client_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Issue_Client_Result" ItemsSource="{Binding Client}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="150"/>
+                                        <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"  Width="400"/>
                                         <DataGridTemplateColumn Header="Email" Width="150">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <ComboBox ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                    <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Email}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTemplateColumn Header="Phone" Width="100">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <ComboBox ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                                    <ComboBox SelectedIndex="0" ItemsSource="{Binding Record.Phone}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -750,6 +779,7 @@
                                         <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
                                         <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
                                         <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"          Width="350"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -759,7 +789,13 @@
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Button   Grid.Column="0" Name="Mod_Issue_Client_Add"    Content="+"/>
-                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Client_List"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Client_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.UID}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Issue_Client_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -769,25 +805,44 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="*"/>
-                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="40"/>
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" Margin="5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Issue_Device_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Issue_Device_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Issue_Device_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Issue_Device_Result" ItemsSource="{Binding Device}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="DisplayName"   Binding="{Binding Record.DisplayName}"   Width="250"/>
-                                        <DataGridTextColumn Header="Chassis"       Binding="{Binding Record.Chassis}"       Width="100"/>
+                                        <DataGridTemplateColumn Header="Chassis" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding Record.Chassis}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                        <ComboBoxItem Content='Desktop'/>
+                                                        <ComboBoxItem Content='Laptop'/>
+                                                        <ComboBoxItem Content='Smartphone'/>
+                                                        <ComboBoxItem Content='Tablet'/>
+                                                        <ComboBoxItem Content='Console'/>
+                                                        <ComboBoxItem Content='Server'/>
+                                                        <ComboBoxItem Content='Network'/>
+                                                        <ComboBoxItem Content='Other'/>
+                                                        <ComboBoxItem Content='-'/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Vendor"        Binding="{Binding Record.Vendor}"        Width="150"/>
                                         <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>
                                         <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>
                                         <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>
                                         <DataGridTextColumn Header="Client"        Binding="{Binding Record.Client}"        Width="Auto"/>
+                                        <DataGridTextColumn Header="UID"           Binding="{Binding Record.UID}"           Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -796,8 +851,14 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button   Grid.Column="0" Name="Mod_Issue_Device_Add"    Content="+"/>
-                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Device_List"/>
+                                    <Button   Grid.Column="0" Name="Mod_Issue_Device_Add"  Content="+"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Device_List" SelectedIndex="0">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.UID}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Issue_Device_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -813,9 +874,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Issue_Service_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Issue_Service_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Issue_Service_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid     Grid.Row="1"    Name="Mod_Issue_Service_Result" ItemsSource="{Binding Service}">
                                     <DataGrid.Columns>
@@ -823,6 +886,7 @@
                                         <DataGridTextColumn Header="Name"        Binding="{Binding Record.Name}"        Width="150"/>
                                         <DataGridTextColumn Header="Cost"        Binding="{Binding Record.Cost}"        Width="80"/>
                                         <DataGridTextColumn Header="Description" Binding="{Binding Record.Description}" Width="300"/>
+                                        <DataGridTextColumn Header="UID"         Binding="{Binding Record.UID}"         Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -832,7 +896,13 @@
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Button   Grid.Column="0" Name="Mod_Issue_Service_Add"    Content="+"/>
-                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Service_List"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Issue_Service_List" SelectedIndex="0">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.UID}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Issue_Service_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -874,10 +944,10 @@
                             <DataGridTextColumn Header="Model"         Binding="{Binding Record.Model}"         Width="150"/>
                             <DataGridTextColumn Header="Specification" Binding="{Binding Record.Specification}" Width="150"/>
                             <DataGridTextColumn Header="Serial"        Binding="{Binding Record.Serial}"        Width="150"/>
-                            <DataGridTemplateColumn Header="IsDevice"   Width="60">
+                            <DataGridTemplateColumn Header="IsDevice"   Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}">
+                                        <ComboBox SelectedIndex="{Binding Record.IsDevice}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
                                             <ComboBoxItem Content="False"/>
                                             <ComboBoxItem Content="True"/>
                                         </ComboBox>
@@ -886,6 +956,7 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>
                             <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>
+                            <DataGridTextColumn Header="UID"           Binding="{Binding Record.UID}"         Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -955,7 +1026,13 @@
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="Mod_Purchase_Device_Result"/>
                                 <Button   Grid.Column="1" Name="Mod_Purchase_Device_Add"    Content="+"/>
-                                <ComboBox Grid.Column="2" Name="Mod_Purchase_Device_List"/>
+                                <ComboBox Grid.Column="2" Name="Mod_Purchase_Device_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 <Button   Grid.Column="3" Name="Mod_Purchase_Device_Remove" Content="-"/>
                             </Grid>
                         </Grid>
@@ -1004,6 +1081,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="80"/>
+                            <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"  Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1069,7 +1147,13 @@
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="Mod_Inventory_Device_Result"/>
                                 <Button   Grid.Column="1" Name="Mod_Inventory_Device_Add"    Content="+"/>
-                                <ComboBox Grid.Column="2" Name="Mod_Inventory_Device_List"/>
+                                <ComboBox Grid.Column="2" Name="Mod_Inventory_Device_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 <Button   Grid.Column="3" Name="Mod_Inventory_Device_Remove" Content="-"/>
                             </Grid>
                         </Grid>
@@ -1094,7 +1178,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}" Width="200"/>
                             <DataGridTextColumn Header="Recipient"    Binding="{Binding Record.Recipient}"   Width="200"/>
-                            <DataGridTemplateColumn Header="IsAccount" Width="60">
+                            <DataGridTemplateColumn Header="IsAccount" Width="80">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox SelectedIndex="{Binding IsAccount}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
@@ -1106,6 +1190,7 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Account"      Binding="{Binding Record.Account}"     Width="100"/>
                             <DataGridTextColumn Header="Cost"         Binding="{Binding Record.Cost}"        Width="80"/>
+                            <DataGridTextColumn Header="UID"          Binding="{Binding Record.UID}"         Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1150,7 +1235,13 @@
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="Mod_Expense_Account_Result"/>
                                 <Button   Grid.Column="1" Name="Mod_Expense_Account_Add"    Content="+"/>
-                                <ComboBox Grid.Column="2" Name="Mod_Expense_Account_List"/>
+                                <ComboBox Grid.Column="2" Name="Mod_Expense_Account_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 <Button   Grid.Column="3" Name="Mod_Expense_Account_Remove" Content="-"/>
                             </Grid>
                         </Grid>
@@ -1176,7 +1267,8 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="Get_Account_Result" ItemsSource="{Binding Account}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Object"  Binding="{Binding Record.Object}" Width="*"/>
+                            <DataGridTextColumn Header="Object"  Binding="{Binding Record.Object}" Width="300"/>
+                            <DataGridTextColumn Header="UID"     Binding="{Binding Record.UID}"    Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1207,7 +1299,13 @@
                                 </Grid.ColumnDefinitions>
                                 <ComboBox Grid.Column="0" Name="Mod_Account_Object_Result"/>
                                 <Button   Grid.Column="1" Name="Mod_Account_Object_Add"    Content="+"/>
-                                <ComboBox Grid.Column="2" Name="Mod_Account_Object_List"/>
+                                <ComboBox Grid.Column="2" Name="Mod_Account_Object_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 <Button   Grid.Column="3" Name="Mod_Account_Object_Remove" Content="-"/>
                             </Grid>
                         </Grid>
@@ -1230,10 +1328,11 @@
                     </Grid>
                     <DataGrid Grid.Row="1" Margin="5" Name="Get_Invoice_Result" ItemsSource="{Binding Invoice}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date"  Binding="{Binding Record.Date}"  Width="*"/>
-                            <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="*"/>
-                            <DataGridTextColumn Header="Phone" Binding="{Binding Record.Last}"  Width="*"/>
-                            <DataGridTextColumn Header="Email" Binding="{Binding Record.First}" Width="*"/>
+                            <DataGridTextColumn Header="Date"  Binding="{Binding Record.Date}"  Width="250"/>
+                            <DataGridTextColumn Header="Name"  Binding="{Binding Record.Name}"  Width="250"/>
+                            <DataGridTextColumn Header="Phone" Binding="{Binding Record.Last}"  Width="200"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Record.First}" Width="200"/>
+                            <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"   Width="250"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -1244,19 +1343,10 @@
                         <RowDefinition Height="180"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="[Mode]">
-                        <ComboBox Name="Mod_Invoice_Mode_List">
-                            <ComboBoxItem Content="Issue"/>
-                            <ComboBoxItem Content="Purchase"/>
-                            <ComboBoxItem Content="Inventory"/>
-                            <ComboBoxItem Content="Issue/Purchase"/>
-                            <ComboBoxItem Content="Issue/Inventory"/>
-                            <ComboBoxItem Content="Purchase/Inventory"/>
-                            <ComboBoxItem Content="Issue/Purchase/Inventory"/>
-                            <ComboBoxItem Content="-"/>
-                        </ComboBox>
+                        <ComboBox Name="Mod_Invoice_Mode_List"/>
                     </GroupBox>
                     <TabControl Grid.Row="1">
-                        <TabItem Header="Client">
+                        <TabItem Header="Client" Name="Mod_Invoice_TabControl">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
@@ -1267,9 +1357,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Invoice_Client_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Invoice_Client_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Invoice_Client_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Invoice_Client_Result" ItemsSource="{Binding Client}">
                                     <DataGrid.Columns>
@@ -1292,6 +1384,7 @@
                                         <DataGridTextColumn Header="First" Binding="{Binding Record.First}"        Width="150"/>
                                         <DataGridTextColumn Header="MI"    Binding="{Binding Record.MI}"           Width="50"/>
                                         <DataGridTextColumn Header="DOB"   Binding="{Binding Record.DOB}"          Width="100"/>
+                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"          Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -1301,7 +1394,13 @@
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Button   Grid.Column="0" Name="Mod_Invoice_Client_Add" Content="+"/>
-                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Client_List"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Client_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Invoice_Client_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -1317,14 +1416,28 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Invoice_Issue_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Invoice_Issue_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Invoice_Issue_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Invoice_Issue_Result" ItemsSource="{Binding Issue}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="DisplayName"  Binding="{Binding Record.DisplayName}"   Width="150"/>
-                                        <DataGridTextColumn Header="Status"       Binding="{Binding Record.Status}"        Width="100"/>
+                                        <DataGridTemplateColumn Header="Status" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding Record.Status}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center">
+                                                        <ComboBoxItem Content='New'/>
+                                                        <ComboBoxItem Content='Diagnosed'/>
+                                                        <ComboBoxItem Content='Commit'/>
+                                                        <ComboBoxItem Content='Completed'/>
+                                                        <ComboBoxItem Content='-'/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Description"  Binding="{Binding Record.Description}"   Width="200"/>
                                         <DataGridTemplateColumn Header="Client" Width="150">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -1347,6 +1460,7 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="UID"    Binding="{Binding Record.UID}"    Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -1356,7 +1470,13 @@
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Button   Grid.Column="0" Name="Mod_Invoice_Issue_Add"    Content="+" />
-                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Issue_List"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Issue_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Invoice_Issue_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -1372,9 +1492,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Invoice_Purchase_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Invoice_Purchase_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Invoice_Purchase_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Invoice_Purchase_Result" ItemsSource="{Binding Purchase}">
                                     <DataGrid.Columns>
@@ -1396,6 +1518,7 @@
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Device"        Binding="{Binding Record.Device}"      Width="200"/>
                                         <DataGridTextColumn Header="Cost"          Binding="{Binding Record.Cost}"        Width="80"/>
+                                        <DataGridTextColumn Header="UID"           Binding="{Binding Record.UID}"         Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">
@@ -1405,7 +1528,13 @@
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Button   Grid.Column="0" Name="Mod_Invoice_Purchase_Add"    Content="+"/>
-                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Purchase_List"/>
+                                    <ComboBox Grid.Column="1" Name="Mod_Invoice_Purchase_List">
+                                    <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Record.DisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                     <Button   Grid.Column="2" Name="Mod_Invoice_Purchase_Remove" Content="-"/>
                                 </Grid>
                             </Grid>
@@ -1421,9 +1550,11 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox Grid.Column="0" Name="Mod_Invoice_Inventory_Property"/>
                                     <TextBox  Grid.Column="1" Name="Mod_Invoice_Inventory_Filter"/>
+                                    <Button   Grid.Column="2" Name="Mod_Invoice_Inventory_Search" Content="Search"/>
                                 </Grid>
                                 <DataGrid Grid.Row="1" Name="Mod_Invoice_Inventory_Result" ItemsSource="{Binding Inventory}">
                                     <DataGrid.Columns>
@@ -1450,6 +1581,7 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Cost"  Binding="{Binding Record.Cost}" Width="80"/>
+                                        <DataGridTextColumn Header="UID"   Binding="{Binding Record.UID}"  Width="250"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Grid Grid.Row="2">

@@ -308,6 +308,9 @@ https://github.com/FriendsOfMDT/PSD
 
     # PSDRestart
     Copy-PSDFolder -Source $PSScriptRoot\PSDResources\Prestart -Destination $PSDeploymentFolder\PSDResources\Prestart
+    
+    # Write Install-FightingEntropy
+    Set-Content $PSDeploymentFolder\Scripts\Install-FightingEntropy.ps1 -Value "Invoke-RestMethod github.com/mcc85s/FightingEntropy/blob/main/Install.ps1?raw=true | Invoke-Expression"
 
     # Update the DeploymentShare properties
     If (!$Upgrade)

@@ -376,7 +376,9 @@ Function Copy-PSDFolder
 Function Test-PSDNetCon
 {
     [CmdletBinding(SupportsShouldProcess)]
-    Param($Hostname,$Protocol)
+    Param(
+        [Parameter(Mandatory)][String]$Hostname,
+        [Parameter(Mandatory)][String]$Protocol)
 
     $Port = Switch ($Protocol)
     {

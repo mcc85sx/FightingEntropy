@@ -479,7 +479,7 @@
                 </DataGrid>
             </GroupBox>
         </Grid>
-        <Grid Grid.Row="1" Name="Control_Panel" Visibility="Visible">
+        <Grid Grid.Row="1" Name="Control_Panel" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="*"/>

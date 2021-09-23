@@ -7,8 +7,8 @@
 
 .NOTES
           FileName: Invoke-FEWizard.ps1
-          Solution: FightingEntropy PowerShell Deployment for MDT
-          Purpose: Preexisting Environment Graphical User Interface 
+          Solution: FightingEntropy PowerShell Deployment for MDT (featuring DVR)
+          Purpose: Preinstallation Execution Environment Graphical User Interface
           Author: Michael C. Cook Sr.
           Contact: @mcc85s
           Primary: @mcc85s 
@@ -562,7 +562,7 @@ Function Invoke-FEWizard
         '                </DataGrid>',
         '            </GroupBox>',
         '        </Grid>',
-        '        <Grid Grid.Row="1" Name="Control_Panel" Visibility="Visible">',
+        '        <Grid Grid.Row="1" Name="Control_Panel" Visibility="Collapsed">',
         '            <Grid.RowDefinitions>',
         '                <RowDefinition Height="200"/>',
         '                <RowDefinition Height="*"/>',
@@ -1225,7 +1225,7 @@ Function Invoke-FEWizard
 
     $Xaml.IO.Control_Mode.SelectedIndex               = 0
     
-    $Xaml.IO.Control_Username.Text                    = $Xaml.TSEnv["Username"]
+    $Xaml.IO.Control_Username.Text                    = $Xaml.TSEnv["UserID"]
     $Xaml.IO.Control_Domain.Text                      = $Xaml.TSEnv["UserDomain"]
     $Xaml.IO.Control_Password.Password                = $Xaml.TSEnv["UserPassword"]
     $Xaml.IO.Control_Confirm.Password                 = $Xaml.TSEnv["UserPassword"]
@@ -1281,6 +1281,8 @@ Function Invoke-FEWizard
     {
         $Xaml.View(5)
     })
+
+    $Xaml.View(0)
 
     $Xaml.IO.Start.Add_Click(
     {

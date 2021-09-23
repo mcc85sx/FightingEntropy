@@ -153,7 +153,6 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Name="Locale_Tab" Content="Locale"/>
             <Button Grid.Column="1" Name="System_Tab" Content="System"/>
@@ -161,7 +160,6 @@
             <Button Grid.Column="3" Name="Network_Tab" Content="Network"/>
             <Button Grid.Column="4" Name="Applications_Tab" Content="Applications"/>
             <Button Grid.Column="5" Name="Control_Tab" Content="Control"/>
-            <Button Grid.Column="6" Name="Others_Tab" Content="Others"/>
         </Grid>
         <Grid Grid.Row="1" Name="Locale_Panel" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -254,38 +252,41 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <!-- Column 0 -->
-                    <Label       Grid.Row="0" Grid.Column="0" Content="Manufacturer"/>
-                    <Label       Grid.Row="1" Grid.Column="0" Content="Model"/>
-                    <Label       Grid.Row="2" Grid.Column="0" Content="Processor"/>
-                    <Label       Grid.Row="3" Grid.Column="0" Content="Architecture"/>
-                    <Label       Grid.Row="4" Grid.Column="0" Content="UUID"/>
-                    <Label       Grid.Row="5" Grid.Column="0" Content="System Name"     ToolTip="Enter a new system name"/>
-                    <Label       Grid.Row="6" Grid.Column="0" Content="System Password" ToolTip="Enter a new system password"/>
+                    <Label       Grid.Row="0" Grid.Column="0" Content="Manufacturer:"/>
+                    <Label       Grid.Row="1" Grid.Column="0" Content="Model:"/>
+                    <Label       Grid.Row="2" Grid.Column="0" Content="Processor:"/>
+                    <Label       Grid.Row="3" Grid.Column="0" Content="Architecture:"/>
+                    <Label       Grid.Row="4" Grid.Column="0" Content="UUID:"/>
+                    <Label       Grid.Row="5" Grid.Column="0" Content="System Name:"     ToolTip="Enter a new system name"/>
+                    <Label       Grid.Row="6" Grid.Column="0" Content="System Password:" ToolTip="Enter a new system password"/>
                     <!-- Column 1 -->
                     <TextBox     Grid.Row="0" Grid.Column="1" Name="System_Manufacturer"/>
                     <TextBox     Grid.Row="1" Grid.Column="1" Name="System_Model"/>
                     <ComboBox    Grid.Row="2" Grid.Column="1" Name="System_Processor"/>
                     <ComboBox    Grid.Row="3" Grid.Column="1" Name="System_Architecture"/>
-                    <TextBox     Grid.Row="4" Grid.Column="1" Name="System_UUID"/>
+                    <TextBox     Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"  Name="System_UUID"/>
                     <TextBox     Grid.Row="5" Grid.Column="1" Name="System_Name"/>
                     <PasswordBox Grid.Row="6" Grid.Column="1" Name="System_Password"/>
                     <!-- Column 2 -->
-                    <Label       Grid.Row="0" Grid.Column="2" Content="Product"/>
-                    <Label       Grid.Row="1" Grid.Column="2" Content="Serial"/>
-                    <Label       Grid.Row="2" Grid.Column="2" Content="Memory"/>
+                    <Label       Grid.Row="0" Grid.Column="2" Content="Product:"/>
+                    <Label       Grid.Row="1" Grid.Column="2" Content="Serial:"/>
+                    <Label       Grid.Row="2" Grid.Column="2" Content="Memory:"/>
                     <StackPanel  Grid.Row="3" Grid.Column="2" Orientation="Horizontal">
-                        <Label    Content="Chassis"/>
+                        <Label    Content="Chassis:"/>
                         <CheckBox Name="System_IsVM" Content="IsVM" IsEnabled="False"/>
                     </StackPanel>
-                    <Label       Grid.Row="4" Grid.Column="2" Content="BIOS/UEFI"/>
                     <CheckBox    Grid.Row="5" Grid.Column="2" Name="System_UseSerial" Content="Use Serial #"/>
-                    <Label       Grid.Row="6" Grid.Column="2" Content="Confirm"/>
+                    <Label       Grid.Row="6" Grid.Column="2" Content="Confirm:"/>
                     <!-- Column 3 -->
                     <TextBox     Grid.Row="0" Grid.Column="3" Name="System_Product"/>
                     <TextBox     Grid.Row="1" Grid.Column="3" Name="System_Serial"/>
                     <TextBox     Grid.Row="2" Grid.Column="3" Name="System_Memory"/>
                     <ComboBox    Grid.Row="3" Grid.Column="3" Name="System_Chassis"/>
-                    <ComboBox    Grid.Row="4" Grid.Column="3" Name="System_BiosUefi"/>
+                    <StackPanel  Grid.Row="5" Grid.Column="3" Orientation="Horizontal">
+                        <Label   Content="BIOS/UEFI:"/>
+                        <ComboBox Name="System_BiosUefi" Width="165"/>
+                    </StackPanel>
+                    
                     <PasswordBox Grid.Row="6" Grid.Column="3" Name="System_Confirm"/>
                 </Grid>
             </GroupBox>
@@ -293,9 +294,9 @@
                 <DataGrid Name="System_Disk" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name"       Binding="{Binding Name}" Width="50"/>
-                        <DataGridTextColumn Header="Label"      Binding="{Binding Name}" Width="150"/>
+                        <DataGridTextColumn Header="Label"      Binding="{Binding Label}" Width="150"/>
                         <DataGridTextColumn Header="FileSystem" Binding="{Binding FileSystem}" Width="80"/>
-                        <DataGridTextColumn Header="Size"       Binding="{Binding Name}" Width="150"/>
+                        <DataGridTextColumn Header="Size"       Binding="{Binding Size}" Width="150"/>
                         <DataGridTextColumn Header="Free"       Binding="{Binding Free}" Width="150"/>
                         <DataGridTextColumn Header="Used"       Binding="{Binding Used}" Width="150"/>
                     </DataGrid.Columns>
@@ -303,7 +304,11 @@
             </GroupBox>
         </Grid>
         <Grid Grid.Row="1" Name="Domain_Panel" Visibility="Collapsed">
-            <GroupBox Header="[Domain]" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="[Domain]" Grid.Row="0">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"/>
@@ -319,11 +324,11 @@
                     </Grid.RowDefinitions>
                     <!-- Column 0 -->
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                        <Label Content="Org Name"/>
-                        <CheckBox Content="Modify" Name="Domain_OrgModify" HorizontalAlignment="Left"/>
+                        <Label Content="Organization:"/>
+                        <CheckBox Content="Edit" Name="Domain_OrgEdit" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <Label    Grid.Row="1" Grid.Column="0" Content="Org Unit"/>
-                    <Label    Grid.Row="2" Grid.Column="0" Content="Home Page"/>
+                    <Label    Grid.Row="1" Grid.Column="0" Content="Organizational Unit:"/>
+                    <Label    Grid.Row="2" Grid.Column="0" Content="Home Page:"/>
                     <GroupBox Grid.Row="3" Grid.ColumnSpan="4" Header="[Credential (Username/Password/Confirm)]">
                         <Grid Margin="4">
                             <Grid.ColumnDefinitions>
@@ -338,13 +343,52 @@
                         </Grid>
                     </GroupBox>
                     <!-- Column 1 -->
-                    <TextBox  Grid.Row="0" Grid.Column="1" Name="Domain_OrgName" IsReadOnly="True"/>
+                    <TextBox  Grid.Row="0" Grid.Column="1" Name="Domain_OrgName"/>
                     <TextBox  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Name="Domain_OU"/>
                     <TextBox  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Name="Domain_HomePage"/>
                     <!-- Column 2 -->
                     <ComboBox Grid.Row="0" Grid.Column="2" Name="Domain_Type"/>
                     <!-- Column 3 -->
                     <TextBox  Grid.Row="0" Grid.Column="3" Name="Domain_Name"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Row ="1" Header="[Miscellaneous]">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <!-- Column 0 -->
+                    <Label    Grid.Row="0" Grid.Column="0" Content="Finish Action:"/>
+                    <Label    Grid.Row="1" Grid.Column="0" Content="Event Service:"/>
+                    <Label    Grid.Row="2" Grid.Column="0" Content="End Log Files:"/>
+                    <Label    Grid.Row="3" Grid.Column="0" Content="Real-Time Log:"/>
+                    <Label    Grid.Row="4" Grid.Column="0" Content="Product Key"/>
+                    <!-- Column 1 -->
+                    <ComboBox Grid.Row="0" Grid.Column="1" Name="Misc_Finish_Action"/>
+                    <TextBox  Grid.Row="1" Grid.Column="1" Name="Misc_EventService" ToolTip="For monitoring deployment process"/>
+                    <TextBox  Grid.Row="2" Grid.Column="1" Name="Misc_LogsSLShare"/>
+                    <TextBox  Grid.Row="3" Grid.Column="1" Name="Misc_LogsSLShare_DynamicLogging"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" Name="Misc_Product_Key_Type"/>
+                    <!-- Column 2 -->
+                    <Label    Grid.Row="0" Grid.Column="2" Content="WSUS Server:"/>
+                    <CheckBox Grid.Row="2" Grid.Column="2" Content="Save in Root" Name="Misc_SLShare_DeployRoot" />
+                    <Label    Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="Enable Real-Time Task Sequence Logging" HorizontalAlignment="Left"/>
+                    <TextBox  Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Name="Misc_Product_Key"/>
+                    <!-- Column 3 -->
+                    <TextBox  Grid.Row="0" Grid.Column="3" Name="Misc_WSUSServer" ToolTip="Pull updates from Windows Server Update Services"/>
+                    <CheckBox Grid.Row="1" Grid.Column="3" Name="Misc_HideShell" Content="Hide explorer during deployment"/>
+                    <CheckBox Grid.Row="2" Grid.Column="3" Name="Misc_NoExtraPartition" Content="Do not create extra partition"/>
                 </Grid>
             </GroupBox>
         </Grid>
@@ -389,11 +433,11 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <!-- Column 0 -->
-                    <Label    Grid.Row="0" Grid.Column="0" Content="Selected Adapter"/>
-                    <Label    Grid.Row="1" Grid.Column="0" Content="Network type"/>
-                    <Label    Grid.Row="2" Grid.Column="0" Content="IP Address"/>
-                    <Label    Grid.Row="3" Grid.Column="0" Content="Subnet Mask"/>
-                    <Label    Grid.Row="4" Grid.Column="0" Content="Gateway"/>
+                    <Label    Grid.Row="0" Grid.Column="0" Content="Selected Adapter:"/>
+                    <Label    Grid.Row="1" Grid.Column="0" Content="Network Type:"/>
+                    <Label    Grid.Row="2" Grid.Column="0" Content="IP Address:"/>
+                    <Label    Grid.Row="3" Grid.Column="0" Content="Subnet Mask:"/>
+                    <Label    Grid.Row="4" Grid.Column="0" Content="Gateway:"/>
                     <!-- Column 1 -->
                     <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Name="Network_Selected" IsEnabled="False"/>
                     <ComboBox Grid.Row="1" Grid.Column="1" Name="Network_Type"/>
@@ -401,10 +445,10 @@
                     <TextBox  Grid.Row="3" Grid.Column="1" Name="Network_SubnetMask"/>
                     <TextBox  Grid.Row="4" Grid.Column="1" Name="Network_Gateway"/>
                     <!-- Column 2 -->
-                    <Label    Grid.Row="1" Grid.Column="2" Content="Interface Index"/>
-                    <Label    Grid.Row="2" Grid.Column="2" Content="DNS Server(s)"/>
-                    <Label    Grid.Row="3" Grid.Column="2" Content="DHCP Server"/>
-                    <Label    Grid.Row="4" Grid.Column="2" Content="Mac Address"/>
+                    <Label    Grid.Row="1" Grid.Column="2" Content="Interface Index:"/>
+                    <Label    Grid.Row="2" Grid.Column="2" Content="DNS Server(s):"/>
+                    <Label    Grid.Row="3" Grid.Column="2" Content="DHCP Server:"/>
+                    <Label    Grid.Row="4" Grid.Column="2" Content="Mac Address:"/>
                     <!-- Column 3 -->
                     <TextBox  Grid.Row="1" Grid.Column="3" Name="Network_Index"/>
                     <ComboBox Grid.Row="2" Grid.Column="3" Name="Network_DNS"/>
@@ -455,19 +499,19 @@
                         <ColumnDefinition Width="250"/>
                     </Grid.ColumnDefinitions>
                     <!-- Column 0 -->
-                    <Label    Grid.Row="0" Grid.Column="0" Content="Username"/>
-                    <Label    Grid.Row="1" Grid.Column="0" Content="Password" />
-                    <Label    Grid.Row="2" Grid.Column="0" Content="Mode"/>
-                    <Label    Grid.Row="3" Grid.Column="0" Content="Description"/>
+                    <Label    Grid.Row="0" Grid.Column="0" Content="Username:"/>
+                    <Label    Grid.Row="1" Grid.Column="0" Content="Password:" />
+                    <Label    Grid.Row="2" Grid.Column="0" Content="Mode:"/>
+                    <Label    Grid.Row="3" Grid.Column="0" Content="Description:"/>
                     <!-- Column 1 -->
                     <TextBox  Grid.Row="0" Grid.Column="1" Name="Control_Username"/>
                     <TextBox  Grid.Row="1" Grid.Column="1" Name="Control_Password"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" Name="Control_Mode"/>
                     <TextBox  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"  Name="Control_Description"/>
                     <!-- Column 1 -->
-                    <Label    Grid.Row="0" Grid.Column="2" Content="Domain"/>
-                    <Label    Grid.Row="1" Grid.Column="2" Content="Confirm"/>
-                    <Label    Grid.Row="2" Grid.Column="2" Content="Test"/>
+                    <Label    Grid.Row="0" Grid.Column="2" Content="Domain:"/>
+                    <Label    Grid.Row="1" Grid.Column="2" Content="Confirm:"/>
+                    <Label    Grid.Row="2" Grid.Column="2" Content="Test:"/>
                     <!-- Column 1 -->
                     <TextBox  Grid.Row="0" Grid.Column="3" Name="Control_Domain"/>
                     <TextBox  Grid.Row="1" Grid.Column="3" Name="Control_Confirm"/>
@@ -568,72 +612,6 @@
                     </Grid>
                 </GroupBox>
             </Grid>
-        </Grid>
-        <Grid Grid.Row="1" Name="Others_Panel" Visibility="Collapsed">
-            <GroupBox Header="[Others]">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125"/>
-                        <ColumnDefinition Width="250"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Content="Finish action"/>
-                        <Label Grid.Row="1" Content="WSUS Server"/>
-                        <Label Grid.Row="2" Content="Event service"/>
-                        <Label Grid.Row="3" Content="End Log files"/>
-                        <Label Grid.Row="4" Content="Real time log"/>
-                        <Label Grid.Row="5" Content="Product Key"/>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                        </Grid.RowDefinitions>
-                        <ComboBox Grid.Row="0" Name="Misc_Finish_Action"/>
-                        <TextBox  Grid.Row="1" Name="Misc_WSUSServer"/>
-                        <TextBox  Grid.Row="2" Name="Misc_EventService"/>
-                        <TextBox  Grid.Row="3" Name="Misc_LogsSLShare"/>
-                        <TextBox  Grid.Row="4" Name="Misc_LogsSLShare_DynamicLogging"/>
-                        <ComboBox Grid.Row="5" Name="Misc_Product_Key_Type"/>
-                        <TextBox  Grid.Row="6" Name="Misc_Product_Key"/>
-                        <CheckBox Grid.Row="7" Name="Misc_HideShell" Content="Hide explorer deployment" ToolTip="Hide the product key wizard panes"/>
-                        <CheckBox Grid.Row="8" Name="Misc_NoExtraPartition" Content="Do not create extra partition" ToolTip="Hide the product key wizard panes"/>
-                    </Grid>
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="40"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="2" Content="Set the live reporting in the monitoring section" HorizontalAlignment="Left"/>
-                        <CheckBox Grid.Row="3" Name="Misc_SLShare_Deployroot" Content="Set on the deployroot"/>
-                        <Label Grid.Row="4" Content="Enable the real time logging of your Task Sequence" HorizontalAlignment="Left"/>
-                    </Grid>
-                </Grid>
-            </GroupBox>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

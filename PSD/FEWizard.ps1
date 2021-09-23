@@ -929,7 +929,7 @@ Function Invoke-FEWizard
                 $This.IO.$Ix.BorderBrush = "#000000"
             }
 
-            $Item = ("Locale System Domain Network Applications Control Others" -Split " ")[$Slot]
+            $Item = ("Locale System Domain Network Applications Control" -Split " ")[$Slot]
             $Tx   = "{0}_Tab"   -f $Item
             $Px   = "{0}_Panel" -f $Item
 
@@ -981,6 +981,10 @@ Function Invoke-FEWizard
             # [MacAddress]
             $This.IO.Network_MacAddress.Text                  = $IPInfo.MacAddress
             $This.IO.Network_MacAddress.IsReadOnly            = 1
+        }
+        Browse([UInt32]$Slot)
+        {
+
         }
         Invoke()
         {
@@ -1182,7 +1186,7 @@ Function Invoke-FEWizard
     $Xaml.IO.Control_Mode.Add_SelectionChanged(
     {
         $Xaml.IO.Computer_Backup.Visibility           = "Collapsed"
-        $Xaml.IO.Computer_Restore.Visibility          = "Collapsed"
+        $Xaml.IO.Computer_Capture.Visibility          = "Collapsed"
         $Xaml.IO.User_Backup.Visibility               = "Collapsed"
         $Xaml.IO.User_Restore.Visibility              = "Collapsed"
         
@@ -1191,45 +1195,61 @@ Function Invoke-FEWizard
             0 
             { 
                 $Description = "Perform a fresh installation of an operating system"
-                $Xaml.IO.Computer_Backup.Visibility   = "Visible"
+                $Xaml.IO.Computer_Capture.Visibility  = "Visible"
+                $Xaml.IO.User_Restore.Visibility      = "Visible"
             }
 
             1 
             { 
                 $Description = "Perform an in-place upgrade, preserving the content"
-
+                $Xaml.IO.Computer_Backup.Visibility   = "Visible"
+                $Xaml.IO.User_Backup.Visibility       = "Visible"
             }
 
             2 
             { 
-                $Description = "Convert a physical machine to a virtual machine"    
+                $Description = "Convert a physical machine to a virtual machine"
+                $Xaml.IO.Computer_Capture.Visibility  = "Visible"
+                $Xaml.IO.User_Restore.Visibility      = "Visible"
             }
 
             3 
             { 
                 $Description = "Convert a virtual machine to a physical machine"
-
+                $Xaml.IO.Computer_Capture.Visibility  = "Visible"
+                $Xaml.IO.User_Restore.Visibility      = "Visible"
             }
         }
         $Xaml.IO.Control_Description.Text             = $Description
     })
 
+    $Xaml.IO.Control_Mode.SelectedIndex               = 0
+    
+    $Xaml.IO.Control_Username.Text                    = $Xaml.TSEnv["Username"]
+    $Xaml.IO.Control_Domain.Text                      = $Xaml.TSEnv["UserDomain"]
+    $Xaml.IO.Control_Password.Password                = $Xaml.TSEnv["UserPassword"]
+    $Xaml.IO.Control_Confirm.Password                 = $Xaml.TSEnv["UserPassword"]
+
     # [Backup]
     $Xaml.IO.Computer_Backup_Type.ItemsSource         = @( )
-    $Xaml.IO.Computer_Backup_Type.ItemsSource         = @("Do not backup the existing computer","Automatically determine the location","Specify a location","-")
-    $Xaml.IO.Computer_Backup_Type.SelectedIndex       = 3
+    $Xaml.IO.Computer_Backup_Type.ItemsSource         = @("Do not backup the existing computer","Automatically determine the location","Specify a location")
+    $Xaml.IO.Computer_Backup_Type.SelectedIndex       = 0
 
     $Xaml.IO.Computer_Capture_Type.ItemsSource        = @( )
-    $Xaml.IO.Computer_Capture_Type.ItemsSource        = @("Do not capture","Capture my computer","Sysprep this computer","Prepare to capture the machine","-")
-    $Xaml.IO.Computer_Capture_Type.SelectedIndex      = 4
+    $Xaml.IO.Computer_Capture_Type.ItemsSource        = @("Do not capture","Capture my computer","Sysprep this computer","Prepare to capture the machine")
+    $Xaml.IO.Computer_Capture_Type.SelectedIndex      = 0
 
     $Xaml.IO.Computer_Capture_Extension.ItemsSource   = @( )
-    $Xaml.IO.Computer_Capture_Extension.ItemsSource   = @("WIM","VHD","-")
-    $Xaml.IO.Computer_Capture_Extension.SelectedIndex = 2
+    $Xaml.IO.Computer_Capture_Extension.ItemsSource   = @("WIM","VHD")
+    $Xaml.IO.Computer_Capture_Extension.SelectedIndex = 0
 
     $Xaml.IO.User_Backup_Type.ItemsSource             = @( )
-    $Xaml.IO.User_Backup_Type.ItemsSource             = @("Do not save data and settings","Automatically determine the location","Specify a location","-")
-    $Xaml.IO.User_Backup_Type.SelectedIndex           = 3
+    $Xaml.IO.User_Backup_Type.ItemsSource             = @("Do not save data and settings","Automatically determine the location","Specify a location")
+    $Xaml.IO.User_Backup_Type.SelectedIndex           = 0
+
+    $Xaml.IO.User_Restore_Type.ItemsSource            = @( )
+    $Xaml.IO.User_Restore_Type.ItemsSource            = @("Specify a location","Specify an account")
+    $Xaml.IO.User_Restore_Type.SelectedIndex          = 0
 
     # [Menu Selection]
     $Xaml.IO.Locale_Tab.Add_Click(
@@ -1260,11 +1280,6 @@ Function Invoke-FEWizard
     $Xaml.IO.Control_Tab.Add_Click(
     {
         $Xaml.View(5)
-    })
-
-    $Xaml.IO.Others_Tab.Add_Click(
-    {
-        $Xaml.View(6)
     })
 
     $Xaml.IO.Start.Add_Click(

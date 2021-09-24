@@ -7,8 +7,8 @@
 
 .NOTES
           FileName: Invoke-FEWizard.ps1
-          Solution: FightingEntropy PowerShell Deployment for MDT (featuring DVR)
-          Purpose: Preinstallation Execution Environment Graphical User Interface
+          Solution: FightingEntropy PowerShell Deployment for MDT
+          Purpose: Preexisting Environment Graphical User Interface 
           Author: Michael C. Cook Sr.
           Contact: @mcc85s
           Primary: @mcc85s 
@@ -151,7 +151,7 @@ Function Invoke-FEWizard
         '        <Style TargetType="Button">',
         '            <Setter Property="Margin" Value="5"/>',
         '            <Setter Property="Padding" Value="5"/>',
-        '            <Setter Property="FontWeight" Value="SemiBold"/>',
+        '            <Setter Property="FontWeight" Value="Semibold"/>',
         '            <Setter Property="FontSize" Value="14"/>',
         '            <Setter Property="Foreground" Value="Black"/>',
         '            <Setter Property="Background" Value="#DFFFBA"/>',
@@ -167,7 +167,7 @@ Function Invoke-FEWizard
         '            <Setter Property="Height" Value="24"/>',
         '            <Setter Property="Margin" Value="5"/>',
         '            <Setter Property="FontSize" Value="12"/>',
-        '            <Setter Property="FontWeight" Value="Bold"/>',
+        '            <Setter Property="FontWeight" Value="Normal"/>',
         '        </Style>',
         '        <Style TargetType="DataGrid">',
         '            <Setter Property="Margin" Value="5"/>',
@@ -367,7 +367,7 @@ Function Invoke-FEWizard
         '                    <ComboBox    Grid.Row="3" Grid.Column="3" Name="System_Chassis"/>',
         '                    <StackPanel  Grid.Row="5" Grid.Column="3" Orientation="Horizontal">',
         '                        <Label   Content="BIOS/UEFI:"/>',
-        '                        <ComboBox Name="System_BiosUefi" Width="165"/>',
+        '                        <ComboBox Name="System_BiosUefi" Width="150"/>',
         '                    </StackPanel>',
         '                    ',
         '                    <PasswordBox Grid.Row="6" Grid.Column="3" Name="System_Confirm"/>',
@@ -485,18 +485,18 @@ Function Invoke-FEWizard
         '                    <DataGrid.Columns>',
         '                        <DataGridTextColumn Header="Name"       Binding="{Binding Name}" Width="200"/>',
         '                        <DataGridTextColumn Header="Index"      Binding="{Binding Index}" Width="50"/>',
-        '                        <DataGridTextColumn Header="IPAddress"  Binding="{Binding IPAddress}" Width="125"/>',
-        '                        <DataGridTextColumn Header="SubnetMask" Binding="{Binding SubnetMask}" Width="125"/>',
-        '                        <DataGridTextColumn Header="Gateway"    Binding="{Binding Gateway}" Width="125"/>',
+        '                        <DataGridTextColumn Header="IPAddress"  Binding="{Binding IPAddress}" Width="100"/>',
+        '                        <DataGridTextColumn Header="SubnetMask" Binding="{Binding SubnetMask}" Width="100"/>',
+        '                        <DataGridTextColumn Header="Gateway"    Binding="{Binding Gateway}" Width="100"/>',
         '                        <DataGridTemplateColumn Header="DNSServer" Width="125">',
         '                                <DataGridTemplateColumn.CellTemplate>',
         '                                    <DataTemplate>',
-        '                                        <ComboBox ItemsSource="{Binding DNSServer}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
+        '                                        <ComboBox ItemsSource="{Binding DNSServer}" SelectedIndex="0" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>',
         '                                    </DataTemplate>',
         '                                </DataGridTemplateColumn.CellTemplate>',
         '                            </DataGridTemplateColumn>',
-        '                        <DataGridTextColumn Header="DhcpServer" Binding="{Binding Name}" Width="125"/>',
-        '                        <DataGridTextColumn Header="MacAddress" Binding="{Binding Name}" Width="125"/>',
+        '                        <DataGridTextColumn Header="DhcpServer" Binding="{Binding DhcpServer}" Width="100"/>',
+        '                        <DataGridTextColumn Header="MacAddress" Binding="{Binding MacAddress}" Width="100"/>',
         '                    </DataGrid.Columns>',
         '                </DataGrid>',
         '            </GroupBox>',
@@ -762,17 +762,17 @@ Function Invoke-FEWizard
         [String] $Name
         [String] $Label
         [String] $FileSystem
-        [Double] $Size
-        [Double] $Free
-        [Double] $Used
+        [String] $Size
+        [String] $Free
+        [String] $Used
         Disk([Object]$Disk)
         {
             $This.Name       = $Disk.DeviceID
             $This.Label      = $Disk.VolumeName
             $This.FileSystem = $Disk.FileSystem
-            $This.Size       = "{0:n2}" -f ($Disk.Size/1MB)
-            $This.Free       = "{0:n2}" -f ($Disk.FreeSpace/1MB)
-            $This.Used       = "{0:n2}" -f (($Disk.Size-$Disk.FreeSpace)/1MB)
+            $This.Size       = "{0:n2} GB" -f ($Disk.Size/1GB)
+            $This.Free       = "{0:n2} GB" -f ($Disk.FreeSpace/1GB)
+            $This.Used       = "{0:n2} GB" -f (($Disk.Size-$Disk.FreeSpace)/1GB)
         }
     }
 
@@ -941,15 +941,23 @@ Function Invoke-FEWizard
         SetDomain([UInt32]$Slot)
         {
             $This.IO.Domain_OrgName.Text                      = $This.TSEnv["_SMSTSOrgName"]
-            $This.IO.Domain_Name.Text                         = @($This.TSEnv["UserDomain"],$Null)[$Slot]
-            $This.IO.Domain_OU.Text                           = @($This.IO.Domain_OU.Text,$Null)[$Slot]
+            $This.IO.Domain_Name.Text                         = @($Null,$This.TSEnv["UserDomain"])[$Slot]
+            $This.IO.Domain_OU.Text                           = @($Null,$This.IO.Domain_OU.Text,$Null)[$Slot]
             $This.IO.Domain_Username.Text                     = $This.TSEnv["UserId"]
             $This.IO.Domain_Password.Password                 = $This.TSEnv["UserPassword"]
             $This.IO.Domain_Confirm.Password                  = $This.TSEnv["UserPassword"]
         }
         SetNetwork([UInt32]$Index)
         {
-            $IPInfo                                           = $This.System.Network[$Index]
+            If ($This.System.Network.Count -eq 1)
+            {
+                $IPInfo                                       = $This.System.Network
+            }
+            Else
+            {
+                $IPInfo                                       = $This.System.Network[$Index]
+            }
+
             $X                                                = $IPInfo.DhcpServer -eq ""
             # [Network Type]
             $This.IO.Network_Type.SelectedIndex               = $X
@@ -973,6 +981,7 @@ Function Invoke-FEWizard
             # [Dns]
             $This.IO.Network_Dns.ItemsSource                  = @( )
             $This.IO.Network_DNS.ItemsSource                  = @($IPInfo.DNSServer)
+            $This.IO.Network_DNS.SelectedIndex                = 0
 
             # [Dhcp]
             $This.IO.Network_Dhcp.Text                        = $IPInfo.DhcpServer
@@ -1064,18 +1073,32 @@ Function Invoke-FEWizard
 
     # [System]
     $Xaml.IO.System_Manufacturer.Text                 = $Xaml.System.Manufacturer
+    $Xaml.IO.System_Manufacturer.IsReadOnly           = 1
+
     $Xaml.IO.System_Model.Text                        = $Xaml.System.Model
+    $Xaml.IO.System_Model.IsReadOnly                  = 1
+
     $Xaml.IO.System_Product.Text                      = $Xaml.System.Product
+    $Xaml.IO.System_Product.IsReadOnly                = 1
+
     $Xaml.IO.System_Serial.Text                       = $Xaml.System.Serial
+    $Xaml.IO.System_Serial.IsReadOnly                 = 1
+
+    $Xaml.IO.System_Memory.Text                       = $Xaml.System.Memory
+    $Xaml.IO.System_Memory.IsReadOnly                 = 1
+
+    $Xaml.IO.System_UUID.Text                         = $Xaml.System.UUID
+    $Xaml.IO.System_UUID.IsReadOnly                   = 1
     
     # Processor
     $Xaml.IO.System_Processor.ItemsSource             = @( )
     $Xaml.IO.System_Processor.ItemsSource             = @($Xaml.System.Processor.Name)
-    $Xaml.IO.System_Processor.IsEnabled               = 0
-    $Xaml.IO.System_Memory.Text                       = $Xaml.System.Memory
+    $Xaml.IO.System_Processor.SelectedIndex           = 0
+
     $Xaml.IO.System_Architecture.ItemsSource          = @( )
     $Xaml.IO.System_Architecture.ItemsSource          = @("x86","x64")
     $Xaml.IO.System_Architecture.SelectedIndex        = $Xaml.System.Architecture -eq "x64"
+    $Xaml.IO.System_Architecture.IsEnabled            = 0
 
     # Chassis
     $Xaml.IO.System_IsVM.IsChecked                    = $Xaml.TSEnv["IsVm"]
@@ -1090,16 +1113,16 @@ Function Invoke-FEWizard
     $Xaml.IO.System_Chassis.SelectedIndex             = $X
     $Xaml.IO.System_Chassis.IsEnabled                 = 0
 
-    $Xaml.IO.System_UUID.Text                         = $Xaml.System.UUID
     $Xaml.IO.System_BiosUefi.ItemsSource              = @( )
     $Xaml.IO.System_BiosUefi.ItemsSource              = @("BIOS","UEFI")
     $Xaml.IO.System_BiosUefi.SelectedIndex            = $Xaml.System -eq "UEFI"
+    $Xaml.IO.System_BiosUefi.IsEnabled                = 0
 
     $Xaml.IO.System_UseSerial.Add_Click(
     {
         If ($Xaml.IO.System_UseSerial.IsChecked)
         {
-            $Xaml.IO.System_Name.Text                 = $Xaml.System.Serial
+            $Xaml.IO.System_Name.Text                 = ($Xaml.System.Serial -Replace "\-","").ToCharArray()[0..14] -join ''
         }
         If (!$Xaml.IO.System_UseSerial.IsChecked)
         {
@@ -1160,7 +1183,7 @@ Function Invoke-FEWizard
         If ($Xaml.IO.Network_Adapter.SelectedIndex -ne -1)
         {
             $Xaml.IO.Network_Selected.ItemsSource     = @( )
-            $Xaml.IO.Network_Selected.ItemsSource     = $Xaml.IO.Network_Adapter.SelectedItem.Name
+            $Xaml.IO.Network_Selected.ItemsSource     = @( $Xaml.IO.Network_Adapter.SelectedItem.Name )
             $Xaml.SetNetwork($Xaml.IO.Network_Adapter.SelectedIndex)
         }
     })
@@ -1168,6 +1191,7 @@ Function Invoke-FEWizard
     $Xaml.IO.Network_Type.ItemsSource                 = @( )
     $Xaml.IO.Network_Type.ItemsSource                 = @("DHCP","Static")
     $Xaml.IO.Network_Type.SelectedIndex               = 0
+
 
     $Xaml.SetNetwork(0)
 

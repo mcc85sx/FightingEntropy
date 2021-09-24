@@ -5,27 +5,27 @@ Installation instructions for the latest version are over there.
 
 # FEWizard
 I am currently redeveloping the FriendsOfMDT project PSD (PowerShell Deployment)
-
 Here are some screenshots from (09-23-2021)
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(0).jpg)
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(0).jpg)<br/>
 Thursday, September 23, 2021 8:15:22 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(1).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(1).jpg)<br/>
 Thursday, September 23, 2021 8:15:49 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(2).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(2).jpg)<br/>
 Thursday, September 23, 2021 8:16:17 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(3).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(3).jpg)<br/>
 Thursday, September 23, 2021 8:16:59 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(4).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(4).jpg)<br/>
 Thursday, September 23, 2021 8:17:27 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(5).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(5).jpg)<br/>
 Thursday, September 23, 2021 8:17:53 PM
 
-![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(6).jpg)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(6).jpg)<br/>
 Thursday, September 23, 2021 8:18:24 PM
 
 ...and here is a video I made that shows it in action.

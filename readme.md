@@ -3,8 +3,13 @@ This is the development folder for FightingEntropy.
 The production version of the project is over at https://www.github.com/mcc85s/FightingEntropy
 Installation instructions for the latest version are over there.
 
+# FEDeploymentShare
+I will be featuring a video shortly that wraps the ADDS domain topology tool, MDT configuration, virtual machine hive clustering, along with advanced system administration AND the following process... FEWizard.
+
 # FEWizard
-I am currently redeveloping the FriendsOfMDT project PSD (PowerShell Deployment)
+I am currently redeveloping the FriendsOfMDT project PSD (PowerShell Deployment)<br/>
+Here is a video I made that shows it in action, which also, shows some of my GUI development, script development, virtualization, and networking in action.
+https://youtu.be/lZX5fAgczz0
 Here are some screenshots from (09-23-2021)
 
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(0).jpg)<br/>
@@ -27,10 +32,6 @@ Thursday, September 23, 2021 8:17:53 PM
 
 ![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(6).jpg)<br/>
 Thursday, September 23, 2021 8:18:24 PM
-
-...and here is a video I made that shows it in action.
-Also, shows some of my GUI development, script development, virtualization, and networking in action.
-https://youtu.be/lZX5fAgczz0
 
 # About FightingEntropy
 My name is Michael Cook, I am an application developer, design artist, and system engineer.

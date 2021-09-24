@@ -2,7 +2,35 @@
 This is the development folder for FightingEntropy.
 The production version of the project is over at https://www.github.com/mcc85s/FightingEntropy
 Installation instructions for the latest version are over there.
-There has been an installation GUI for the module as well as for the FEDeploymentShare GUI.
+
+# FEWizard
+I am currently redeveloping the FriendsOfMDT project PSD (PowerShell Deployment)
+
+Here are some screenshots from (09-23-2021)
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(0).jpg)
+Thursday, September 23, 2021 8:15:22 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(1).jpg)
+Thursday, September 23, 2021 8:15:49 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(2).jpg)
+Thursday, September 23, 2021 8:16:17 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(3).jpg)
+Thursday, September 23, 2021 8:16:59 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(4).jpg)
+Thursday, September 23, 2021 8:17:27 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(5).jpg)
+Thursday, September 23, 2021 8:17:53 PM
+
+![alt text](https://github.com/mcc85sx/FightingEntropy/blob/master/Screenshots/2021_0923-(FEWizard)(6).jpg)
+Thursday, September 23, 2021 8:18:24 PM
+
+...and here is a video I made that shows it in action.
+Also, shows some of my GUI development, script development, virtualization, and networking in action.
+https://youtu.be/lZX5fAgczz0
 
 # About FightingEntropy
 My name is Michael Cook, I am an application developer, design artist, and system engineer.

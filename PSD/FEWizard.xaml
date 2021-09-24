@@ -68,7 +68,7 @@
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="5"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontWeight" Value="Semibold"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Background" Value="#DFFFBA"/>
@@ -84,7 +84,7 @@
             <Setter Property="Height" Value="24"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontWeight" Value="Normal"/>
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="Margin" Value="5"/>
@@ -284,7 +284,7 @@
                     <ComboBox    Grid.Row="3" Grid.Column="3" Name="System_Chassis"/>
                     <StackPanel  Grid.Row="5" Grid.Column="3" Orientation="Horizontal">
                         <Label   Content="BIOS/UEFI:"/>
-                        <ComboBox Name="System_BiosUefi" Width="165"/>
+                        <ComboBox Name="System_BiosUefi" Width="150"/>
                     </StackPanel>
                     
                     <PasswordBox Grid.Row="6" Grid.Column="3" Name="System_Confirm"/>
@@ -402,18 +402,18 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name"       Binding="{Binding Name}" Width="200"/>
                         <DataGridTextColumn Header="Index"      Binding="{Binding Index}" Width="50"/>
-                        <DataGridTextColumn Header="IPAddress"  Binding="{Binding IPAddress}" Width="125"/>
-                        <DataGridTextColumn Header="SubnetMask" Binding="{Binding SubnetMask}" Width="125"/>
-                        <DataGridTextColumn Header="Gateway"    Binding="{Binding Gateway}" Width="125"/>
+                        <DataGridTextColumn Header="IPAddress"  Binding="{Binding IPAddress}" Width="100"/>
+                        <DataGridTextColumn Header="SubnetMask" Binding="{Binding SubnetMask}" Width="100"/>
+                        <DataGridTextColumn Header="Gateway"    Binding="{Binding Gateway}" Width="100"/>
                         <DataGridTemplateColumn Header="DNSServer" Width="125">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding DNSServer}" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding DNSServer}" SelectedIndex="0" Margin="0" Padding="2" Height="18" FontSize="10" VerticalContentAlignment="Center"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="DhcpServer" Binding="{Binding Name}" Width="125"/>
-                        <DataGridTextColumn Header="MacAddress" Binding="{Binding Name}" Width="125"/>
+                        <DataGridTextColumn Header="DhcpServer" Binding="{Binding DhcpServer}" Width="100"/>
+                        <DataGridTextColumn Header="MacAddress" Binding="{Binding MacAddress}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>

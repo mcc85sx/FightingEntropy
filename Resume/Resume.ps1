@@ -160,5 +160,3 @@ $Resume = @(
     $Buff[2];
     $Education3;
     $Studies3)
-
-Write-Theme $Resume -Title "Michael C. Cook's Resume ($(Get-Date))" -Prompt "You don't have to press any key to continue"

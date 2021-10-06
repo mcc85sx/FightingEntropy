@@ -1604,7 +1604,7 @@
                                     <Grid Height="215"  VerticalAlignment="Top">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="40"/>
-                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="160"/>
                                         </Grid.RowDefinitions>
                                         <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
@@ -1637,19 +1637,24 @@
                             <TabItem Header="Network">
                                 <Grid VerticalAlignment="Top">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="80"/>
-                                        <RowDefinition Height="80"/>
-                                        <RowDefinition Height="80"/>
+                                        <RowDefinition Height="40"/>
+                                        <RowDefinition Height="40"/>
+                                        <RowDefinition Height="40"/>
                                     </Grid.RowDefinitions>
-                                    <GroupBox Grid.Row="0" Header="[DsNwNetBiosName] - (Enter NetBIOS name)">
-                                        <TextBox Name="DsNwNetBiosName"/>
-                                    </GroupBox>
-                                    <GroupBox Grid.Row="1" Header="[DsNwDnsName] - (Enter DNS name)">
-                                        <TextBox Name="DsNwDnsName"/>
-                                    </GroupBox>
-                                    <GroupBox Grid.Row="2" Header="[DsNwMachineOuName] - (Enter the organizational unit container for child items)">
-                                        <TextBox Name="DsNwMachineOuName"/>
-                                    </GroupBox>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label   Grid.Row="0" Grid.Column="0" Content="[NetBios]:"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Name="DsNetBiosName"/>
+                                    <Label   Grid.Row="0" Grid.Column="2" Content="[Dns]:"/>
+                                    <TextBox Grid.Row="0" Grid.Column="3" Name="DsDnsName"/>
+                                    <Label   Grid.Row="1" Grid.Column="0" Content="[Organization]:"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Name="DsOrganization"/>
+                                    <Label   Grid.Row="2" Grid.Column="0" Content="[MachineOu]:"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Name="DsMachineOu"/>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="Domain">

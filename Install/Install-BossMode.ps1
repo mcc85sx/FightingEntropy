@@ -1,11 +1,11 @@
 Function Install-BossMode # Should be cross platform
 {
-    Class Enum
+    Class EnumType
     {
         [String] $Name
         [Object] $Value
 
-        Enum([String]$Name,[Object]$Value)
+        EnumType([String]$Name,[Object]$Value)
         {
             $This.Name  = $Name
             $This.Value = $Value
@@ -23,9 +23,9 @@ Function Install-BossMode # Should be cross platform
 
         OS()
         {
-            $This.Env   = Get-ChildItem Env:\      | % { [Enum]::New($_.Key,$_.Value) }
-            $This.Var   = Get-ChildItem Variable:\ | % { [Enum]::New($_.Name,$_.Value) }
-            $This.PS    = $This.Var | ? Name -eq PSVersionTable | % Value | % GetEnumerator | % { [Enum]::New($_.Name,$_.Value) }
+            $This.Env   = Get-ChildItem Env:\      | % { [EnumType]::New($_.Key,$_.Value) }
+            $This.Var   = Get-ChildItem Variable:\ | % { [EnumType]::New($_.Name,$_.Value) }
+            $This.PS    = $This.Var | ? Name -eq PSVersionTable | % Value | % GetEnumerator | % { [EnumType]::New($_.Name,$_.Value) }
             $This.Ver   = $This.PS | ? Name -eq PSVersion | % Value
             $This.Major = $This.Ver.Major
             $This.Type  = $This.GetOSType()

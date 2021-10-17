@@ -1,10 +1,32 @@
-Function Install-BossMode # Should be cross platform
+<#
+.SYNOPSIS
+
+.DESCRIPTION
+
+.LINK
+
+.NOTES
+          FileName: Install-BossMode.ps1
+          Solution: FightingEntropy Module
+          Purpose: For going all-out boss mode on your Visual Studio Code...
+          Author: Michael C. Cook Sr.
+          Contact: @mcc85s
+          Primary: @mcc85s
+          Created: 2021-10-09
+          Modified: 2021-10-17
+          
+          Version - 2021.10.0 - () - Finalized functional version 1.
+
+          TODO:
+
+.Example
+#>
+Function Install-BossMode
 {
     Class EnumType
     {
         [String] $Name
         [Object] $Value
-
         EnumType([String]$Name,[Object]$Value)
         {
             $This.Name  = $Name
@@ -20,7 +42,6 @@ Function Install-BossMode # Should be cross platform
         [Object] $Ver
         [Object] $Major
         [Object] $Type
-
         OS()
         {
             $This.Env   = Get-ChildItem Env:\      | % { [EnumType]::New($_.Key,$_.Value) }
@@ -30,7 +51,6 @@ Function Install-BossMode # Should be cross platform
             $This.Major = $This.Ver.Major
             $This.Type  = $This.GetOSType()
         }
-
         [String] GetWinType()
         {
             Return @( Switch -Regex ( Invoke-Expression "[wmiclass]'Win32_OperatingSystem' | % GetInstances | % Caption" )
@@ -38,7 +58,6 @@ Function Install-BossMode # Should be cross platform
                 "Windows 10" { "Win32_Client" } "Windows Server" { "Win32_Server" }
             })
         }
-
         [String] GetOSType()
         {
             Return @(If ($This.Major -gt 5)

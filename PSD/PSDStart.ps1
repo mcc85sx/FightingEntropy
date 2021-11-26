@@ -12,7 +12,7 @@
           Contact: @Mikael_Nystrom , @jarwidmark , @mniehaus , @SoupAtWork , @JordanTheItGuy
           Primary: @Mikael_Nystrom 
           Created: 
-          Modified: 2021-11-26
+          Modified: 2021-09-21
 
           Version - 0.0.0 - () - Finalized functional version 1.
           Version - 0.9.1 - Added check for network access when doing network deployment
@@ -652,7 +652,8 @@ Else
         If (Test-Path $Modules\FEWizard.psm1)
         {
             Import-Module FEWizard
-            $Result = Get-FEWizard
+            $Drives = Get-PSDrive
+            $Result = Get-FEWizard -Drive $Drives
         }
 
         Else

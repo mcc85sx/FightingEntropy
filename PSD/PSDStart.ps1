@@ -12,7 +12,7 @@
           Contact: @Mikael_Nystrom , @jarwidmark , @mniehaus , @SoupAtWork , @JordanTheItGuy
           Primary: @Mikael_Nystrom 
           Created: 
-          Modified: 2021-09-21
+          Modified: 2021-11-26
 
           Version - 0.0.0 - () - Finalized functional version 1.
           Version - 0.9.1 - Added check for network access when doing network deployment
@@ -324,12 +324,12 @@ If ($tsInProgress)
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Task sequence engine located at $tsEngine."
 
     # Get full scripts location
-    $scripts          = Get-PSDContent -Content "Scripts"
-    $env:ScriptRoot   = $scripts
+    $scripts           = Get-PSDContent -Content "Scripts"
+    $env:ScriptRoot    = $scripts
 
     # Set the PSModulePath
-    $modules          = Get-PSDContent -Content "Tools\Modules"
-    $env:PSModulePath = "$env:PSModulePath;$modules"
+    $modules           = Get-PSDContent -Content "Tools\Modules"
+    $env:PSModulePath += ";$modules"
 
     # Resume task sequence
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Deployroot is now $deployRoot"
@@ -649,25 +649,19 @@ Else
     If ($tsenv:SkipWizard -ine "YES")
     {
         Add-Type -AssemblyName PresentationFramework
-        (Get-Content $DeployRoot\Scripts\Invoke-FEWizard.ps1) -join "`n" | Invoke-Expression
-
-        $Drive              = Get-PSDrive | ? Provider -match FileSystem | ? Root -eq $DeployRoot.ToString()
-        $TSEnv              = @{ }
-        ForEach ( $Item in Get-ChildItem TSEnv: )
+        If (Test-Path $Modules\FEWizard.psm1)
         {
-            $TSEnv.Add($Item.Name,$Item.Value)
-        }
-        $Root               = @{
-                    
-            DS              = Get-ChildItem DeploymentShare: -Recurse
-            TSEnv           = $TSEnv
-            Control         = "$($Drive.Name):\Control"
-            Scripts         = "$($Drive.Name):\Scripts"
+            Import-Module FEWizard
+            $Result = Get-FEWizard
         }
 
-        $Result             = Show-FEWizard $Root
-
-        If ($Result.DialogResult -eq $False)
+        Else
+        {
+            Import-Module PSDWizard
+            $Result = Show-PSDWizard
+        }
+        
+        If (!$Result.DialogResult)
         {
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Cancelling, aborting..."
             Show-PSDInfo -Message "Cancelling, aborting..." -Severity Information -OSDComputername $OSDComputername -Deployroot $global:psddsDeployRoot
@@ -697,16 +691,19 @@ Else
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Find the task sequence engine"
 
     # Find the task sequence engine
-    if (Test-Path -Path "X:\Deploy\Tools\$($tsenv:Architecture)\tsmbootstrap.exe"){
+    If (Test-Path -Path "X:\Deploy\Tools\$($tsenv:Architecture)\tsmbootstrap.exe")
+    {
         $tsEngine = "X:\Deploy\Tools\$($tsenv:Architecture)"
     }
-    else{
+    Else
+    {
         $tsEngine = Get-PSDContent "Tools\$($tsenv:Architecture)"
     }
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Task sequence engine located at $tsEngine."
 
     # Transfer $PSDDeBug to TSEnv: for TS to understand
-    If($PSDDeBug -eq $true){
+    If ($PSDDeBug)
+    {
         $tsenv:PSDDebug = "YES"
     }
 
@@ -758,7 +755,8 @@ Else
     Stop-PSDLogging
     
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Looking for $tsEngine\TSMBootstrap.exe"
-    if((Test-Path -Path "$tsEngine\TSMBootstrap.exe") -ne $true){
+    If (!(Test-Path -Path "$tsEngine\TSMBootstrap.exe"))
+    {
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Unable to access $tsEngine\TSMBootstrap.exe" -Loglevel 3
         Show-PSDInfo -Message "Unable to access $tsEngine\TSMBootstrap.exe" -Severity Error -OSDComputername $OSDComputername -Deployroot $global:psddsDeployRoot
     }
@@ -766,16 +764,19 @@ Else
 }
 
 # If we are in WinPE and we have deployed an operating system, we should write logfiles to the new drive
-if($BootfromWinPE -eq $True){
+If ($BootfromWinPE)
+{
     # Assuming that the first Volume having mspaint.exe is the correct OS volume
-    $Drives = Get-PSDrive | Where-Object {$_.Provider -like "*filesystem*"}
-    Foreach ($Drive in $Drives){
+    $Drives = Get-PSDrive | ? Provider -eq FileSystem
+    Foreach ($Drive in $Drives)
+    {
         # TODO: Need to find a better file for detection of running OS
-        If (Test-Path -Path "$($Drive.Name):\Windows\System32\mspaint.exe"){
+        If (Test-Path -Path "$($Drive.Name):\Windows\System32\mspaint.exe")
+        {
             Start-PSDLogging -Logpath "$($Drive.Name):\MININT\SMSOSD\OSDLOGS"
 
             Break
-� �     }
+        }
     }
 }
 
@@ -783,10 +784,12 @@ Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): logPath is now $logPath"
 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Task Sequence is done, PSDStart.ps1 is now in charge.."
 
 # Make sure variables.dat is in the current local directory
-if (Test-Path -Path "$(Get-PSDLocalDataPath)\Variables.dat"){
+If (Test-Path -Path "$(Get-PSDLocalDataPath)\Variables.dat")
+{
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Variables.dat found in the correct location, $(Get-PSDLocalDataPath)\Variables.dat, no need to copy."
 }
-else{
+Else
+{
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Copying Variables.dat to the current location, $(Get-PSDLocalDataPath)\Variables.dat."
     Copy-Item $variablesPath "$(Get-PSDLocalDataPath)\"
 }
@@ -799,8 +802,10 @@ Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): env:PSModulePath is now 
 #if($result.ExitCode -eq $null){$result.ExitCode = 0}
 #Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Return code from TSMBootstrap.exe is $($result.ExitCode)"
 
-Switch ($result.ExitCode){
-    0 {
+Switch ($result.ExitCode)
+{
+    0 
+    {
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): SUCCESS!"
         Write-PSDEvent -MessageID 41015 -severity 4 -Message "PSD deployment completed successfully."
         
@@ -808,16 +813,18 @@ Switch ($result.ExitCode){
         Get-ItemProperty "HKLM:\Software\Microsoft\Deployment 4" | Remove-Item -Force -Recurse
 
         $Executable = "regsvr32.exe"
-        $Arguments = "/u /s $tools\tscore.dll"
-        if((Test-Path -Path "$tools\tscore.dll") -eq $true){
+        $Arguments  = "/u /s $tools\tscore.dll"
+        If (!(Test-Path -Path "$tools\tscore.dll"))
+        {
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
             $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
         }
 
         $Executable = "$Tools\TSProgressUI.exe"
-        $Arguments = "/Unregister"
-        if((Test-Path -Path "$Tools\TSProgressUI.exe") -eq $true){
+        $Arguments  = "/Unregister"
+        If ((Test-Path -Path "$Tools\TSProgressUI.exe"))
+        {
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
             $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
@@ -827,7 +834,8 @@ Switch ($result.ExitCode){
         # Read-Host -Prompt "Check for FinishAction and cleanup leftovers"
         Write-Verbose "tsenv:FinishAction is $tsenv:FinishAction"
         
-        if($tsenv:FinishAction -eq "Reboot" -or $tsenv:FinishAction -eq "Restart"){
+        If ($tsenv:FinishAction -eq "Reboot" -or $tsenv:FinishAction -eq "Restart")
+        {
             $Global:RebootAfterTS = $True
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Will reboot for finishaction"
         }
@@ -840,21 +848,25 @@ Switch ($result.ExitCode){
         Clear-PSDInformation
                 
         #Checking for FinalSummary
-        if(!($tsenv:SkipFinalSummary -eq "YES")){
+        If (!($tsenv:SkipFinalSummary -eq "YES"))
+        {
             Show-PSDInfo -Message "OSD SUCCESS!" -Severity Information -OSDComputername $OSDComputername -Deployroot $global:psddsDeployRoot
         }
 
-        if($tsenv:PSDPause -eq "YES"){
+        If ($tsenv:PSDPause -eq "YES")
+        {
             Read-Host -Prompt "Exit 0"
         }
 
         # Read-Host -Prompt "Check for finish action and cleanup leftovers"
         # Check for finish action and cleanup leftovers
         
-        if($RebootAfterTS -eq $True){
+        If ($RebootAfterTS -eq $True)
+        {
             Start-Process powershell -ArgumentList "$env:TEMP\PSDFinal.ps1 -Restart $true -ParentPID $PID" -WindowStyle Hidden -Wait
         }
-        else{
+        Else
+        {
             Start-Process powershell -ArgumentList "$env:TEMP\PSDFinal.ps1 -Restart $false -ParentPID $PID" -WindowStyle Hidden -Wait
         }
 
@@ -866,31 +878,39 @@ Switch ($result.ExitCode){
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): REBOOT!"
         $variablesPath = Restore-PSDVariables
 
-        try{
-            foreach($i in (Get-ChildItem -Path TSEnv:)){
+        Try
+        {
+            foreach ($i in (Get-ChildItem -Path TSEnv:))
+            {
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Property $($i.Name) is $($i.Value)"
             }
         }
-        catch{
+        Catch
+        {
+        
         }
 
 
-        if ($env:SYSTEMDRIVE -eq "X:"){
+        If ($env:SYSTEMDRIVE -eq "X:")
+        {
             # We are running in WinPE and need to reboot, if we have a hard disk, then we need files to continute the TS after reboot, copy files...
             # Exit with a zero return code and let Windows PE reboot
 
             # Assuming that the first Volume having mspaint.exe is the correct OS volume
-            $Drives = Get-PSDrive | Where-Object {$_.Provider -like "*filesystem*"}
-            Foreach ($Drive in $Drives){
+            $Drives = Get-PSDrive | ? Provider -eq FileSystem
+            Foreach ($Drive in $Drives)
+            {
                 # TODO: Need to find a better file for detection of running OS
-                If (Test-Path -Path "$($Drive.Name):\Windows\System32\mspaint.exe"){
+                If (Test-Path -Path "$($Drive.Name):\Windows\System32\mspaint.exe")
+                {
                     #Copy files needed for full OS
 
                     Write-PSDLog -Message "Copy-Item $scripts\PSDStart.ps1 $($Drive.Name):\MININT\Scripts"
                     Initialize-PSDFolder "$($Drive.Name):\MININT\Scripts"
                     Copy-Item "$scripts\PSDStart.ps1" "$($Drive.Name):\MININT\Scripts"
 
-                    try{
+                    Try
+                    {
                         $drvcache = "$($Drive.Name):\MININT\Cache"
                         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Copy-Item X:\Deploy\Tools -Destination $drvcache"
                         $cres = Copy-Item -Path "X:\Deploy\Tools" -Destination "$drvcache" -Recurse -Force -Verbose -PassThru
@@ -912,7 +932,8 @@ Switch ($result.ExitCode){
                         Copy-PSDFolder "$Tools" "$($Drive.Name):\MININT\Tools\$($tsenv:Architecture)"
 
                     }
-                    catch{
+                    Catch
+                    {
                         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Copy failed"
                         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): $_"
                     }
@@ -926,25 +947,29 @@ Switch ($result.ExitCode){
                     # Get-ChildItem -Path "$($tsenv:OSVolume):\MININT\Cache\Tools" -Filter ts.xml -Recurse | Remove-Item -Force
                     # Get-ChildItem -Path "$($tsenv:OSVolume):\MININT\Cache\Tools" -Filter variables.dat -Recurse | Remove-Item -Force
 
-                    if($PSDDeBug -eq $true){
+                    If ($PSDDeBug)
+                    {
                         New-Item -Path "$($Drive.Name):\MININT\PSDDebug.txt" -ItemType File -Force
                     }
 
                     #Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): We are now on line 775 and we are doing a break on line 776..."
                     #Break
-� �             }
+                }
             }
 
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exit with a zero return code and let Windows PE reboot"
             Stop-PSDLogging
 
-            if($tsenv:PSDPause -eq "YES"){
+            If ($tsenv:PSDPause -eq "YES")
+            {
                 Read-Host -Prompt "Exit -2147021886 (WinPE)"
             }
 
-            exit 0
+            Exit 0
         }
-        else{
+
+        Else
+        {
             # In full OS, need to initiate a reboot
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): In full OS, need to initiate a reboot"
 
@@ -957,29 +982,35 @@ Switch ($result.ExitCode){
             
             $Executable = "regsvr32.exe"
             $Arguments = "/u /s $tools\tscore.dll"
-            if((Test-Path -Path "$tools\tscore.dll") -eq $true){
+            If (Test-Path -Path "$tools\tscore.dll")
+            {
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
                 $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
             }
-            if($return -ne 0){
+            If ($return -ne 0)
+            {
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Unable to unload $tools\tscore.dll" -Loglevel 2
             }
 
             $Executable = "$Tools\TSProgressUI.exe"
             $Arguments = "/Unregister"
-            if((Test-Path -Path "$Tools\TSProgressUI.exe") -eq $true){
+            If (Test-Path -Path "$Tools\TSProgressUI.exe")
+            {
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
                 $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
             }
-            if($return -ne 0){
+
+            If ($return -ne 0)
+            {
                 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Unable to unload $Tools\TSProgressUI.exe" -Loglevel 2
             }
 
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Restart, see you on the other side... (Shutdown.exe /r /t 30 /f)"
             
-            if($tsenv:PSDPause -eq "YES"){
+            If ($tsenv:PSDPause -eq "YES")
+            {
                 Read-Host -Prompt "Exit -2147021886 (Windows)"
             }
             
@@ -987,10 +1018,11 @@ Switch ($result.ExitCode){
             Shutdown.exe /r /t 30 /f
 
             Stop-PSDLogging
-            exit 0
+            Exit 0
         }
     }
-    default {
+    Default 
+    {
         # Exit with a non-zero return code
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Task sequence failed, rc = $($result.ExitCode)"
 
@@ -1005,16 +1037,18 @@ Switch ($result.ExitCode){
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Tools is now $Tools"
 
         $Executable = "regsvr32.exe"
-        $Arguments = "/u /s $tools\tscore.dll"
-        if((Test-Path -Path "$tools\tscore.dll") -eq $true){
+        $Arguments  = "/u /s $tools\tscore.dll"
+        If (Test-Path -Path "$tools\tscore.dll")
+        {
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
             $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
         }
 
         $Executable = "$Tools\TSProgressUI.exe"
-        $Arguments = "/Unregister"
-        if((Test-Path -Path "$Tools\TSProgressUI.exe") -eq $true){
+        $Arguments  = "/Unregister"
+        If (Test-Path -Path "$Tools\TSProgressUI.exe")
+        {
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): About to run: $Executable $Arguments"
             $return = Invoke-PSDEXE -Executable $Executable -Arguments $Arguments
             Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Exitcode: $return"
@@ -1027,6 +1061,6 @@ Switch ($result.ExitCode){
         Write-PSDEvent -MessageID 41014 -severity 1 -Message "PSD deployment failed, Return Code is $($result.ExitCode)"
         Show-PSDInfo -Message "Task sequence failed, Return Code is $($result.ExitCode)" -Severity Error -OSDComputername $OSDComputername -Deployroot $global:psddsDeployRoot
 
-        exit $result.ExitCode
+        Exit $result.ExitCode
     }
 }

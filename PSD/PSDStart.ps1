@@ -64,7 +64,7 @@ Function Write-PSDBootInfo
 
 # Set the module path based on the current script path
 $DeployRoot            = Split-Path $PSScriptRoot
-$env:PSModulePath      = "$env:PSModulePath;$DeployRoot\Tools\Modules"
+$env:PSModulePath     += ";$DeployRoot\Tools\Modules"
 
 # Check for debug settings
 $Global:PSDDebug       = $False
@@ -168,12 +168,12 @@ If ($Global:PSDDebug -ne $True)
     Set-PSDCommandWindowsSize -Width 99 -Height 15
 }
 
-If ($BootfromWinPE -eq $True)
+If ($BootfromWinPE)
 {
     # Windows ADK v1809 could be missing certain files, we need to check for that.
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Check if we are running Windows ADK 10 v1809"
     
-    If ([UInt32](Get-WmiObject Win32_OperatingSystem | % BuildNumber) -eq 17763)
+    If ((Get-WmiObject Win32_OperatingSystem).BuildNumber -eq 17763)
     {
         Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Check for BCP47Langs.dll and BCP47mrm.dll, needed for WPF"
         If (!(Test-Path X:\Windows\System32\BCP47Langs.dll) -or !(Test-Path X:\Windows\System32\BCP47mrm.dll))
@@ -189,7 +189,7 @@ If ($BootfromWinPE -eq $True)
     Write-PSDBootInfo -SleepSec 2 -Message "Checking that we have at least 1.5 GB of RAM"
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Check for minimum amount of memory in WinPE to run PSD"
 
-    If ((Get-WmiObject -Class Win32_ComputerSystem).TotalPhysicalMemory -le 1499MB)
+    If ((Get-WmiObject Win32_ComputerSystem).TotalPhysicalMemory -le 1499MB)
     {
         Show-PSDInfo -Message "Not enough memory to run PSD, aborting..." -Severity Error -OSDComputername $OSDComputername -Deployroot $global:psddsDeployRoot
         Start-Process PowerShell -Wait
@@ -202,16 +202,18 @@ If ($BootfromWinPE -eq $True)
 
 # Load more modules
 Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Load more modules"
-Import-Module PSDDeploymentShare -ErrorAction Stop -Force -Verbose:$False
-Import-Module PSDGather -ErrorAction Stop -Force -Verbose:$False
-Import-Module PSDWizard -ErrorAction Stop -Force -Verbose:$False
+
+Import-Module PSDDeploymentShare -Force -Verbose
+Import-Module PSDGather -Force -Verbose
+Add-Type -AssemblyName PresentationFramework
+Import-Module PSDWizard -Force -Verbose
 
 #Set-PSDDebugPause -Prompt 182
 
 #Check if tsenv: works
 Try
 {
-    Get-ChildItem -Path "TSEnv:"
+    Get-ChildItem tsenv:
     Write-PSDLog -Message "$($MyInvocation.MyCommand.Name): Able to read from TSEnv"
 }
 Catch
@@ -639,7 +641,7 @@ Else
 
     # Set the PSModulePath
     $Modules          = Get-PSDContent -Content "Tools\Modules"
-    $env:PSModulePath = "$env:PSModulePath;$modules"
+    $env:PSModulePath += ";$modules"
 
     #Set-PSDDebugPause -Prompt "Process wizard"
 
@@ -648,18 +650,16 @@ Else
     # $tsenv:TaskSequenceID = ""
     If ($tsenv:SkipWizard -ine "YES")
     {
+        Import-Module PSDWizard
         Add-Type -AssemblyName PresentationFramework
-        If (Test-Path $Modules\FEWizard.psm1)
+        $Drives = Get-PSDrive
+        Try
         {
-            Import-Module FEWizard
-            $Drives = Get-PSDrive
             $Result = Get-FEWizard -Drive $Drives
         }
-
-        Else
+        Catch
         {
-            Import-Module PSDWizard
-            $Result = Show-PSDWizard
+            $Result = Show-PSDWizard "$Scripts\PSDWizardMod.xaml"
         }
         
         If (!$Result.DialogResult)

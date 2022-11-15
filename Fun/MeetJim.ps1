@@ -1,0 +1,23 @@
+Write-Theme -Title "Meet Jim" -Prompt "There's NO WAY, that this is a joke. Not at all." -InputObject @(
+"Jim wakes up at the crack of dawn, and not a single person on the planet thinks",
+"he's an asshole. Not (1). The man goes around being a respectable member of the",
+"community, every day. Pays his taxes. Makes charitable donations every other day.",
+" ",
+"Simply put...? The man doesn't fuck around.",
+"No way, dude.",
+"If there's a single word in the English language that describes him BEST...?",
+"Very respectable. Even though that's actually (2) words...? Doesn't matter.",
+"Jim exhibits commendable behaviors on a daily basis.",
+" ",
+"When SOME people spend their days fucking around...?",
+"Jim doesn't ever think to do that... at all.",
+"Can't even crack a joke around this dude without risking a real hard stare from",
+"him... No way. He's too serious to fuck around. He stares down problems with his",
+"fuckin' eyebrows."
+" ",
+"In other words...?",
+"Jim doesn't do dumb shit, and he's about as serious as a heart attack...",
+"...and has the patience of a nun. Jim may very well win a Nobel peace prize",
+"someday for being as fuckin' (awesome/serious/patient) as he is...",
+" ",
+"To learn MORE about Jim...? Go to www.jim.com, and find out how cool he is.")
